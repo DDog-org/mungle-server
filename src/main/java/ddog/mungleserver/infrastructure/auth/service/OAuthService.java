@@ -3,6 +3,8 @@ package ddog.mungleserver.infrastructure.auth.service;
 import ddog.mungleserver.infrastructure.auth.config.enums.Provider;
 import ddog.mungleserver.infrastructure.auth.config.enums.Role;
 import ddog.mungleserver.infrastructure.auth.config.jwt.JwtTokenProvider;
+import ddog.mungleserver.infrastructure.auth.dto.RefreshTokenDto;
+import ddog.mungleserver.infrastructure.auth.dto.TokenAccountInfoDto;
 import ddog.mungleserver.infrastructure.auth.dto.TokenInfoDto;
 import ddog.mungleserver.jpa.customer.Customer;
 import ddog.mungleserver.persistence.Customer.CustomerRepository;
@@ -40,9 +42,11 @@ public class OAuthService {
     }
 
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email) {
+        String nickname = kakaoUserInfo.get("nickname").toString();
         Customer customer = Customer.builder()
                 .provider(Provider.KAKAO)
                 .email(email)
+                .nickname(nickname)
                 .role(Role.CUSTOMER)
                 .build();
         customerRepository.save(customer);
@@ -56,5 +60,19 @@ public class OAuthService {
                 = new UsernamePasswordAuthenticationToken(email + "," + provider, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
+    }
+
+    public TokenInfoDto reGenerateAccessToken(RefreshTokenDto refreshTokenDto) {
+        String refreshToken = refreshTokenDto.getRefreshToken();
+        if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
+            /* 추후에 INVALID_TOKEN 으로 변경 예정 */
+            throw new RuntimeException();
+        }
+
+        TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
+        String email = tokenInfo.getEmail();
+        String provider = tokenInfo.getProvider();
+
+        return jwtTokenProvider.generateToken(getAuthentication(email, provider), Role.CUSTOMER);
     }
 }

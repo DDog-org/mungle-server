@@ -36,12 +36,15 @@ public class KakaoSocialService {
 
     private HashMap<String, Object> getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException{
         String responseBody = readResponse(kakaoServerConnection);
+        log.info("ResponseBody: {}", responseBody);
 
         JsonElement jsonElement = JsonParser.parseString(responseBody);
         String email = jsonElement.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+        String nickname = jsonElement.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString();
 
         HashMap<String, Object> kakaoUserInfo = new HashMap<>();
         kakaoUserInfo.put("email", email);
+        kakaoUserInfo.put("nickname", nickname);
         return kakaoUserInfo;
     }
 

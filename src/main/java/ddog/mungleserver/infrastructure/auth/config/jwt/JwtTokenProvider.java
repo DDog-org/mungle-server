@@ -2,6 +2,7 @@ package ddog.mungleserver.infrastructure.auth.config.jwt;
 
 import ddog.mungleserver.infrastructure.auth.config.enums.Provider;
 import ddog.mungleserver.infrastructure.auth.config.enums.Role;
+import ddog.mungleserver.infrastructure.auth.dto.TokenAccountInfoDto;
 import ddog.mungleserver.infrastructure.auth.dto.TokenInfoDto;
 import ddog.mungleserver.persistence.Customer.CustomerRepository;
 import io.jsonwebtoken.*;
@@ -125,5 +126,22 @@ public class JwtTokenProvider {
             /* 추후 UNKNOWN_ERROR 으로 변경 예정 */
             throw new RuntimeException();
         }
+    }
+
+    public TokenAccountInfoDto.TokenInfo extractTokenInfoFromJwt(String token) {
+        if (token.startsWith("Bearer ")) {
+            String resolvedToken = token.substring(7).trim();
+            Claims claims = parseClaims(resolvedToken);
+            String[] subjectParts = claims.getSubject().split(",");
+            if (subjectParts.length > 1) {
+                String email = subjectParts[0];
+                String provider = subjectParts[1];
+                return TokenAccountInfoDto.TokenInfo.builder()
+                        .email(email)
+                        .provider(provider)
+                        .build();
+            }
+        }
+        return null;
     }
 }

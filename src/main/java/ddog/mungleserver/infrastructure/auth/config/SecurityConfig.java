@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/**").permitAll()
+                        .requestMatchers("/auth/login/kakao/**").permitAll()    // Kakao 소셜 로그인을 위한 URL 허용
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/customer").hasRole("CUSTOMER")
                         .requestMatchers("/groomer").hasRole("GROOMER"))
