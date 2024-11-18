@@ -2,7 +2,7 @@ package ddog.mungleserver.global.auth.dto;
 
 import ddog.mungleserver.global.auth.config.enums.Provider;
 import ddog.mungleserver.global.auth.config.enums.Role;
-import ddog.mungleserver.infrastructure.jpa.Customer;
+import ddog.mungleserver.infrastructure.jpa.CustomerJpaEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,12 +16,12 @@ public class TokenAccountInfoDto {
     private Role role;
 
     @Builder
-    public TokenAccountInfoDto(Customer customer) {
-        this.id = customer.getId();
-        this.email = customer.getEmail();
-        this.nickname = customer.getNickname();
-        this.provider = customer.getProvider();
-        this.role = customer.getRole();
+    public TokenAccountInfoDto(CustomerJpaEntity customerJpaEntity) {
+        this.id = customerJpaEntity.getId();
+        this.email = customerJpaEntity.getEmail();
+        this.nickname = customerJpaEntity.getNickname();
+        this.provider = customerJpaEntity.getProvider();
+        this.role = customerJpaEntity.getRole();
     }
 
     @Getter

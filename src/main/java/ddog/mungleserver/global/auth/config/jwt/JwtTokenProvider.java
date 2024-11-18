@@ -1,10 +1,12 @@
 package ddog.mungleserver.global.auth.config.jwt;
 
+import ddog.mungleserver.application.repository.CustomerRepository;
 import ddog.mungleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.mungleserver.global.auth.dto.TokenInfoDto;
 import ddog.mungleserver.global.auth.config.enums.Provider;
 import ddog.mungleserver.global.auth.config.enums.Role;
-import ddog.mungleserver.infrastructure.CustomerRepository;
+import ddog.mungleserver.implementation.CustomerException;
+import ddog.mungleserver.implementation.enums.CustomerExceptionType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,9 @@ public class JwtTokenProvider {
     private final Key key;
     private final CustomerRepository customerRepository;
     /* accessToken 만료 시간 */
-    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7;    // 7일
+    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
-    private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;   // 3일
+    private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}") String secret, CustomerRepository customerRepository) {
@@ -85,9 +87,9 @@ public class JwtTokenProvider {
         String email = subjectParts[0];
         Provider provider = subjectParts.length > 1 ? Provider.valueOf(subjectParts[1]) : null;
 
-        customerRepository.findByEmailAndProvider(email, provider)
-                /* 추후에 CUSTOMER_NOT_EXIST 으로 변경 예정 */
-                .orElseThrow(RuntimeException::new);
+        if (!customerRepository.existsByEmailAndProvider(email, provider)) {
+            throw new CustomerException(CustomerExceptionType.CUSTOMER_NOT_EXIST);
+        }
 
         return new UsernamePasswordAuthenticationToken(accessToken, authorities);
     }

@@ -1,13 +1,14 @@
 package ddog.mungleserver.global.auth.application;
 
+import ddog.mungleserver.application.repository.CustomerRepository;
+import ddog.mungleserver.domain.Customer;
 import ddog.mungleserver.global.auth.config.enums.Provider;
 import ddog.mungleserver.global.auth.config.jwt.JwtTokenProvider;
 import ddog.mungleserver.global.auth.dto.RefreshTokenDto;
 import ddog.mungleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.mungleserver.global.auth.dto.TokenInfoDto;
 import ddog.mungleserver.global.auth.config.enums.Role;
-import ddog.mungleserver.infrastructure.jpa.Customer;
-import ddog.mungleserver.infrastructure.CustomerRepository;
+import ddog.mungleserver.infrastructure.jpa.CustomerJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

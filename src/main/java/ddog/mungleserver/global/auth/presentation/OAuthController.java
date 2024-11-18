@@ -1,14 +1,18 @@
 package ddog.mungleserver.global.auth.presentation;
 
+import ddog.mungleserver.global.auth.application.OAuthService;
 import ddog.mungleserver.global.auth.dto.KakaoAccessTokenDto;
 import ddog.mungleserver.global.auth.dto.RefreshTokenDto;
 import ddog.mungleserver.global.auth.dto.TokenInfoDto;
-import ddog.mungleserver.global.auth.application.OAuthService;
-import ddog.mungleserver.global.presentation.ResponseDto;
-import ddog.mungleserver.global.presentation.ResponseStatus;
+import ddog.mungleserver.global.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import static ddog.mungleserver.global.common.CommonResponseEntity.success;
 
 @Slf4j
 @RestController
@@ -19,13 +23,13 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
     @PostMapping("/kakao")
-    public ResponseDto<TokenInfoDto> kakaoLogin(@RequestBody KakaoAccessTokenDto kakaoAccessTokenDto) {
-        return new ResponseDto(ResponseStatus.SUCCESS, "카카오 로그인 성공", oAuthService.kakaoOAuthLogin(kakaoAccessTokenDto.getKakaoAccessToken()));
+    public CommonResponseEntity<TokenInfoDto> kakaoLogin(@RequestBody KakaoAccessTokenDto kakaoAccessTokenDto) {
+        return success(oAuthService.kakaoOAuthLogin(kakaoAccessTokenDto.getKakaoAccessToken()));
     }
 
     @PostMapping("/refresh-token")
-    public ResponseDto<TokenInfoDto> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+    public CommonResponseEntity<TokenInfoDto> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto) {
         oAuthService.reGenerateAccessToken(refreshTokenDto);
-        return new ResponseDto(ResponseStatus.SUCCESS, "토큰 재발급", oAuthService.reGenerateAccessToken(refreshTokenDto));
+        return success(oAuthService.reGenerateAccessToken(refreshTokenDto));
     }
 }
