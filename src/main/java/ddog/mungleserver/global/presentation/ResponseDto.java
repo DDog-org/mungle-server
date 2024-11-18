@@ -1,4 +1,4 @@
-package ddog.mungleserver.infrastructure.auth.dto;
+package ddog.mungleserver.global.presentation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

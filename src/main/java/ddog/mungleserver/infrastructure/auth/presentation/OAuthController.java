@@ -1,14 +1,13 @@
-package ddog.mungleserver.presentation.oauth;
+package ddog.mungleserver.infrastructure.auth.presentation;
 
 import ddog.mungleserver.infrastructure.auth.dto.KakaoAccessTokenDto;
 import ddog.mungleserver.infrastructure.auth.dto.RefreshTokenDto;
-import ddog.mungleserver.infrastructure.auth.dto.ResponseDto;
-import ddog.mungleserver.infrastructure.auth.dto.ResponseStatus;
+import ddog.mungleserver.global.presentation.ResponseDto;
+import ddog.mungleserver.global.presentation.ResponseStatus;
 import ddog.mungleserver.infrastructure.auth.dto.TokenInfoDto;
 import ddog.mungleserver.infrastructure.auth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
