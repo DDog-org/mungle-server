@@ -34,7 +34,9 @@ public class OAuthService {
         String email = kakaoUserInfo.get("email").toString();
         Provider provider = Provider.KAKAO;
 
-        if (customerRepository.notExistsAccountByEmailAndProvider(email, provider)) {
+        if (!customerRepository.checkExistsAccountBy(email, provider)) {
+            /* 추후에 만약 회원이 없다면 회원가입 페이지로 보낼 수 있도록 로직 변경하며,
+            * saveAccount() 는 회원가입에서 등록했을 때 동작하도록 로직 변경해줘야 함. */
             saveAccount(kakaoUserInfo, email);
         }
 

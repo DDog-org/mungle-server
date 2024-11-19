@@ -11,9 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerJpaRepository extends JpaRepository<CustomerJpaEntity, Long> {
 
-    @Query("select case when count(a) = 0 then true else false end from Customer a where a.email = :email and a.provider = :provider")
-    boolean notExistsAccountByEmailAndProvider(String email, Provider provider);
-
     boolean existsByEmailAndProvider(String email, Provider provider);
 
     Optional<CustomerJpaEntity> findByEmailAndProvider(String email, Provider provider);

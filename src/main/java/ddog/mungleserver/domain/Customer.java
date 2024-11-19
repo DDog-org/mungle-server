@@ -7,13 +7,12 @@ import lombok.*;
 @Getter
 @Builder
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class Customer {
 
-    private Long id;
-    private String email;
-    private String nickname;
-    private Provider provider;
-    private Role role;
+    private final Long id;
+    private final String email;
+    private final String nickname;
+    private final Provider provider;
+    private final Role role;
 
 }

@@ -16,17 +16,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private final CustomerJpaRepository customerJpaRepository;
 
     @Override
-    public boolean notExistsAccountByEmailAndProvider(String email, Provider provider) {
-        return customerJpaRepository.notExistsAccountByEmailAndProvider(email, provider);
-    }
-
-    @Override
-    public boolean existsByEmailAndProvider(String email, Provider provider) {
+    public boolean checkExistsAccountBy(String email, Provider provider) {
         return customerJpaRepository.existsByEmailAndProvider(email, provider);
     }
 
     @Override
-    public Customer findByEmailAndProvider(String email, Provider provider) {
+    public Customer findCustomerBy(String email, Provider provider) {
         return customerJpaRepository.findByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new CustomerException(CustomerExceptionType.CUSTOMER_NOT_EXIST))
                 .toModel();

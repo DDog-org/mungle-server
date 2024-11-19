@@ -87,7 +87,7 @@ public class JwtTokenProvider {
         String email = subjectParts[0];
         Provider provider = subjectParts.length > 1 ? Provider.valueOf(subjectParts[1]) : null;
 
-        if (!customerRepository.existsByEmailAndProvider(email, provider)) {
+        if (!customerRepository.checkExistsAccountBy(email, provider)) {
             throw new CustomerException(CustomerExceptionType.CUSTOMER_NOT_EXIST);
         }
 
