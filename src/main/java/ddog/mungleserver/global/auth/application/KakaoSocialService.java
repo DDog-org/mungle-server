@@ -2,6 +2,8 @@ package ddog.mungleserver.global.auth.application;
 
 import com.nimbusds.jose.shaded.gson.JsonElement;
 import com.nimbusds.jose.shaded.gson.JsonParser;
+import ddog.mungleserver.global.auth.exception.AuthException;
+import ddog.mungleserver.global.auth.exception.enums.AuthExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,12 +28,18 @@ public class KakaoSocialService {
             if (kakaoServerConnection.getResponseCode() == 200) {
                 return getKakaoUserInfoResponse(kakaoServerConnection);
             }
-            /* 추후에 RESPONSE_CODE_ERROR 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.RESPONSE_CODE_ERROR);
         } catch (IOException e) {
-            /* 추후에 FAILED_TO_RETRIEVE_KAKAO_USER_INFO 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.FAILED_TO_RETRIEVE_KAKAO_USER_INFO);
         }
+    }
+
+    private static HttpURLConnection getKakaoServerConnectionForTokenInfo(String kakaoAccessToken) throws IOException {
+        URL url = new URL(KAKAO_TOKEN_INFO_URL);
+        HttpURLConnection kakaoServerConnection = (HttpURLConnection) url.openConnection();
+        kakaoServerConnection.setRequestMethod("GET");
+        kakaoServerConnection.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
+        return kakaoServerConnection;
     }
 
     private HashMap<String, Object> getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException{
@@ -57,13 +65,5 @@ public class KakaoSocialService {
         }
         br.close();
         return responseBody.toString();
-    }
-
-    private static HttpURLConnection getKakaoServerConnectionForTokenInfo(String kakaoAccessToken) throws IOException {
-        URL url = new URL(KAKAO_TOKEN_INFO_URL);
-        HttpURLConnection kakaoServerConnection = (HttpURLConnection) url.openConnection();
-        kakaoServerConnection.setRequestMethod("GET");
-        kakaoServerConnection.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
-        return kakaoServerConnection;
     }
 }
