@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KakaoAccessTokenDto {
-    private String kakaoAccessToken;
     private String loginType;
 }

@@ -85,9 +85,9 @@ public class JwtTokenProvider {
 
         String[] subjectParts = claims.getSubject().split(",");
         String email = subjectParts[0];
-        Provider provider = subjectParts.length > 1 ? Provider.valueOf(subjectParts[1]) : null;
+        Role role = subjectParts.length > 1 ? Role.valueOf(subjectParts[1]) : null;
 
-        if (!accountRepository.checkExistsAccountBy(email, provider)) {
+        if (!accountRepository.checkExistsAccountBy(email, role)) {
             throw new AccountException(AccountExceptionType.ACCOUNT_EXCEPTION_TYPE);
         }
 
