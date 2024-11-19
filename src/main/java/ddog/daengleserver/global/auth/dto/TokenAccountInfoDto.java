@@ -2,7 +2,7 @@ package ddog.daengleserver.global.auth.dto;
 
 import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.enums.Role;
-import ddog.daengleserver.infrastructure.jpa.CustomerJpaEntity;
+import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,12 +16,12 @@ public class TokenAccountInfoDto {
     private Role role;
 
     @Builder
-    public TokenAccountInfoDto(CustomerJpaEntity customerJpaEntity) {
-        this.id = customerJpaEntity.getId();
-        this.email = customerJpaEntity.getEmail();
-        this.nickname = customerJpaEntity.getNickname();
-        this.provider = customerJpaEntity.getProvider();
-        this.role = customerJpaEntity.getRole();
+    public TokenAccountInfoDto(AccountJpaEntity accountJpaEntity) {
+        this.id = accountJpaEntity.getId();
+        this.email = accountJpaEntity.getEmail();
+        this.nickname = accountJpaEntity.getNickname();
+        this.provider = accountJpaEntity.getProvider();
+        this.role = accountJpaEntity.getRole();
     }
 
     @Getter

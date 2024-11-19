@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure.jpa;
 
-import ddog.daengleserver.domain.Customer;
+import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.enums.Role;
 import jakarta.persistence.*;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Customer")
-public class CustomerJpaEntity {
+public class AccountJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +29,18 @@ public class CustomerJpaEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    public static CustomerJpaEntity from(Customer customer) {
-        CustomerJpaEntity customerJpaEntity = new CustomerJpaEntity();
-        customerJpaEntity.id = customer.getId();
-        customerJpaEntity.email = customer.getEmail();
-        customerJpaEntity.nickname = customer.getNickname();
-        customerJpaEntity.provider = customer.getProvider();
-        customerJpaEntity.role = customer.getRole();
-        return customerJpaEntity;
+    public static AccountJpaEntity from(Account account) {
+        return AccountJpaEntity.builder()
+                .id(account.getId())
+                .email(account.getEmail())
+                .nickname(account.getNickname())
+                .provider(account.getProvider())
+                .role(account.getRole())
+                .build();
     }
 
-    public Customer toModel() {
-        return Customer.builder()
+    public Account toModel() {
+        return Account.builder()
                 .id(this.id)
                 .email(this.email)
                 .nickname(this.nickname)

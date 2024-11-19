@@ -1,4 +1,4 @@
 package ddog.daengleserver.application;
 
-public class CustomerService {
+public class AccountService {
 }

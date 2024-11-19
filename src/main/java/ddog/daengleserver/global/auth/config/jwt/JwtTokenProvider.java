@@ -1,12 +1,12 @@
 package ddog.daengleserver.global.auth.config.jwt;
 
-import ddog.daengleserver.application.repository.CustomerRepository;
+import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
 import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.enums.Role;
-import ddog.daengleserver.implementation.CustomerException;
-import ddog.daengleserver.implementation.enums.CustomerExceptionType;
+import ddog.daengleserver.implementation.AccountException;
+import ddog.daengleserver.implementation.enums.AccountExceptionType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -29,16 +29,16 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Key key;
-    private final CustomerRepository customerRepository;
+    private final AccountRepository accountRepository;
     /* accessToken 만료 시간 */
     private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
     private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret, CustomerRepository customerRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret, AccountRepository accountRepository) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.customerRepository = customerRepository;
+        this.accountRepository = accountRepository;
     }
 
     public TokenInfoDto generateToken(Authentication authentication, Role role) {
@@ -87,8 +87,8 @@ public class JwtTokenProvider {
         String email = subjectParts[0];
         Provider provider = subjectParts.length > 1 ? Provider.valueOf(subjectParts[1]) : null;
 
-        if (!customerRepository.checkExistsAccountBy(email, provider)) {
-            throw new CustomerException(CustomerExceptionType.CUSTOMER_NOT_EXIST);
+        if (!accountRepository.checkExistsAccountBy(email, provider)) {
+            throw new AccountException(AccountExceptionType.ACCOUNT_EXCEPTION_TYPE);
         }
 
         return new UsernamePasswordAuthenticationToken(accessToken, authorities);

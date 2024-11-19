@@ -1,4 +1,4 @@
 package ddog.daengleserver.presentation;
 
-public class CustomController {
+public class AccountController {
 }

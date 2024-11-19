@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class Customer {
+public class Account {
 
     private final Long id;
     private final String email;

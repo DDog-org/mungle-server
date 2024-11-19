@@ -1,7 +1,7 @@
 package ddog.daengleserver.global.auth.application;
 
-import ddog.daengleserver.application.repository.CustomerRepository;
-import ddog.daengleserver.domain.Customer;
+import ddog.daengleserver.application.repository.AccountRepository;
+import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.jwt.JwtTokenProvider;
 import ddog.daengleserver.global.auth.dto.RefreshTokenDto;
@@ -28,7 +28,7 @@ public class OAuthService {
 
     public static final String ROLE = "ROLE_";
     private final KakaoSocialService kakaoSocialService;
-    private final CustomerRepository customerRepository;
+    private final AccountRepository accountRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     public TokenInfoDto kakaoOAuthLogin(String kakaoAccessToken, String loginType) {
@@ -36,35 +36,34 @@ public class OAuthService {
         HashMap<String, Object> kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(kakaoAccessToken);
 
         String email = kakaoUserInfo.get("email").toString();
-        Provider provider = Provider.KAKAO;
 
         Role role = fromString(loginType);
-        if (!customerRepository.checkExistsAccountBy(email, provider)) {
+        if (!accountRepository.checkExistsAccountBy(email, role)) {
             /* 추후에 만약 회원이 없다면 회원가입 페이지로 보낼 수 있도록 로직 변경하며,
             * saveAccount() 는 회원가입에서 등록했을 때 동작하도록 로직 변경해줘야 함. */
             saveAccount(kakaoUserInfo, email, role);
         }
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, String.valueOf(provider), ROLE + loginType), role);
+        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + loginType), role);
     }
 
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
         String nickname = kakaoUserInfo.get("nickname").toString();
-        Customer customer = Customer.builder()
+        Account account = Account.builder()
                 .provider(Provider.KAKAO)
                 .email(email)
                 .nickname(nickname)
                 .role(role)
                 .build();
-        customerRepository.save(customer);
+        accountRepository.save(account);
     }
 
-    private Authentication getAuthentication(String email, String provider, String role) {
+    private Authentication getAuthentication(String email, String role) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role));
 
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + provider, null, authorities);
+                = new UsernamePasswordAuthenticationToken(email + "," + role, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
@@ -78,9 +77,8 @@ public class OAuthService {
 
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
-        String provider = tokenInfo.getProvider();
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, provider, ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER);
+        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER);
     }
 
     public static Role fromString(String roleString) {
