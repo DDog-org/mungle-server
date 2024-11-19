@@ -44,7 +44,7 @@ public class OAuthService {
             saveAccount(kakaoUserInfo, email, role);
         }
 
-        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + loginType), role);
+        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + loginType, loginType), role);
     }
 
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
@@ -58,12 +58,12 @@ public class OAuthService {
         accountRepository.save(account);
     }
 
-    private Authentication getAuthentication(String email, String role) {
+    private Authentication getAuthentication(String email, String role, String loginType) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role));
 
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + role, null, authorities);
+                = new UsernamePasswordAuthenticationToken(email + "," + loginType, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
@@ -78,7 +78,7 @@ public class OAuthService {
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
 
-        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER);
+        return jwtTokenProvider.generateToken(getAuthentication(email,ROLE + refreshTokenDto.getLoginType(), refreshTokenDto.getLoginType()), Role.CUSTOMER);
     }
 
     public static Role fromString(String roleString) {
