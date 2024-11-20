@@ -3,7 +3,6 @@ package ddog.daengleserver.global.auth.config.jwt;
 import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
-import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.implementation.AccountException;
 import ddog.daengleserver.implementation.enums.AccountExceptionType;
@@ -91,10 +90,10 @@ public class JwtTokenProvider {
             throw new AccountException(AccountExceptionType.ACCOUNT_EXCEPTION_TYPE);
         }
 
-        return new UsernamePasswordAuthenticationToken(accessToken, authorities);
+        return new UsernamePasswordAuthenticationToken(accessToken, null, authorities);
     }
 
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
