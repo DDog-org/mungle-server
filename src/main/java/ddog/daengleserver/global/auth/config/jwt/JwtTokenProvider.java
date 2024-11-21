@@ -1,17 +1,16 @@
 package ddog.daengleserver.global.auth.config.jwt;
 
 import ddog.daengleserver.application.repository.AccountRepository;
+import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
-import ddog.daengleserver.global.auth.config.enums.Provider;
-import ddog.daengleserver.global.auth.config.enums.Role;
-import ddog.daengleserver.implementation.AccountException;
-import ddog.daengleserver.implementation.enums.AccountExceptionType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,14 +40,19 @@ public class JwtTokenProvider {
         this.accountRepository = accountRepository;
     }
 
-    public TokenInfoDto generateToken(Authentication authentication, Role role) {
+    public TokenInfoDto generateToken(Authentication authentication, Role role, HttpServletResponse response) {
         String accessToken = createToken(authentication, ACCESSTOKEN_EXPIRATION_TIME);
         String refreshToken = createToken(authentication, REFRESHTOKEN_EXPIRATION_TIME);
+        response.setHeader("Set-Cookie", ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .maxAge(REFRESHTOKEN_EXPIRATION_TIME)
+                .path("/")
+                .sameSite("None")
+                .build().toString());
 
         return TokenInfoDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .role(role)
                 .build();
     }
@@ -83,18 +87,10 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        String[] subjectParts = claims.getSubject().split(",");
-        String email = subjectParts[0];
-        Role role = subjectParts.length > 1 ? Role.valueOf(subjectParts[1]) : null;
-
-        if (!accountRepository.checkExistsAccountBy(email, role)) {
-            throw new AccountException(AccountExceptionType.ACCOUNT_EXCEPTION_TYPE);
-        }
-
-        return new UsernamePasswordAuthenticationToken(accessToken, authorities);
+        return new UsernamePasswordAuthenticationToken(accessToken, null, authorities);
     }
 
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -134,16 +130,15 @@ public class JwtTokenProvider {
         if (token.startsWith("Bearer ")) {
             String resolvedToken = token.substring(7).trim();
             Claims claims = parseClaims(resolvedToken);
-            String[] subjectParts = claims.getSubject().split(",");
-            if (subjectParts.length > 1) {
-                String email = subjectParts[0];
-                String provider = subjectParts[1];
-                return TokenAccountInfoDto.TokenInfo.builder()
-                        .email(email)
-                        .provider(provider)
-                        .build();
-            }
+            String email = claims.getSubject();
+            String role = claims.get("role", String.class);
+
+            return TokenAccountInfoDto.TokenInfo.builder()
+                    .email(email)
+                    .role(role)
+                    .build();
         }
+
         return null;
     }
 }
