@@ -10,6 +10,7 @@ import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
 import ddog.daengleserver.global.auth.exception.AuthException;
 import ddog.daengleserver.global.auth.exception.enums.AuthExceptionType;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,7 @@ public class OAuthService {
         throw new AuthException(AuthExceptionType.UNAVAILABLE_ROLE);
     }
 
-    public TokenInfoDto kakaoOAuthLogin(String kakaoAccessToken, String loginType) {
+    public TokenInfoDto kakaoOAuthLogin(String kakaoAccessToken, String loginType, HttpServletResponse response) {
         /* kakaoAccessToken 정보를 가지고 유저의 닉네임, 이메일 정보를 가져온다. */
         HashMap<String, Object> kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(kakaoAccessToken);
 
@@ -52,7 +53,7 @@ public class OAuthService {
             saveAccount(kakaoUserInfo, email, role);
         }
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + loginType), role);
+        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + loginType), role, response);
     }
 
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
@@ -76,7 +77,7 @@ public class OAuthService {
         return authentication;
     }
 
-    public TokenInfoDto reGenerateAccessToken(RefreshTokenDto refreshTokenDto) {
+    public TokenInfoDto reGenerateAccessToken(RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
             /* 추후에 INVALID_TOKEN 으로 변경 예정 */
@@ -86,6 +87,6 @@ public class OAuthService {
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER);
+        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER, response);
     }
 }

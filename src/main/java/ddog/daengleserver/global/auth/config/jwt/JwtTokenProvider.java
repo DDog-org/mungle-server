@@ -6,9 +6,11 @@ import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,14 +40,19 @@ public class JwtTokenProvider {
         this.accountRepository = accountRepository;
     }
 
-    public TokenInfoDto generateToken(Authentication authentication, Role role) {
+    public TokenInfoDto generateToken(Authentication authentication, Role role, HttpServletResponse response) {
         String accessToken = createToken(authentication, ACCESSTOKEN_EXPIRATION_TIME);
         String refreshToken = createToken(authentication, REFRESHTOKEN_EXPIRATION_TIME);
+        response.setHeader("Set-Cookie", ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .maxAge(REFRESHTOKEN_EXPIRATION_TIME)
+                .path("/")
+                .sameSite("None")
+                .build().toString());
 
         return TokenInfoDto.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .role(role)
                 .build();
     }
