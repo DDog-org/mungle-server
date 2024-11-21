@@ -1,5 +1,6 @@
 package ddog.daengleserver.infrastructure;
 
+import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.global.auth.config.enums.Provider;
 import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;
@@ -15,4 +16,5 @@ public interface AccountJpaRepository extends JpaRepository<AccountJpaEntity, Lo
 
     Optional<AccountJpaEntity> findByEmailAndProvider(String email, Provider provider);
 
+    Optional<AccountJpaEntity> findByEmailAndRole(String email, Role role);
 }

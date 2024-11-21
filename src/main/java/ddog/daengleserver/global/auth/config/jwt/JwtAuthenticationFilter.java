@@ -22,18 +22,20 @@ import java.util.List;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final List<String> excludeUrls = List.of("/api/login"); // 필터 제외 URL
+    /* 필터 제외 URL 리스트 */
+    private final List<String> excludeUrls = List.of(
+            "/api/oauth/kakao", "/api/oauth/refresh-token"
+    );
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = resolveToken((HttpServletRequest) request);
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-
         if (excludeUrls.contains(httpServletRequest.getRequestURI())) {
             chain.doFilter(request, response);
             return;
         }
 
+        String token = resolveToken((HttpServletRequest) request);
         try {
             if (jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);

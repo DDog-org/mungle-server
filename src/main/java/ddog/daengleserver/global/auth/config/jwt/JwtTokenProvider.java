@@ -1,11 +1,9 @@
 package ddog.daengleserver.global.auth.config.jwt;
 
 import ddog.daengleserver.application.repository.AccountRepository;
+import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import ddog.daengleserver.global.auth.dto.TokenInfoDto;
-import ddog.daengleserver.global.auth.config.enums.Role;
-import ddog.daengleserver.implementation.AccountException;
-import ddog.daengleserver.implementation.enums.AccountExceptionType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -82,14 +80,6 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        String[] subjectParts = claims.getSubject().split(",");
-        String email = subjectParts[0];
-        Role role = subjectParts.length > 1 ? Role.valueOf(subjectParts[1]) : null;
-
-        if (!accountRepository.checkExistsAccountBy(email, role)) {
-            throw new AccountException(AccountExceptionType.ACCOUNT_EXCEPTION_TYPE);
-        }
-
         return new UsernamePasswordAuthenticationToken(accessToken, null, authorities);
     }
 
@@ -133,16 +123,15 @@ public class JwtTokenProvider {
         if (token.startsWith("Bearer ")) {
             String resolvedToken = token.substring(7).trim();
             Claims claims = parseClaims(resolvedToken);
-            String[] subjectParts = claims.getSubject().split(",");
-            if (subjectParts.length > 1) {
-                String email = subjectParts[0];
-                String provider = subjectParts[1];
-                return TokenAccountInfoDto.TokenInfo.builder()
-                        .email(email)
-                        .provider(provider)
-                        .build();
-            }
+            String email = claims.getSubject();
+            String role = claims.get("role", String.class);
+
+            return TokenAccountInfoDto.TokenInfo.builder()
+                    .email(email)
+                    .role(role)
+                    .build();
         }
+
         return null;
     }
 }

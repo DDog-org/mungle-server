@@ -52,11 +52,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/login", "/api/get-info").permitAll()
+                        .requestMatchers("/**").permitAll() // 임시로 모든 API 에 대해 통과
                         .requestMatchers("/api/oauth/**").permitAll()  // Kakao 소셜 로그인을 위한 URL 허용
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/customer").hasRole("CUSTOMER")
-                        .requestMatchers("/groomer").hasRole("GROOMER"))
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
+                        .requestMatchers("/groomer/**").hasRole("GROOMER"))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

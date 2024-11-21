@@ -28,6 +28,6 @@ public class TokenAccountInfoDto {
     @Builder
     public static class TokenInfo {
         private String email;
-        private String provider;
+        private String role;
     }
 }
