@@ -15,6 +15,7 @@ public class UserAddressAndPetsInfo {
     @Getter
     @Builder
     public static class PetInfo {
+        private Long petId;
         private String petImage;
         private String petName;
     }

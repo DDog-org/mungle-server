@@ -1,5 +1,6 @@
 package ddog.daengleserver.domain.estimate;
 
+import ddog.daengleserver.presentation.dto.request.GroomingEstimateReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GroomingEstimate {
 
+    private Long groomingEstimateId;
     private Long userId;
     private Long petId;
     private LocalDateTime reservedDate;
@@ -26,4 +28,21 @@ public class GroomingEstimate {
     private LocalDateTime createdAt;
     private String overallOpinion;
 
+    public static GroomingEstimate createGeneralGroomingEstimate(GroomingEstimateReq request) {
+        return GroomingEstimate.builder()
+                .groomingEstimateId(null)
+                .userId(request.getUserId())
+                .petId(request.getPetId())
+                .reservedDate(request.getReservedDate())
+                .desiredStyle(request.getDesiredStyle())
+                .requirements(request.getRequirements())
+                .address(request.getAddress())
+                .proposal(Proposal.GENERAL)
+                .designatedGroomerId(null)
+                .groomerId(null)
+                .status(EstimateStatus.NEW)
+                .createdAt(LocalDateTime.now())
+                .overallOpinion(null)
+                .build();
+    }
 }

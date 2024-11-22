@@ -28,6 +28,7 @@ public class User {
         List<UserAddressAndPetsInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
             petInfos.add(UserAddressAndPetsInfo.PetInfo.builder()
+                    .petId(pet.getPetId())
                     .petImage(pet.getPetImage())
                     .petName(pet.getPetName())
                     .build());
