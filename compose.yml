@@ -1,0 +1,24 @@
+services:
+  daengle-server:
+    container_name: server
+    build: .
+    ports:
+      - "80:8080"
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+
+
+  mysql-server:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd1234
+      MYSQL_DATABASE: daengle-docker
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - 3307:3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping" ]
+      interval: 5s
+      retries: 10
