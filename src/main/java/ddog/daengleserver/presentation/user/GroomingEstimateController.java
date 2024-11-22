@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation;
+package ddog.daengleserver.presentation.user;
 
 import ddog.daengleserver.application.GroomingEstimateService;
 import ddog.daengleserver.global.common.CommonResponseEntity;

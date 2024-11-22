@@ -1,4 +1,4 @@
-package ddog.daengleserver.domain;
+package ddog.daengleserver.domain.estimate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
