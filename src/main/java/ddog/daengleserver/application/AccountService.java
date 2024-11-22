@@ -4,13 +4,14 @@ import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.presentation.dto.response.AccountInfoDto;
+import ddog.daengleserver.presentation.usecase.AccountUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements AccountUseCase {
 
     private final AccountRepository accountRepository;
 
