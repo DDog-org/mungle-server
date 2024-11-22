@@ -1,10 +1,10 @@
 package ddog.daengleserver.presentation;
 
-import ddog.daengleserver.application.AccountService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.request.UpdateNicknameDto;
 import ddog.daengleserver.presentation.dto.response.AccountInfoDto;
+import ddog.daengleserver.presentation.usecase.AccountUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import static ddog.daengleserver.presentation.enums.AccountControllerResp.UPDATE
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountService accountService;
+    private final AccountUseCase accountService;
 
     @GetMapping("/account-info")
     public CommonResponseEntity<AccountInfoDto> getAccountInfo(PayloadDto payloadDto) {
