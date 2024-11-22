@@ -4,7 +4,8 @@ import ddog.daengleserver.application.repository.GroomingEstimateRepository;
 import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.presentation.dto.request.GroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.request.DesignationGroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.request.GeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.dto.response.UserAddressAndPetsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,12 @@ public class GroomingEstimateService {
     }
 
     @Transactional
-    public void createGeneralGroomingEstimate(GroomingEstimateReq groomingEstimateReq) {
-        groomingEstimateRepository.save(GroomingEstimate.createGeneralGroomingEstimate(groomingEstimateReq));
+    public void createGeneralGroomingEstimate(GeneralGroomingEstimateReq generalGroomingEstimateReq) {
+        groomingEstimateRepository.save(GroomingEstimate.createGeneralGroomingEstimate(generalGroomingEstimateReq));
+    }
+
+    @Transactional
+    public void createDesignationGroomingEstimate(DesignationGroomingEstimateReq designationGroomingEstimateReq) {
+        groomingEstimateRepository.save(GroomingEstimate.createDesignationGroomingEstimate(designationGroomingEstimateReq));
     }
 }

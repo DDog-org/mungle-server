@@ -30,7 +30,6 @@ public class GroomingEstimateJpaEntity {
 
     @Enumerated(EnumType.STRING)
     private Proposal proposal;
-    private Long designatedGroomerId;
     private Long groomerId;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +47,6 @@ public class GroomingEstimateJpaEntity {
                 .requirements(this.requirements)
                 .address(this.address)
                 .proposal(this.proposal)
-                .designatedGroomerId(this.designatedGroomerId)
                 .groomerId(this.groomerId)
                 .status(this.status)
                 .createdAt(this.createdAt)
@@ -66,7 +64,6 @@ public class GroomingEstimateJpaEntity {
                 .requirements(groomingEstimate.getRequirements())
                 .address(groomingEstimate.getAddress())
                 .proposal(groomingEstimate.getProposal())
-                .designatedGroomerId(groomingEstimate.getDesignatedGroomerId())
                 .groomerId(groomingEstimate.getGroomerId())
                 .status(groomingEstimate.getStatus())
                 .createdAt(groomingEstimate.getCreatedAt())

@@ -6,10 +6,11 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GroomingEstimateReq {
+public class DesignationGroomingEstimateReq {
 
     private Long userId;
     private Long petId;
+    private Long groomerId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
