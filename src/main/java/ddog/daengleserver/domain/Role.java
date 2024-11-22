@@ -1,4 +1,4 @@
-package ddog.daengleserver.global.auth.config.enums;
+package ddog.daengleserver.domain;
 
 public enum Role {
 

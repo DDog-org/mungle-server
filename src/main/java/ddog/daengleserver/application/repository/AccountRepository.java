@@ -1,7 +1,7 @@
 package ddog.daengleserver.application.repository;
 
 import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Role;
 
 public interface AccountRepository {
 

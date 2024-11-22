@@ -1,7 +1,7 @@
 package ddog.daengleserver.global.auth.dto;
 
-import ddog.daengleserver.global.auth.config.enums.Provider;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Provider;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package ddog.daengleserver.infrastructure.jpa;
 
 import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.global.auth.config.enums.Provider;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Provider;
+import ddog.daengleserver.domain.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

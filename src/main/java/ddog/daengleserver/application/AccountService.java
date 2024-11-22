@@ -2,7 +2,7 @@ package ddog.daengleserver.application;
 
 import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.presentation.dto.response.AccountInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

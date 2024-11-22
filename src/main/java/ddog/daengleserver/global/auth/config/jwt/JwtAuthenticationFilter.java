@@ -24,7 +24,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
     /* 필터 제외 URL 리스트 */
     private final List<String> excludeUrls = List.of(
-            "/api/oauth/kakao", "/api/oauth/refresh-token"
+            "/api/oauth/kakao", "/api/oauth/refresh-token",
+            "/api/daengle/address-pets-info/1"
     );
 
     @Override
