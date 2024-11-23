@@ -4,5 +4,5 @@ import ddog.daengleserver.domain.User;
 
 public interface UserRepository {
 
-    User findById(long id);
+    User findById(Long accountId);
 }

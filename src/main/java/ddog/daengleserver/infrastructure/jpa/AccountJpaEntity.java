@@ -19,7 +19,6 @@ public class AccountJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
-
     private String email;
     private String nickname;
 

@@ -13,8 +13,8 @@ public class GroomerRepositoryImpl implements GroomerRepository {
     private final GroomerJpaRepository groomerJpaRepository;
 
     @Override
-    public String findAddressById(Long groomerId) {
-        return groomerJpaRepository.findByGroomerId(groomerId)
+    public String findAddressById(Long accountId) {
+        return groomerJpaRepository.findByGroomerId(accountId)
                 .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
                 .getAddress();
     }

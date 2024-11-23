@@ -1,10 +1,7 @@
 package ddog.daengleserver.infrastructure.jpa;
 
 import ddog.daengleserver.domain.Groomer;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +15,12 @@ import lombok.NoArgsConstructor;
 public class GroomerJpaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomerId;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountId")
+    private AccountJpaEntity account;
     private String groomerName;
     private String groomerImage;
     private String address;

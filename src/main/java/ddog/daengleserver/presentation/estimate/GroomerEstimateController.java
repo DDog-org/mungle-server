@@ -1,6 +1,7 @@
 package ddog.daengleserver.presentation.estimate;
 
 import ddog.daengleserver.application.GroomingEstimateService;
+import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.response.GroomingEstimateInfo;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class GroomerEstimateController {
 
     private final GroomingEstimateService groomingEstimateService;
 
-    @GetMapping("/estimate-info/{groomerId}")
-    public CommonResponseEntity<List<GroomingEstimateInfo>> findGroomingEstimateInfos(@PathVariable Long groomerId) {
-        return CommonResponseEntity.success(groomingEstimateService.findGroomingEstimateInfos(groomerId));
+    @GetMapping("/estimate-info")
+    public CommonResponseEntity<List<GroomingEstimateInfo>> findGroomingEstimateInfos(PayloadDto payloadDto) {
+        return CommonResponseEntity.success(groomingEstimateService.findGroomingEstimateInfos(payloadDto.getAccountId()));
     }
 }

@@ -20,7 +20,7 @@ public class PetJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long petId;
-    private Long ownerId;
+    private Long userId;
     private String petName;
     private String petImage;
     private String petSignificant;
@@ -28,7 +28,7 @@ public class PetJpaEntity {
     public Pet toModel() {
         return Pet.builder()
                 .petId(this.petId)
-                .ownerId(this.ownerId)
+                .userId(this.userId)
                 .petName(this.petName)
                 .petImage(this.petImage)
                 .petSignificant(this.petSignificant)

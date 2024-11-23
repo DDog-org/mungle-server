@@ -24,8 +24,8 @@ public class GroomingEstimateService {
     private final GroomingEstimateRepository groomingEstimateRepository;
 
     @Transactional(readOnly = true)
-    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long userId) {
-        User user = userRepository.findById(userId);
+    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long accountId) {
+        User user = userRepository.findById(accountId);
         return user.getAddressAndPetsInfo();
     }
 
@@ -40,8 +40,8 @@ public class GroomingEstimateService {
     }
 
     @Transactional
-    public List<GroomingEstimateInfo> findGroomingEstimateInfos(Long groomerId) {
-        String address = groomerRepository.findAddressById(groomerId);
+    public List<GroomingEstimateInfo> findGroomingEstimateInfos(Long accountId) {
+        String address = groomerRepository.findAddressById(accountId);
         List<GroomingEstimate> groomingEstimates =  groomingEstimateRepository.findGroomingEstimatesByAddress(address);
         return GroomingEstimate.withGroomingEstimate(groomingEstimates);
     }

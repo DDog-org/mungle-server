@@ -12,8 +12,8 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public User findById(long userId) {
-        return userJpaRepository.findById(userId)
+    public User findById(Long accountId) {
+        return userJpaRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("user not found"))
                 .toModel();
     }

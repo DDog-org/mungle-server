@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class Groomer {
 
     private Long groomerId;
+    private Long accountId;
     private String groomerName;
     private String groomerImage;
     private String address;
