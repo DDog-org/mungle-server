@@ -1,24 +1,21 @@
-package ddog.daengleserver.presentation.dto.request;
+package ddog.daengleserver.presentation.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-public class DesignationGroomingEstimateReq {
+@Builder
+public class GroomingEstimateInfo {
 
-    private Long userId;
-    private Long petId;
-    private String userImage;
+    private Long groomingEstimateId;
     private String nickname;
+    private String userImage;
+    private String address;
     private String petSignificant;
-    private Long groomerId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
-    private String desiredStyle;
-    private String requirements;
-    private String address;
-
 }

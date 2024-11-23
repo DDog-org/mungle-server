@@ -25,6 +25,7 @@ public class UserJpaEntity {
     private Long userId;
     private String username;
     private String userImage;
+    private String nickname;
     private String address;
 
     @OneToMany(mappedBy = "ownerId")
@@ -35,12 +36,13 @@ public class UserJpaEntity {
                 .userId(this.userId)
                 .username(this.username)
                 .userImage(this.userImage)
+                .nickname(this.nickname)
                 .address(this.address)
                 .pets(toPetModel())
                 .build();
     }
 
-    public UserJpaEntity from(User user) {
+    public static UserJpaEntity from(User user) {
         return UserJpaEntity.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())

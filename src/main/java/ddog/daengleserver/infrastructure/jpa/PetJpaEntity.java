@@ -23,6 +23,7 @@ public class PetJpaEntity {
     private Long ownerId;
     private String petName;
     private String petImage;
+    private String petSignificant;
 
     public Pet toModel() {
         return Pet.builder()
@@ -30,6 +31,7 @@ public class PetJpaEntity {
                 .ownerId(this.ownerId)
                 .petName(this.petName)
                 .petImage(this.petImage)
+                .petSignificant(this.petSignificant)
                 .build();
     }
 }

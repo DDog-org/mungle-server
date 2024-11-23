@@ -7,8 +7,10 @@ import java.util.List;
 
 @Getter
 @Builder
-public class UserAddressAndPetsInfo {
+public class UserAndPetsInfo {
 
+    private String userImage;
+    private String nickname;
     private String address;
     private List<PetInfo> petInfos;
 
@@ -18,5 +20,7 @@ public class UserAddressAndPetsInfo {
         private Long petId;
         private String petImage;
         private String petName;
+        private String petSignificant;
+
     }
 }

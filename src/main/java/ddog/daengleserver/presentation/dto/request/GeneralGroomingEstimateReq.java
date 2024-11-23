@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 public class GeneralGroomingEstimateReq {
 
     private Long userId;
+    private String userImage;
+    private String nickname;
     private Long petId;
+    private String petSignificant;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;

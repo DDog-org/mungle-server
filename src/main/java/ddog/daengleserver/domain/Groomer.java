@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet {
+public class Groomer {
 
-    private Long petId;
-    private Long ownerId;
-    private String petName;
-    private String petImage;
-    private String petSignificant;
+    private Long groomerId;
+    private String groomerName;
+    private String groomerImage;
+    private String address;
 
 }

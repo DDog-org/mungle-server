@@ -71,6 +71,9 @@ public class OAuthService {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(role));
 
+        /* 추후에 email과 role 정보를 가지고 계정의 Id 값을 넣어서 유저의 Id 정보를 받아온 뒤,
+        * Principal 에 담아준 뒤, JWT 토큰에 정보를 담아줄 예정. */
+
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(email, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);

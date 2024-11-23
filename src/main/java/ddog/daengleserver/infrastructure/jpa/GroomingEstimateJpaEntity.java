@@ -23,6 +23,9 @@ public class GroomingEstimateJpaEntity {
     private Long groomingEstimateId;
     private Long userId;
     private Long petId;
+    private String userImage;
+    private String nickname;
+    private String petSignificant;
     private LocalDateTime reservedDate;
     private String desiredStyle;
     private String requirements;
@@ -42,6 +45,9 @@ public class GroomingEstimateJpaEntity {
                 .groomingEstimateId(this.groomingEstimateId)
                 .userId(this.userId)
                 .petId(this.petId)
+                .userImage(this.userImage)
+                .nickname(this.nickname)
+                .petSignificant(this.petSignificant)
                 .reservedDate(this.reservedDate)
                 .desiredStyle(this.desiredStyle)
                 .requirements(this.requirements)
@@ -59,6 +65,9 @@ public class GroomingEstimateJpaEntity {
                 .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
                 .userId(groomingEstimate.getUserId())
                 .petId(groomingEstimate.getPetId())
+                .userImage(groomingEstimate.getUserImage())
+                .nickname(groomingEstimate.getNickname())
+                .petSignificant(groomingEstimate.getPetSignificant())
                 .reservedDate(groomingEstimate.getReservedDate())
                 .desiredStyle(groomingEstimate.getDesiredStyle())
                 .requirements(groomingEstimate.getRequirements())

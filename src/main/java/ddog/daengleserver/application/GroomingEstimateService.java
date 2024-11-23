@@ -1,25 +1,30 @@
 package ddog.daengleserver.application;
 
+import ddog.daengleserver.application.repository.GroomerRepository;
 import ddog.daengleserver.application.repository.GroomingEstimateRepository;
 import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.presentation.dto.request.DesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.dto.request.GeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.dto.response.UserAddressAndPetsInfo;
+import ddog.daengleserver.presentation.dto.response.GroomingEstimateInfo;
+import ddog.daengleserver.presentation.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GroomingEstimateService {
 
     private final UserRepository userRepository;
+    private final GroomerRepository groomerRepository;
     private final GroomingEstimateRepository groomingEstimateRepository;
 
     @Transactional(readOnly = true)
-    public UserAddressAndPetsInfo getUserAddressAndPetsInfoById(Long userId) {
+    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long userId) {
         User user = userRepository.findById(userId);
         return user.getAddressAndPetsInfo();
     }
@@ -32,5 +37,12 @@ public class GroomingEstimateService {
     @Transactional
     public void createDesignationGroomingEstimate(DesignationGroomingEstimateReq designationGroomingEstimateReq) {
         groomingEstimateRepository.save(GroomingEstimate.createDesignationGroomingEstimate(designationGroomingEstimateReq));
+    }
+
+    @Transactional
+    public List<GroomingEstimateInfo> findGroomingEstimateInfos(Long groomerId) {
+        String address = groomerRepository.findAddressById(groomerId);
+        List<GroomingEstimate> groomingEstimates =  groomingEstimateRepository.findGroomingEstimatesByAddress(address);
+        return GroomingEstimate.withGroomingEstimate(groomingEstimates);
     }
 }
