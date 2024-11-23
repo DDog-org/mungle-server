@@ -19,7 +19,7 @@ public class Order {
     private Long itemId;
     private String orderUid;
     private Long userId;
-    private Long paymentId;
+    private Payment payment;
 
     public static Order createBy(PostOrderReq postOrderReq, Payment payment) {
         return Order.builder()
@@ -28,7 +28,7 @@ public class Order {
                 .itemId(postOrderReq.getItemId())
                 .orderUid(String.valueOf(UUID.randomUUID()))
                 .userId(postOrderReq.getUserId())
-                .paymentId(payment.getPaymentId())
+                .payment(payment)
                 .build();
     }
 }

@@ -22,7 +22,10 @@ public class OrderJpaEntity {
     private Long itemId;
     private String orderUid;
     private Long userId;
-    private Long paymentId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private PaymentJpaEntity payment;
 
     public Order toModel() {
         return Order.builder()
@@ -31,19 +34,20 @@ public class OrderJpaEntity {
                 .itemId(this.itemId)
                 .orderUid(this.orderUid)
                 .userId(this.userId)
-                .paymentId(this.paymentId)
+                .payment(this.payment.toModel())
                 .build();
     }
 
     public static OrderJpaEntity fromModel(Order order) {
+        Payment payment = order.getPayment();
+
         return OrderJpaEntity.builder()
                 .orderId(order.getOrderId())
                 .price(order.getPrice())
                 .itemId(order.getItemId())
                 .orderUid(order.getOrderUid())
                 .userId(order.getUserId())
-                .paymentId(order.getPaymentId())
+                .payment(PaymentJpaEntity.fromModel(payment))
                 .build();
     }
-
 }

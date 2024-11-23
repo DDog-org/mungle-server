@@ -19,7 +19,7 @@ public class OrderService implements OrderUseCase {
 
     @Transactional
     public void processOrder(PostOrderReq postOrderReq) {
-        Payment payment = Payment.saveTemporaryHistoryBy(postOrderReq);
+        Payment payment = Payment.createTemporaryHistoryBy(postOrderReq);
         paymentRepository.save(payment);
 
         Order order = Order.createBy(postOrderReq, payment);

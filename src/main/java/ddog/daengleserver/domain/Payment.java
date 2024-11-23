@@ -21,7 +21,7 @@ public class Payment {
 
     private PaymentRepository paymentRepository;
 
-    public static Payment saveTemporaryHistoryBy(PostOrderReq postOrderReq) {
+    public static Payment createTemporaryHistoryBy(PostOrderReq postOrderReq) {
         return Payment.builder()
                 .paymentId(null)
                 .price(postOrderReq.getPrice())
