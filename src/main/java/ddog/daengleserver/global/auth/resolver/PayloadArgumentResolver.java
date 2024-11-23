@@ -1,6 +1,6 @@
 package ddog.daengleserver.global.auth.resolver;
 
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.global.auth.config.jwt.JwtTokenProvider;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.auth.exception.AuthException;

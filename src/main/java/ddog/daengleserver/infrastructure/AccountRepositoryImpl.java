@@ -2,7 +2,7 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.implementation.AccountException;
 import ddog.daengleserver.implementation.enums.AccountExceptionType;
 import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;

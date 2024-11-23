@@ -1,6 +1,6 @@
 package ddog.daengleserver.presentation.dto.response;
 
-import ddog.daengleserver.global.auth.config.enums.Provider;
+import ddog.daengleserver.domain.Provider;
 import lombok.Builder;
 import lombok.Data;
 

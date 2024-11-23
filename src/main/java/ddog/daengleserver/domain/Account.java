@@ -1,7 +1,5 @@
 package ddog.daengleserver.domain;
 
-import ddog.daengleserver.global.auth.config.enums.Provider;
-import ddog.daengleserver.global.auth.config.enums.Role;
 import ddog.daengleserver.presentation.dto.response.AccountInfoDto;
 import lombok.Builder;
 import lombok.Getter;

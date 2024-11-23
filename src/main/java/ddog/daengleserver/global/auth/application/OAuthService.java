@@ -2,8 +2,8 @@ package ddog.daengleserver.global.auth.application;
 
 import ddog.daengleserver.application.repository.AccountRepository;
 import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.global.auth.config.enums.Provider;
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Provider;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.global.auth.config.jwt.JwtTokenProvider;
 import ddog.daengleserver.global.auth.dto.RefreshTokenDto;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
