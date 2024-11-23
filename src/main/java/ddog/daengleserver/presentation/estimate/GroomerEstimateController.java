@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
-import static ddog.daengleserver.presentation.enums.GroomerEstimateControllerResp.GENERAL_REGISTRATION_COMPLETED;
+import static ddog.daengleserver.presentation.enums.GroomerEstimateControllerResp.REGISTRATION_COMPLETED;
 
 @RestController
 @RequestMapping("/api/groomer")
@@ -31,9 +31,9 @@ public class GroomerEstimateController {
         return success(groomingEstimateService.getGroomingEstimateDetailInfo(groomingEstimateId));
     }
 
-    @PostMapping("/general-estimate")
-    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
-        groomingEstimateService.createGroomerGeneralGroomingEstimate(request, payloadDto.getAccountId());
-        return success(GENERAL_REGISTRATION_COMPLETED.getMessage());
+    @PostMapping("/estimate")
+    public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
+        groomingEstimateService.createGroomerGroomingEstimate(request, payloadDto.getAccountId());
+        return success(REGISTRATION_COMPLETED.getMessage());
     }
 }

@@ -33,13 +33,13 @@ public class GroomingEstimateService {
     }
 
     @Transactional
-    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq userGeneralGroomingEstimateReq) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(userGeneralGroomingEstimateReq));
+    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request) {
+        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(request));
     }
 
     @Transactional
-    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq userDesignationGroomingEstimateReq) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserDesignationGroomingEstimate(userDesignationGroomingEstimateReq));
+    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request) {
+        groomingEstimateRepository.save(GroomingEstimate.createUserDesignationGroomingEstimate(request));
     }
 
     @Transactional(readOnly = true)
@@ -56,9 +56,9 @@ public class GroomingEstimateService {
     }
 
     @Transactional
-    public void createGroomerGeneralGroomingEstimate(GroomerGroomingEstimateReq groomerGroomingEstimateReq, Long accountId) {
-        GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomerGroomingEstimateReq.getGroomingEstimateId());
+    public void createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Long accountId) {
+        GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(request.getGroomingEstimateId());
         Groomer groomer = groomerRepository.getGroomerById(accountId);
-        groomingEstimateRepository.save(groomingEstimate.createGroomerGeneralGroomingEstimate(groomerGroomingEstimateReq, groomer));
+        groomingEstimateRepository.save(groomingEstimate.createGroomerGroomingEstimate(request, groomer));
     }
 }

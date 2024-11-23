@@ -128,12 +128,12 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public GroomingEstimate createGroomerGeneralGroomingEstimate(GroomerGroomingEstimateReq request, Groomer groomer) {
+    public GroomingEstimate createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Groomer groomer) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(desiredStyle)
                 .requirements(requirements)
-                .proposal(getProposal())
+                .proposal(proposal)
                 .status(EstimateStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .userId(userId)
