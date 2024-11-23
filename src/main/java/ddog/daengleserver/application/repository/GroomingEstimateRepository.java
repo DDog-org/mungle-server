@@ -9,4 +9,6 @@ public interface GroomingEstimateRepository {
     void save(GroomingEstimate groomingEstimate);
 
     List<GroomingEstimate> findGroomingEstimatesByAddress(String address);
+
+    GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId);
 }

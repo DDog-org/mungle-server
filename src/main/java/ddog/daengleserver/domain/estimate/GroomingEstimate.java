@@ -1,7 +1,9 @@
 package ddog.daengleserver.domain.estimate;
 
+import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.presentation.dto.request.DesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.dto.request.GeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.dto.response.GroomingEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +24,11 @@ public class GroomingEstimate {
     private Long userId;
     private Long petId;
     private String userImage;
+    private String petImage;
     private String nickname;
+    private String petName;
+    private int petBirth;
+    private Weight petWeight;
     private String petSignificant;
     private LocalDateTime reservedDate;
     private String desiredStyle;
@@ -40,7 +46,11 @@ public class GroomingEstimate {
                 .userId(request.getUserId())
                 .petId(request.getPetId())
                 .userImage(request.getUserImage())
+                .petImage(request.getPetImage())
                 .nickname(request.getNickname())
+                .petName(request.getPetName())
+                .petBirth(request.getPetBirth())
+                .petWeight(request.getPetWeight())
                 .petSignificant(request.getPetSignificant())
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -60,7 +70,11 @@ public class GroomingEstimate {
                 .userId(request.getUserId())
                 .petId(request.getPetId())
                 .userImage(request.getUserImage())
+                .petImage(request.getPetImage())
                 .nickname(request.getNickname())
+                .petName(request.getPetName())
+                .petBirth(request.getPetBirth())
+                .petWeight(request.getPetWeight())
                 .petSignificant(request.getPetSignificant())
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -74,7 +88,7 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static List<GroomingEstimateInfo> withGroomingEstimate(List<GroomingEstimate> groomingEstimates) {
+    public static List<GroomingEstimateInfo> withGroomingEstimates(List<GroomingEstimate> groomingEstimates) {
 
         List<GroomingEstimateInfo> groomingEstimateInfos = new ArrayList<>();
 
@@ -90,5 +104,22 @@ public class GroomingEstimate {
         }
 
         return groomingEstimateInfos;
+    }
+
+    public GroomingEstimateDetails withGroomingEstimate() {
+        return GroomingEstimateDetails.builder()
+                .groomingEstimateId(this.groomingEstimateId)
+                .userImage(this.userImage)
+                .nickname(this.nickname)
+                .address(this.address)
+                .reservedDate(this.reservedDate)
+                .petImage(this.petImage)
+                .petBirth(this.petBirth)
+                .petSignificant(this.petSignificant)
+                .petName(this.petName)
+                .petSignificant(this.petSignificant)
+                .petBirth(this.petBirth)
+                .petWeight(this.petWeight)
+                .build();
     }
 }

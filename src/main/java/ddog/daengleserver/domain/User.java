@@ -34,6 +34,8 @@ public class User {
                     .petImage(pet.getPetImage())
                     .petName(pet.getPetName())
                     .petSignificant(pet.getPetSignificant())
+                    .petBirth(pet.getPetBirth())
+                    .petWeight(pet.getPetWeight())
                     .build());
         }
 

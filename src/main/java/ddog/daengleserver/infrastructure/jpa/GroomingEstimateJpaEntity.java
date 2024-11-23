@@ -1,5 +1,6 @@
 package ddog.daengleserver.infrastructure.jpa;
 
+import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.domain.estimate.EstimateStatus;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.domain.estimate.Proposal;
@@ -24,7 +25,13 @@ public class GroomingEstimateJpaEntity {
     private Long userId;
     private Long petId;
     private String userImage;
+    private String petImage;
     private String nickname;
+    private String petName;
+    private int petBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Weight petWeight;
     private String petSignificant;
     private LocalDateTime reservedDate;
     private String desiredStyle;
@@ -46,7 +53,11 @@ public class GroomingEstimateJpaEntity {
                 .userId(this.userId)
                 .petId(this.petId)
                 .userImage(this.userImage)
+                .petImage(this.petImage)
                 .nickname(this.nickname)
+                .petName(this.petName)
+                .petBirth(this.petBirth)
+                .petWeight(this.petWeight)
                 .petSignificant(this.petSignificant)
                 .reservedDate(this.reservedDate)
                 .desiredStyle(this.desiredStyle)
@@ -66,7 +77,11 @@ public class GroomingEstimateJpaEntity {
                 .userId(groomingEstimate.getUserId())
                 .petId(groomingEstimate.getPetId())
                 .userImage(groomingEstimate.getUserImage())
+                .petImage(groomingEstimate.getPetImage())
                 .nickname(groomingEstimate.getNickname())
+                .petName(groomingEstimate.getPetName())
+                .petBirth(groomingEstimate.getPetBirth())
+                .petWeight(groomingEstimate.getPetWeight())
                 .petSignificant(groomingEstimate.getPetSignificant())
                 .reservedDate(groomingEstimate.getReservedDate())
                 .desiredStyle(groomingEstimate.getDesiredStyle())

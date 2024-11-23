@@ -16,5 +16,7 @@ public class Pet {
     private String petName;
     private String petImage;
     private String petSignificant;
+    private int petBirth;
+    private Weight petWeight;
 
 }

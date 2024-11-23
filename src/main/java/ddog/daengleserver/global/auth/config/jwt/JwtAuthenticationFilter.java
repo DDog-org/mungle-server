@@ -24,7 +24,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
     /* 필터 제외 URL 리스트 */
     private final List<String> excludeUrls = List.of(
-            "/api/oauth/kakao", "/api/oauth/refresh-token"
+            "/api/oauth/kakao", "/api/oauth/refresh-token",
+            "/swagger-ui"
     );
 
     @Override
@@ -32,10 +33,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         /* 당분간 토큰 검증을 빼기 위해 임시로 넣어놓음. 나중에 꼭 빼야됨 !! */
-/*        if (true) {
+        if (true) {
             chain.doFilter(request, response);
             return;
-        }*/
+        }
 
         if (excludeUrls.contains(httpServletRequest.getRequestURI())) {
             chain.doFilter(request, response);

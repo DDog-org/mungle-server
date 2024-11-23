@@ -7,6 +7,7 @@ import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.presentation.dto.request.DesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.dto.request.GeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.dto.response.GroomingEstimateInfo;
 import ddog.daengleserver.presentation.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +40,16 @@ public class GroomingEstimateService {
         groomingEstimateRepository.save(GroomingEstimate.createDesignationGroomingEstimate(designationGroomingEstimateReq));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GroomingEstimateInfo> findGroomingEstimateInfos(Long accountId) {
-        String address = groomerRepository.findAddressById(accountId);
-        List<GroomingEstimate> groomingEstimates =  groomingEstimateRepository.findGroomingEstimatesByAddress(address);
-        return GroomingEstimate.withGroomingEstimate(groomingEstimates);
+        String address = groomerRepository.getAddressById(accountId);
+        List<GroomingEstimate> groomingEstimates = groomingEstimateRepository.findGroomingEstimatesByAddress(address);
+        return GroomingEstimate.withGroomingEstimates(groomingEstimates);
+    }
+
+    @Transactional(readOnly = true)
+    public GroomingEstimateDetails getGroomingEstimateDetailInfo(Long groomingEstimateId) {
+        GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomingEstimateId);
+        return groomingEstimate.withGroomingEstimate();
     }
 }

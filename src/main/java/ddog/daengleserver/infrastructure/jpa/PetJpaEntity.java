@@ -1,10 +1,8 @@
 package ddog.daengleserver.infrastructure.jpa;
 
 import ddog.daengleserver.domain.Pet;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import ddog.daengleserver.domain.Weight;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +22,10 @@ public class PetJpaEntity {
     private String petName;
     private String petImage;
     private String petSignificant;
+    private int petBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Weight petWeight;
 
     public Pet toModel() {
         return Pet.builder()
@@ -32,6 +34,8 @@ public class PetJpaEntity {
                 .petName(this.petName)
                 .petImage(this.petImage)
                 .petSignificant(this.petSignificant)
+                .petBirth(this.petBirth)
+                .petWeight(this.petWeight)
                 .build();
     }
 }

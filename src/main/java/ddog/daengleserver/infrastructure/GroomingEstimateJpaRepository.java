@@ -2,7 +2,6 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.infrastructure.jpa.GroomingEstimateJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -12,4 +11,5 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
     * 또한 추후에 성능 최적화를 위해 페이징 기법 사용해야함. */
     List<GroomingEstimateJpaEntity> findGroomingEstimatesJpaEntitiesByAddress(String address);
 
+    GroomingEstimateJpaEntity getGroomingEstimateJpaEntityByGroomingEstimateId(Long groomingEstimateId);
 }

@@ -1,5 +1,6 @@
 package ddog.daengleserver.presentation.dto.response;
 
+import ddog.daengleserver.domain.Weight;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,6 +22,7 @@ public class UserAndPetsInfo {
         private String petImage;
         private String petName;
         private String petSignificant;
-
+        private int petBirth;
+        private Weight petWeight;
     }
 }

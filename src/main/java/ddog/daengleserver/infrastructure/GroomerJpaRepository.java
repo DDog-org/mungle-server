@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Long> {
 
     Optional<GroomerJpaEntity> findByGroomerId(Long accountId);
+
 }
