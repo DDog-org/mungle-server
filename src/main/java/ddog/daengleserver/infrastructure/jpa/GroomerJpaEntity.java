@@ -24,13 +24,15 @@ public class GroomerJpaEntity {
     private String groomerName;
     private String groomerImage;
     private String address;
+    private String shopName;
 
     public Groomer toModel() {
         return Groomer.builder()
-                .groomerId(this.groomerId)
-                .groomerName(this.groomerName)
-                .groomerImage(this.groomerImage)
-                .address(this.address)
+                .groomerId(groomerId)
+                .groomerName(groomerName)
+                .groomerImage(groomerImage)
+                .address(address)
+                .shopName(shopName)
                 .build();
     }
 
@@ -40,6 +42,7 @@ public class GroomerJpaEntity {
                 .groomerName(groomer.getGroomerName())
                 .groomerImage(groomer.getGroomerName())
                 .address(groomer.getAddress())
+                .shopName(groomer.getShopName())
                 .build();
     }
 }

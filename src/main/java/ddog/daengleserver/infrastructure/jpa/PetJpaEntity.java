@@ -29,13 +29,13 @@ public class PetJpaEntity {
 
     public Pet toModel() {
         return Pet.builder()
-                .petId(this.petId)
-                .userId(this.userId)
-                .petName(this.petName)
-                .petImage(this.petImage)
-                .petSignificant(this.petSignificant)
-                .petBirth(this.petBirth)
-                .petWeight(this.petWeight)
+                .petId(petId)
+                .userId(userId)
+                .petName(petName)
+                .petImage(petImage)
+                .petSignificant(petSignificant)
+                .petBirth(petBirth)
+                .petWeight(petWeight)
                 .build();
     }
 }

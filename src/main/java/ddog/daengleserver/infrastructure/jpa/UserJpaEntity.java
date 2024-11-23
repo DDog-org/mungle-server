@@ -46,11 +46,11 @@ public class UserJpaEntity {
 
     public User toModel() {
         return User.builder()
-                .userId(this.userId)
-                .username(this.username)
-                .userImage(this.userImage)
-                .nickname(this.nickname)
-                .address(this.address)
+                .userId(userId)
+                .username(username)
+                .userImage(userImage)
+                .nickname(nickname)
+                .address(address)
                 .pets(toPetModel())
                 .build();
     }

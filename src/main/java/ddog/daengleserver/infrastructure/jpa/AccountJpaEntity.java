@@ -40,11 +40,11 @@ public class AccountJpaEntity {
 
     public Account toModel() {
         return Account.builder()
-                .accountId(this.accountId)
-                .email(this.email)
-                .nickname(this.nickname)
-                .provider(this.provider)
-                .role(this.role)
+                .accountId(accountId)
+                .email(email)
+                .nickname(nickname)
+                .provider(provider)
+                .role(role)
                 .build();
     }
 }

@@ -40,9 +40,9 @@ public class User {
         }
 
         return UserAndPetsInfo.builder()
-                .nickname(this.nickname)
-                .userImage(this.userImage)
-                .address(this.address)
+                .nickname(nickname)
+                .userImage(userImage)
+                .address(address)
                 .petInfos(petInfos)
                 .build();
     }

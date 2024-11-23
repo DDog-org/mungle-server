@@ -46,28 +46,36 @@ public class GroomingEstimateJpaEntity {
 
     private Long groomerId;
     private String overallOpinion;
+    private String groomerImage;
+    private String groomerName;
+    private String shopName;
+    private String groomerIntroduction;
 
     public GroomingEstimate toModel() {
         return GroomingEstimate.builder()
-                .groomingEstimateId(this.groomingEstimateId)
-                .reservedDate(this.reservedDate)
-                .desiredStyle(this.desiredStyle)
-                .requirements(this.requirements)
-                .proposal(this.proposal)
-                .status(this.status)
-                .createdAt(this.createdAt)
-                .userId(this.userId)
-                .userImage(this.userImage)
-                .nickname(this.nickname)
-                .address(this.address)
-                .petId(this.petId)
-                .petImage(this.petImage)
-                .petName(this.petName)
-                .petBirth(this.petBirth)
-                .petWeight(this.petWeight)
-                .petSignificant(this.petSignificant)
-                .groomerId(this.groomerId)
-                .overallOpinion(this.overallOpinion)
+                .groomingEstimateId(groomingEstimateId)
+                .reservedDate(reservedDate)
+                .desiredStyle(desiredStyle)
+                .requirements(requirements)
+                .proposal(proposal)
+                .status(status)
+                .createdAt(createdAt)
+                .userId(userId)
+                .userImage(userImage)
+                .nickname(nickname)
+                .address(address)
+                .petId(petId)
+                .petImage(petImage)
+                .petName(petName)
+                .petBirth(petBirth)
+                .petWeight(petWeight)
+                .petSignificant(petSignificant)
+                .groomerId(groomerId)
+                .overallOpinion(overallOpinion)
+                .groomerImage(groomerImage)
+                .groomerName(groomerName)
+                .shopName(shopName)
+                .groomerIntroduction(groomerIntroduction)
                 .build();
     }
 
@@ -92,6 +100,10 @@ public class GroomingEstimateJpaEntity {
                 .petSignificant(groomingEstimate.getPetSignificant())
                 .groomerId(groomingEstimate.getGroomerId())
                 .overallOpinion(groomingEstimate.getOverallOpinion())
+                .groomerImage(groomingEstimate.getGroomerImage())
+                .groomerName(groomingEstimate.getGroomerName())
+                .shopName(groomingEstimate.getShopName())
+                .groomerIntroduction(groomingEstimate.getGroomerIntroduction())
                 .build();
     }
 }

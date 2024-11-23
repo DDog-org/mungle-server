@@ -18,19 +18,19 @@ public class Account {
 
     public Account withNickname(String nickname) {
         return Account.builder()
-                .accountId(this.accountId)
-                .email(this.email)
-                .nickname(this.nickname)
-                .provider(this.provider)
-                .role(this.role)
+                .accountId(accountId)
+                .email(email)
+                .nickname(nickname)
+                .provider(provider)
+                .role(role)
                 .build();
     }
 
     public AccountInfoDto withAccount() {
         return AccountInfoDto.builder()
-                .email(this.email)
-                .nickname(this.nickname)
-                .provider(this.provider)
+                .email(email)
+                .nickname(nickname)
+                .provider(provider)
                 .build();
     }
 }

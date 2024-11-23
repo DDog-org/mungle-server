@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GroomingEstimateDetails {
+public class UserGroomingEstimateDetails {
 
     private Long groomingEstimateId;
     private String userImage;

@@ -3,8 +3,8 @@ package ddog.daengleserver.presentation.estimate;
 import ddog.daengleserver.application.GroomingEstimateService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
-import ddog.daengleserver.presentation.dto.request.DesignationGroomingEstimateReq;
-import ddog.daengleserver.presentation.dto.request.GeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.request.UserDesignationGroomingEstimateReq;
+import ddog.daengleserver.presentation.dto.request.UserGeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.dto.response.UserAndPetsInfo;
 import ddog.daengleserver.presentation.enums.GroomingEstimateControllerResp;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,15 +30,15 @@ public class UserGroomingEstimateController {
 
     @Operation(summary = "미용 견적서 작성 (일반)", description = "일반 미용 견적서 작성")
     @PostMapping("general-estimate")
-    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GeneralGroomingEstimateReq generalGroomingEstimateReq) {
-        groomingEstimateService.createGeneralGroomingEstimate(generalGroomingEstimateReq);
+    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody UserGeneralGroomingEstimateReq userGeneralGroomingEstimateReq) {
+        groomingEstimateService.createUserGeneralGroomingEstimate(userGeneralGroomingEstimateReq);
         return success(GroomingEstimateControllerResp.GENERAL_REGISTRATION_COMPLETED.getMessage());
     }
 
     @Operation(summary = "미용 견적서 작성 (지정)", description = "미용사 지정 견적서 작성")
     @PostMapping("designation-estimate")
-    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq designationGroomingEstimateReq) {
-        groomingEstimateService.createDesignationGroomingEstimate(designationGroomingEstimateReq);
+    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody UserDesignationGroomingEstimateReq userDesignationGroomingEstimateReq) {
+        groomingEstimateService.createUserDesignationGroomingEstimate(userDesignationGroomingEstimateReq);
         return success(GroomingEstimateControllerResp.DESIGNATION_REGISTRATION_COMPLETED.getMessage());
     }
 }
