@@ -18,13 +18,17 @@ public class Order {
     private Long price;
     private Long itemId;
     private String orderUid;
+    private Long userId;
+    private Long paymentId;
 
-    public static Order createNewOrderBy(PostOrderReq postOrderReq) {
+    public static Order createBy(PostOrderReq postOrderReq, Payment payment) {
         return Order.builder()
                 .orderId(null)
                 .price(postOrderReq.getPrice())
                 .itemId(postOrderReq.getItemId())
                 .orderUid(String.valueOf(UUID.randomUUID()))
+                .userId(postOrderReq.getUserId())
+                .paymentId(payment.getPaymentId())
                 .build();
     }
 }

@@ -1,10 +1,8 @@
 package ddog.daengleserver.infrastructure.po;
 
 import ddog.daengleserver.domain.Order;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import ddog.daengleserver.domain.Payment;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +21,8 @@ public class OrderJpaEntity {
     private Long price;
     private Long itemId;
     private String orderUid;
+    private Long userId;
+    private Long paymentId;
 
     public Order toModel() {
         return Order.builder()
@@ -30,6 +30,8 @@ public class OrderJpaEntity {
                 .price(this.price)
                 .itemId(this.itemId)
                 .orderUid(this.orderUid)
+                .userId(this.userId)
+                .paymentId(this.paymentId)
                 .build();
     }
 
@@ -39,6 +41,8 @@ public class OrderJpaEntity {
                 .price(order.getPrice())
                 .itemId(order.getItemId())
                 .orderUid(order.getOrderUid())
+                .userId(order.getUserId())
+                .paymentId(order.getPaymentId())
                 .build();
     }
 

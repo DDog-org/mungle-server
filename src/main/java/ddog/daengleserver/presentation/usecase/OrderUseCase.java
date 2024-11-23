@@ -3,5 +3,5 @@ package ddog.daengleserver.presentation.usecase;
 import ddog.daengleserver.presentation.dto.request.PostOrderReq;
 
 public interface OrderUseCase {
-    void registerOrder(PostOrderReq postOrderReq);
+    void processOrder(PostOrderReq postOrderReq);
 }
