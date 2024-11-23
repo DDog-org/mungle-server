@@ -21,45 +21,49 @@ import java.util.List;
 public class GroomingEstimate {
 
     private Long groomingEstimateId;
+    private LocalDateTime reservedDate;
+    private String desiredStyle;
+    private String requirements;
+    private Proposal proposal;
+    private EstimateStatus status;
+    private LocalDateTime createdAt;
+
     private Long userId;
-    private Long petId;
     private String userImage;
-    private String petImage;
     private String nickname;
+    private String address;
+
+    private Long petId;
+    private String petImage;
     private String petName;
     private int petBirth;
     private Weight petWeight;
     private String petSignificant;
-    private LocalDateTime reservedDate;
-    private String desiredStyle;
-    private String requirements;
-    private String address;
-    private Proposal proposal;
+
     private Long groomerId;
-    private EstimateStatus status;
-    private LocalDateTime createdAt;
     private String overallOpinion;
+
 
     public static GroomingEstimate createGeneralGroomingEstimate(GeneralGroomingEstimateReq request) {
         return GroomingEstimate.builder()
                 .groomingEstimateId(null)
+                .reservedDate(request.getReservedDate())
+                .desiredStyle(request.getDesiredStyle())
+                .requirements(request.getRequirements())
+                .proposal(Proposal.GENERAL)
+                .status(EstimateStatus.NEW)
+                .createdAt(LocalDateTime.now())
                 .userId(request.getUserId())
-                .petId(request.getPetId())
                 .userImage(request.getUserImage())
-                .petImage(request.getPetImage())
                 .nickname(request.getNickname())
+                .address(request.getAddress())
+                .petId(request.getPetId())
+                .petImage(request.getPetImage())
                 .petName(request.getPetName())
                 .petBirth(request.getPetBirth())
                 .petWeight(request.getPetWeight())
                 .petSignificant(request.getPetSignificant())
-                .reservedDate(request.getReservedDate())
-                .desiredStyle(request.getDesiredStyle())
-                .requirements(request.getRequirements())
-                .address(request.getAddress())
-                .proposal(Proposal.GENERAL)
                 .groomerId(null)
-                .status(EstimateStatus.NEW)
-                .createdAt(LocalDateTime.now())
                 .overallOpinion(null)
                 .build();
     }
@@ -67,23 +71,23 @@ public class GroomingEstimate {
     public static GroomingEstimate createDesignationGroomingEstimate(DesignationGroomingEstimateReq request) {
         return GroomingEstimate.builder()
                 .groomingEstimateId(null)
+                .reservedDate(request.getReservedDate())
+                .desiredStyle(request.getDesiredStyle())
+                .requirements(request.getRequirements())
+                .proposal(Proposal.DESIGNATION)
+                .status(EstimateStatus.NEW)
+                .createdAt(LocalDateTime.now())
                 .userId(request.getUserId())
-                .petId(request.getPetId())
                 .userImage(request.getUserImage())
-                .petImage(request.getPetImage())
                 .nickname(request.getNickname())
+                .address(request.getAddress())
+                .petId(request.getPetId())
+                .petImage(request.getPetImage())
                 .petName(request.getPetName())
                 .petBirth(request.getPetBirth())
                 .petWeight(request.getPetWeight())
                 .petSignificant(request.getPetSignificant())
-                .reservedDate(request.getReservedDate())
-                .desiredStyle(request.getDesiredStyle())
-                .requirements(request.getRequirements())
-                .address(request.getAddress())
-                .proposal(Proposal.DESIGNATION)
                 .groomerId(request.getGroomerId())
-                .status(EstimateStatus.NEW)
-                .createdAt(LocalDateTime.now())
                 .overallOpinion(null)
                 .build();
     }
@@ -95,11 +99,11 @@ public class GroomingEstimate {
         for (GroomingEstimate groomingEstimate : groomingEstimates) {
             groomingEstimateInfos.add(GroomingEstimateInfo.builder()
                     .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                    .nickname(groomingEstimate.getNickname())
-                    .userImage(groomingEstimate.getUserImage())
-                    .petSignificant(groomingEstimate.getPetSignificant())
-                    .address(groomingEstimate.getAddress())
                     .reservedDate(groomingEstimate.getReservedDate())
+                    .address(groomingEstimate.getAddress())
+                    .userImage(groomingEstimate.getUserImage())
+                    .nickname(groomingEstimate.getNickname())
+                    .petSignificant(groomingEstimate.getPetSignificant())
                     .build());
         }
 
@@ -109,10 +113,10 @@ public class GroomingEstimate {
     public GroomingEstimateDetails withGroomingEstimate() {
         return GroomingEstimateDetails.builder()
                 .groomingEstimateId(this.groomingEstimateId)
-                .userImage(this.userImage)
-                .nickname(this.nickname)
-                .address(this.address)
                 .reservedDate(this.reservedDate)
+                .nickname(this.nickname)
+                .userImage(this.userImage)
+                .address(this.address)
                 .petImage(this.petImage)
                 .petBirth(this.petBirth)
                 .petSignificant(this.petSignificant)

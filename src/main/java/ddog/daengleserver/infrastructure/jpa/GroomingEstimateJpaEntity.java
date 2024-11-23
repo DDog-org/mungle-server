@@ -22,51 +22,51 @@ public class GroomingEstimateJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomingEstimateId;
-    private Long userId;
-    private Long petId;
-    private String userImage;
-    private String petImage;
-    private String nickname;
-    private String petName;
-    private int petBirth;
-
-    @Enumerated(EnumType.STRING)
-    private Weight petWeight;
-    private String petSignificant;
     private LocalDateTime reservedDate;
     private String desiredStyle;
     private String requirements;
-    private String address;
-
     @Enumerated(EnumType.STRING)
     private Proposal proposal;
-    private Long groomerId;
-
     @Enumerated(EnumType.STRING)
     private EstimateStatus status;
     private LocalDateTime createdAt;
+
+    private Long userId;
+    private String userImage;
+    private String nickname;
+    private String address;
+
+    private Long petId;
+    private String petImage;
+    private String petName;
+    private int petBirth;
+    @Enumerated(EnumType.STRING)
+    private Weight petWeight;
+    private String petSignificant;
+
+    private Long groomerId;
     private String overallOpinion;
 
     public GroomingEstimate toModel() {
         return GroomingEstimate.builder()
                 .groomingEstimateId(this.groomingEstimateId)
+                .reservedDate(this.reservedDate)
+                .desiredStyle(this.desiredStyle)
+                .requirements(this.requirements)
+                .proposal(this.proposal)
+                .status(this.status)
+                .createdAt(this.createdAt)
                 .userId(this.userId)
-                .petId(this.petId)
                 .userImage(this.userImage)
-                .petImage(this.petImage)
                 .nickname(this.nickname)
+                .address(this.address)
+                .petId(this.petId)
+                .petImage(this.petImage)
                 .petName(this.petName)
                 .petBirth(this.petBirth)
                 .petWeight(this.petWeight)
                 .petSignificant(this.petSignificant)
-                .reservedDate(this.reservedDate)
-                .desiredStyle(this.desiredStyle)
-                .requirements(this.requirements)
-                .address(this.address)
-                .proposal(this.proposal)
                 .groomerId(this.groomerId)
-                .status(this.status)
-                .createdAt(this.createdAt)
                 .overallOpinion(this.overallOpinion)
                 .build();
     }
@@ -74,23 +74,23 @@ public class GroomingEstimateJpaEntity {
     public static GroomingEstimateJpaEntity from(GroomingEstimate groomingEstimate) {
         return GroomingEstimateJpaEntity.builder()
                 .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
+                .reservedDate(groomingEstimate.getReservedDate())
+                .desiredStyle(groomingEstimate.getDesiredStyle())
+                .requirements(groomingEstimate.getRequirements())
+                .proposal(groomingEstimate.getProposal())
+                .status(groomingEstimate.getStatus())
+                .createdAt(groomingEstimate.getCreatedAt())
                 .userId(groomingEstimate.getUserId())
-                .petId(groomingEstimate.getPetId())
                 .userImage(groomingEstimate.getUserImage())
-                .petImage(groomingEstimate.getPetImage())
                 .nickname(groomingEstimate.getNickname())
+                .address(groomingEstimate.getAddress())
+                .petId(groomingEstimate.getPetId())
+                .petImage(groomingEstimate.getPetImage())
                 .petName(groomingEstimate.getPetName())
                 .petBirth(groomingEstimate.getPetBirth())
                 .petWeight(groomingEstimate.getPetWeight())
                 .petSignificant(groomingEstimate.getPetSignificant())
-                .reservedDate(groomingEstimate.getReservedDate())
-                .desiredStyle(groomingEstimate.getDesiredStyle())
-                .requirements(groomingEstimate.getRequirements())
-                .address(groomingEstimate.getAddress())
-                .proposal(groomingEstimate.getProposal())
                 .groomerId(groomingEstimate.getGroomerId())
-                .status(groomingEstimate.getStatus())
-                .createdAt(groomingEstimate.getCreatedAt())
                 .overallOpinion(groomingEstimate.getOverallOpinion())
                 .build();
     }
