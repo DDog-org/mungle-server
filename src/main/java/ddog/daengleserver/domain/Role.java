@@ -1,15 +1,14 @@
 package ddog.daengleserver.domain;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum Role {
 
     CUSTOMER("사용자"),
     GROOMER("미용사"),
     ADMIN("관리자");
 
-    private String description;
-
-    Role(String description) {
-        this.description = description;
-    }
+    public final String description;
 
 }

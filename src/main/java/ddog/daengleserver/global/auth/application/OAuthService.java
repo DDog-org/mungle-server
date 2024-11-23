@@ -53,7 +53,7 @@ public class OAuthService {
             saveAccount(kakaoUserInfo, email, role);
         }
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + loginType), role, response);
+        return jwtTokenProvider.generateToken(getAuthentication(email, loginType), role, response);
     }
 
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
@@ -67,15 +67,15 @@ public class OAuthService {
         accountRepository.save(account);
     }
 
-    private Authentication getAuthentication(String email, String role) {
+    private Authentication getAuthentication(String email, String roleString) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role));
+        authorities.add(new SimpleGrantedAuthority(ROLE + roleString));
 
-        /* 추후에 email과 role 정보를 가지고 계정의 Id 값을 넣어서 유저의 Id 정보를 받아온 뒤,
-        * Principal 에 담아준 뒤, JWT 토큰에 정보를 담아줄 예정. */
+        Role role = fromString(roleString);
+        Long accountId = accountRepository.findAccountByEmailAndRole(email, role).getAccountId();
 
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId , null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }

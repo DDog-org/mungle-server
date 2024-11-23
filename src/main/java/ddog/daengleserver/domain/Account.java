@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Account {
 
-    private final Long id;
+    private final Long accountId;
     private final String email;
     private final String nickname;
     private final Provider provider;
@@ -18,9 +18,9 @@ public class Account {
 
     public Account withNickname(String nickname) {
         return Account.builder()
-                .id(this.id)
+                .accountId(this.accountId)
                 .email(this.email)
-                .nickname(nickname)
+                .nickname(this.nickname)
                 .provider(this.provider)
                 .role(this.role)
                 .build();
