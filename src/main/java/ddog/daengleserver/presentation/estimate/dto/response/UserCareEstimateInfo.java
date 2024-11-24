@@ -9,15 +9,14 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class UserGroomingEstimateInfo {
+public class UserCareEstimateInfo {
 
-    private Long groomingEstimateId;
+    private Long careEstimateId;
     private String userImage;
     private String nickname;
-    private Proposal proposal;
     private String petSignificant;
+    private Proposal proposal;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
-
 }

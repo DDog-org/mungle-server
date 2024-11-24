@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure;
 
-import ddog.daengleserver.infrastructure.jpa.GroomerJpaEntity;
+import ddog.daengleserver.infrastructure.po.GroomerJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

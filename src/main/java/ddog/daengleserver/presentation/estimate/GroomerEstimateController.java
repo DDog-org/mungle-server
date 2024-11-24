@@ -24,19 +24,19 @@ public class GroomerEstimateController {
 
     private final GroomingEstimateService groomingEstimateService;
 
-    @Operation(summary = "사용자가 요청한 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
+    @Operation(summary = "사용자가 요청한 미용 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
     @GetMapping("/list")
     public CommonResponseEntity<List<UserGroomingEstimateInfo>> findGroomingEstimateInfos(PayloadDto payloadDto) {
         return success(groomingEstimateService.findGroomingEstimateInfos(payloadDto.getAccountId()));
     }
 
-    @Operation(summary = "견적서 상세 내용 조회")
+    @Operation(summary = "미용 견적서 상세 내용 조회")
     @GetMapping("/{groomingEstimateId}/details")
     public CommonResponseEntity<UserGroomingEstimateDetails> getGroomingEstimateDetails(@PathVariable Long groomingEstimateId) {
         return success(groomingEstimateService.getGroomingEstimateDetailInfo(groomingEstimateId));
     }
 
-    @Operation(summary = "사용자에게 견적서 요청", description = "견적서를 요청한 사용자에게 추가 의견을 덧붙여 견적서 전송 (신규 -> 대기)")
+    @Operation(summary = "사용자에게 미용 견적서 요청", description = "미용 견적서를 요청한 사용자에게 추가 의견을 덧붙여 견적서 전송 (신규 -> 대기)")
     @PostMapping
     public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
         groomingEstimateService.createGroomerGroomingEstimate(request, payloadDto.getAccountId());

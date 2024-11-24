@@ -1,7 +1,6 @@
 package ddog.daengleserver.infrastructure.po;
 
 import ddog.daengleserver.domain.Groomer;
-import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Groomer")
+@Entity(name = "Groomers")
 public class GroomerJpaEntity {
 
     @Id
@@ -26,16 +25,7 @@ public class GroomerJpaEntity {
     private String groomerImage;
     private String address;
     private String shopName;
-
-    public Groomer toModel() {
-        return Groomer.builder()
-                .groomerId(groomerId)
-                .groomerName(groomerName)
-                .groomerImage(groomerImage)
-                .address(address)
-                .shopName(shopName)
-                .build();
-    }
+    private String groomerIntroduction;
 
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
@@ -44,6 +34,18 @@ public class GroomerJpaEntity {
                 .groomerImage(groomer.getGroomerName())
                 .address(groomer.getAddress())
                 .shopName(groomer.getShopName())
+                .groomerIntroduction(groomer.getGroomerIntroduction())
+                .build();
+    }
+
+    public Groomer toModel() {
+        return Groomer.builder()
+                .groomerId(groomerId)
+                .groomerName(groomerName)
+                .groomerImage(groomerImage)
+                .address(address)
+                .shopName(shopName)
+                .groomerIntroduction(groomerIntroduction)
                 .build();
     }
 }
