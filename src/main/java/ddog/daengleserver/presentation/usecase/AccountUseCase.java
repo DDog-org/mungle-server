@@ -1,6 +1,6 @@
 package ddog.daengleserver.presentation.usecase;
 
-import ddog.daengleserver.global.auth.config.enums.Role;
+import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.presentation.dto.response.AccountInfoDto;
 
 public interface AccountUseCase {

@@ -17,7 +17,7 @@ public class TokenAccountInfoDto {
 
     @Builder
     public TokenAccountInfoDto(AccountJpaEntity accountJpaEntity) {
-        this.id = accountJpaEntity.getId();
+        this.id = accountJpaEntity.getAccountId();
         this.email = accountJpaEntity.getEmail();
         this.nickname = accountJpaEntity.getNickname();
         this.provider = accountJpaEntity.getProvider();

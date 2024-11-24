@@ -18,8 +18,7 @@ public class AccountJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private Long accountId;
     private String email;
     private String nickname;
 
@@ -31,7 +30,7 @@ public class AccountJpaEntity {
 
     public static AccountJpaEntity from(Account account) {
         return AccountJpaEntity.builder()
-                .id(account.getId())
+                .accountId(account.getAccountId())
                 .email(account.getEmail())
                 .nickname(account.getNickname())
                 .provider(account.getProvider())
@@ -41,11 +40,11 @@ public class AccountJpaEntity {
 
     public Account toModel() {
         return Account.builder()
-                .id(this.id)
-                .email(this.email)
-                .nickname(this.nickname)
-                .provider(this.provider)
-                .role(this.role)
+                .accountId(accountId)
+                .email(email)
+                .nickname(nickname)
+                .provider(provider)
+                .role(role)
                 .build();
     }
 }

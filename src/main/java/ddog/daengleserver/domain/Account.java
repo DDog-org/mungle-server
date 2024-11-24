@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Account {
 
-    private final Long id;
+    private final Long accountId;
     private final String email;
     private final String nickname;
     private final Provider provider;
@@ -18,19 +18,19 @@ public class Account {
 
     public Account withNickname(String nickname) {
         return Account.builder()
-                .id(this.id)
-                .email(this.email)
+                .accountId(accountId)
+                .email(email)
                 .nickname(nickname)
-                .provider(this.provider)
-                .role(this.role)
+                .provider(provider)
+                .role(role)
                 .build();
     }
 
     public AccountInfoDto withAccount() {
         return AccountInfoDto.builder()
-                .email(this.email)
-                .nickname(this.nickname)
-                .provider(this.provider)
+                .email(email)
+                .nickname(nickname)
+                .provider(provider)
                 .build();
     }
 }

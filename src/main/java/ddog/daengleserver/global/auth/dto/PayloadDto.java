@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PayloadDto {
+    private Long accountId;
     private String email;
     private Role role;
 }
