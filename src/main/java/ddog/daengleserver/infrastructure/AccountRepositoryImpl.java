@@ -5,7 +5,7 @@ import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.domain.Role;
 import ddog.daengleserver.implementation.AccountException;
 import ddog.daengleserver.implementation.enums.AccountExceptionType;
-import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;
+import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

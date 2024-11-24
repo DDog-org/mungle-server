@@ -2,7 +2,7 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.domain.Provider;
 import ddog.daengleserver.domain.Role;
-import ddog.daengleserver.infrastructure.jpa.AccountJpaEntity;
+import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

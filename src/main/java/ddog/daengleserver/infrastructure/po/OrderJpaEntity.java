@@ -1,0 +1,53 @@
+package ddog.daengleserver.infrastructure.po;
+
+import ddog.daengleserver.domain.Order;
+import ddog.daengleserver.domain.Payment;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity(name = "Orders")
+public class OrderJpaEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long orderId;
+    private Long price;
+    private Long itemId;
+    private String orderUid;
+    private Long userId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private PaymentJpaEntity payment;
+
+    public Order toModel() {
+        return Order.builder()
+                .orderId(this.orderId)
+                .price(this.price)
+                .itemId(this.itemId)
+                .orderUid(this.orderUid)
+                .userId(this.userId)
+                .payment(this.payment.toModel())
+                .build();
+    }
+
+    public static OrderJpaEntity fromModel(Order order) {
+        Payment payment = order.getPayment();
+
+        return OrderJpaEntity.builder()
+                .orderId(order.getOrderId())
+                .price(order.getPrice())
+                .itemId(order.getItemId())
+                .orderUid(order.getOrderUid())
+                .userId(order.getUserId())
+                .payment(PaymentJpaEntity.fromModel(payment))
+                .build();
+    }
+}

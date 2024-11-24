@@ -1,4 +1,4 @@
-package ddog.daengleserver.infrastructure.jpa;
+package ddog.daengleserver.infrastructure.po;
 
 import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.domain.estimate.EstimateStatus;

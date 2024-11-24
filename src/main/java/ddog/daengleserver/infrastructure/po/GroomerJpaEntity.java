@@ -1,6 +1,7 @@
-package ddog.daengleserver.infrastructure.jpa;
+package ddog.daengleserver.infrastructure.po;
 
 import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
