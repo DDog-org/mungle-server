@@ -1,6 +1,6 @@
 package ddog.daengleserver.domain;
 
-import ddog.daengleserver.presentation.dto.response.UserAddressAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,24 +18,31 @@ import java.util.List;
 public class User {
 
     private Long userId;
+    private Long accountId;
     private String username;
+    private String nickname;
     private String userImage;
     private String address;
     private List<Pet> pets;
 
-    public UserAddressAndPetsInfo getAddressAndPetsInfo() {
+    public UserAndPetsInfo getAddressAndPetsInfo() {
 
-        List<UserAddressAndPetsInfo.PetInfo> petInfos = new ArrayList<>();
+        List<UserAndPetsInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
-            petInfos.add(UserAddressAndPetsInfo.PetInfo.builder()
+            petInfos.add(UserAndPetsInfo.PetInfo.builder()
                     .petId(pet.getPetId())
                     .petImage(pet.getPetImage())
                     .petName(pet.getPetName())
+                    .petSignificant(pet.getPetSignificant())
+                    .petBirth(pet.getPetBirth())
+                    .petWeight(pet.getPetWeight())
                     .build());
         }
 
-        return UserAddressAndPetsInfo.builder()
-                .address(this.address)
+        return UserAndPetsInfo.builder()
+                .nickname(nickname)
+                .userImage(userImage)
+                .address(address)
                 .petInfos(petInfos)
                 .build();
     }

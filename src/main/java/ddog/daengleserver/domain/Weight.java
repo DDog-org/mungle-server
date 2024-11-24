@@ -3,12 +3,11 @@ package ddog.daengleserver.domain;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public enum Role {
+public enum Weight {
 
-    CUSTOMER("사용자"),
-    GROOMER("미용사"),
-    ADMIN("관리자");
+    SMALL("소형견"),
+    MEDIUM("중형견"),
+    LARGE("대형견");
 
     public final String description;
-
 }

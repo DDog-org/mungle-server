@@ -36,9 +36,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account findAccountByEmailAndRole(String email, Role role) {
-        Optional<AccountJpaEntity> byEmailAndRole = accountJpaRepository.findByEmailAndRole(email, role);
-        AccountJpaEntity accountJpaEntity = byEmailAndRole.orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT));
-        Account model = accountJpaEntity.toModel();
-        return model;
+        return accountJpaRepository.findByEmailAndRole(email, role)
+                .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
+                .toModel();
     }
 }

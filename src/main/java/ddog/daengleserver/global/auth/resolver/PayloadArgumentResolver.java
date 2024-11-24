@@ -37,10 +37,12 @@ public class PayloadArgumentResolver implements HandlerMethodArgumentResolver {
 
         if (jwtTokenProvider.validateToken(token)) {
             Claims claims = jwtTokenProvider.parseClaims(token);
-            String email = claims.getSubject();
+            String[] subjects = claims.getSubject().split(",");
+            String email = subjects[0];
+            Long accountId = Long.valueOf(subjects[1]);
             Role role = fromString(claims.get("auth", String.class).substring(5));
 
-            return new PayloadDto(email, role);
+            return new PayloadDto(accountId, email, role);
         }
 
         return null;
