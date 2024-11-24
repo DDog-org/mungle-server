@@ -2,7 +2,7 @@ package ddog.daengleserver.presentation;
 
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.request.PostOrderReq;
-import ddog.daengleserver.presentation.enums.PostOrderResp;
+import ddog.daengleserver.presentation.dto.response.PostOrderResp;
 import ddog.daengleserver.presentation.usecase.OrderUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,6 @@ public class OrderController {
 
     @PostMapping("/order")
     public CommonResponseEntity<PostOrderResp> processOrder(@RequestBody PostOrderReq postOrderReq) {
-        orderUseCase.processOrder(postOrderReq);
-        return success(PostOrderResp.ORDER_REGISTRATION_COMPLETED);
+        return success(orderUseCase.processOrder(postOrderReq));
     }
 }

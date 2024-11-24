@@ -19,6 +19,7 @@ public class PaymentJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
     private Long price;
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
     private String paymentUid;
 
