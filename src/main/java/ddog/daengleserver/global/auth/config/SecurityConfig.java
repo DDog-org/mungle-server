@@ -54,9 +54,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/**").permitAll() // 임시로 모든 API 에 대해 통과
                         .requestMatchers("/api/oauth/**").permitAll()  // Kakao 소셜 로그인을 위한 URL 허용
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/customer/**").hasRole("CUSTOMER")
-                        .requestMatchers("/groomer/**").hasRole("GROOMER"))
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/daengle/**").hasRole("DAENGLE")
+                        .requestMatchers("/api/groomer/**").hasRole("GROOMER")
+                        .requestMatchers("/api/vet/**").hasRole("VET"))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

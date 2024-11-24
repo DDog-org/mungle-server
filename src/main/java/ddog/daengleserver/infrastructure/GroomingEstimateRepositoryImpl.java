@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class GroomingEstimateEstimateRepositoryImpl implements GroomingEstimateRepository {
+public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepository {
 
     private final GroomingEstimateJpaRepository groomingEstimateJpaRepository;
 

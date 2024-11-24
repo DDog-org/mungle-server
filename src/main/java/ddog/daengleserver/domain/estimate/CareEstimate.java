@@ -1,12 +1,12 @@
 package ddog.daengleserver.domain.estimate;
 
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.Vet;
 import ddog.daengleserver.domain.Weight;
-import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,15 +20,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroomingEstimate {
+public class CareEstimate {
 
-    private Long groomingEstimateId;
+    private Long careEstimateId;
     private LocalDateTime reservedDate;
-    private String desiredStyle;
+    private String symptoms;
     private String requirements;
     private Proposal proposal;
     private EstimateStatus status;
     private LocalDateTime createdAt;
+    private String diagnosis;
+    private String cause;
+    private String treatment;
 
     private Long userId;
     private String userImage;
@@ -42,18 +45,16 @@ public class GroomingEstimate {
     private Weight petWeight;
     private String petSignificant;
 
-    private Long groomerId;
-    private String overallOpinion;
-    private String groomerImage;
-    private String groomerName;
-    private String shopName;
-    private String groomerIntroduction;
+    private Long vetId;
+    private String vetImage;
+    private String vetName;
+    private String vetIntroduction;
 
 
-    public static GroomingEstimate createUserGeneralCareEstimate(UserGeneralGroomingEstimateReq request) {
-        return GroomingEstimate.builder()
+    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request) {
+        return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
-                .desiredStyle(request.getDesiredStyle())
+                .symptoms(request.getSymptoms())
                 .requirements(request.getRequirements())
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
@@ -71,10 +72,10 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static GroomingEstimate createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request) {
-        return GroomingEstimate.builder()
+    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request) {
+        return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
-                .desiredStyle(request.getDesiredStyle())
+                .symptoms(request.getSymptoms())
                 .requirements(request.getRequirements())
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
@@ -89,31 +90,31 @@ public class GroomingEstimate {
                 .petBirth(request.getPetBirth())
                 .petWeight(request.getPetWeight())
                 .petSignificant(request.getPetSignificant())
-                .groomerId(request.getGroomerId())
+                .vetId(request.getVetId())
                 .build();
     }
 
-    public static List<UserGroomingEstimateInfo> withUserGroomingEstimates(List<GroomingEstimate> groomingEstimates) {
+    public static List<UserCareEstimateInfo> withUserCareEstimates(List<CareEstimate> careEstimates) {
 
-        List<UserGroomingEstimateInfo> userGroomingEstimateInfos = new ArrayList<>();
+        List<UserCareEstimateInfo> userCareEstimateInfos = new ArrayList<>();
 
-        for (GroomingEstimate groomingEstimate : groomingEstimates) {
-            userGroomingEstimateInfos.add(UserGroomingEstimateInfo.builder()
-                    .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                    .reservedDate(groomingEstimate.getReservedDate())
-                    .userImage(groomingEstimate.getUserImage())
-                    .proposal(groomingEstimate.getProposal())
-                    .nickname(groomingEstimate.getNickname())
-                    .petSignificant(groomingEstimate.getPetSignificant())
+        for (CareEstimate careEstimate : careEstimates) {
+            userCareEstimateInfos.add(UserCareEstimateInfo.builder()
+                    .careEstimateId(careEstimate.getCareEstimateId())
+                    .userImage(careEstimate.getUserImage())
+                    .nickname(careEstimate.getNickname())
+                    .proposal(careEstimate.getProposal())
+                    .petSignificant(careEstimate.getPetSignificant())
+                    .reservedDate(careEstimate.getReservedDate())
                     .build());
         }
 
-        return userGroomingEstimateInfos;
+        return userCareEstimateInfos;
     }
 
-    public UserGroomingEstimateDetails withUserGroomingEstimate() {
-        return UserGroomingEstimateDetails.builder()
-                .groomingEstimateId(groomingEstimateId)
+    public UserCareEstimateDetails withUserCareEstimate() {
+        return UserCareEstimateDetails.builder()
+                .careEstimateId(careEstimateId)
                 .userImage(userImage)
                 .nickname(nickname)
                 .address(address)
@@ -123,19 +124,22 @@ public class GroomingEstimate {
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
                 .petName(petName)
-                .desiredStyle(desiredStyle)
+                .symptoms(symptoms)
                 .requirements(requirements)
                 .build();
     }
 
-    public GroomingEstimate createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Groomer groomer) {
-        return GroomingEstimate.builder()
+    public CareEstimate createVetGroomingEstimate(VetCareEstimateReq request, Vet vet) {
+        return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
-                .desiredStyle(desiredStyle)
+                .symptoms(symptoms)
                 .requirements(requirements)
                 .proposal(proposal)
                 .status(EstimateStatus.PENDING)
                 .createdAt(LocalDateTime.now())
+                .diagnosis(request.getDiagnosis())
+                .cause(request.getCause())
+                .treatment(request.getTreatment())
                 .userId(userId)
                 .userImage(userImage)
                 .nickname(nickname)
@@ -146,11 +150,10 @@ public class GroomingEstimate {
                 .petBirth(petBirth)
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
-                .groomerId(groomer.getGroomerId())
-                .overallOpinion(request.getOverallOpinion())
-                .groomerImage(groomer.getGroomerImage())
-                .groomerName(groomer.getGroomerName())
-                .groomerIntroduction(groomer.getGroomerIntroduction())
+                .vetId(vet.getVetId())
+                .vetImage(vet.getVetImage())
+                .vetName(vet.getVetName())
+                .vetIntroduction(vet.getVetIntroduction())
                 .build();
     }
 }

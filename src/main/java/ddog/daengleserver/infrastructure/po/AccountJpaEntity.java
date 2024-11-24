@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "Account")
+@Entity(name = "Accounts")
 public class AccountJpaEntity {
 
     @Id

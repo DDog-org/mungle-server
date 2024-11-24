@@ -31,6 +31,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
+        /* TODO 당분간 토큰 검증을 빼기 위해 임시로 넣어놓음. 나중에 꼭 빼야됨 !! */
+/*        if (true) {
         /* 당분간 토큰 검증을 빼기 위해 임시로 넣어놓음. 나중에 꼭 빼야됨 !! */
         if (true) {
             chain.doFilter(request, response);
