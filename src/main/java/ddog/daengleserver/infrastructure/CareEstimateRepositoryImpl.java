@@ -23,18 +23,24 @@ public class CareEstimateRepositoryImpl implements CareEstimateRepository {
     @Override
     public List<CareEstimate> findCareEstimatesByAddress(String address) {
 
-        List<CareEstimateJpaEntity> careEstimatesJpaEntityList = careEstimateJpaRepository.findCareEstimatesJpaEntitiesByAddress(address);
         List<CareEstimate> careEstimates = new ArrayList<>();
-
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimatesJpaEntityList) {
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesJpaEntitiesByAddress(address)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
-
         return careEstimates;
     }
 
     @Override
     public CareEstimate getByCareEstimateId(Long careEstimateId) {
         return careEstimateJpaRepository.getCareEstimateJpaEntityByCareEstimateId(careEstimateId).toModel();
+    }
+
+    @Override
+    public List<CareEstimate> findCareEstimatesByPetId(Long petId) {
+        List<CareEstimate> careEstimates = new ArrayList<>();
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimateJpaEntitiesByPetId(petId)) {
+            careEstimates.add(careEstimateJpaEntity.toModel());
+        }
+        return careEstimates;
     }
 }

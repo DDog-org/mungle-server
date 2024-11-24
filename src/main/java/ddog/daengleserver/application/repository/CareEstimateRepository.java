@@ -12,5 +12,5 @@ public interface CareEstimateRepository {
 
     CareEstimate getByCareEstimateId(Long careEstimateId);
 
-
+    List<CareEstimate> findCareEstimatesByPetId(Long petId);
 }
