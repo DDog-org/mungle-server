@@ -33,4 +33,13 @@ public class Payment {
     public void updatePaymentId(Long paymentId) {
         this.paymentId = paymentId;
     }
+
+    public void cancel() {
+        this.status = PaymentStatus.CANCEL;
+    }
+
+    public void validationSuccess(String impUid) {
+        this.paymentUid = impUid;
+        this.status = PaymentStatus.COMPLETED;
+    }
 }

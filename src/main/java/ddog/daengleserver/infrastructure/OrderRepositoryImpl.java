@@ -2,6 +2,8 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.OrderRepository;
 import ddog.daengleserver.domain.Order;
+import ddog.daengleserver.domain.enums.OrderExceptionType;
+import ddog.daengleserver.domain.exception.OrderException;
 import ddog.daengleserver.infrastructure.po.OrderJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,5 +17,15 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public void save(Order order) {
         orderJpaRepository.save(OrderJpaEntity.fromModel(order));
+    }
+
+    @Override
+    public Order findBy(String orderUid) {
+        return orderJpaRepository.findByOrderUid(orderUid).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED)).toModel();
+    }
+
+    @Override
+    public void delete(Order order) {
+        orderJpaRepository.delete(OrderJpaEntity.fromModel(order));
     }
 }
