@@ -9,6 +9,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import ddog.daengleserver.presentation.estimate.enums.UserEstimateControllerResp;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,5 +65,8 @@ public class UserEstimateController {
         return success(DESIGNATION_REGISTRATION_COMPLETED.getMessage());
     }
 
-
+    @GetMapping("/list")
+    public CommonResponseEntity<EstimateInfo> findEstimateInfos(PayloadDto payloadDto) {
+        return success(userService.findEstimateInfoById(payloadDto.getAccountId()));
+    }
 }

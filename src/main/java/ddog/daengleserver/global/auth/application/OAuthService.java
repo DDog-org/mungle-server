@@ -59,6 +59,7 @@ public class OAuthService {
     private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
         String nickname = kakaoUserInfo.get("nickname").toString();
         Account account = Account.builder()
+                .accountId(null)
                 .provider(Provider.KAKAO)
                 .email(email)
                 .nickname(nickname)
@@ -90,6 +91,6 @@ public class OAuthService {
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + refreshTokenDto.getLoginType()), Role.CUSTOMER, response);
+        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + refreshTokenDto.getLoginType()), Role.DAENGLE, response);
     }
 }
