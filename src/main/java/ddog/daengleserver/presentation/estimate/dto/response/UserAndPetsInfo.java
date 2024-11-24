@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation.dto.response;
+package ddog.daengleserver.presentation.estimate.dto.response;
 
 import ddog.daengleserver.domain.Weight;
 import lombok.Builder;

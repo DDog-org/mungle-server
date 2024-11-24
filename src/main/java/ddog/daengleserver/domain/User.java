@@ -1,6 +1,6 @@
 package ddog.daengleserver.domain;
 
-import ddog.daengleserver.presentation.dto.response.UserAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

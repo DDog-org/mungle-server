@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation.enums;
+package ddog.daengleserver.presentation.estimate.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

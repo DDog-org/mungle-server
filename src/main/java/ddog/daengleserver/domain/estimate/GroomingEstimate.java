@@ -2,11 +2,11 @@ package ddog.daengleserver.domain.estimate;
 
 import ddog.daengleserver.domain.Groomer;
 import ddog.daengleserver.domain.Weight;
-import ddog.daengleserver.presentation.dto.request.GroomerGroomingEstimateReq;
-import ddog.daengleserver.presentation.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.daengleserver.presentation.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.dto.response.UserGroomingEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
