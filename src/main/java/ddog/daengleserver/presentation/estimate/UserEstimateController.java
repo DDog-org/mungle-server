@@ -19,8 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
-import static ddog.daengleserver.presentation.estimate.enums.UserEstimateControllerResp.DESIGNATION_REGISTRATION_COMPLETED;
-import static ddog.daengleserver.presentation.estimate.enums.UserEstimateControllerResp.GENERAL_REGISTRATION_COMPLETED;
+import static ddog.daengleserver.presentation.estimate.enums.UserEstimateControllerResp.*;
 
 @Tag(name = "사용자 견적서 관련 API")
 @RestController
@@ -42,28 +41,28 @@ public class UserEstimateController {
     @PostMapping("/general-grooming")
     public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody UserGeneralGroomingEstimateReq request, PayloadDto payloadDto) {
         groomingEstimateService.createUserGeneralGroomingEstimate(request, payloadDto.getAccountId());
-        return success(GENERAL_REGISTRATION_COMPLETED.getMessage());
+        return success(GENERAL_GROOMING_REGISTRATION.getMessage());
     }
 
     @Operation(summary = "미용 견적서 작성 (지정)", description = "미용사 지정 미용 견적서 작성")
     @PostMapping("/designation-grooming")
     public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody UserDesignationGroomingEstimateReq request, PayloadDto payloadDto) {
         groomingEstimateService.createUserDesignationGroomingEstimate(request, payloadDto.getAccountId());
-        return success(DESIGNATION_REGISTRATION_COMPLETED.getMessage());
+        return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
     @Operation(summary = "진료 견적서 작성 (일반)", description = "일반 진료 견적서 작성")
     @PostMapping("/general-care")
-    public CommonResponseEntity<String> createGeneralCareEstimate(@RequestBody UserGeneralCareEstimateReq request) {
-        careEstimateService.createUserGeneralCareEstimate(request);
-        return success(GENERAL_REGISTRATION_COMPLETED.getMessage());
+    public CommonResponseEntity<String> createGeneralCareEstimate(@RequestBody UserGeneralCareEstimateReq request, PayloadDto payloadDto) {
+        careEstimateService.createUserGeneralCareEstimate(request, payloadDto.getAccountId());
+        return success(GENERAL_CARE_REGISTRATION.getMessage());
     }
 
     @Operation(summary = "진료 견적서 작성 (지정)", description = "수의사 지정 진료 견적서 작성")
     @PostMapping("/designation-care")
-    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody UserDesignationCareEstimateReq request) {
-        careEstimateService.createUserDesignationCareEstimate(request);
-        return success(DESIGNATION_REGISTRATION_COMPLETED.getMessage());
+    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody UserDesignationCareEstimateReq request, PayloadDto payloadDto) {
+        careEstimateService.createUserDesignationCareEstimate(request, payloadDto.getAccountId());
+        return success(DESIGNATION_CARE_REGISTRATION.getMessage());
     }
 
     @GetMapping("/list")

@@ -52,7 +52,7 @@ public class CareEstimate {
     private String vetIntroduction;
 
 
-    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request) {
+    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long userId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -60,7 +60,7 @@ public class CareEstimate {
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
@@ -73,7 +73,7 @@ public class CareEstimate {
                 .build();
     }
 
-    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request) {
+    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long userId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -81,7 +81,7 @@ public class CareEstimate {
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
