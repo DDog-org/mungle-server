@@ -61,7 +61,7 @@ public class PaymentService implements PaymentUseCase {
             payment.validationSuccess(iamportResp.getImpUid());
 
             return PaymentCallbackResp.builder()
-                    .userId(order.getUserId())
+                    .userId(order.getAccountId())
                     .paymentId(payment.getPaymentId())
                     .price(payment.getPrice())
                     .build();

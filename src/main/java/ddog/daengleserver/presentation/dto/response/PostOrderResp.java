@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PostOrderResp {
-    Long userId;
+    Long accountId;
     Long itemId;
     String orderUId;
 }

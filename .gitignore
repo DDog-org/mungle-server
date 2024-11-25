@@ -41,3 +41,6 @@ application.yml
 
 ### Docker Volum ###
 mysql_data/
+
+### Environment variables ###
+.env

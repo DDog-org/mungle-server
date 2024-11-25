@@ -19,15 +19,15 @@ public class OrderService implements OrderUseCase {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public PostOrderResp processOrder(Long userId, PostOrderReq postOrderReq) {
+    public PostOrderResp processOrder(Long accountId, PostOrderReq postOrderReq) {
         Payment payment = Payment.createTemporaryHistoryBy(postOrderReq);
         paymentRepository.save(payment);
 
-        Order order = Order.createBy(postOrderReq, payment);
+        Order order = Order.createBy(accountId, postOrderReq, payment);
         orderRepository.save(order);
 
         return PostOrderResp.builder()
-                .userId(userId)
+                .accountId(accountId)
                 .itemId(postOrderReq.getItemId())
                 .orderUId(order.getOrderUid())
                 .build();
