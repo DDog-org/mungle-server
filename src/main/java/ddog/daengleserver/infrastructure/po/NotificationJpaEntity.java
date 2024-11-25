@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.NotifyMessage;
-import ddog.daengleserver.global.notify.enums.NotifyType;
+import ddog.daengleserver.domain.Notification;
+import ddog.daengleserver.presentation.notify.enums.NotifyType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "NotifyMessage")
-public class NotifyMessageJpaEntity {
+@Entity(name = "Notification")
+public class NotificationJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,17 +27,17 @@ public class NotifyMessageJpaEntity {
     private Long userId;
 
 
-    public static NotifyMessageJpaEntity from(NotifyMessage notifyMessage) {
-        return NotifyMessageJpaEntity.builder()
-                .id(notifyMessage.getId())
-                .notifyType(notifyMessage.getNotifyType())
-                .message(notifyMessage.getMessage())
-                .userId(notifyMessage.getUserId())
+    public static NotificationJpaEntity from(Notification notification) {
+        return NotificationJpaEntity.builder()
+                .id(notification.getId())
+                .notifyType(notification.getNotifyType())
+                .message(notification.getMessage())
+                .userId(notification.getUserId())
                 .build();
     }
 
-    public NotifyMessage toModel() {
-        return NotifyMessage.builder()
+    public Notification toModel() {
+        return Notification.builder()
                 .id(this.id)
                 .notifyType(this.notifyType)
                 .message(this.message)

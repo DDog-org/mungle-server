@@ -1,4 +1,4 @@
-package ddog.daengleserver.global.notify.enums;
+package ddog.daengleserver.presentation.notify.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
