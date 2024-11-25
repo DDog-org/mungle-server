@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IamPortConfig {
 
-    private final Dotenv dotenv = Dotenv.load();
+    private final Dotenv dotenv = Dotenv.configure()
+            .ignoreIfMissing() // CI 빌드 테스트 통과
+            .load();
 
     @Bean
     public IamportClient iamportClient() {
