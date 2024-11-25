@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class PostOrderReq {
-    Long userId;
     Long price;
     Long itemId;
 }

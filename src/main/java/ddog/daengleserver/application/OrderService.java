@@ -19,7 +19,7 @@ public class OrderService implements OrderUseCase {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public PostOrderResp processOrder(PostOrderReq postOrderReq) {
+    public PostOrderResp processOrder(Long userId, PostOrderReq postOrderReq) {
         Payment payment = Payment.createTemporaryHistoryBy(postOrderReq);
         paymentRepository.save(payment);
 
@@ -27,7 +27,7 @@ public class OrderService implements OrderUseCase {
         orderRepository.save(order);
 
         return PostOrderResp.builder()
-                .userId(postOrderReq.getUserId())
+                .userId(userId)
                 .itemId(postOrderReq.getItemId())
                 .orderUId(order.getOrderUid())
                 .build();

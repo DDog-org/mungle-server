@@ -1,5 +1,6 @@
 package ddog.daengleserver.presentation;
 
+import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.request.PostOrderReq;
 import ddog.daengleserver.presentation.dto.response.PostOrderResp;
@@ -17,7 +18,7 @@ public class OrderController {
     private final OrderUseCase orderUseCase;
 
     @PostMapping("/order")
-    public CommonResponseEntity<PostOrderResp> processOrder(@RequestBody PostOrderReq postOrderReq) {
-        return success(orderUseCase.processOrder(postOrderReq));
+    public CommonResponseEntity<PostOrderResp> processOrder(PayloadDto payloadDto, @RequestBody PostOrderReq postOrderReq) {
+        return success(orderUseCase.processOrder(payloadDto.getAccountId(), postOrderReq));
     }
 }
