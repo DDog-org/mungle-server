@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest   #Runner가 실행되는 환경 정의
     permissions:
       contents: read
-
+      
     steps:       # build job 내의 step 목록
     - uses: actions/checkout@v4
     - name: Set up JDK 17      #java 설치
@@ -39,6 +39,8 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build -Dspring.profiles.active=test
+      env:
+        JWT_SECRET: ${{ secrets.jwt_secret_key }} # GitHub Secrets에서 환경 변수 가져오기
 
     - name: Run Tests
       run: ./gradlew test -Dspring.profiles.active=test
