@@ -5,6 +5,7 @@ import ddog.daengleserver.application.repository.PaymentRepository;
 import ddog.daengleserver.domain.Order;
 import ddog.daengleserver.domain.Payment;
 import ddog.daengleserver.presentation.dto.request.PostOrderReq;
+import ddog.daengleserver.presentation.dto.response.PostOrderResp;
 import ddog.daengleserver.presentation.usecase.OrderUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,17 @@ public class OrderService implements OrderUseCase {
     private final PaymentRepository paymentRepository;
 
     @Transactional
-    public void processOrder(PostOrderReq postOrderReq) {
+    public PostOrderResp processOrder(Long accountId, PostOrderReq postOrderReq) {
         Payment payment = Payment.createTemporaryHistoryBy(postOrderReq);
         paymentRepository.save(payment);
 
-        Order order = Order.createBy(postOrderReq, payment);
+        Order order = Order.createBy(accountId, postOrderReq, payment);
         orderRepository.save(order);
+
+        return PostOrderResp.builder()
+                .accountId(accountId)
+                .itemId(postOrderReq.getItemId())
+                .orderUId(order.getOrderUid())
+                .build();
     }
 }

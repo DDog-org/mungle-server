@@ -1,8 +1,9 @@
 package ddog.daengleserver.presentation;
 
+import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.request.PostOrderReq;
-import ddog.daengleserver.presentation.enums.PostOrderResp;
+import ddog.daengleserver.presentation.dto.response.PostOrderResp;
 import ddog.daengleserver.presentation.usecase.OrderUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,7 @@ public class OrderController {
     private final OrderUseCase orderUseCase;
 
     @PostMapping("/order")
-    public CommonResponseEntity<PostOrderResp> processOrder(@RequestBody PostOrderReq postOrderReq) {
-        orderUseCase.processOrder(postOrderReq);
-        return success(PostOrderResp.ORDER_REGISTRATION_COMPLETED);
+    public CommonResponseEntity<PostOrderResp> processOrder(PayloadDto payloadDto, @RequestBody PostOrderReq postOrderReq) {
+        return success(orderUseCase.processOrder(payloadDto.getAccountId(), postOrderReq));
     }
 }

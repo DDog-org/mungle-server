@@ -21,7 +21,7 @@ public class OrderJpaEntity {
     private Long price;
     private Long itemId;
     private String orderUid;
-    private Long userId;
+    private Long account_id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
@@ -33,7 +33,7 @@ public class OrderJpaEntity {
                 .price(this.price)
                 .itemId(this.itemId)
                 .orderUid(this.orderUid)
-                .userId(this.userId)
+                .accountId(this.account_id)
                 .payment(this.payment.toModel())
                 .build();
     }
@@ -46,7 +46,7 @@ public class OrderJpaEntity {
                 .price(order.getPrice())
                 .itemId(order.getItemId())
                 .orderUid(order.getOrderUid())
-                .userId(order.getUserId())
+                .account_id(order.getAccountId())
                 .payment(PaymentJpaEntity.fromModel(payment))
                 .build();
     }

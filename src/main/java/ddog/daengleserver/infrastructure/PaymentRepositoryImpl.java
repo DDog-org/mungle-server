@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
         @Override
         public void save(Payment payment) {
             PaymentJpaEntity paymentJpaEntity = paymentJpaRepository.save(PaymentJpaEntity.fromModel(payment));
-            payment.updatePaymentId(paymentJpaEntity.getPaymentId());  //TODO 어디서 처리해야 하는지?
+            payment.updatePaymentId(paymentJpaEntity.getPaymentId());  //TODO Setter를 없애는 방향으로 리펙터링 필요
         }
 }
