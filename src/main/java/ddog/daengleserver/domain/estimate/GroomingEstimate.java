@@ -51,7 +51,7 @@ public class GroomingEstimate {
     private String groomerIntroduction;
 
 
-    public static GroomingEstimate createUserGeneralCareEstimate(UserGeneralGroomingEstimateReq request) {
+    public static GroomingEstimate createUserGeneralCareEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -59,7 +59,7 @@ public class GroomingEstimate {
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
@@ -72,7 +72,7 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static GroomingEstimate createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request) {
+    public static GroomingEstimate createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long userId) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -80,7 +80,7 @@ public class GroomingEstimate {
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())

@@ -40,15 +40,15 @@ public class UserEstimateController {
 
     @Operation(summary = "미용 견적서 작성 (일반)", description = "일반 미용 견적서 작성")
     @PostMapping("/general-grooming")
-    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody UserGeneralGroomingEstimateReq request) {
-        groomingEstimateService.createUserGeneralGroomingEstimate(request);
+    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody UserGeneralGroomingEstimateReq request, PayloadDto payloadDto) {
+        groomingEstimateService.createUserGeneralGroomingEstimate(request, payloadDto.getAccountId());
         return success(GENERAL_REGISTRATION_COMPLETED.getMessage());
     }
 
     @Operation(summary = "미용 견적서 작성 (지정)", description = "미용사 지정 미용 견적서 작성")
     @PostMapping("/designation-grooming")
-    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody UserDesignationGroomingEstimateReq request) {
-        groomingEstimateService.createUserDesignationGroomingEstimate(request);
+    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody UserDesignationGroomingEstimateReq request, PayloadDto payloadDto) {
+        groomingEstimateService.createUserDesignationGroomingEstimate(request, payloadDto.getAccountId());
         return success(DESIGNATION_REGISTRATION_COMPLETED.getMessage());
     }
 
