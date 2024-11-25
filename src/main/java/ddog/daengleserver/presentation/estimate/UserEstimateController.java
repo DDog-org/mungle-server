@@ -34,7 +34,7 @@ public class UserEstimateController {
 
     @Operation(summary = "사용자 주소, 반려동물 정보 요청", description = "사용자 주소와 반려동물 id, 사진, 이름 정보를 가져옵니다.")
     @GetMapping("/user-pets-info")
-    public CommonResponseEntity<UserAndPetsInfo> getAddressAndPetsInfo(PayloadDto payloadDto) {
+    public CommonResponseEntity<UserAndPetsInfo> findAddressAndPetsInfo(PayloadDto payloadDto) {
         return success(userService.getUserAddressAndPetsInfoById(payloadDto.getAccountId()));
     }
 

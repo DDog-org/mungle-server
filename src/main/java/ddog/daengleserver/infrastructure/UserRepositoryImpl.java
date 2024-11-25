@@ -2,6 +2,8 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.enums.UserExceptionType;
+import ddog.daengleserver.domain.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(Long accountId) {
         return userJpaRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("user not found"))
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND))
                 .toModel();
     }
 }
