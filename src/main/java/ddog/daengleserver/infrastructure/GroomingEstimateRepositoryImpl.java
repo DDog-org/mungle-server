@@ -21,13 +21,20 @@ public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepositor
     }
 
     @Override
-    public List<GroomingEstimate> findGroomingEstimatesByAddress(String address) {
-
+    public List<GroomingEstimate> findGeneralGroomingEstimates(String address) {
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
-        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesJpaEntitiesByAddress(address)) {
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGeneralGroomingEstimatesByAddress(address)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
         }
+        return groomingEstimates;
+    }
 
+    @Override
+    public List<GroomingEstimate> findDesignationGroomingEstimates(Long groomerId) {
+        List<GroomingEstimate> groomingEstimates = new ArrayList<>();
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findDesignationGroomingEstimatesByGroomerId(groomerId)) {
+            groomingEstimates.add(groomingEstimateJpaEntity.toModel());
+        }
         return groomingEstimates;
     }
 

@@ -6,8 +6,8 @@ import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstim
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -94,22 +95,37 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static List<UserGroomingEstimateInfo> withUserGroomingEstimates(List<GroomingEstimate> groomingEstimates) {
+    public static GroomingEstimateInfos findGroomingEstimateInfos(
+            List<GroomingEstimate> generalEstimates,
+            List<GroomingEstimate> designationEstimates
+    ) {
+        List<GroomingEstimateInfos.Contents> allContents = estimatesToContents(generalEstimates);
+        List<GroomingEstimateInfos.Contents> designationContents = estimatesToContents(designationEstimates);
 
-        List<UserGroomingEstimateInfo> userGroomingEstimateInfos = new ArrayList<>();
+        allContents.addAll(designationContents);
 
-        for (GroomingEstimate groomingEstimate : groomingEstimates) {
-            userGroomingEstimateInfos.add(UserGroomingEstimateInfo.builder()
-                    .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                    .reservedDate(groomingEstimate.getReservedDate())
-                    .userImage(groomingEstimate.getUserImage())
-                    .proposal(groomingEstimate.getProposal())
-                    .nickname(groomingEstimate.getNickname())
-                    .petSignificant(groomingEstimate.getPetSignificant())
+        // groomingEstimateId 기준으로 오름차순 정렬
+        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Contents::getGroomingEstimateId));
+
+        return GroomingEstimateInfos.builder()
+                .allGroomingEstimates(allContents)
+                .designationGroomingEstimates(designationContents)
+                .build();
+    }
+
+    private static List<GroomingEstimateInfos.Contents> estimatesToContents(List<GroomingEstimate> estimates) {
+        List<GroomingEstimateInfos.Contents> contents = new ArrayList<>();
+        for (GroomingEstimate estimate : estimates) {
+            contents.add(GroomingEstimateInfos.Contents.builder()
+                    .groomingEstimateId(estimate.getGroomingEstimateId())
+                    .userImage(estimate.getUserImage())
+                    .nickname(estimate.getNickname())
+                    .proposal(estimate.getProposal())
+                    .petSignificant(estimate.getPetSignificant())
+                    .reservedDate(estimate.getReservedDate())
                     .build());
         }
-
-        return userGroomingEstimateInfos;
+        return contents;
     }
 
     public UserGroomingEstimateDetails withUserGroomingEstimate() {
@@ -169,4 +185,5 @@ public class GroomingEstimate {
                 .overallOpinion(overallOpinion)
                 .build();
     }
+
 }

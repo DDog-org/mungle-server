@@ -8,7 +8,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstim
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +33,11 @@ public class GroomingEstimateService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserGroomingEstimateInfo> findGroomingEstimateInfos(Long accountId) {
-        String address = groomerRepository.getAddressById(accountId);
-        List<GroomingEstimate> groomingEstimates = groomingEstimateRepository.findGroomingEstimatesByAddress(address);
-        return GroomingEstimate.withUserGroomingEstimates(groomingEstimates);
+    public GroomingEstimateInfos findGroomingEstimateInfos(Long accountId) {
+        Groomer groomer = groomerRepository.getGroomerById(accountId);
+        List<GroomingEstimate> generalEstimates = groomingEstimateRepository.findGeneralGroomingEstimates(groomer.getAddress());
+        List<GroomingEstimate> designationEstimates = groomingEstimateRepository.findDesignationGroomingEstimates(groomer.getGroomerId());
+        return GroomingEstimate.findGroomingEstimateInfos(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)

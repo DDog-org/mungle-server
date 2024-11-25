@@ -2,8 +2,8 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.GroomerRepository;
 import ddog.daengleserver.domain.Groomer;
-import ddog.daengleserver.implementation.AccountException;
-import ddog.daengleserver.implementation.enums.AccountExceptionType;
+import ddog.daengleserver.domain.enums.UserExceptionType;
+import ddog.daengleserver.domain.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +13,12 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 
     private final GroomerJpaRepository groomerJpaRepository;
 
+
+
     @Override
     public String getAddressById(Long accountId) {
         return groomerJpaRepository.findByGroomerId(accountId)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND))
                 .getAddress();
     }
 
