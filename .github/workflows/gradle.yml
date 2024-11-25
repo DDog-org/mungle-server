@@ -24,6 +24,9 @@ jobs:
     permissions:
       contents: read
 
+    env: # 테스트 환경에서 필요한 환경 변수 설정
+      JWT_SECRET: test-secret-key # 환경 변수 GitHub Actions에 추가
+
     steps:       # build job 내의 step 목록
     - uses: actions/checkout@v4
     - name: Set up JDK 17      #java 설치
