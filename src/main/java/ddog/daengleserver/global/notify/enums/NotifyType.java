@@ -12,7 +12,7 @@ public enum NotifyType {
     COMMUNICATE("채팅 및 비대면 답장"),
     COMPLETED("미용 및 진단 완료"),
     CERTIFIED("인증 완료"),
-    VIDEO_CALL("채팅 및 비대면"),
+    VIDEO_CALL("비대면 상담"),
     MATCHING("매칭 완료"),
     REVIEWED("리뷰 등록"),
     CANCELED("예약 취소"),
