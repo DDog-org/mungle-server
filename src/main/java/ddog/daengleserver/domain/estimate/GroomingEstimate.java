@@ -5,6 +5,7 @@ import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
 import lombok.AllArgsConstructor;
@@ -151,6 +152,21 @@ public class GroomingEstimate {
                 .groomerImage(groomer.getGroomerImage())
                 .groomerName(groomer.getGroomerName())
                 .groomerIntroduction(groomer.getGroomerIntroduction())
+                .build();
+    }
+
+    public GroomingEstimateDetails getGroomingEstimateDetails() {
+        return GroomingEstimateDetails.builder()
+                .groomingEstimateId(groomingEstimateId)
+                .groomerImage(groomerImage)
+                .groomerName(groomerName)
+                .shopName(shopName)
+                .groomerIntroduction(groomerIntroduction)
+                .address(address)
+                .reservedDate(reservedDate)
+                .petWeight(petWeight)
+                .desiredStyle(desiredStyle)
+                .overallOpinion(overallOpinion)
                 .build();
     }
 }

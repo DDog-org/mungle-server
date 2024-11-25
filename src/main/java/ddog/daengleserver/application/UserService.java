@@ -7,7 +7,9 @@ import ddog.daengleserver.domain.Pet;
 import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -72,5 +74,17 @@ public class UserService {
         return EstimateInfo.builder()
                 .petEstimates(petEstimates)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public GroomingEstimateDetails getGroomingEstimateDetails(Long groomingEstimateId) {
+        GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomingEstimateId);
+        return groomingEstimate.getGroomingEstimateDetails();
+    }
+
+    @Transactional(readOnly = true)
+    public CareEstimateDetails getCareEstimateDetails(Long careEstimateId) {
+        CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(careEstimateId);
+        return careEstimate.getCareEstimateDetails();
     }
 }

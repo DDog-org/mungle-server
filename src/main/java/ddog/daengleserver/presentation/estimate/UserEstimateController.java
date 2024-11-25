@@ -9,9 +9,10 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
-import ddog.daengleserver.presentation.estimate.enums.UserEstimateControllerResp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +69,15 @@ public class UserEstimateController {
     @GetMapping("/list")
     public CommonResponseEntity<EstimateInfo> findEstimateInfos(PayloadDto payloadDto) {
         return success(userService.findEstimateInfoById(payloadDto.getAccountId()));
+    }
+
+    @GetMapping("/{groomingEstimateId}/grooming-details")
+    public CommonResponseEntity<GroomingEstimateDetails> getGroomingEstimateDetails(@PathVariable Long groomingEstimateId) {
+        return success(userService.getGroomingEstimateDetails(groomingEstimateId));
+    }
+
+    @GetMapping("/{careEstimateId}/care-details")
+    public CommonResponseEntity<CareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
+        return success(userService.getCareEstimateDetails(careEstimateId));
     }
 }

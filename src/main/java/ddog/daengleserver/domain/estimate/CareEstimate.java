@@ -5,6 +5,7 @@ import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
 import lombok.AllArgsConstructor;
@@ -154,6 +155,20 @@ public class CareEstimate {
                 .vetImage(vet.getVetImage())
                 .vetName(vet.getVetName())
                 .vetIntroduction(vet.getVetIntroduction())
+                .build();
+    }
+
+    public CareEstimateDetails getCareEstimateDetails() {
+        return CareEstimateDetails.builder()
+                .careEstimateId(careEstimateId)
+                .vetImage(vetImage)
+                .vetName(vetName)
+                .vetIntroduction(vetIntroduction)
+                .address(address)
+                .reservedDate(reservedDate)
+                .diagnosis(diagnosis)
+                .cause(cause)
+                .treatment(treatment)
                 .build();
     }
 }
