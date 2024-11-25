@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum Role {
 
-    CUSTOMER("사용자"),
+    DAENGLE("사용자"),
     GROOMER("미용사"),
+    VET("수의사"),
     ADMIN("관리자");
 
     public final String description;

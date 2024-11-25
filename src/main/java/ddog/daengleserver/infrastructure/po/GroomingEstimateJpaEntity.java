@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "GroomingEstimate")
+@Entity(name = "GroomingEstimates")
 public class GroomingEstimateJpaEntity {
 
     @Id

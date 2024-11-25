@@ -11,4 +11,6 @@ public interface GroomingEstimateRepository {
     List<GroomingEstimate> findGroomingEstimatesByAddress(String address);
 
     GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId);
+
+    List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId);
 }

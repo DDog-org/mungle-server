@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class GroomingEstimateEstimateRepositoryImpl implements GroomingEstimateRepository {
+public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepository {
 
     private final GroomingEstimateJpaRepository groomingEstimateJpaRepository;
 
@@ -23,10 +23,8 @@ public class GroomingEstimateEstimateRepositoryImpl implements GroomingEstimateR
     @Override
     public List<GroomingEstimate> findGroomingEstimatesByAddress(String address) {
 
-        List<GroomingEstimateJpaEntity> groomingEstimateJpaEntityList = groomingEstimateJpaRepository.findGroomingEstimatesJpaEntitiesByAddress(address);
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
-
-        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaEntityList) {
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesJpaEntitiesByAddress(address)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
         }
 
@@ -36,5 +34,16 @@ public class GroomingEstimateEstimateRepositoryImpl implements GroomingEstimateR
     @Override
     public GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId) {
         return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByGroomingEstimateId(groomingEstimateId).toModel();
+    }
+
+    @Override
+    public List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId) {
+
+        List<GroomingEstimate> groomingEstimates = new ArrayList<>();
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimateJpaEntitiesByPetId(petId)) {
+            groomingEstimates.add(groomingEstimateJpaEntity.toModel());
+        }
+
+        return groomingEstimates;
     }
 }
