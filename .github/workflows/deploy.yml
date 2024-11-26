@@ -71,21 +71,27 @@ jobs:
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
 
           echo "=== Stopping and removing existing container ==="
-          if docker ps -q --filter "name=spring-app"; then
+          if docker ps -q --filter "name=spring-app" > /dev/null; then
+            echo "Stopping existing container..."
             docker stop spring-app || { echo "Failed to stop container"; exit 1; }
             docker rm spring-app || { echo "Failed to remove container"; exit 1; }
+          else
+            echo "No existing container to stop."
           fi
 
           echo "=== Running new container ==="
           docker run --env-file .env -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
 
           echo "=== Verifying the new container ==="
-          sleep 5 # Allow container to initialize
+          sleep 10 # Allow container to initialize
           if ! docker ps --filter "name=spring-app" --filter "status=running" | grep spring-app; then
             echo "New container is not running. Check logs for errors."
             docker logs spring-app
             exit 1
           fi
+
+          echo "=== Fetching container logs ==="
+          docker logs spring-app
 
           echo "=== Deployment completed successfully ==="
           EOF
