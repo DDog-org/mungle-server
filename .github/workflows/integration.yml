@@ -4,8 +4,8 @@ name: Java CI with Gradle
 # Workflow가 실행되지 위한 조건(트리거)
 # develop 브랜치로의 pull request가 일어 났을 경우 Actions가 실행됨
 on:
-  pull_request:
-    branches: [ "develop" ]
+#  pull_request:
+#    branches: [ "develop" ]
 
 # Workflow의 job 목록
 jobs:
