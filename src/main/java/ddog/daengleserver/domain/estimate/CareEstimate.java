@@ -48,6 +48,7 @@ public class CareEstimate {
     private String petSignificant;
 
     private Long vetId;
+    private int daengleMeter;
     private String vetImage;
     private String vetName;
     private String vetIntroduction;
@@ -168,6 +169,7 @@ public class CareEstimate {
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
                 .vetId(vet.getVetId())
+                .daengleMeter(vet.getDaengleMeter())
                 .vetImage(vet.getVetImage())
                 .vetName(vet.getVetName())
                 .vetIntroduction(vet.getVetIntroduction())
