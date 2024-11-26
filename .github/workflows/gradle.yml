@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest   #Runner가 실행되는 환경 정의
     permissions:
       contents: read
-      
+
     steps:       # build job 내의 step 목록
     - uses: actions/checkout@v4
     - name: Set up JDK 17      #java 설치
@@ -46,6 +46,9 @@ jobs:
       run: ./gradlew test -Dspring.profiles.active=test
       env:
         JWT_SECRET: ${{ secrets.jwt_secret_key }}
+        SPRING_DATASOURCE_URL: ${{ secrets.MYSQL_URL }}
+        SPRING_DATASOURCE_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+        SPRING_DATASOURCE_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
