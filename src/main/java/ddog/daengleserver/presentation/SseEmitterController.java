@@ -19,7 +19,6 @@ public class SseEmitterController {
     private final SseEmitterUsecase sseEmitterUsecase;
     private static final String INIT = "{\"message\" : \"CONNECTED\"}";
 
-
     @GetMapping(value = "/connection", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter connectNotificationStream(Long userId){
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
