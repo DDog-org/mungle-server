@@ -30,10 +30,6 @@ public class Payment {
                 .build();
     }
 
-    public void updatePaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
-
     public void cancel() {
         this.status = PaymentStatus.CANCEL;
     }
