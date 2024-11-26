@@ -1,0 +1,40 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Repository Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 3. Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          # ECR 로그인
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
+          # Docker 이미지 Pull 및 컨테이너 재배포
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker stop spring-app || true
+          docker rm spring-app || true
+          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          EOF
