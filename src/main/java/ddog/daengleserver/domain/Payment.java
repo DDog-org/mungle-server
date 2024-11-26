@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -21,6 +24,8 @@ public class Payment {
 
     private PaymentRepository paymentRepository;
 
+    public static final String PAYMENT_SUCCESS_STATUS = "paid";
+
     public static Payment createTemporaryHistoryBy(PostOrderReq postOrderReq) {
         return Payment.builder()
                 .paymentId(null)
@@ -30,12 +35,25 @@ public class Payment {
                 .build();
     }
 
-    public void cancel() {
-        this.status = PaymentStatus.CANCEL;
+    //결제 완료 확인
+    public boolean checkIncompleteBy(String paymentStatus) {
+        if(paymentStatus != PAYMENT_SUCCESS_STATUS) {
+            return true;
+        }
+        return false;
+    }
+
+    //결제 금액 유효성 검증
+    public boolean checkInValidationBy(Long paymentAmount) {
+        return !Objects.equals(this.price, paymentAmount);
     }
 
     public void validationSuccess(String impUid) {
         this.paymentUid = impUid;
         this.status = PaymentStatus.COMPLETED;
+    }
+
+    public void cancel() {
+        this.status = PaymentStatus.CANCEL;
     }
 }
