@@ -77,14 +77,6 @@ dependencies {
 
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
-}
-
-tasks.test {
-    testLogging {
-        showExceptions = true
-        exceptionFormat "full"
-        showStackTraces true
-    }
 }
