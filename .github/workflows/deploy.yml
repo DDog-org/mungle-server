@@ -13,22 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up JDK and Build JAR
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+      # 2. Set up Gradle and Build JAR (CI에서 진행했음)
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v4
+#        with:
+#          java-version: '17'
+#          distribution: 'temurin'
+#
+#      - name: Build with Gradle
+#        run: ./gradlew clean build -x test
 
-      - name: Build with Gradle
-        run: ./gradlew clean build -x test
-
-      # 3. Create .env File
-      - name: Create .env file
-        run: |
-          echo "${{ secrets.ENV_VARIABLES }}" > .env
-
-      # 4. Log in to Amazon ECR
+      # 3. Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         env:
@@ -36,21 +31,19 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      # 5. Build and Push Docker Image
+      # 4. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
           echo "Building Docker image..."
           docker build --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
-          echo "Tagging Docker image as 'latest'..."
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           echo "Pushing Docker image with tag $IMAGE_TAG to ECR..."
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
-          echo "Pushing Docker image with tag 'latest' to ECR..."
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # 6. Set up SSH
+      # 5. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -58,14 +51,27 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # 7. Deploy to EC2
+      # 6. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "Logging in to Amazon ECR..."
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
+          echo "Pulling latest Docker image..."
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+          echo "Stopping and removing existing container..."
           docker stop spring-app || true
           docker rm spring-app || true
+
+          echo "Starting new container..."
           docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+          echo "Checking running containers..."
+          docker ps -a
+
+          echo "Fetching container logs..."
+          docker logs spring-app || true
           EOF
