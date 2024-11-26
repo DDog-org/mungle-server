@@ -66,6 +66,11 @@ public class SseEmitterService implements SseEmitterUsecase {
         }
     }
 
+    @Override
+    public boolean isUserConnected(Long userId) {
+        return emitters.containsKey(userId);
+    }
+
     // 유효하지 않은 Emitter 정리
     private void removeInvalidEmitters() {
         emitters.entrySet().removeIf(entry -> isInvalidEmitter(entry.getValue()));

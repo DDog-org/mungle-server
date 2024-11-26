@@ -70,10 +70,10 @@ public class NotificationControllerTest {
         sseStream.take(2)
                 .doOnNext(message -> {
                     if (message.contains("CONNECTED")) {
-                        assertTrue(message.contains("CONNECTED"), "연결 메시지 실패");
+                        assertTrue(message.contains("CONNECTED"), "연결 실패");
                         System.out.println(message);
                     } else if (message.contains(notificationMessage)) {
-                        assertTrue(message.contains(notificationMessage), "알림 메시지 실패");
+                        assertTrue(message.contains(notificationMessage), "알림 실패");
                         System.out.println(message);
                     }
                 })

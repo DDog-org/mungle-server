@@ -5,6 +5,7 @@ import ddog.daengleserver.infrastructure.NotificationJpaRepository;
 import ddog.daengleserver.infrastructure.po.NotificationJpaEntity;
 import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.notify.enums.NotifyType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +19,7 @@ public class NotificationTest {
     private NotificationJpaRepository notificationRepository;
 
     @Test
+    @DisplayName("알림 메시지를 DB에 저장하여 출력할 수 있다.")
     void testSaveNotification() {
         Long userId = 2L;
         String notificationMessage = "테스트 알림 메시지";

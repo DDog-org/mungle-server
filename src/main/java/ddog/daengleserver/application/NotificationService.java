@@ -8,8 +8,6 @@ import ddog.daengleserver.presentation.usecase.NotificationUsecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -49,8 +47,7 @@ public class NotificationService implements NotificationUsecase {
     }
 
     // DB에 알림 메시지 저장
-    @Transactional
-    public void saveNotificationToDb(NotificationReq notificationReq) {
+    private void saveNotificationToDb(NotificationReq notificationReq) {
         notificationRepository.save(Notification.createNotificationWithReq(notificationReq)); // DB에 저장
     }
 }

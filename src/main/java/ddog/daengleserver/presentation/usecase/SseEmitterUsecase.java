@@ -8,4 +8,5 @@ public interface SseEmitterUsecase {
     void sendMessageToUser(Long userId, String message);
     void sendMessageToAllUsers(String message);
     void removeEmitter(Long userId);
+    boolean isUserConnected(Long userId);
 }

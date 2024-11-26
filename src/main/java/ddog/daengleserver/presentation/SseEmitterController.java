@@ -1,14 +1,16 @@
 package ddog.daengleserver.presentation;
 
+import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+
+import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +33,16 @@ public class SseEmitterController {
         return sseEmitter;
     }
 
+    @GetMapping("/connection-status")
+    public CommonResponseEntity<String> connectionStatus(@RequestParam Long userId) {
+        boolean isConnected = sseEmitterUsecase.isUserConnected(userId);
+        String message = isConnected ? "User is connected" : "User is not connected";
+        return success(message);
+    }
+
     @PostMapping("/send")
-    public ResponseEntity<String> sendNotification(@RequestBody NotificationReq notificationReq) {
+    public CommonResponseEntity<String> sendNotification(@RequestBody NotificationReq notificationReq) {
         sseEmitterUsecase.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
-        return ResponseEntity.ok("Notification sent.");
+        return success("Notification sent");
     }
 }
