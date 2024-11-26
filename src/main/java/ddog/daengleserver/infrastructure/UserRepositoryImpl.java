@@ -31,4 +31,9 @@ public class UserRepositoryImpl implements UserRepository {
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND))
                 .toModel();
     }
+
+    @Override
+    public Boolean hasNickname(String nickname) {
+        return userJpaRepository.existsByNickname(nickname);
+    }
 }

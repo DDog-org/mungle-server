@@ -48,6 +48,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public Boolean hasNickname(String nickname) {
+        return !userRepository.hasNickname(nickname);
+    }
+
+    @Transactional(readOnly = true)
     public UserAndPetsInfo getUserAddressAndPetsInfoById(Long accountId) {
         User user = userRepository.findById(accountId);
         return user.findAddressAndPetsInfo();
