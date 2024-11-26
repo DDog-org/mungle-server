@@ -13,6 +13,7 @@ public class Groomer {
 
     private Long groomerId;
     private Long accountId;
+    private int daengleMeter;
     private String groomerName;
     private String groomerImage;
     private String address;

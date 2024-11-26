@@ -47,9 +47,9 @@ public class GroomingEstimateService {
     }
 
     @Transactional
-    public void createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Long accountId) {
+    public void createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Long groomerId) {
         GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(request.getGroomingEstimateId());
-        Groomer groomer = groomerRepository.getGroomerById(accountId);
+        Groomer groomer = groomerRepository.getGroomerById(groomerId);
         groomingEstimateRepository.save(groomingEstimate.createGroomerGroomingEstimate(request, groomer));
     }
 }

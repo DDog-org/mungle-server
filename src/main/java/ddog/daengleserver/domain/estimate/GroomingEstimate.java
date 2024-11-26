@@ -45,6 +45,7 @@ public class GroomingEstimate {
     private String petSignificant;
 
     private Long groomerId;
+    private int daengleMeter;
     private String overallOpinion;
     private String groomerImage;
     private String groomerName;
@@ -165,6 +166,7 @@ public class GroomingEstimate {
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
                 .groomerId(groomer.getGroomerId())
+                .daengleMeter(groomer.getDaengleMeter())
                 .overallOpinion(request.getOverallOpinion())
                 .groomerImage(groomer.getGroomerImage())
                 .groomerName(groomer.getGroomerName())
