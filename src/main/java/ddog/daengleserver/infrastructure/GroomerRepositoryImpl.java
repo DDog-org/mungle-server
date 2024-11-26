@@ -13,8 +13,6 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 
     private final GroomerJpaRepository groomerJpaRepository;
 
-
-
     @Override
     public String getAddressById(Long accountId) {
         return groomerJpaRepository.findByGroomerId(accountId)

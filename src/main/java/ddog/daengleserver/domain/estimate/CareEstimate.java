@@ -6,8 +6,8 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -95,22 +97,36 @@ public class CareEstimate {
                 .build();
     }
 
-    public static List<UserCareEstimateInfo> withUserCareEstimates(List<CareEstimate> careEstimates) {
+    public static CareEstimateInfos findCareEstimateInfos(
+            List<CareEstimate> generalEstimates,
+            List<CareEstimate> designationEstimates
+    ) {
+        List<CareEstimateInfos.Contents> allContents = estimatesToContents(generalEstimates);
+        List<CareEstimateInfos.Contents> designationContents = estimatesToContents(designationEstimates);
 
-        List<UserCareEstimateInfo> userCareEstimateInfos = new ArrayList<>();
+        allContents.addAll(designationContents);
 
-        for (CareEstimate careEstimate : careEstimates) {
-            userCareEstimateInfos.add(UserCareEstimateInfo.builder()
-                    .careEstimateId(careEstimate.getCareEstimateId())
-                    .userImage(careEstimate.getUserImage())
-                    .nickname(careEstimate.getNickname())
-                    .proposal(careEstimate.getProposal())
-                    .petSignificant(careEstimate.getPetSignificant())
-                    .reservedDate(careEstimate.getReservedDate())
+        // careEstimateId 기준으로 오름차순 정렬
+        allContents.sort(Comparator.comparing(CareEstimateInfos.Contents::getCareEstimateId));
+        return CareEstimateInfos.builder()
+                .allCareEstimates(allContents)
+                .designationCareEstimates(designationContents)
+                .build();
+    }
+
+    private static List<CareEstimateInfos.Contents> estimatesToContents(List<CareEstimate> estimates) {
+        List<CareEstimateInfos.Contents> contents = new ArrayList<>();
+        for (CareEstimate estimate : estimates) {
+            contents.add(CareEstimateInfos.Contents.builder()
+                    .careEstimateId(estimate.getCareEstimateId())
+                    .userImage(estimate.getUserImage())
+                    .nickname(estimate.getNickname())
+                    .proposal(estimate.getProposal())
+                    .petSignificant(estimate.getPetSignificant())
+                    .reservedDate(estimate.getReservedDate())
                     .build());
         }
-
-        return userCareEstimateInfos;
+        return contents;
     }
 
     public UserCareEstimateDetails withUserCareEstimate() {

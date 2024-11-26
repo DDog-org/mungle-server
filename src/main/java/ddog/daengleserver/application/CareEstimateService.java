@@ -8,7 +8,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +33,11 @@ public class CareEstimateService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserCareEstimateInfo> findCareEstimateInfos(Long accountId) {
-        String address = vetRepository.getAddressById(accountId);
-        List<CareEstimate> careEstimates = careEstimateRepository.findCareEstimatesByAddress(address);
-        return CareEstimate.withUserCareEstimates(careEstimates);
+    public CareEstimateInfos findCareEstimateInfos(Long vetId) {
+        Vet vet = vetRepository.getVetById(vetId);
+        List<CareEstimate> generalEstimates = careEstimateRepository.findGeneralCareEstimates(vet.getAddress());
+        List<CareEstimate> designationEstimates = careEstimateRepository.findDesignationCareEstimates(vet.getVetId());
+        return CareEstimate.findCareEstimateInfos(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)
