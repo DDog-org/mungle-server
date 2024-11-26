@@ -27,8 +27,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Account findBy(long id) {
-        return accountJpaRepository.findById(id)
+    public Account findById(Long accountId) {
+        return accountJpaRepository.findById(accountId)
                 .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
                 .toModel();
     }

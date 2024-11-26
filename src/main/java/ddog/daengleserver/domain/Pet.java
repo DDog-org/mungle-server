@@ -1,6 +1,6 @@
 package ddog.daengleserver.domain;
 
-import ddog.daengleserver.presentation.dto.request.JoinUserWithPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

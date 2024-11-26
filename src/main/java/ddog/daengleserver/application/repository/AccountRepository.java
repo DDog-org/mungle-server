@@ -9,7 +9,7 @@ public interface AccountRepository {
 
     Account save(Account account);
 
-    Account findBy(long id);
+    Account findById(Long accountId);
 
     Account findAccountByEmailAndRole(String email, Role role);
 }

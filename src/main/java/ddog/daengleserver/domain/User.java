@@ -1,7 +1,8 @@
 package ddog.daengleserver.domain;
 
-import ddog.daengleserver.presentation.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class User {
     private String nickname;
     private String userImage;
     private String address;
+    private String email;
     private List<Pet> pets;
 
     public static User createWithoutPet(Long accountId, JoinUserWithoutPet request) {
@@ -32,6 +34,7 @@ public class User {
                 .phoneNumber(request.getPhoneNumber())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
+                .email(request.getEmail())
                 .pets(new ArrayList<>())
                 .build();
     }
@@ -45,7 +48,18 @@ public class User {
                 .phoneNumber(request.getPhoneNumber())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
+                .email(request.getEmail())
                 .pets(pets)
+                .build();
+    }
+
+    public UserProfileInfo toUserProfileInfo() {
+        return UserProfileInfo.builder()
+                .userImage(userImage)
+                .nickname(nickname)
+                .username(username)
+                .phoneNumber(phoneNumber)
+                .email(email)
                 .build();
     }
 

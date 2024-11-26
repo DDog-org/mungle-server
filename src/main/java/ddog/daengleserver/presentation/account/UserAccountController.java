@@ -1,18 +1,17 @@
-package ddog.daengleserver.presentation;
+package ddog.daengleserver.presentation.account;
 
 import ddog.daengleserver.application.UserService;
+import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
-import ddog.daengleserver.presentation.dto.request.CheckNicknameReq;
-import ddog.daengleserver.presentation.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.request.CheckNicknameReq;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
-import static ddog.daengleserver.presentation.enums.JoinControllerResp.USER_JOIN_COMPLETED;
+import static ddog.daengleserver.presentation.account.enums.JoinControllerResp.USER_JOIN_COMPLETED;
 
 @RestController
 @RequestMapping("/api/daengle")
@@ -37,5 +36,11 @@ public class UserAccountController {
         userService.createUserWithPet(request);
         return success(USER_JOIN_COMPLETED.getMessage());
     }
+
+    @GetMapping("/modify-page")
+    public CommonResponseEntity<UserProfileInfo> getUserProfileInfo(PayloadDto payloadDto) {
+        return success(userService.getUserProfileInfo(payloadDto.getAccountId()));
+    }
+
 
 }

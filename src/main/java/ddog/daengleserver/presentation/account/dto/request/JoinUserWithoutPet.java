@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation.dto.request;
+package ddog.daengleserver.presentation.account.dto.request;
 
 import ddog.daengleserver.domain.Role;
 import lombok.Builder;

@@ -32,6 +32,7 @@ public class UserJpaEntity {
     private String nickname;
     private String userImage;
     private String address;
+    private String email;
 
     @OneToMany(mappedBy = "userId")
     private List<PetJpaEntity> pets = new ArrayList<>();
@@ -44,6 +45,7 @@ public class UserJpaEntity {
                 .nickname(user.getNickname())
                 .userImage(user.getUserImage())
                 .address(user.getAddress())
+                .email(user.getEmail())
                 .pets(UserJpaEntity.fromPetModel(user.getPets()))
                 .build();
     }
@@ -56,6 +58,7 @@ public class UserJpaEntity {
                 .nickname(nickname)
                 .userImage(userImage)
                 .address(address)
+                .email(email)
                 .pets(toPetModel())
                 .build();
     }

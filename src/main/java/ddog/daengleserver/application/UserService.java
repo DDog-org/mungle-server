@@ -6,8 +6,9 @@ import ddog.daengleserver.domain.Pet;
 import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.presentation.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
+import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
@@ -50,6 +51,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public Boolean hasNickname(String nickname) {
         return !userRepository.hasNickname(nickname);
+    }
+
+    @Transactional(readOnly = true)
+    public UserProfileInfo getUserProfileInfo(Long userId) {
+        User user = userRepository.findById(userId);
+        return user.toUserProfileInfo();
     }
 
     @Transactional(readOnly = true)
