@@ -40,7 +40,8 @@ public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepositor
 
     @Override
     public GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId) {
-        return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByGroomingEstimateId(groomingEstimateId).toModel();
+        return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByGroomingEstimateId(groomingEstimateId)
+                .toModel();
     }
 
     @Override

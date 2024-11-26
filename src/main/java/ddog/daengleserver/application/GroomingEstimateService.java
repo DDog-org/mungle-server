@@ -24,7 +24,7 @@ public class GroomingEstimateService {
 
     @Transactional
     public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralCareEstimate(request, userId));
+        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(request, userId));
     }
 
     @Transactional

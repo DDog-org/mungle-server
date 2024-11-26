@@ -20,10 +20,10 @@ public class UserGroomingEstimateDetails {
     private LocalDateTime reservedDate;
 
     private String petImage;
+    private String petName;
     private int petBirth;
     private Weight petWeight;
     private String petSignificant;
-    private String petName;
     private String desiredStyle;
     private String requirements;
 

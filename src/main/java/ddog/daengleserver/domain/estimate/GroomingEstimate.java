@@ -52,7 +52,7 @@ public class GroomingEstimate {
     private String groomerIntroduction;
 
 
-    public static GroomingEstimate createUserGeneralCareEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
+    public static GroomingEstimate createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -136,10 +136,10 @@ public class GroomingEstimate {
                 .address(address)
                 .reservedDate(reservedDate)
                 .petImage(petImage)
+                .petName(petName)
                 .petBirth(petBirth)
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
-                .petName(petName)
                 .desiredStyle(desiredStyle)
                 .requirements(requirements)
                 .build();
