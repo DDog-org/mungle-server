@@ -4,7 +4,7 @@ import ddog.daengleserver.global.exception.CustomRuntimeException;
 import ddog.daengleserver.implementation.enums.AccountExceptionType;
 
 public class AccountException extends CustomRuntimeException {
-    public AccountException(AccountExceptionType message, Object... args) {
-        super(String.valueOf(message), args);
+    public AccountException(AccountExceptionType type, Object... args) {
+        super(type.getMessage(), type.getHttpStatus(), type.getCode());
     }
 }

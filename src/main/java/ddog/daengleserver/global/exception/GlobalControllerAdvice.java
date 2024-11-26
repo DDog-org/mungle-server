@@ -9,29 +9,36 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalControllerAdvice {
-    private ResponseEntity<CommonResponseEntity<Object>> response(Throwable throwable, HttpStatus status) {
+
+    private ResponseEntity<CommonResponseEntity<Object>> response(CustomRuntimeException exception) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
+
         return new ResponseEntity<>(
-                new CommonResponseEntity<>(false, null, new CustomError(throwable.getMessage(), status))
-                , headers, status
+                new CommonResponseEntity<>(
+                        false,
+                        null,
+                        new CustomError(exception.getMessage(), exception.getHttpStatus(), exception.getCode())
+                ),
+                headers,
+                exception.getHttpStatus()
         );
     }
 
-    @ExceptionHandler({
-            IllegalParameterException.class,
-            BadRequestException.class})
-    public ResponseEntity<?> handleBadRequestException(Exception e) {
-        return response(e, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleExceptionForBadRequest(Exception e) {
-        return response(e, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(CustomRuntimeException.class)
+    public ResponseEntity<?> handleCustomRuntimeException(CustomRuntimeException e) {
+        return response(e);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception e) {
-        return response(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+                new CommonResponseEntity<>(
+                        false,
+                        null,
+                        new CustomError(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null)
+                ),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }
