@@ -8,6 +8,8 @@ import ddog.daengleserver.infrastructure.po.OrderJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
@@ -20,8 +22,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order findBy(String orderUid) {
-        return orderJpaRepository.findByOrderUid(orderUid).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED)).toModel();
+    public Optional<Order> findBy(String orderUid) {
+        return orderJpaRepository.findByOrderUid(orderUid).map(OrderJpaEntity::toModel);
     }
 
     @Override
