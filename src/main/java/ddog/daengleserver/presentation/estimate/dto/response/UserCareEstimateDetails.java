@@ -19,6 +19,7 @@ public class UserCareEstimateDetails {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
 
+    private Long petId;
     private String petImage;
     private String petName;
     private int petBirth;

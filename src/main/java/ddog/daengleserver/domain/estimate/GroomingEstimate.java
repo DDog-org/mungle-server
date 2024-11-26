@@ -135,6 +135,7 @@ public class GroomingEstimate {
                 .nickname(nickname)
                 .address(address)
                 .reservedDate(reservedDate)
+                .petId(petId)
                 .petImage(petImage)
                 .petName(petName)
                 .petBirth(petBirth)

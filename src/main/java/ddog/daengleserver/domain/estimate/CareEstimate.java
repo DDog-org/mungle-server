@@ -135,6 +135,7 @@ public class CareEstimate {
                 .nickname(nickname)
                 .address(address)
                 .reservedDate(reservedDate)
+                .petId(petId)
                 .petImage(petImage)
                 .petBirth(petBirth)
                 .petWeight(petWeight)
