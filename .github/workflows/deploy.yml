@@ -3,32 +3,30 @@ name: Deploy to EC2
 on:
   push:
     branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Log in to AWS ECR
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+      # 1. Repository Checkout
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # 2. Pull and deploy Docker image on EC2
+      # 2. Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 3. Deploy to EC2
       - name: Deploy to EC2
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker stop spring-app || true
           docker rm spring-app || true
           docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
           EOF
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        shell: bash
