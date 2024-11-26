@@ -32,11 +32,7 @@ jobs:
       - name: Verify Build Output
         run: ls -l build/libs
 
-      # 4. Create .env file
-      - name: Create .env file
-        run: echo "${{ secrets.ENV_VARIABLES }}" > .env
-
-      # 5. Log in to Amazon ECR
+      # 4. Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         env:
@@ -44,7 +40,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      # 6. Build and Push Docker Image
+      # 5. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
@@ -55,7 +51,7 @@ jobs:
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # 7. Set up SSH
+      # 6. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -63,22 +59,30 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # 8. Deploy to EC2
+      # 7. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "=== Logging into ECR ==="
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
           echo "=== Pulling the latest Docker image ==="
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+
           echo "=== Stopping and removing existing container ==="
           docker stop spring-app || echo "No container to stop"
           docker rm spring-app || echo "No container to remove"
+
+          echo "=== Creating .env file ==="
+          echo "${{ secrets.ENV_VARIABLES }}" > .env
+
           echo "=== Running new container ==="
-          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          docker run --env-file .env -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+
           echo "=== Checking running containers ==="
           docker ps -a
+
           echo "=== Fetching container logs ==="
           docker logs spring-app || echo "No logs available"
           EOF
