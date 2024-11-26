@@ -21,6 +21,7 @@ public class VetJpaEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
     private AccountJpaEntity account;
+    private int daengleMeter;
     private String vetName;
     private String vetImage;
     private String address;
@@ -29,6 +30,7 @@ public class VetJpaEntity {
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
                 .vetId(vet.getVetId())
+                .daengleMeter(vet.getDaengleMeter())
                 .vetName(vet.getVetName())
                 .vetImage(vet.getVetImage())
                 .address(vet.getAddress())
@@ -39,6 +41,7 @@ public class VetJpaEntity {
     public Vet toModel() {
         return Vet.builder()
                 .vetId(vetId)
+                .daengleMeter(daengleMeter)
                 .vetName(vetName)
                 .vetImage(vetImage)
                 .address(address)

@@ -12,6 +12,7 @@ public class CareEstimateDetails {
     private Long careEstimateId;
     private String vetImage;
     private String vetName;
+    private int daengleMeter;
     private String vetIntroduction;
     private String address;
     private LocalDateTime reservedDate;

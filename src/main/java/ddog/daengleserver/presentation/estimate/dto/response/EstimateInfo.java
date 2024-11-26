@@ -11,21 +11,22 @@ import java.util.List;
 @Builder
 public class EstimateInfo {
 
-    List<PetEstimate> petEstimates;
+    List<PetInfo> petInfos;
 
     @Getter
     @Builder
-    public static class PetEstimate {
+    public static class PetInfo {
         private String petName;
         private String petImage;
-        List<GroomingEstimateInfo> groomingEstimates;
-        List<CareEstimateInfo> careEstimates;
+        List<Grooming> groomingEstimates;
+        List<Care> careEstimates;
 
         @Getter
         @Builder
-        public static class GroomingEstimateInfo {
+        public static class Grooming {
             private Long groomingEstimateId;
             private String groomerName;
+            private int daengleMeter;
             private String groomerImage;
             private String shopName;
 
@@ -35,9 +36,10 @@ public class EstimateInfo {
 
         @Getter
         @Builder
-        public static class CareEstimateInfo {
+        public static class Care {
             private Long careEstimateId;
             private String vetName;
+            private int daengleMeter;
             private String vetImage;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

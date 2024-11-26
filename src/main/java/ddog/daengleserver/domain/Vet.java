@@ -13,6 +13,7 @@ public class Vet {
 
     private Long vetId;
     private Long accountId;
+    private int daengleMeter;
     private String vetName;
     private String vetImage;
     private String address;

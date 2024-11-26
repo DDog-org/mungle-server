@@ -8,9 +8,11 @@ public interface CareEstimateRepository {
 
     void save(CareEstimate careEstimate);
 
-    List<CareEstimate> findCareEstimatesByAddress(String address);
-
     CareEstimate getByCareEstimateId(Long careEstimateId);
 
     List<CareEstimate> findCareEstimatesByPetId(Long petId);
+
+    List<CareEstimate> findGeneralCareEstimates(String address);
+
+    List<CareEstimate> findDesignationCareEstimates(Long vetId);
 }

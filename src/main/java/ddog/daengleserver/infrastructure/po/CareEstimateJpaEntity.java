@@ -48,38 +48,10 @@ public class CareEstimateJpaEntity {
     private String petSignificant;
 
     private Long vetId;
+    private int daengleMeter;
     private String vetImage;
     private String vetName;
     private String vetIntroduction;
-
-    public CareEstimate toModel() {
-        return CareEstimate.builder()
-                .careEstimateId(careEstimateId)
-                .reservedDate(reservedDate)
-                .symptoms(symptoms)
-                .requirements(requirements)
-                .proposal(proposal)
-                .status(status)
-                .createdAt(createdAt)
-                .diagnosis(diagnosis)
-                .cause(cause)
-                .treatment(treatment)
-                .userId(userId)
-                .userImage(userImage)
-                .nickname(nickname)
-                .address(address)
-                .petId(petId)
-                .petImage(petImage)
-                .petName(petName)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
-                .petSignificant(petSignificant)
-                .vetId(vetId)
-                .vetImage(vetImage)
-                .vetName(vetName)
-                .vetIntroduction(vetIntroduction)
-                .build();
-    }
 
     public static CareEstimateJpaEntity from(CareEstimate careEstimate) {
         return CareEstimateJpaEntity.builder()
@@ -104,9 +76,40 @@ public class CareEstimateJpaEntity {
                 .petWeight(careEstimate.getPetWeight())
                 .petSignificant(careEstimate.getPetSignificant())
                 .vetId(careEstimate.getVetId())
+                .daengleMeter(careEstimate.getDaengleMeter())
                 .vetImage(careEstimate.getVetImage())
                 .vetName(careEstimate.getVetName())
                 .vetIntroduction(careEstimate.getVetIntroduction())
+                .build();
+    }
+
+    public CareEstimate toModel() {
+        return CareEstimate.builder()
+                .careEstimateId(careEstimateId)
+                .reservedDate(reservedDate)
+                .symptoms(symptoms)
+                .requirements(requirements)
+                .proposal(proposal)
+                .status(status)
+                .createdAt(createdAt)
+                .diagnosis(diagnosis)
+                .cause(cause)
+                .treatment(treatment)
+                .userId(userId)
+                .userImage(userImage)
+                .nickname(nickname)
+                .address(address)
+                .petId(petId)
+                .petImage(petImage)
+                .petName(petName)
+                .petBirth(petBirth)
+                .petWeight(petWeight)
+                .petSignificant(petSignificant)
+                .vetId(vetId)
+                .daengleMeter(daengleMeter)
+                .vetImage(vetImage)
+                .vetName(vetName)
+                .vetIntroduction(vetIntroduction)
                 .build();
     }
 }

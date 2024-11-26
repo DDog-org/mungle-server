@@ -8,9 +8,11 @@ public interface GroomingEstimateRepository {
 
     void save(GroomingEstimate groomingEstimate);
 
-    List<GroomingEstimate> findGroomingEstimatesByAddress(String address);
-
     GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId);
 
     List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId);
+
+    List<GroomingEstimate> findGeneralGroomingEstimates(String address);
+
+    List<GroomingEstimate> findDesignationGroomingEstimates(Long groomerId);
 }

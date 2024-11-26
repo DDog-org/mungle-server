@@ -6,8 +6,9 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
+import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -47,12 +49,13 @@ public class CareEstimate {
     private String petSignificant;
 
     private Long vetId;
+    private int daengleMeter;
     private String vetImage;
     private String vetName;
     private String vetIntroduction;
 
 
-    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request) {
+    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long userId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -60,7 +63,7 @@ public class CareEstimate {
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
@@ -73,7 +76,7 @@ public class CareEstimate {
                 .build();
     }
 
-    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request) {
+    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long userId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -81,7 +84,7 @@ public class CareEstimate {
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(request.getUserId())
+                .userId(userId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
@@ -95,22 +98,50 @@ public class CareEstimate {
                 .build();
     }
 
-    public static List<UserCareEstimateInfo> withUserCareEstimates(List<CareEstimate> careEstimates) {
+    public static CareEstimateInfos findCareEstimateInfos(
+            List<CareEstimate> generalEstimates,
+            List<CareEstimate> designationEstimates
+    ) {
+        List<CareEstimateInfos.Contents> allContents = estimatesToContents(generalEstimates);
+        List<CareEstimateInfos.Contents> designationContents = estimatesToContents(designationEstimates);
 
-        List<UserCareEstimateInfo> userCareEstimateInfos = new ArrayList<>();
+        allContents.addAll(designationContents);
 
+        // careEstimateId 기준으로 오름차순 정렬
+        allContents.sort(Comparator.comparing(CareEstimateInfos.Contents::getCareEstimateId));
+        return CareEstimateInfos.builder()
+                .allCareEstimates(allContents)
+                .designationCareEstimates(designationContents)
+                .build();
+    }
+
+    private static List<CareEstimateInfos.Contents> estimatesToContents(List<CareEstimate> estimates) {
+        List<CareEstimateInfos.Contents> contents = new ArrayList<>();
+        for (CareEstimate estimate : estimates) {
+            contents.add(CareEstimateInfos.Contents.builder()
+                    .careEstimateId(estimate.getCareEstimateId())
+                    .userImage(estimate.getUserImage())
+                    .nickname(estimate.getNickname())
+                    .proposal(estimate.getProposal())
+                    .petSignificant(estimate.getPetSignificant())
+                    .reservedDate(estimate.getReservedDate())
+                    .build());
+        }
+        return contents;
+    }
+
+    public static List<EstimateInfo.PetInfo.Care> toInfos(List<CareEstimate> careEstimates) {
+        List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
         for (CareEstimate careEstimate : careEstimates) {
-            userCareEstimateInfos.add(UserCareEstimateInfo.builder()
+            careInfos.add(EstimateInfo.PetInfo.Care.builder()
                     .careEstimateId(careEstimate.getCareEstimateId())
-                    .userImage(careEstimate.getUserImage())
-                    .nickname(careEstimate.getNickname())
-                    .proposal(careEstimate.getProposal())
-                    .petSignificant(careEstimate.getPetSignificant())
+                    .vetName(careEstimate.getVetName())
+                    .daengleMeter(careEstimate.getDaengleMeter())
+                    .vetImage(careEstimate.getVetImage())
                     .reservedDate(careEstimate.getReservedDate())
                     .build());
         }
-
-        return userCareEstimateInfos;
+        return careInfos;
     }
 
     public UserCareEstimateDetails withUserCareEstimate() {
@@ -120,6 +151,7 @@ public class CareEstimate {
                 .nickname(nickname)
                 .address(address)
                 .reservedDate(reservedDate)
+                .petId(petId)
                 .petImage(petImage)
                 .petBirth(petBirth)
                 .petWeight(petWeight)
@@ -130,7 +162,7 @@ public class CareEstimate {
                 .build();
     }
 
-    public CareEstimate createVetGroomingEstimate(VetCareEstimateReq request, Vet vet) {
+    public CareEstimate createVetCareEstimate(VetCareEstimateReq request, Vet vet) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(symptoms)
@@ -152,6 +184,7 @@ public class CareEstimate {
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
                 .vetId(vet.getVetId())
+                .daengleMeter(vet.getDaengleMeter())
                 .vetImage(vet.getVetImage())
                 .vetName(vet.getVetName())
                 .vetIntroduction(vet.getVetIntroduction())
@@ -163,6 +196,7 @@ public class CareEstimate {
                 .careEstimateId(careEstimateId)
                 .vetImage(vetImage)
                 .vetName(vetName)
+                .daengleMeter(daengleMeter)
                 .vetIntroduction(vetIntroduction)
                 .address(address)
                 .reservedDate(reservedDate)

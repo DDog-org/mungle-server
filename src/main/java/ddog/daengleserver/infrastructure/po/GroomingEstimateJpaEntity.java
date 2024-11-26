@@ -45,6 +45,7 @@ public class GroomingEstimateJpaEntity {
     private String petSignificant;
 
     private Long groomerId;
+    private int daengleMeter;
     private String overallOpinion;
     private String groomerImage;
     private String groomerName;
@@ -71,6 +72,7 @@ public class GroomingEstimateJpaEntity {
                 .petWeight(petWeight)
                 .petSignificant(petSignificant)
                 .groomerId(groomerId)
+                .daengleMeter(daengleMeter)
                 .overallOpinion(overallOpinion)
                 .groomerImage(groomerImage)
                 .groomerName(groomerName)
@@ -99,6 +101,7 @@ public class GroomingEstimateJpaEntity {
                 .petWeight(groomingEstimate.getPetWeight())
                 .petSignificant(groomingEstimate.getPetSignificant())
                 .groomerId(groomingEstimate.getGroomerId())
+                .daengleMeter(groomingEstimate.getDaengleMeter())
                 .overallOpinion(groomingEstimate.getOverallOpinion())
                 .groomerImage(groomingEstimate.getGroomerImage())
                 .groomerName(groomingEstimate.getGroomerName())
