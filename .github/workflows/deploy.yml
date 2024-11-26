@@ -28,7 +28,11 @@ jobs:
       # 3. Deploy to EC2
       - name: Deploy to EC2
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          # ECR 로그인
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
+          # Docker 이미지 Pull 및 컨테이너 재배포
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker stop spring-app || true
           docker rm spring-app || true
