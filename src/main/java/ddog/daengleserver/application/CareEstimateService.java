@@ -50,6 +50,6 @@ public class CareEstimateService {
     public void createVetCareEstimate(VetCareEstimateReq request, Long accountId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getCareEstimateId());
         Vet vet = vetRepository.getVetById(accountId);
-        careEstimateRepository.save(careEstimate.createVetGroomingEstimate(request, vet));
+        careEstimateRepository.save(careEstimate.createVetCareEstimate(request, vet));
     }
 }

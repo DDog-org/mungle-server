@@ -4,14 +4,12 @@ import ddog.daengleserver.application.CareEstimateService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
+import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 import static ddog.daengleserver.presentation.estimate.enums.VetEstimateControllerResp.REGISTRATION_COMPLETED;
@@ -32,7 +30,7 @@ public class VetEstimateController {
 
     @Operation(summary = "진료 견적서 상세 내용 조회")
     @GetMapping("/{careEstimateId}/details")
-    public CommonResponseEntity<UserCareEstimateDetails> getGroomingEstimateDetails(@PathVariable Long careEstimateId) {
+    public CommonResponseEntity<UserCareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
         return success(careEstimateService.getCareEstimateDetailInfo(careEstimateId));
     }
 
