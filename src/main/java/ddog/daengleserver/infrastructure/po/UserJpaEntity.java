@@ -28,28 +28,33 @@ public class UserJpaEntity {
     @JoinColumn(name = "accountId")
     private AccountJpaEntity account;
     private String username;
-    private String userImage;
+    private String phoneNumber;
     private String nickname;
+    private String userImage;
     private String address;
 
     @OneToMany(mappedBy = "userId")
     private List<PetJpaEntity> pets = new ArrayList<>();
 
-    public static UserJpaEntity from(User user) {
+    public static UserJpaEntity from(User user, AccountJpaEntity account) {
         return UserJpaEntity.builder()
-                .userId(user.getUserId())
+                .account(account)
                 .username(user.getUsername())
+                .phoneNumber(user.getPhoneNumber())
+                .nickname(user.getNickname())
                 .userImage(user.getUserImage())
                 .address(user.getAddress())
+                .pets(UserJpaEntity.fromPetModel(user.getPets()))
                 .build();
     }
 
     public User toModel() {
         return User.builder()
-                .userId(userId)
+                .accountId(account.getAccountId())
                 .username(username)
-                .userImage(userImage)
+                .phoneNumber(phoneNumber)
                 .nickname(nickname)
+                .userImage(userImage)
                 .address(address)
                 .pets(toPetModel())
                 .build();
@@ -61,5 +66,13 @@ public class UserJpaEntity {
             petModel.add(pet.toModel());
         }
         return petModel;
+    }
+
+    private static List<PetJpaEntity> fromPetModel(List<Pet> petModel) {
+        List<PetJpaEntity> pets = new ArrayList<>();
+        for (Pet pet : petModel) {
+            pets.add(PetJpaEntity.from(pet));
+        }
+        return pets;
     }
 }

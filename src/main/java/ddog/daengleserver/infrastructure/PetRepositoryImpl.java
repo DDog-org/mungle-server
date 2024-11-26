@@ -25,4 +25,9 @@ public class PetRepositoryImpl implements PetRepository {
         }
         return petList;
     }
+
+    @Override
+    public void save(Pet pet) {
+        petJpaRepository.save(PetJpaEntity.from(pet));
+    }
 }

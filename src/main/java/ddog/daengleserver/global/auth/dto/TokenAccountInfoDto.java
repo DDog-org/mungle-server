@@ -11,7 +11,6 @@ public class TokenAccountInfoDto {
 
     private Long id;
     private String email;
-    private String nickname;
     private Provider provider;
     private Role role;
 
@@ -19,7 +18,6 @@ public class TokenAccountInfoDto {
     public TokenAccountInfoDto(AccountJpaEntity accountJpaEntity) {
         this.id = accountJpaEntity.getAccountId();
         this.email = accountJpaEntity.getEmail();
-        this.nickname = accountJpaEntity.getNickname();
         this.provider = accountJpaEntity.getProvider();
         this.role = accountJpaEntity.getRole();
     }

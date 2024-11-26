@@ -7,7 +7,7 @@ public interface AccountRepository {
 
     boolean checkExistsAccountBy(String email, Role role);
 
-    void save(Account account);
+    Account save(Account account);
 
     Account findBy(long id);
 

@@ -1,12 +1,13 @@
 package ddog.daengleserver.application;
 
-import ddog.daengleserver.application.repository.CareEstimateRepository;
-import ddog.daengleserver.application.repository.GroomingEstimateRepository;
-import ddog.daengleserver.application.repository.UserRepository;
+import ddog.daengleserver.application.repository.*;
+import ddog.daengleserver.domain.Account;
 import ddog.daengleserver.domain.Pet;
 import ddog.daengleserver.domain.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
+import ddog.daengleserver.presentation.dto.request.JoinUserWithPet;
+import ddog.daengleserver.presentation.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
@@ -22,9 +23,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final PetRepository petRepository;
     private final GroomingEstimateRepository groomingEstimateRepository;
     private final CareEstimateRepository careEstimateRepository;
+
+    @Transactional
+    public void createUserWithoutPet(JoinUserWithoutPet request) {
+        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+        Account savedAccount = accountRepository.save(accountToSave);
+        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void createUserWithPet(JoinUserWithPet request) {
+        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+        Account savedAccount = accountRepository.save(accountToSave);
+        Pet pet = Pet.toJoinPetInfo(savedAccount.getAccountId(), request);
+        User user = User.createWithPet(savedAccount.getAccountId(), request, pet);
+        petRepository.save(pet);
+        userRepository.save(user);
+    }
 
     @Transactional(readOnly = true)
     public UserAndPetsInfo getUserAddressAndPetsInfoById(Long accountId) {

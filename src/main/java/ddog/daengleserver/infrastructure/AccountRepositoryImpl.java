@@ -21,8 +21,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void save(Account account) {
-        accountJpaRepository.save(AccountJpaEntity.from(account));
+    public Account save(Account account) {
+        return accountJpaRepository.save(AccountJpaEntity.from(account))
+                .toModel();
     }
 
     @Override
