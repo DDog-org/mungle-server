@@ -196,6 +196,7 @@ public class GroomingEstimate {
                 .groomerImage(groomerImage)
                 .groomerName(groomerName)
                 .shopName(shopName)
+                .daengleMeter(daengleMeter)
                 .groomerIntroduction(groomerIntroduction)
                 .address(address)
                 .reservedDate(reservedDate)

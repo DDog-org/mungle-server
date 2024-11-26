@@ -196,6 +196,7 @@ public class CareEstimate {
                 .careEstimateId(careEstimateId)
                 .vetImage(vetImage)
                 .vetName(vetName)
+                .daengleMeter(daengleMeter)
                 .vetIntroduction(vetIntroduction)
                 .address(address)
                 .reservedDate(reservedDate)
