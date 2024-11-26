@@ -46,12 +46,10 @@ public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepositor
 
     @Override
     public List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId) {
-
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
-        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimateJpaEntitiesByPetId(petId)) {
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesByPetId(petId)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
         }
-
         return groomingEstimates;
     }
 }

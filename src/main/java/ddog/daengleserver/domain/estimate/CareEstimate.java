@@ -7,6 +7,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstim
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
+import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -127,6 +128,20 @@ public class CareEstimate {
                     .build());
         }
         return contents;
+    }
+
+    public static List<EstimateInfo.PetInfo.Care> toInfos(List<CareEstimate> careEstimates) {
+        List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
+        for (CareEstimate careEstimate : careEstimates) {
+            careInfos.add(EstimateInfo.PetInfo.Care.builder()
+                    .careEstimateId(careEstimate.getCareEstimateId())
+                    .vetName(careEstimate.getVetName())
+                    .daengleMeter(careEstimate.getDaengleMeter())
+                    .vetImage(careEstimate.getVetImage())
+                    .reservedDate(careEstimate.getReservedDate())
+                    .build());
+        }
+        return careInfos;
     }
 
     public UserCareEstimateDetails withUserCareEstimate() {

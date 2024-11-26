@@ -46,7 +46,7 @@ public class CareEstimateRepositoryImpl implements CareEstimateRepository {
     @Override
     public List<CareEstimate> findCareEstimatesByPetId(Long petId) {
         List<CareEstimate> careEstimates = new ArrayList<>();
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimateJpaEntitiesByPetId(petId)) {
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByPetId(petId)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
         return careEstimates;

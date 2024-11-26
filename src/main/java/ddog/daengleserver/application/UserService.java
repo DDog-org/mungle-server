@@ -33,46 +33,27 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimateInfoById(Long accountId) {
-        User user = userRepository.findById(accountId);
+    public EstimateInfo findEstimateInfos(Long userId) {
+        User user = userRepository.findById(userId);
         List<Pet> pets = user.getPets();
 
-        List<EstimateInfo.PetEstimate> petEstimates = new ArrayList<>();
+        List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
-
-            List<EstimateInfo.PetEstimate.GroomingEstimateInfo> groomingEstimateInfos = new ArrayList<>();
-            List<EstimateInfo.PetEstimate.CareEstimateInfo> careEstimateInfos = new ArrayList<>();
-
             List<GroomingEstimate> groomingEstimates = groomingEstimateRepository.findGroomingEstimatesByPetId(pet.getPetId());
-            for (GroomingEstimate groomingEstimate : groomingEstimates) {
-                groomingEstimateInfos.add(EstimateInfo.PetEstimate.GroomingEstimateInfo.builder()
-                        .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                        .groomerName(groomingEstimate.getGroomerName())
-                        .groomerImage(groomingEstimate.getGroomerImage())
-                        .shopName(groomingEstimate.getShopName())
-                        .reservedDate(groomingEstimate.getReservedDate())
-                        .build());
-            }
-            List<CareEstimate> careEstimates = careEstimateRepository.findCareEstimatesByPetId(pet.getPetId());
-            for (CareEstimate careEstimate : careEstimates) {
-                careEstimateInfos.add(EstimateInfo.PetEstimate.CareEstimateInfo.builder()
-                        .careEstimateId(careEstimate.getCareEstimateId())
-                        .vetName(careEstimate.getVetName())
-                        .vetImage(careEstimate.getVetImage())
-                        .reservedDate(careEstimate.getReservedDate())
-                        .build());
-            }
+            List<EstimateInfo.PetInfo.Grooming> groomingInfos = GroomingEstimate.toInfos(groomingEstimates);
 
-            petEstimates.add(EstimateInfo.PetEstimate.builder()
+            List<CareEstimate> careEstimates = careEstimateRepository.findCareEstimatesByPetId(pet.getPetId());
+            List<EstimateInfo.PetInfo.Care> careInfos = CareEstimate.toInfos(careEstimates);
+
+            petInfos.add(EstimateInfo.PetInfo.builder()
                     .petName(pet.getPetName())
                     .petImage(pet.getPetImage())
-                    .groomingEstimates(groomingEstimateInfos)
-                    .careEstimates(careEstimateInfos)
+                    .groomingEstimates(groomingInfos)
+                    .careEstimates(careInfos)
                     .build());
         }
-
         return EstimateInfo.builder()
-                .petEstimates(petEstimates)
+                .petInfos(petInfos)
                 .build();
     }
 

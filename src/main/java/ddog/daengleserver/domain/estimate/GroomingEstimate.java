@@ -5,6 +5,7 @@ import ddog.daengleserver.domain.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
@@ -127,6 +128,21 @@ public class GroomingEstimate {
                     .build());
         }
         return contents;
+    }
+
+    public static List<EstimateInfo.PetInfo.Grooming> toInfos(List<GroomingEstimate> groomingEstimates) {
+        List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
+        for (GroomingEstimate groomingEstimate : groomingEstimates) {
+            groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
+                    .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
+                    .groomerName(groomingEstimate.getGroomerName())
+                    .daengleMeter(groomingEstimate.getDaengleMeter())
+                    .groomerImage(groomingEstimate.getGroomerImage())
+                    .shopName(groomingEstimate.getShopName())
+                    .reservedDate(groomingEstimate.getReservedDate())
+                    .build());
+        }
+        return groomingInfos;
     }
 
     public UserGroomingEstimateDetails withUserGroomingEstimate() {
