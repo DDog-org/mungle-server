@@ -6,9 +6,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TokenInfoDto {
+public class LoginResult {
 
+    private final Boolean isOnboarding;
+    private final String email;
+    private final Role role;
     private final String grantType;
     private final String accessToken;
-    private final Role role;
+
 }
