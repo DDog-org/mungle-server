@@ -2,6 +2,7 @@ package ddog.daengleserver.global.infra.sse;
 
 import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -34,7 +35,8 @@ public class SseEmitterService implements SseEmitterUsecase {
         SseEmitter emitter = emitters.get(userId); // 사용자 ID에 해당하는 Emitter 찾기
         if (emitter != null) {
             try {
-                emitter.send(message); // 해당 사용자에게 메시지 전송
+                emitter.send(SseEmitter.event().name("notification").data(message, MediaType.valueOf("text/event-stream;charset=UTF-8")));
+
             } catch (IOException e) {
                 log.error("사용자 {}에게 데이터 전송 중 오류 발생: {}", userId, e.getMessage(), e);
                 removeEmitter(userId);

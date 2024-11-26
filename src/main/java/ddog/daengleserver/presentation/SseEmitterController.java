@@ -1,11 +1,11 @@
 package ddog.daengleserver.presentation;
 
+import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -29,5 +29,11 @@ public class SseEmitterController {
             sseEmitterUsecase.removeEmitter(userId);
         }
         return sseEmitter;
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<String> sendNotification(@RequestBody NotificationReq notificationReq) {
+        sseEmitterUsecase.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
+        return ResponseEntity.ok("Notification sent.");
     }
 }
