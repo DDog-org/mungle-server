@@ -1,7 +1,9 @@
 package ddog.daengleserver.presentation.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class PaymentCallbackResp {
     private Long userId;

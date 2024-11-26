@@ -4,15 +4,12 @@ import ddog.daengleserver.application.CareEstimateService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
-import ddog.daengleserver.presentation.estimate.enums.VetEstimateControllerResp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 import static ddog.daengleserver.presentation.estimate.enums.VetEstimateControllerResp.REGISTRATION_COMPLETED;
@@ -25,15 +22,15 @@ public class VetEstimateController {
 
     private final CareEstimateService careEstimateService;
 
-    @Operation(summary = "사용자가 요청한 진료 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
+    @Operation(summary = "사용자가 요청한 진료 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 진료 견적서 목록 조회 (신규)")
     @GetMapping("/list")
-    public CommonResponseEntity<List<UserCareEstimateInfo>> findCareEstimateInfos(PayloadDto payloadDto) {
+    public CommonResponseEntity<CareEstimateInfos> findCareEstimateInfos(PayloadDto payloadDto) {
         return success(careEstimateService.findCareEstimateInfos(payloadDto.getAccountId()));
     }
 
     @Operation(summary = "진료 견적서 상세 내용 조회")
     @GetMapping("/{careEstimateId}/details")
-    public CommonResponseEntity<UserCareEstimateDetails> getGroomingEstimateDetails(@PathVariable Long careEstimateId) {
+    public CommonResponseEntity<UserCareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
         return success(careEstimateService.getCareEstimateDetailInfo(careEstimateId));
     }
 

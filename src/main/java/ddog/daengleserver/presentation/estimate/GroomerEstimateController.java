@@ -6,7 +6,7 @@ import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.global.infra.sse.SseEmitterService;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class GroomerEstimateController {
 
     @Operation(summary = "사용자가 요청한 미용 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
     @GetMapping("/list")
-    public CommonResponseEntity<List<UserGroomingEstimateInfo>> findGroomingEstimateInfos(PayloadDto payloadDto) {
+    public CommonResponseEntity<GroomingEstimateInfos> findGroomingEstimateInfos(PayloadDto payloadDto) {
         return success(groomingEstimateService.findGroomingEstimateInfos(payloadDto.getAccountId()));
     }
 

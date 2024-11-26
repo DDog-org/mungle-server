@@ -8,7 +8,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,20 +23,21 @@ public class CareEstimateService {
     private final CareEstimateRepository careEstimateRepository;
 
     @Transactional
-    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request) {
-        careEstimateRepository.save(CareEstimate.createUserGeneralCareEstimate(request));
+    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long userId) {
+        careEstimateRepository.save(CareEstimate.createUserGeneralCareEstimate(request, userId));
     }
 
     @Transactional
-    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request) {
-        careEstimateRepository.save(CareEstimate.createUserDesignationCareEstimate(request));
+    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long userId) {
+        careEstimateRepository.save(CareEstimate.createUserDesignationCareEstimate(request, userId));
     }
 
     @Transactional(readOnly = true)
-    public List<UserCareEstimateInfo> findCareEstimateInfos(Long accountId) {
-        String address = vetRepository.getAddressById(accountId);
-        List<CareEstimate> careEstimates = careEstimateRepository.findCareEstimatesByAddress(address);
-        return CareEstimate.withUserCareEstimates(careEstimates);
+    public CareEstimateInfos findCareEstimateInfos(Long vetId) {
+        Vet vet = vetRepository.getVetById(vetId);
+        List<CareEstimate> generalEstimates = careEstimateRepository.findGeneralCareEstimates(vet.getAddress());
+        List<CareEstimate> designationEstimates = careEstimateRepository.findDesignationCareEstimates(vet.getVetId());
+        return CareEstimate.findCareEstimateInfos(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)
@@ -46,9 +47,9 @@ public class CareEstimateService {
     }
 
     @Transactional
-    public void createVetCareEstimate(VetCareEstimateReq request, Long accountId) {
+    public void createVetCareEstimate(VetCareEstimateReq request, Long vetId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getCareEstimateId());
-        Vet vet = vetRepository.getVetById(accountId);
-        careEstimateRepository.save(careEstimate.createVetGroomingEstimate(request, vet));
+        Vet vet = vetRepository.getVetById(vetId);
+        careEstimateRepository.save(careEstimate.createVetCareEstimate(request, vet));
     }
 }

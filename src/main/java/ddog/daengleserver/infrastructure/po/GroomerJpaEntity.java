@@ -21,6 +21,7 @@ public class GroomerJpaEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
     private AccountJpaEntity account;
+    private int daengleMeter;
     private String groomerName;
     private String groomerImage;
     private String address;
@@ -30,6 +31,7 @@ public class GroomerJpaEntity {
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
                 .groomerId(groomer.getGroomerId())
+                .daengleMeter(groomer.getDaengleMeter())
                 .groomerName(groomer.getGroomerName())
                 .groomerImage(groomer.getGroomerName())
                 .address(groomer.getAddress())
@@ -41,6 +43,7 @@ public class GroomerJpaEntity {
     public Groomer toModel() {
         return Groomer.builder()
                 .groomerId(groomerId)
+                .daengleMeter(daengleMeter)
                 .groomerName(groomerName)
                 .groomerImage(groomerImage)
                 .address(address)

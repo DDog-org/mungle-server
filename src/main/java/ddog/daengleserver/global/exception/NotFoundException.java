@@ -1,7 +1,9 @@
 package ddog.daengleserver.global.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class NotFoundException extends CustomRuntimeException {
     public NotFoundException(String message, Object... args) {
-        super(message, args);
+        super(message, HttpStatus.NOT_FOUND, null);
     }
 }

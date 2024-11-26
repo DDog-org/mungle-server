@@ -14,6 +14,7 @@ public class GroomingEstimateDetails {
     private String groomerImage;
     private String groomerName;
     private String shopName;
+    private int daengleMeter;
     private String groomerIntroduction;
     private String address;
     private LocalDateTime reservedDate;
