@@ -10,4 +10,16 @@ public enum OrderExceptionType {
     private final HttpStatus httpStatus;
     private final Integer code;
     private final String message;
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }
