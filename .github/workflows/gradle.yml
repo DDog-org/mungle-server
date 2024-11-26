@@ -45,10 +45,10 @@ jobs:
       - name: Run Tests
         run: ./gradlew test -Dspring.profiles.active=test
 
-      - name: Setup MySQL
-        uses: samin/mysql-action@v1
+      - uses: mirromutth/mysql-action@v1.1
         with:
-          character set server: 'utf8'
+          host port: 3306
+          container port: 3306
           mysql database: 'daengleDB'
           mysql user: ${{ secrets.MYSQL_USERNAME }}
           mysql password: ${{ secrets.MYSQL_PASSWORD }}
