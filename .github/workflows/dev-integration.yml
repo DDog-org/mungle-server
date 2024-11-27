@@ -39,7 +39,7 @@ jobs:
           mkdir -p src/test/resources
           echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application-test.yml
 
-      - name: Validate application.yml
+      - name: Validate application-test.yml
         run: cat src/test/resources/application.yml
 
       - name: Build without cache
