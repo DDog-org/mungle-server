@@ -50,8 +50,8 @@ jobs:
         run: |
           set -e
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
-          echo "Building Docker image..."
-          docker build --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          echo "Building Docker image with platform linux/amd64..."
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
@@ -64,7 +64,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # 9. Deploy to EC2 (HOST는 로드밸런서 DNS 주소로 IP아님)
+      # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
@@ -81,7 +81,7 @@ jobs:
             docker stop spring-app || { echo "Failed to stop container"; exit 1; }
             docker rm spring-app || { echo "Failed to remove container"; exit 1; }
           else
-            echo "No existing container to stop."
+            echo "No existing container to stop. Proceeding with deployment."
           fi
 
           echo "=== Running new container ==="
