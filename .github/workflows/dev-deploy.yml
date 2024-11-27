@@ -13,16 +13,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Create .env file
+      # 2. Create application.yml
+      - name: Create application.yml
+        run: |
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+
+      # 3. Create .env file
       - name: Create .env file
         run: |
           echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
 
-      # 3. Verify .env File
+      # 4. Verify .env File
       - name: Verify .env File
         run: cat .env
 
-      # 4. Build and Push Docker Image
+      # 5. Set up JDK and Build JAR
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build JAR with Gradle
+        run: ./gradlew clean build -x test
+
+      # 6. Verify Build Output
+      - name: Verify Build Output
+        run: ls -l build/libs
+
+      # 7. Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      # 8. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
@@ -33,9 +60,18 @@ jobs:
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # 5. Deploy to EC2
+      # 9. Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 10. Deploy to EC2
       - name: Deploy to EC2
         run: |
+          set -e
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           echo "=== Logging into ECR ==="
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
@@ -54,15 +90,18 @@ jobs:
           fi
 
           echo "=== Running new container ==="
-          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          docker run -d --name spring-app -p 8080:8080 --env-file /app/.env ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
 
           echo "=== Verifying the new container ==="
-          sleep 10
+          sleep 10 # Allow container to initialize
           if ! docker ps --filter "name=spring-app" --filter "status=running" | grep spring-app; then
             echo "New container is not running. Check logs for errors."
             docker logs spring-app
             exit 1
           fi
+
+          echo "=== Fetching container logs ==="
+          docker logs spring-app
 
           echo "=== Deployment completed successfully ==="
           EOF
