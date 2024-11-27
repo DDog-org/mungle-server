@@ -44,7 +44,7 @@ public class PaymentService implements PaymentUseCase {
             long paymentAmount = iamportResp.getAmount().longValue();
 
             //결제 완료 검증
-            if(payment.checkIncompleteBy(paymentStatus)) {
+            if(payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
                 payment.cancel();
                 paymentRepository.save(payment);
 
@@ -52,7 +52,7 @@ public class PaymentService implements PaymentUseCase {
             }
 
             //결제 금액 검증
-            if(payment.checkInValidationBy(paymentAmount)) {
+            if(payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
                 payment.cancel();
                 paymentRepository.save(payment);
                 iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
