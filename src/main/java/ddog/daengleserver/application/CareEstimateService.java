@@ -2,7 +2,7 @@ package ddog.daengleserver.application;
 
 import ddog.daengleserver.application.repository.CareEstimateRepository;
 import ddog.daengleserver.application.repository.VetRepository;
-import ddog.daengleserver.domain.Vet;
+import ddog.daengleserver.domain.account.Vet;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
@@ -34,7 +34,7 @@ public class CareEstimateService {
 
     @Transactional(readOnly = true)
     public CareEstimateInfos findCareEstimateInfos(Long vetId) {
-        Vet vet = vetRepository.getVetById(vetId);
+        Vet vet = vetRepository.getVetByAccountId(vetId);
         List<CareEstimate> generalEstimates = careEstimateRepository.findGeneralCareEstimates(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimateRepository.findDesignationCareEstimates(vet.getVetId());
         return CareEstimate.findCareEstimateInfos(generalEstimates, designationEstimates);
@@ -49,7 +49,7 @@ public class CareEstimateService {
     @Transactional
     public void createVetCareEstimate(VetCareEstimateReq request, Long vetId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getCareEstimateId());
-        Vet vet = vetRepository.getVetById(vetId);
+        Vet vet = vetRepository.getVetByAccountId(vetId);
         careEstimateRepository.save(careEstimate.createVetCareEstimate(request, vet));
     }
 }

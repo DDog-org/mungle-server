@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.account.Groomer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +15,9 @@ import lombok.NoArgsConstructor;
 public class GroomerJpaEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomerId;
-
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
-    private AccountJpaEntity account;
+    private Long accountId;
     private int daengleMeter;
     private String groomerName;
     private String groomerImage;
@@ -31,6 +28,7 @@ public class GroomerJpaEntity {
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
                 .groomerId(groomer.getGroomerId())
+                .accountId(groomer.getAccountId())
                 .daengleMeter(groomer.getDaengleMeter())
                 .groomerName(groomer.getGroomerName())
                 .groomerImage(groomer.getGroomerName())
@@ -43,6 +41,7 @@ public class GroomerJpaEntity {
     public Groomer toModel() {
         return Groomer.builder()
                 .groomerId(groomerId)
+                .accountId(accountId)
                 .daengleMeter(daengleMeter)
                 .groomerName(groomerName)
                 .groomerImage(groomerImage)

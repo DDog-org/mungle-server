@@ -2,6 +2,7 @@ package ddog.daengleserver.presentation.estimate;
 
 import ddog.daengleserver.application.CareEstimateService;
 import ddog.daengleserver.application.GroomingEstimateService;
+import ddog.daengleserver.application.UserAccountService;
 import ddog.daengleserver.application.UserService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
@@ -28,13 +29,14 @@ import static ddog.daengleserver.presentation.estimate.enums.UserEstimateControl
 public class UserEstimateController {
 
     private final UserService userService;
+    private final UserAccountService userAccountService;
     private final CareEstimateService careEstimateService;
     private final GroomingEstimateService groomingEstimateService;
 
     @Operation(summary = "사용자 주소, 반려동물 정보 요청", description = "사용자 주소와 반려동물 id, 사진, 이름 정보를 가져옵니다.")
     @GetMapping("/user-pets-info")
     public CommonResponseEntity<UserAndPetsInfo> findAddressAndPetsInfo(PayloadDto payloadDto) {
-        return success(userService.getUserAddressAndPetsInfoById(payloadDto.getAccountId()));
+        return success(userAccountService.getUserAddressAndPetsInfoById(payloadDto.getAccountId()));
     }
 
     @Operation(summary = "미용 견적서 작성 (일반)", description = "일반 미용 견적서 작성")
