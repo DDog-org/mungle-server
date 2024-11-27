@@ -37,10 +37,7 @@ public class Payment {
 
     //결제 완료 확인
     public boolean checkIncompleteBy(String paymentStatus) {
-        if(paymentStatus != PAYMENT_SUCCESS_STATUS) {
-            return true;
-        }
-        return false;
+        return !Objects.equals(paymentStatus, PAYMENT_SUCCESS_STATUS);
     }
 
     //결제 금액 유효성 검증
