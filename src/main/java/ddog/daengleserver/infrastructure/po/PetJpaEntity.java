@@ -1,14 +1,14 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Breed;
-import ddog.daengleserver.domain.Gender;
-import ddog.daengleserver.domain.Pet;
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -33,6 +33,10 @@ public class PetJpaEntity {
     private Weight petWeight;
     @Enumerated(EnumType.STRING)
     private Breed breed;
+    private Boolean isNeutered;
+    private Boolean groomingExperience;
+    private Boolean isBite;
+
 
     public Pet toModel() {
         return Pet.builder()
@@ -45,6 +49,9 @@ public class PetJpaEntity {
                 .petBirth(petBirth)
                 .petWeight(petWeight)
                 .breed(breed)
+                .isNeutered(isNeutered)
+                .groomingExperience(groomingExperience)
+                .isBite(isBite)
                 .build();
     }
 
@@ -59,6 +66,9 @@ public class PetJpaEntity {
                 .petBirth(pet.getPetBirth())
                 .petWeight(pet.getPetWeight())
                 .breed(pet.getBreed())
+                .isNeutered(pet.getIsNeutered())
+                .groomingExperience(pet.getGroomingExperience())
+                .isBite(pet.getIsBite())
                 .build();
     }
 }

@@ -49,4 +49,6 @@ public class UserAccountController {
         userAccountService.modifyUserProfile(request, payloadDto.getAccountId());
         return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
+
+    @GetMapping("/")
 }

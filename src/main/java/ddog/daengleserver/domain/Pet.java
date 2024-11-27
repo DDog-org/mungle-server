@@ -21,6 +21,9 @@ public class Pet {
     private int petBirth;
     private Weight petWeight;
     private Breed breed;
+    private Boolean isNeutered;
+    private Boolean groomingExperience;
+    private Boolean isBite;
 
     public static Pet toJoinPetInfo(Long accountId, JoinUserWithPet request) {
         return Pet.builder()
