@@ -40,7 +40,7 @@ jobs:
           echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application-test.yml
 
       - name: Validate application-test.yml
-        run: cat src/test/resources/application.yml
+        run: cat src/test/resources/application-test.yml
 
       - name: Build without cache
         run: ./gradlew clean build -Dspring.profiles.active=test --no-build-cache
