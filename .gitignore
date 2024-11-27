@@ -39,5 +39,8 @@ out/
 ### Secret Config ###
 application.yml
 
-### ENV ###
+### Docker Volum ###
+mysql_data/
+
+### Environment variables ###
 .env
