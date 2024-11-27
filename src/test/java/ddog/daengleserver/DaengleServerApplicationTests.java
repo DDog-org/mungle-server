@@ -1,10 +1,10 @@
-package ddog.mungleserver;
+package ddog.daengleserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MungleServerApplicationTests {
+class DaengleServerApplicationTests {
 
     @Test
     void contextLoads() {
