@@ -21,9 +21,13 @@ jobs:
       # 3. Create .env file
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > $GITHUB_WORKSPACE/.env
 
-      # 4. Set up JDK and Build JAR
+      # 4. Verify .env File
+      - name: Verify .env File
+        run: cat $GITHUB_WORKSPACE/.env
+
+      # 5. Set up JDK and Build JAR
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -33,11 +37,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # 5. Verify Build Output
+      # 6. Verify Build Output
       - name: Verify Build Output
         run: ls -l build/libs
 
-      # 6. Log in to Amazon ECR
+      # 7. Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         env:
@@ -45,7 +49,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      # 7. Build and Push Docker Image
+      # 8. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
@@ -56,7 +60,7 @@ jobs:
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # 8. Set up SSH
+      # 9. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -64,7 +68,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # 9. Deploy to EC2
+      # 10. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
@@ -86,7 +90,7 @@ jobs:
           fi
 
           echo "=== Running new container ==="
-          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          docker run -d --name spring-app -p 8080:8080 --env-file /home/${{ secrets.SSH_USER }}/.env ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
 
           echo "=== Verifying the new container ==="
           sleep 10
