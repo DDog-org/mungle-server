@@ -27,10 +27,17 @@ jobs:
       - name: Debug workspace
         run: ls -R src
 
-      - name: Create application.yml
+      # Main application.yml 생성
+      - name: Create application.yml for main
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YML_MAIN }}" > src/main/resources/application.yml
+
+      # Test용 application-test.yml 생성
+      - name: Create application-test.yml for test
         run: |
           mkdir -p src/test/resources
-          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application-test.yml
 
       - name: Validate application.yml
         run: cat src/test/resources/application.yml
