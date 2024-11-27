@@ -44,6 +44,7 @@ public class NotificationControllerTest {
     @DisplayName("알림 메시지를 서버에서 트리거하고 이를 SSE로 받을 수 있다.")
     @Test
     void testTriggerNotificationAndReceiveSse()  {
+
         // given
         Long userId = 2L;
         String notificationMessage = "테스트 알림 메시지";
