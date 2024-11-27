@@ -21,7 +21,7 @@ jobs:
 
       - name: Create application.yml
         run: |
-          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/main/resources/application.yml
 
       - name: Validate application.yml
         run: cat src/test/resources/application.yml
