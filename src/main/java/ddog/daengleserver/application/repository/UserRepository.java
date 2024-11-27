@@ -6,7 +6,7 @@ public interface UserRepository {
 
     void save(User user);
 
-    User findById(Long accountId);
+    User findByAccountId(Long accountId);
 
     Boolean hasNickname(String nickname);
 }

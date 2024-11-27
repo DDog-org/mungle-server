@@ -34,7 +34,7 @@ public class GroomingEstimateService {
 
     @Transactional(readOnly = true)
     public GroomingEstimateInfos findGroomingEstimateInfos(Long groomerId) {
-        Groomer groomer = groomerRepository.getGroomerById(groomerId);
+        Groomer groomer = groomerRepository.getGroomerByAccountId(groomerId);
         List<GroomingEstimate> generalEstimates = groomingEstimateRepository.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimateRepository.findDesignationGroomingEstimates(groomer.getGroomerId());
         return GroomingEstimate.findGroomingEstimateInfos(generalEstimates, designationEstimates);
@@ -49,7 +49,7 @@ public class GroomingEstimateService {
     @Transactional
     public void createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Long groomerId) {
         GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(request.getGroomingEstimateId());
-        Groomer groomer = groomerRepository.getGroomerById(groomerId);
+        Groomer groomer = groomerRepository.getGroomerByAccountId(groomerId);
         groomingEstimateRepository.save(groomingEstimate.createGroomerGroomingEstimate(request, groomer));
     }
 }

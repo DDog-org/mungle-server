@@ -21,12 +21,9 @@ import java.util.List;
 public class UserJpaEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
-    private AccountJpaEntity account;
+    private Long accountId;
     private String username;
     private String phoneNumber;
     private String nickname;
@@ -37,9 +34,10 @@ public class UserJpaEntity {
     @OneToMany(mappedBy = "userId")
     private List<PetJpaEntity> pets = new ArrayList<>();
 
-    public static UserJpaEntity from(User user, AccountJpaEntity account) {
+    public static UserJpaEntity from(User user) {
         return UserJpaEntity.builder()
-                .account(account)
+                .userId(user.getUserId())
+                .accountId(user.getAccountId())
                 .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
                 .nickname(user.getNickname())
@@ -52,7 +50,8 @@ public class UserJpaEntity {
 
     public User toModel() {
         return User.builder()
-                .accountId(account.getAccountId())
+                .userId(userId)
+                .accountId(accountId)
                 .username(username)
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)

@@ -6,6 +6,6 @@ public interface VetRepository {
 
     String getAddressById(Long accountId);
 
-    Vet getVetById(Long accountId);
+    Vet getVetByAccountId(Long accountId);
 
 }

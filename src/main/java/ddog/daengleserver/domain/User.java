@@ -4,7 +4,10 @@ import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -60,6 +63,20 @@ public class User {
                 .username(username)
                 .phoneNumber(phoneNumber)
                 .email(email)
+                .build();
+    }
+
+    public User withImageAndNickname(String userImage, String nickname) {
+        return User.builder()
+                .userId(userId)
+                .accountId(accountId)
+                .username(username)
+                .phoneNumber(phoneNumber)
+                .nickname(nickname)
+                .userImage(userImage)
+                .address(address)
+                .email(email)
+                .pets(pets)
                 .build();
     }
 

@@ -6,5 +6,5 @@ public interface GroomerRepository {
 
     String getAddressById(Long accountId);
 
-    Groomer getGroomerById(Long accountId);
+    Groomer getGroomerByAccountId(Long accountId);
 }
