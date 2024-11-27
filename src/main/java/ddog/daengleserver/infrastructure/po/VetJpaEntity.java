@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Vet;
+import ddog.daengleserver.domain.account.Vet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +15,9 @@ import lombok.NoArgsConstructor;
 public class VetJpaEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vetId;
-
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountId")
-    private AccountJpaEntity account;
+    private Long accountId;
     private int daengleMeter;
     private String vetName;
     private String vetImage;
@@ -30,6 +27,7 @@ public class VetJpaEntity {
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
                 .vetId(vet.getVetId())
+                .accountId(vet.getAccountId())
                 .daengleMeter(vet.getDaengleMeter())
                 .vetName(vet.getVetName())
                 .vetImage(vet.getVetImage())
@@ -41,6 +39,7 @@ public class VetJpaEntity {
     public Vet toModel() {
         return Vet.builder()
                 .vetId(vetId)
+                .accountId(accountId)
                 .daengleMeter(daengleMeter)
                 .vetName(vetName)
                 .vetImage(vetImage)

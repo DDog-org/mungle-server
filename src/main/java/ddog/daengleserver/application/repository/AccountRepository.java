@@ -1,15 +1,15 @@
 package ddog.daengleserver.application.repository;
 
-import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.Account;
+import ddog.daengleserver.domain.account.enums.Role;
 
 public interface AccountRepository {
 
     boolean checkExistsAccountBy(String email, Role role);
 
-    void save(Account account);
+    Account save(Account account);
 
-    Account findBy(long id);
+    Account findById(Long accountId);
 
     Account findAccountByEmailAndRole(String email, Role role);
 }

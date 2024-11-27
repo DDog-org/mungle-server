@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.account.enums.Weight;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.EstimateStatus;
 import ddog.daengleserver.domain.estimate.Proposal;

@@ -3,14 +3,13 @@ package ddog.daengleserver.application;
 import ddog.daengleserver.application.repository.CareEstimateRepository;
 import ddog.daengleserver.application.repository.GroomingEstimateRepository;
 import ddog.daengleserver.application.repository.UserRepository;
-import ddog.daengleserver.domain.Pet;
-import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.account.Pet;
+import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +26,8 @@ public class UserService {
     private final CareEstimateRepository careEstimateRepository;
 
     @Transactional(readOnly = true)
-    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long accountId) {
-        User user = userRepository.findById(accountId);
-        return user.findAddressAndPetsInfo();
-    }
-
-    @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfos(Long userId) {
-        User user = userRepository.findById(userId);
+        User user = userRepository.findByAccountId(userId);
         List<Pet> pets = user.getPets();
 
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
