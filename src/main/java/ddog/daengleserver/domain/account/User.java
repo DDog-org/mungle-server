@@ -1,5 +1,6 @@
 package ddog.daengleserver.domain.account;
 
+import ddog.daengleserver.presentation.account.dto.request.AddPetInfoReq;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
@@ -68,6 +69,21 @@ public class User {
     }
 
     public User withImageAndNickname(String userImage, String nickname) {
+        return User.builder()
+                .userId(userId)
+                .accountId(accountId)
+                .username(username)
+                .phoneNumber(phoneNumber)
+                .nickname(nickname)
+                .userImage(userImage)
+                .address(address)
+                .email(email)
+                .pets(pets)
+                .build();
+    }
+
+    public User withNewPet(Pet newPet) {
+        pets.add(newPet);
         return User.builder()
                 .userId(userId)
                 .accountId(accountId)

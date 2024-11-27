@@ -27,7 +27,8 @@ public class PetRepositoryImpl implements PetRepository {
     }
 
     @Override
-    public void save(Pet pet) {
-        petJpaRepository.save(PetJpaEntity.from(pet));
+    public Pet save(Pet pet) {
+        return petJpaRepository.save(PetJpaEntity.from(pet))
+                .toModel();
     }
 }

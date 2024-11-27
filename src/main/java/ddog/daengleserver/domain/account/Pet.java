@@ -3,6 +3,7 @@ package ddog.daengleserver.domain.account;
 import ddog.daengleserver.domain.account.enums.Breed;
 import ddog.daengleserver.domain.account.enums.Gender;
 import ddog.daengleserver.domain.account.enums.Weight;
+import ddog.daengleserver.presentation.account.dto.request.AddPetInfoReq;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,4 +41,20 @@ public class Pet {
                 .build();
     }
 
+    public static Pet create(Long accountId, AddPetInfoReq request) {
+        return Pet.builder()
+                .userId(accountId)
+                .petGender(request.getPetGender())
+                .petName(request.getPetName())
+                .petImage(request.getPetImage())
+                .petSignificant(request.getPetSignificant())
+                .petBirth(request.getPetBirth())
+                .petWeight(request.getPetWeight())
+                .breed(request.getBreed())
+                .isNeutered(request.getIsNeutered())
+                .groomingExperience(request.getGroomingExperience())
+                .isBite(request.getIsBite())
+                .dislikeParts(request.getDislikeParts())
+                .build();
+    }
 }

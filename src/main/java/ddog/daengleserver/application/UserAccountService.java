@@ -6,6 +6,7 @@ import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.account.Account;
 import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
+import ddog.daengleserver.presentation.account.dto.request.AddPetInfoReq;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.request.UserProfileModifyReq;
@@ -54,16 +55,24 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void modifyUserProfile(UserProfileModifyReq request, Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public void modifyUserProfile(UserProfileModifyReq request, Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         User modifiedUser = user.withImageAndNickname(request.getUserImage(), request.getNickname());
         userRepository.save(modifiedUser);
     }
 
     @Transactional(readOnly = true)
-    public PetInfos getPetInfos(Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public PetInfos getPetInfos(Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         return user.toPetInfos();
+    }
+
+    @Transactional
+    public void addPetInfo(AddPetInfoReq request, Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
+        Pet newPet = Pet.create(accountId, request);
+        Pet savedPet = petRepository.save(newPet);
+        userRepository.save(user.withNewPet(savedPet));
     }
 
     @Transactional(readOnly = true)
