@@ -4,7 +4,7 @@ ARG JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar
 
 COPY ${JAR_FILE} app.jar
 
-COPY .env /app/.env
+COPY .env .env
 
 ENV TZ=Asia/Seoul
 
