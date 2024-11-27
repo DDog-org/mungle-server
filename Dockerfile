@@ -9,10 +9,12 @@ WORKDIR /app
 COPY ${JAR_FILE} app.jar
 
 # .env 파일 복사
-COPY .env /app/.env
+COPY .env .env
 
+# 환경 변수 설정
 ENV TZ=Asia/Seoul
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-Dfile.encoding=UTF-8","-jar","/app.jar"]
+# 애플리케이션 실행 경로 수정
+ENTRYPOINT ["java","-Dfile.encoding=UTF-8","-jar","app.jar"]
