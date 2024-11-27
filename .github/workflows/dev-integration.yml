@@ -36,6 +36,10 @@ jobs:
       - name: Run Tests
         run: ./gradlew test -Dspring.profiles.active=test
 
+      - name : Create application.yml
+        run : |
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/test/resources/application.yml
+
   dependency-submission:
 
     runs-on: ubuntu-latest
