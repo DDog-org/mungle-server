@@ -1,0 +1,103 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout Repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Create application.yml
+      - name: Create application.yml
+        run: |
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+
+      # 3. Create .env file
+      - name: Create .env file
+        run: |
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
+      # 4. Set up JDK and Build JAR
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # 5. Verify Build Output
+      - name: Verify Build Output
+        run: ls -l build/libs
+
+      # 6. Log in to Amazon ECR
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      # 7. Build and Push Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          set -e
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          echo "Building Docker image..."
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+      # 8. Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 9. Deploy to EC2
+      - name: Deploy to EC2
+        run: |
+          set -e
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "=== Logging into ECR ==="
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
+          echo "=== Pulling the latest Docker image ==="
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+
+          echo "=== Stopping and removing existing container ==="
+          CONTAINER_ID=$(docker ps -aq --filter "name=spring-app")
+          if [ -n "$CONTAINER_ID" ]; then
+            echo "Stopping existing container..."
+            docker stop spring-app || { echo "Failed to stop container"; exit 1; }
+            docker rm spring-app || { echo "Failed to remove container"; exit 1; }
+          else
+            echo "No existing container to stop."
+          fi
+
+          echo "=== Running new container ==="
+          docker run -d --name spring-app -p 8080:8080 --env-file .env ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+
+          echo "=== Verifying the new container ==="
+          sleep 10
+          if ! docker ps --filter "name=spring-app" --filter "status=running" | grep spring-app; then
+            echo "New container is not running. Check logs for errors."
+            docker logs spring-app
+            exit 1
+          fi
+
+          echo "=== Fetching container logs ==="
+          docker logs spring-app
+
+          echo "=== Deployment completed successfully ==="
+          EOF
