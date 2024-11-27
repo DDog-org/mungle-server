@@ -11,15 +11,12 @@ import java.util.List;
 @Getter
 @Builder
 public class PetInfos {
-
     List<Details> petDetails;
 
     @Getter
     @Builder
-
     public static class Details {
-
-        private String petId;
+        private Long petId;
         private String petImage;
         private String petName;
         private int petBirth;
@@ -29,6 +26,8 @@ public class PetInfos {
         private Weight petWeight;
         private Boolean groomingExperience;
         private Boolean isBite;
+        private String[] dislikeParts;
+        private String petSignificant;
 
     }
 }

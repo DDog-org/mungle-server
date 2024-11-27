@@ -7,6 +7,7 @@ import ddog.daengleserver.presentation.account.dto.request.CheckNicknameReq;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.request.UserProfileModifyReq;
+import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +51,8 @@ public class UserAccountController {
         return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
-    @GetMapping("/")
+    @GetMapping("/pets-info")
+    public CommonResponseEntity<PetInfos> getPetsInfo(PayloadDto payloadDto) {
+        return success(userAccountService.getPetInfos(payloadDto.getAccountId()));
+    }
 }

@@ -2,6 +2,7 @@ package ddog.daengleserver.domain;
 
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
+import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.AllArgsConstructor;
@@ -77,6 +78,29 @@ public class User {
                 .address(address)
                 .email(email)
                 .pets(pets)
+                .build();
+    }
+
+    public PetInfos toPetInfos() {
+        List<PetInfos.Details> petDetails = new ArrayList<>();
+        for (Pet pet : pets) {
+            petDetails.add(PetInfos.Details.builder()
+                    .petId(pet.getPetId())
+                    .petImage(pet.getPetImage())
+                    .petName(pet.getPetName())
+                    .petBirth(pet.getPetBirth())
+                    .petGender(pet.getPetGender())
+                    .breed(pet.getBreed())
+                    .isNeutered(pet.getIsNeutered())
+                    .petWeight(pet.getPetWeight())
+                    .groomingExperience(pet.getGroomingExperience())
+                    .isBite(pet.getIsBite())
+                    .dislikeParts(pet.getDislikeParts().split(","))
+                    .petSignificant(pet.getPetSignificant())
+                    .build());
+        }
+        return PetInfos.builder()
+                .petDetails(petDetails)
                 .build();
     }
 

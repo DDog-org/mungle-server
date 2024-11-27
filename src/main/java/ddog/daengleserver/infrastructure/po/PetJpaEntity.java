@@ -36,7 +36,7 @@ public class PetJpaEntity {
     private Boolean isNeutered;
     private Boolean groomingExperience;
     private Boolean isBite;
-
+    private String dislikeParts;
 
     public Pet toModel() {
         return Pet.builder()
@@ -52,6 +52,7 @@ public class PetJpaEntity {
                 .isNeutered(isNeutered)
                 .groomingExperience(groomingExperience)
                 .isBite(isBite)
+                .dislikeParts(dislikeParts)
                 .build();
     }
 
@@ -69,6 +70,7 @@ public class PetJpaEntity {
                 .isNeutered(pet.getIsNeutered())
                 .groomingExperience(pet.getGroomingExperience())
                 .isBite(pet.getIsBite())
+                .dislikeParts(pet.getDislikeParts())
                 .build();
     }
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -24,6 +26,7 @@ public class Pet {
     private Boolean isNeutered;
     private Boolean groomingExperience;
     private Boolean isBite;
+    private String dislikeParts;
 
     public static Pet toJoinPetInfo(Long accountId, JoinUserWithPet request) {
         return Pet.builder()
@@ -35,6 +38,5 @@ public class Pet {
                 .breed(request.getBreed())
                 .build();
     }
-
 
 }

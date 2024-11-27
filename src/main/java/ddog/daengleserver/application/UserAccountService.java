@@ -9,6 +9,7 @@ import ddog.daengleserver.domain.User;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.request.UserProfileModifyReq;
+import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,12 @@ public class UserAccountService {
         User user = userRepository.findByAccountId(userId);
         User modifiedUser = user.withImageAndNickname(request.getUserImage(), request.getNickname());
         userRepository.save(modifiedUser);
+    }
+
+    @Transactional(readOnly = true)
+    public PetInfos getPetInfos(Long userId) {
+        User user = userRepository.findByAccountId(userId);
+        return user.toPetInfos();
     }
 
     @Transactional(readOnly = true)
