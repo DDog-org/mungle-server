@@ -78,8 +78,8 @@ jobs:
           echo "=== Stopping and removing existing container ==="
           if docker ps -q --filter "name=spring-app" > /dev/null; then
             echo "Stopping existing container..."
-            docker stop spring-app || { echo "Failed to stop container"; exit 1; }
-            docker rm spring-app || { echo "Failed to remove container"; exit 1; }
+            docker stop spring-app || true
+            docker rm spring-app || true
           else
             echo "No existing container to stop. Proceeding with deployment."
           fi
