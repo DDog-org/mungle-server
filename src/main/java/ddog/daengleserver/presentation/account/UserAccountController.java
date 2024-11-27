@@ -4,6 +4,7 @@ import ddog.daengleserver.application.UserAccountService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.account.dto.request.*;
+import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class UserAccountController {
     @PostMapping("/available-nickname")
     public CommonResponseEntity<Boolean> hasNickname(@RequestBody CheckNicknameReq request) {
         return success(userAccountService.hasNickname(request.getNickname()));
+    }
+
+    @GetMapping("/breed-list")
+    public CommonResponseEntity<BreedInfos> getBreedList() {
+        return success(userAccountService.getBreedInfos());
     }
 
     @PostMapping("/join-without-pet")

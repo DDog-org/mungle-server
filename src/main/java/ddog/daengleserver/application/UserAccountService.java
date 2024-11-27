@@ -6,13 +6,18 @@ import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.account.Account;
 import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
+import ddog.daengleserver.domain.account.enums.Breed;
 import ddog.daengleserver.presentation.account.dto.request.*;
+import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,20 @@ public class UserAccountService {
     @Transactional(readOnly = true)
     public Boolean hasNickname(String nickname) {
         return !userRepository.hasNickname(nickname);
+    }
+
+    /* TODO PetService 추가하면 그곳으로 옮기기 */
+    public BreedInfos getBreedInfos() {
+        List<BreedInfos.Detail> details = new ArrayList<>();
+        for (Breed breed : Breed.values()) {
+            details.add(BreedInfos.Detail.builder()
+                    .breed(breed.toString())
+                    .breedName(breed.getName())
+                    .build());
+        }
+        return BreedInfos.builder()
+                .breedList(details)
+                .build();
     }
 
     @Transactional
@@ -87,6 +106,7 @@ public class UserAccountService {
 
     @Transactional
     public void deletePet(Long petId) {
+        /* TODO PetService 추가하면 그곳으로 옮기기 */
         petRepository.deletePetById(petId);
     }
 }
