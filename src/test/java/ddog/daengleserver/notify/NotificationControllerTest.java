@@ -2,8 +2,6 @@ package ddog.daengleserver.notify;
 
 import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.notify.enums.NotifyType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,32 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import redis.embedded.RedisServer;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NotificationControllerTest {
 
-    private static RedisServer redisServer;
-
     @Autowired
     private WebTestClient webTestClient;
-
-    @BeforeAll
-    static void setUp() throws Exception {
-        if (redisServer == null || !redisServer.isActive()) {
-            redisServer = new RedisServer(6379);
-            redisServer.start();
-        }
-    }
-
-    @AfterAll
-    static void tearDown() {
-        if (redisServer != null && redisServer.isActive()) {
-            redisServer.stop();
-        }
-    }
 
     @DisplayName("SSE를 활용하여 실시간으로 메시지를 전달받을 수 있다.")
     @Test
