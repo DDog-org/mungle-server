@@ -48,13 +48,19 @@ public class UserAccountController {
     }
 
     @PostMapping("/add-pet")
-    public CommonResponseEntity<String> addPetInfo(@RequestBody AddPetInfoReq request, PayloadDto payloadDto) {
-        userAccountService.addPetInfo(request, payloadDto.getAccountId());
+    public CommonResponseEntity<String> addPet(@RequestBody AddPetInfo request, PayloadDto payloadDto) {
+        userAccountService.addPet(request, payloadDto.getAccountId());
         return success(PET_ADD_COMPLETED.getMessage());
     }
 
     @GetMapping("/pets-info")
     public CommonResponseEntity<PetInfos> getPetsInfo(PayloadDto payloadDto) {
         return success(userAccountService.getPetInfos(payloadDto.getAccountId()));
+    }
+
+    @PostMapping("/modify-pet")
+    public CommonResponseEntity<String> modifyPetProfile(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
+        userAccountService.modifyPetProfile(request, payloadDto.getAccountId());
+        return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
     }
 }

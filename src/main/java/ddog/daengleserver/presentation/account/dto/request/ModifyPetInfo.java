@@ -6,8 +6,9 @@ import ddog.daengleserver.domain.account.enums.Weight;
 import lombok.Getter;
 
 @Getter
-public class AddPetInfoReq {
+public class ModifyPetInfo {
 
+    private Long petId;
     private String petImage;
     private String petName;
     private int petBirth;

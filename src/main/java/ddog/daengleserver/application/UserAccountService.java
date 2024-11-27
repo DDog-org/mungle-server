@@ -6,10 +6,7 @@ import ddog.daengleserver.application.repository.UserRepository;
 import ddog.daengleserver.domain.account.Account;
 import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
-import ddog.daengleserver.presentation.account.dto.request.AddPetInfoReq;
-import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
-import ddog.daengleserver.presentation.account.dto.request.UserProfileModifyReq;
+import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
@@ -61,6 +58,14 @@ public class UserAccountService {
         userRepository.save(modifiedUser);
     }
 
+    @Transactional
+    public void addPet(AddPetInfo request, Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
+        Pet newPet = Pet.create(accountId, request);
+        Pet savedPet = petRepository.save(newPet);
+        userRepository.save(user.withNewPet(savedPet));
+    }
+
     @Transactional(readOnly = true)
     public PetInfos getPetInfos(Long accountId) {
         User user = userRepository.findByAccountId(accountId);
@@ -68,11 +73,10 @@ public class UserAccountService {
     }
 
     @Transactional
-    public void addPetInfo(AddPetInfoReq request, Long accountId) {
-        User user = userRepository.findByAccountId(accountId);
-        Pet newPet = Pet.create(accountId, request);
-        Pet savedPet = petRepository.save(newPet);
-        userRepository.save(user.withNewPet(savedPet));
+    public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
+        /* TODO 수정할 반려동물이 해당 사용자의 반려동물인지 유효성 검증 추가해야할듯 */
+        Pet modifiedPet = Pet.withModifyPetInfo(request, accountId);
+        petRepository.save(modifiedPet);
     }
 
     @Transactional(readOnly = true)

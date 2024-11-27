@@ -8,4 +8,6 @@ public interface PetRepository {
     List<Pet> findPetsById(Long accountId);
 
     Pet save(Pet pet);
+
+    Pet findByPetId(Long petId);
 }

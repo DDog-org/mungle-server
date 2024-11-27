@@ -1,6 +1,5 @@
 package ddog.daengleserver.domain.account;
 
-import ddog.daengleserver.presentation.account.dto.request.AddPetInfoReq;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
