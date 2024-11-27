@@ -86,7 +86,7 @@ jobs:
           fi
 
           echo "=== Running new container ==="
-          docker run -d --name spring-app -p 8080:8080 --env-file .env ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
 
           echo "=== Verifying the new container ==="
           sleep 10
