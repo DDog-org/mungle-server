@@ -14,4 +14,4 @@ spring:
 
 
 jwt:
-  secret: ADGGC45345DFSFG78999RYUJHHH677866QWQEWER
+  secret: ${JWT_SECRET:default_secret_value}
