@@ -1,5 +1,6 @@
 package ddog.daengleserver.presentation.notify.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,4 +21,9 @@ public enum NotifyType {
     NEARBY_CALL("위치 기반 알림");
 
     private String message;
+
+    @JsonCreator
+    public static NotifyType fromString(String value) {
+        return NotifyType.valueOf(value.toUpperCase());
+    }
 }

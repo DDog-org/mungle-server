@@ -1,6 +1,5 @@
 package ddog.daengleserver.presentation;
 
-import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
 import lombok.RequiredArgsConstructor;
@@ -10,17 +9,15 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 
-import static ddog.daengleserver.global.common.CommonResponseEntity.success;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notification")
-public class SseEmitterController {
+public class NotificationController {
     private final SseEmitterUsecase sseEmitterUsecase;
     private static final String INIT = "{\"message\" : \"CONNECTED\"}";
 
     @GetMapping(value = "/connection", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter connectNotificationStream(Long userId){
+    public SseEmitter connectNotificationStream(@RequestParam(value = "userId", required = true) Long userId) {
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         sseEmitterUsecase.addEmitter(userId, sseEmitter);
 
@@ -32,16 +29,13 @@ public class SseEmitterController {
         return sseEmitter;
     }
 
-    @GetMapping("/connection-status")
-    public CommonResponseEntity<String> connectionStatus(@RequestParam Long userId) {
-        boolean isConnected = sseEmitterUsecase.isUserConnected(userId);
-        String message = isConnected ? "User is connected" : "User is not connected";
-        return success(message);
-    }
-
     @PostMapping("/send")
-    public CommonResponseEntity<String> sendNotification(@RequestBody NotificationReq notificationReq) {
-        sseEmitterUsecase.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
-        return success("Notification sent");
+    public void sendNotification(@RequestBody NotificationReq notificationReq) {
+        if (sseEmitterUsecase.isUserConnected(notificationReq.getUserId())) {
+            sseEmitterUsecase.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
+        }
+        else {
+            sseEmitterUsecase.saveNotificationToDb(notificationReq);
+        }
     }
 }
