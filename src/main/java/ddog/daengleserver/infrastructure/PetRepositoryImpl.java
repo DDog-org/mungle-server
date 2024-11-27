@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.PetRepository;
-import ddog.daengleserver.domain.Pet;
+import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.infrastructure.po.PetJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

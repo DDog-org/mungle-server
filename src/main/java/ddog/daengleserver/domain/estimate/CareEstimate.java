@@ -1,7 +1,7 @@
 package ddog.daengleserver.domain.estimate;
 
-import ddog.daengleserver.domain.Vet;
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.account.Vet;
+import ddog.daengleserver.domain.account.enums.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;

@@ -1,9 +1,9 @@
 package ddog.daengleserver.presentation.account.dto.request;
 
-import ddog.daengleserver.domain.Breed;
-import ddog.daengleserver.domain.Gender;
-import ddog.daengleserver.domain.Role;
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.account.enums.Breed;
+import ddog.daengleserver.domain.account.enums.Gender;
+import ddog.daengleserver.domain.account.enums.Role;
+import ddog.daengleserver.domain.account.enums.Weight;
 import lombok.Builder;
 import lombok.Getter;
 

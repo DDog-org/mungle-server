@@ -1,12 +1,13 @@
-package ddog.daengleserver.domain;
+package ddog.daengleserver.domain.account;
 
+import ddog.daengleserver.domain.account.enums.Breed;
+import ddog.daengleserver.domain.account.enums.Gender;
+import ddog.daengleserver.domain.account.enums.Weight;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @Builder

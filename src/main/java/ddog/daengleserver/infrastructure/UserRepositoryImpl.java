@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.UserRepository;
-import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.enums.UserExceptionType;
 import ddog.daengleserver.domain.exception.UserException;
 import ddog.daengleserver.infrastructure.po.UserJpaEntity;

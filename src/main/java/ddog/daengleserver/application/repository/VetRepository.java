@@ -1,6 +1,6 @@
 package ddog.daengleserver.application.repository;
 
-import ddog.daengleserver.domain.Vet;
+import ddog.daengleserver.domain.account.Vet;
 
 public interface VetRepository {
 

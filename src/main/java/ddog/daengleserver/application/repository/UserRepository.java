@@ -1,6 +1,6 @@
 package ddog.daengleserver.application.repository;
 
-import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.account.User;
 
 public interface UserRepository {
 

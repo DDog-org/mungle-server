@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.GroomerRepository;
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.account.Groomer;
 import ddog.daengleserver.domain.enums.UserExceptionType;
 import ddog.daengleserver.domain.exception.UserException;
 import lombok.RequiredArgsConstructor;

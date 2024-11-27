@@ -1,6 +1,6 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.account.Groomer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

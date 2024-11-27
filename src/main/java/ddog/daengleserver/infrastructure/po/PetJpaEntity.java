@@ -1,14 +1,14 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.*;
+import ddog.daengleserver.domain.account.Pet;
+import ddog.daengleserver.domain.account.enums.Breed;
+import ddog.daengleserver.domain.account.enums.Gender;
+import ddog.daengleserver.domain.account.enums.Weight;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Builder

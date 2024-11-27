@@ -2,7 +2,7 @@ package ddog.daengleserver.application;
 
 import ddog.daengleserver.application.repository.CareEstimateRepository;
 import ddog.daengleserver.application.repository.VetRepository;
-import ddog.daengleserver.domain.Vet;
+import ddog.daengleserver.domain.account.Vet;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;

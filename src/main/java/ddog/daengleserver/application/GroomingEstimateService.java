@@ -2,7 +2,7 @@ package ddog.daengleserver.application;
 
 import ddog.daengleserver.application.repository.GroomerRepository;
 import ddog.daengleserver.application.repository.GroomingEstimateRepository;
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.account.Groomer;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;

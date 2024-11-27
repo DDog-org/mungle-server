@@ -1,7 +1,7 @@
 package ddog.daengleserver.domain.estimate;
 
-import ddog.daengleserver.domain.Groomer;
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.account.Groomer;
+import ddog.daengleserver.domain.account.enums.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;

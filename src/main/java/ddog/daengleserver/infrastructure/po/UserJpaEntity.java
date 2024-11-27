@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Pet;
-import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.account.Pet;
+import ddog.daengleserver.domain.account.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

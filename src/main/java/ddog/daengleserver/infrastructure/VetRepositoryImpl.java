@@ -1,7 +1,7 @@
 package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.VetRepository;
-import ddog.daengleserver.domain.Vet;
+import ddog.daengleserver.domain.account.Vet;
 import ddog.daengleserver.implementation.AccountException;
 import ddog.daengleserver.implementation.enums.AccountExceptionType;
 import lombok.RequiredArgsConstructor;

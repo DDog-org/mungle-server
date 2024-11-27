@@ -1,7 +1,7 @@
 package ddog.daengleserver.global.auth.config.jwt;
 
 import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.enums.Role;
 import ddog.daengleserver.global.auth.dto.LoginResult;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
 import io.jsonwebtoken.*;

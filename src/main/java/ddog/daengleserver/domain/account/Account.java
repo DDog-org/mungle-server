@@ -1,5 +1,7 @@
-package ddog.daengleserver.domain;
+package ddog.daengleserver.domain.account;
 
+import ddog.daengleserver.domain.account.enums.Provider;
+import ddog.daengleserver.domain.account.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 

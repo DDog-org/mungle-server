@@ -1,4 +1,4 @@
-package ddog.daengleserver.domain;
+package ddog.daengleserver.domain.account;
 
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;

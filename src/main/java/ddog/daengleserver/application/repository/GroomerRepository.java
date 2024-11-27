@@ -1,6 +1,6 @@
 package ddog.daengleserver.application.repository;
 
-import ddog.daengleserver.domain.Groomer;
+import ddog.daengleserver.domain.account.Groomer;
 
 public interface GroomerRepository {
 
