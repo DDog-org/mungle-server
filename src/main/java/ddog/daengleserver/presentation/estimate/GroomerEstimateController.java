@@ -3,6 +3,7 @@ package ddog.daengleserver.presentation.estimate;
 import ddog.daengleserver.application.GroomingEstimateService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
+import ddog.daengleserver.global.infra.sse.SseEmitterService;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
@@ -23,6 +24,7 @@ import static ddog.daengleserver.presentation.estimate.enums.GroomerEstimateCont
 public class GroomerEstimateController {
 
     private final GroomingEstimateService groomingEstimateService;
+    private final SseEmitterService sseEmitterService;
 
     @Operation(summary = "사용자가 요청한 미용 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
     @GetMapping("/list")
@@ -40,6 +42,7 @@ public class GroomerEstimateController {
     @PostMapping
     public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
         groomingEstimateService.createGroomerGroomingEstimate(request, payloadDto.getAccountId());
+        sseEmitterService.sendMessageToUser(payloadDto.getAccountId(), REGISTRATION_COMPLETED.getMessage());
         return success(REGISTRATION_COMPLETED.getMessage());
     }
 }
