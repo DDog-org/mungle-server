@@ -39,4 +39,9 @@ public class PetRepositoryImpl implements PetRepository {
                 .orElseThrow(() -> new RuntimeException("pet not found"))
                 .toModel();
     }
+
+    @Override
+    public void deletePetById(Long petId) {
+        petJpaRepository.deleteByPetId(petId);
+    }
 }

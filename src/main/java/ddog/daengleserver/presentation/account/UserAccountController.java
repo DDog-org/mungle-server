@@ -63,4 +63,10 @@ public class UserAccountController {
         userAccountService.modifyPetProfile(request, payloadDto.getAccountId());
         return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
     }
+
+    @DeleteMapping("/delete-pet")
+    public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request, PayloadDto payloadDto) {
+        userAccountService.deletePet(request.getPetId());
+        return success(DELETE_PET_COMPLETED.getMessage());
+    }
 }

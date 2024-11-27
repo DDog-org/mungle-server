@@ -10,4 +10,6 @@ public interface PetRepository {
     Pet save(Pet pet);
 
     Pet findByPetId(Long petId);
+
+    void deletePetById(Long petId);
 }

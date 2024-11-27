@@ -84,4 +84,9 @@ public class UserAccountService {
         User user = userRepository.findByAccountId(userId);
         return user.findAddressAndPetsInfo();
     }
+
+    @Transactional
+    public void deletePet(Long petId) {
+        petRepository.deletePetById(petId);
+    }
 }
