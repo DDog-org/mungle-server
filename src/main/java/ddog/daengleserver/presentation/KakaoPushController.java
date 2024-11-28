@@ -1,23 +1,30 @@
 package ddog.daengleserver.presentation;
 
-import ddog.daengleserver.application.CustomMessageService;
-import ddog.daengleserver.application.KakaoAuthService;
-import org.springframework.web.bind.annotation.GetMapping;
+import ddog.daengleserver.application.KakaoPushService;
+import ddog.daengleserver.presentation.dto.request.MessageDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class KakaoPushController {
-    KakaoAuthService authService;
-    CustomMessageService customMessageService;
+    private final KakaoPushService kakaoPushService;
 
-    @GetMapping("/send")
-    public String serviceStart(String code) {
-        if (authService.getKakaoAuthToken(code)) {
-            customMessageService.sendMessage();
-            return "메시지 전송 성공";
-        }
-        else {
-            return "토큰 발급 실패";
+    public KakaoPushController(KakaoPushService kakaoPushService) {
+        this.kakaoPushService = kakaoPushService;
+    }
+
+    // 카카오 알림톡 메시지 전송
+    @PostMapping("/api/kakao-send")
+    public ResponseEntity<String> sendNotification(@RequestBody MessageDto requestDto) {
+        // MessageDto를 이용해 알림톡 메시지 전송
+        boolean isSuccess = kakaoPushService.sendNotification(requestDto.getTargetUuid(), requestDto.getMessage());
+
+        if (isSuccess) {
+            return ResponseEntity.ok("알림톡 전송 성공");
+        } else {
+            return ResponseEntity.status(500).body("알림톡 전송 실패");
         }
     }
 }

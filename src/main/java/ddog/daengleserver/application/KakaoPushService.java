@@ -1,60 +1,75 @@
 package ddog.daengleserver.application;
 
-import ddog.daengleserver.presentation.dto.request.MessageDto;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
+import org.springframework.web.client.RestTemplate;
 
 @Service
-public class KakaoPushService extends HttpCallService {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private static final String MSG_SEND_SERVICE_URL = "https://kapi.kakao.com/v2/api/talk/memo/default/send";
-    private static final String SEND_SUCCESS_MSG = "메시지 전송에 성공했습니다.";
-    private static final String SEND_FAIL_MSG = "메시지 전송에 실패했습니다.";
+public class KakaoPushService {
 
-    private static final String SUCCESS_CODE = "0";
+    @Value("${kakao.admin}")
+    private String ADMIN_KEY; // 카카오에서 발급받은 Admin Key
+    private static final String SEND_MESSAGE_URL = "https://kapi.kakao.com/v1/api/talk/friends/message/send";
 
-    public boolean sendMessage(String accessToken, MessageDto messageDto) {
-        JSONObject object = new JSONObject();
-        object.put("web_url", messageDto.getWebUrl());
-        object.put("mobile_web_url", messageDto.getMobileUrl());
+    private static final Logger logger = LoggerFactory.getLogger(KakaoPushService.class);
 
-        JSONObject templateObject = new JSONObject();
-        templateObject.put("object_type", messageDto.getObjType());
-        templateObject.put("text", messageDto.getText());
-        templateObject.put("link", object);
-        templateObject.put("button_title", messageDto.getBtnTitle());
+    // 알림톡 메시지 전송
+    public boolean sendNotification(String targetUuid, String message) {
+        try {
+            // 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
 
-        HttpHeaders header = new HttpHeaders();
-        header.set("Content-Type", APP_TYPE_URL_ENCODED);
-        header.set("Authorization", "Bearer " + accessToken);
+            // 현재 로그인 중인 사용자의 JWT 토큰 가져오기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.getCredentials() != null) {
+                String jwtToken = (String) authentication.getCredentials();
+                logger.info("JWT 토큰: {}", jwtToken); // 디버깅을 위해 JWT 토큰을 출력
+                headers.set("Authorization", "Bearer " + jwtToken);  // JWT 토큰을 Authorization 헤더에 포함
+            } else {
+                throw new IllegalStateException("로그인된 사용자가 없습니다.");
+            }
 
-        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
-        param.add("template_object", templateObject.toString());
+            headers.set("KakaoAK", ADMIN_KEY);  // 카카오 Admin Key를 헤더에 추가
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<?> messageRequestEntity = httpClientEntity(header, param);
+            // 메시지 템플릿 객체 생성
+            JSONObject linkObject = new JSONObject();
+            linkObject.put("web_url", message); // 여기서 웹 URL은 예시로 메시지를 그대로 넣음
+            linkObject.put("mobile_web_url", message); // 모바일 URL도 동일하게 설정
 
-        String resCode = "";
-        ResponseEntity<String> response = httpRequest(MSG_SEND_SERVICE_URL, HttpMethod.POST, messageRequestEntity);
+            JSONObject templateObject = new JSONObject();
+            templateObject.put("object_type", "text"); // 텍스트 메시지로 설정
+            templateObject.put("text", message);
+            templateObject.put("link", linkObject);
+            templateObject.put("button_title", "자세히 보기");
 
-        JSONObject jsonData = new JSONObject(response.getBody());
-        resCode = jsonData.get("result_code").toString();
+            // 메시지 객체 구성
+            JSONObject messageObject = new JSONObject();
+            messageObject.put("receiver_uuids", new String[]{targetUuid}); // 대상 UUID
+            messageObject.put("template_object", templateObject);
 
-        return successCheck(resCode);
-    }
+            // 요청 전송
+            HttpEntity<String> entity = new HttpEntity<>(messageObject.toString(), headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(SEND_MESSAGE_URL, HttpMethod.POST, entity, String.class);
 
-    public boolean successCheck(String resultCode) {
-        if (resultCode.equals(SUCCESS_CODE)) {
-            logger.info(SEND_SUCCESS_MSG);
-            return true;
-        }
-        else {
-            logger.debug(SEND_FAIL_MSG);
+            // 응답 확인
+            if (response.getStatusCode() == HttpStatus.OK) {
+                logger.info("알림톡 전송 성공: {}", response.getBody());
+                return true;
+            } else {
+                logger.warn("알림톡 전송 실패: {}", response.getBody());
+                return false;
+            }
+
+        } catch (Exception e) {
+            logger.error("알림톡 전송 중 오류 발생: {}", e.getMessage(), e);
             return false;
         }
     }
