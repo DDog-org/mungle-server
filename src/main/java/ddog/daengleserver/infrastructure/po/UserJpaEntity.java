@@ -31,7 +31,8 @@ public class UserJpaEntity {
     private String address;
     private String email;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany
+    @JoinColumn(name = "account_id", referencedColumnName = "accountId")
     private List<PetJpaEntity> pets;
 
     public static UserJpaEntity from(User user) {

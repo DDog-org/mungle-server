@@ -2,7 +2,6 @@ package ddog.daengleserver.infrastructure;
 
 import ddog.daengleserver.application.repository.PetRepository;
 import ddog.daengleserver.domain.account.Pet;
-import ddog.daengleserver.implementation.AccountException;
 import ddog.daengleserver.infrastructure.po.PetJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -17,11 +16,11 @@ public class PetRepositoryImpl implements PetRepository {
     private final PetJpaRepository petJpaRepository;
 
     @Override
-    public List<Pet> findPetsById(Long userId) {
+    public List<Pet> findPetsById(Long accountId) {
 
         List<Pet> petList = new ArrayList<>();
 
-        for (PetJpaEntity petJpaEntity : petJpaRepository.findByUserId(userId)) {
+        for (PetJpaEntity petJpaEntity : petJpaRepository.findByAccountId(accountId)) {
             petList.add(petJpaEntity.toModel());
         }
         return petList;

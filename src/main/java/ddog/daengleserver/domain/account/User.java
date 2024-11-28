@@ -2,7 +2,7 @@ package ddog.daengleserver.domain.account;
 
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
-import ddog.daengleserver.presentation.account.dto.response.PetInfos;
+import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import lombok.AllArgsConstructor;
@@ -59,7 +59,7 @@ public class User {
 
     public UserProfileInfo toUserProfileInfo() {
         return UserProfileInfo.builder()
-                .userImage(userImage)
+                .image(userImage)
                 .nickname(nickname)
                 .username(username)
                 .phoneNumber(phoneNumber)
@@ -96,25 +96,25 @@ public class User {
                 .build();
     }
 
-    public PetInfos toPetInfos() {
-        List<PetInfos.Details> petDetails = new ArrayList<>();
+    public PetInfo toPetInfo() {
+        List<PetInfo.Detail> petDetails = new ArrayList<>();
         for (Pet pet : pets) {
-            petDetails.add(PetInfos.Details.builder()
-                    .petId(pet.getPetId())
-                    .petImage(pet.getPetImage())
-                    .petName(pet.getPetName())
-                    .petBirth(pet.getPetBirth())
-                    .petGender(pet.getPetGender())
+            petDetails.add(PetInfo.Detail.builder()
+                    .id(pet.getPetId())
+                    .image(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .birth(pet.getPetBirth())
+                    .gender(pet.getPetGender())
                     .breed(pet.getBreed())
                     .isNeutered(pet.getIsNeutered())
-                    .petWeight(pet.getPetWeight())
+                    .weight(pet.getPetWeight())
                     .groomingExperience(pet.getGroomingExperience())
                     .isBite(pet.getIsBite())
                     .dislikeParts(pet.getDislikeParts().split(","))
-                    .petSignificant(pet.getPetSignificant())
+                    .significant(pet.getPetSignificant())
                     .build());
         }
-        return PetInfos.builder()
+        return PetInfo.builder()
                 .petDetails(petDetails)
                 .build();
     }

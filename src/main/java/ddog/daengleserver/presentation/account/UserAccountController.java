@@ -5,7 +5,7 @@ import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
-import ddog.daengleserver.presentation.account.dto.response.PetInfos;
+import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,8 +62,8 @@ public class UserAccountController {
     }
 
     @GetMapping("/pets-info")
-    public CommonResponseEntity<PetInfos> getPetsInfo(PayloadDto payloadDto) {
-        return success(userAccountService.getPetInfos(payloadDto.getAccountId()));
+    public CommonResponseEntity<PetInfo> getPetInfo(PayloadDto payloadDto) {
+        return success(userAccountService.getPetInfo(payloadDto.getAccountId()));
     }
 
     @PostMapping("/modify-pet")
@@ -78,7 +78,7 @@ public class UserAccountController {
         return success(DELETE_PET_COMPLETED.getMessage());
     }
 
-    @Operation(summary = "사용자 주소, 반려동물 정보 요청", description = "사용자 주소와 반려동물 id, 사진, 이름 정보를 가져옵니다.")
+    @Operation(summary = "사용자 주소, 반려동물 정보 요청")
     @GetMapping("/user-pets-info")
     public CommonResponseEntity<UserInfo> getUserAndPetInfos(PayloadDto payloadDto) {
         return success(userAccountService.getUserAndPetInfos(payloadDto.getAccountId()));

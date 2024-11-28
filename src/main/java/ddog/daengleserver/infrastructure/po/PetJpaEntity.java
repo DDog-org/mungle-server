@@ -20,7 +20,9 @@ public class PetJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long petId;
-    private Long userId;
+
+    @Column(name = "account_id")
+    private Long accountId;
 
     @Enumerated(EnumType.STRING)
     private Gender petGender;
@@ -41,7 +43,7 @@ public class PetJpaEntity {
     public Pet toModel() {
         return Pet.builder()
                 .petId(petId)
-                .userId(userId)
+                .accountId(accountId)
                 .petGender(petGender)
                 .petName(petName)
                 .petImage(petImage)
@@ -59,7 +61,7 @@ public class PetJpaEntity {
     public static PetJpaEntity from(Pet pet) {
         return PetJpaEntity.builder()
                 .petId(pet.getPetId())
-                .userId(pet.getUserId())
+                .accountId(pet.getAccountId())
                 .petGender(pet.getPetGender())
                 .petName(pet.getPetName())
                 .petImage(pet.getPetImage())

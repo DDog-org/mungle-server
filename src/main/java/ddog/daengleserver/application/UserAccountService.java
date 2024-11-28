@@ -9,7 +9,7 @@ import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.account.enums.Breed;
 import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
-import ddog.daengleserver.presentation.account.dto.response.PetInfos;
+import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -65,15 +65,15 @@ public class UserAccountService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileInfo getUserProfileInfo(Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public UserProfileInfo getUserProfileInfo(Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         return user.toUserProfileInfo();
     }
 
     @Transactional
     public void modifyUserProfile(UserProfileModifyReq request, Long accountId) {
         User user = userRepository.findByAccountId(accountId);
-        User modifiedUser = user.withImageAndNickname(request.getUserImage(), request.getNickname());
+        User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
         userRepository.save(modifiedUser);
     }
 
@@ -86,14 +86,14 @@ public class UserAccountService {
     }
 
     @Transactional(readOnly = true)
-    public PetInfos getPetInfos(Long accountId) {
+    public PetInfo getPetInfo(Long accountId) {
         User user = userRepository.findByAccountId(accountId);
-        return user.toPetInfos();
+        return user.toPetInfo();
     }
 
     @Transactional
     public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
-        /* TODO 수정할 반려동물이 해당 사용자의 반려동물인지 유효성 검증 추가해야할듯 */
+        /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = Pet.withModifyPetInfo(request, accountId);
         petRepository.save(modifiedPet);
     }
