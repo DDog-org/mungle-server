@@ -41,7 +41,7 @@ subprojects {
     dependencies {  //TODO 모듈별로 의존성 분산하기
         //implementation 'org.springframework.boot:spring-boot-starter-web'
 
-        //Spring Security
+/*        //Spring Security
         implementation 'org.springframework.boot:spring-boot-starter-security'
 
         //jwt
@@ -85,7 +85,7 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
         // webflux
-        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'*/
     }
 }
 
