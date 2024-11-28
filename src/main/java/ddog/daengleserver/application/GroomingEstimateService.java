@@ -23,13 +23,13 @@ public class GroomingEstimateService {
     private final GroomingEstimateRepository groomingEstimateRepository;
 
     @Transactional
-    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(request, userId));
+    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long accountId) {
+        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(request, accountId));
     }
 
     @Transactional
-    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long userId) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserDesignationGroomingEstimate(request, userId));
+    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long accountId) {
+        groomingEstimateRepository.save(GroomingEstimate.createUserDesignationGroomingEstimate(request, accountId));
     }
 
     @Transactional(readOnly = true)

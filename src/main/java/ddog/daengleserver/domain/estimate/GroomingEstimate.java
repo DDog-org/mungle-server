@@ -54,7 +54,7 @@ public class GroomingEstimate {
     private String groomerIntroduction;
 
 
-    public static GroomingEstimate createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long userId) {
+    public static GroomingEstimate createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -62,20 +62,20 @@ public class GroomingEstimate {
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(userId)
+                .userId(accountId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
-                .petId(request.getPetId())
+                .petId(request.getId())
                 .petImage(request.getPetImage())
-                .petName(request.getPetName())
-                .petBirth(request.getPetBirth())
-                .petWeight(request.getPetWeight())
-                .petSignificant(request.getPetSignificant())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
                 .build();
     }
 
-    public static GroomingEstimate createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long userId) {
+    public static GroomingEstimate createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .desiredStyle(request.getDesiredStyle())
@@ -83,16 +83,16 @@ public class GroomingEstimate {
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(userId)
+                .userId(accountId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
                 .petId(request.getPetId())
                 .petImage(request.getPetImage())
-                .petName(request.getPetName())
-                .petBirth(request.getPetBirth())
-                .petWeight(request.getPetWeight())
-                .petSignificant(request.getPetSignificant())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
                 .groomerId(request.getGroomerId())
                 .build();
     }
