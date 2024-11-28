@@ -134,10 +134,10 @@ public class CareEstimate {
         List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
         for (CareEstimate careEstimate : careEstimates) {
             careInfos.add(EstimateInfo.PetInfo.Care.builder()
-                    .careEstimateId(careEstimate.getCareEstimateId())
-                    .vetName(careEstimate.getVetName())
+                    .id(careEstimate.getCareEstimateId())
+                    .name(careEstimate.getVetName())
                     .daengleMeter(careEstimate.getDaengleMeter())
-                    .vetImage(careEstimate.getVetImage())
+                    .image(careEstimate.getVetImage())
                     .reservedDate(careEstimate.getReservedDate())
                     .build());
         }

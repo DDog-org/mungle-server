@@ -60,8 +60,8 @@ public class UserEstimateController {
 
     @Operation(summary = "미용/진료 대기 견적서 목록 조회")
     @GetMapping("/list")
-    public CommonResponseEntity<EstimateInfo> findEstimateInfos(PayloadDto payloadDto) {
-        return success(userService.findEstimateInfos(payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateInfo> findEstimateInfo(PayloadDto payloadDto) {
+        return success(userService.findEstimateInfo(payloadDto.getAccountId()));
     }
 
     @GetMapping("/{groomingEstimateId}/grooming-detail")

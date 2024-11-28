@@ -26,8 +26,8 @@ public class UserService {
     private final CareEstimateRepository careEstimateRepository;
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimateInfos(Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public EstimateInfo findEstimateInfo(Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         List<Pet> pets = user.getPets();
 
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
@@ -39,8 +39,8 @@ public class UserService {
             List<EstimateInfo.PetInfo.Care> careInfos = CareEstimate.toInfos(careEstimates);
 
             petInfos.add(EstimateInfo.PetInfo.builder()
-                    .petName(pet.getPetName())
-                    .petImage(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .image(pet.getPetImage())
                     .groomingEstimates(groomingInfos)
                     .careEstimates(careInfos)
                     .build());

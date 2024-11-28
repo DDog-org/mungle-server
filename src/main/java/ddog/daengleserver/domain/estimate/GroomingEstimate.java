@@ -134,10 +134,10 @@ public class GroomingEstimate {
         List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
         for (GroomingEstimate groomingEstimate : groomingEstimates) {
             groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
-                    .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                    .groomerName(groomingEstimate.getGroomerName())
+                    .id(groomingEstimate.getGroomingEstimateId())
+                    .name(groomingEstimate.getGroomerName())
                     .daengleMeter(groomingEstimate.getDaengleMeter())
-                    .groomerImage(groomingEstimate.getGroomerImage())
+                    .image(groomingEstimate.getGroomerImage())
                     .shopName(groomingEstimate.getShopName())
                     .reservedDate(groomingEstimate.getReservedDate())
                     .build());
