@@ -12,12 +12,12 @@ import java.util.List;
 @Builder
 public class GroomingEstimateInfos {
 
-    List<Contents> allEstimates;
-    List<Contents> designationEstimates;
+    List<Content> allEstimates;
+    List<Content> designationEstimates;
 
     @Getter
     @Builder
-    public static class Contents {
+    public static class Content {
         private Long id;
         private String image;
         private String nickname;

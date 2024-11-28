@@ -102,28 +102,28 @@ public class CareEstimate {
             List<CareEstimate> generalEstimates,
             List<CareEstimate> designationEstimates
     ) {
-        List<CareEstimateInfos.Contents> allContents = estimatesToContents(generalEstimates);
-        List<CareEstimateInfos.Contents> designationContents = estimatesToContents(designationEstimates);
+        List<CareEstimateInfos.Content> allContents = estimatesToContents(generalEstimates);
+        List<CareEstimateInfos.Content> designationContents = estimatesToContents(designationEstimates);
 
         allContents.addAll(designationContents);
 
         // careEstimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(CareEstimateInfos.Contents::getCareEstimateId));
+        allContents.sort(Comparator.comparing(CareEstimateInfos.Content::getId));
         return CareEstimateInfos.builder()
-                .allCareEstimates(allContents)
-                .designationCareEstimates(designationContents)
+                .allEstimates(allContents)
+                .designationEstimates(designationContents)
                 .build();
     }
 
-    private static List<CareEstimateInfos.Contents> estimatesToContents(List<CareEstimate> estimates) {
-        List<CareEstimateInfos.Contents> contents = new ArrayList<>();
+    private static List<CareEstimateInfos.Content> estimatesToContents(List<CareEstimate> estimates) {
+        List<CareEstimateInfos.Content> contents = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
-            contents.add(CareEstimateInfos.Contents.builder()
-                    .careEstimateId(estimate.getCareEstimateId())
-                    .userImage(estimate.getUserImage())
+            contents.add(CareEstimateInfos.Content.builder()
+                    .id(estimate.getCareEstimateId())
+                    .image(estimate.getUserImage())
                     .nickname(estimate.getNickname())
                     .proposal(estimate.getProposal())
-                    .petSignificant(estimate.getPetSignificant())
+                    .significant(estimate.getPetSignificant())
                     .reservedDate(estimate.getReservedDate())
                     .build());
         }

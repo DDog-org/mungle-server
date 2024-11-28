@@ -32,7 +32,7 @@ public class UserJpaEntity {
     private String email;
 
     @OneToMany(mappedBy = "userId")
-    private List<PetJpaEntity> pets = new ArrayList<>();
+    private List<PetJpaEntity> pets;
 
     public static UserJpaEntity from(User user) {
         return UserJpaEntity.builder()

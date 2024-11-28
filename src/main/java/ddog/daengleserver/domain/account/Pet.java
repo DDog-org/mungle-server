@@ -36,7 +36,7 @@ public class Pet {
                 .userId(accountId)
                 .petName(request.getPetName())
                 .petGender(request.getPetGender())
-                .petBirth(request.getPetBirth())
+                .petWeight(request.getPetWeight())
                 .petBirth(request.getPetBirth())
                 .breed(request.getBreed())
                 .build();

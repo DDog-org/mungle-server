@@ -33,8 +33,8 @@ public class CareEstimateService {
     }
 
     @Transactional(readOnly = true)
-    public CareEstimateInfos findCareEstimateInfos(Long vetId) {
-        Vet vet = vetRepository.getVetByAccountId(vetId);
+    public CareEstimateInfos findCareEstimateInfos(Long accountId) {
+        Vet vet = vetRepository.getVetByAccountId(accountId);
         List<CareEstimate> generalEstimates = careEstimateRepository.findGeneralCareEstimates(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimateRepository.findDesignationCareEstimates(vet.getVetId());
         return CareEstimate.findCareEstimateInfos(generalEstimates, designationEstimates);

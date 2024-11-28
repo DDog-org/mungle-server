@@ -101,13 +101,13 @@ public class GroomingEstimate {
             List<GroomingEstimate> generalEstimates,
             List<GroomingEstimate> designationEstimates
     ) {
-        List<GroomingEstimateInfos.Contents> allContents = estimatesToContents(generalEstimates);
-        List<GroomingEstimateInfos.Contents> designationContents = estimatesToContents(designationEstimates);
+        List<GroomingEstimateInfos.Content> allContents = estimatesToContents(generalEstimates);
+        List<GroomingEstimateInfos.Content> designationContents = estimatesToContents(designationEstimates);
 
         allContents.addAll(designationContents);
 
         // groomingEstimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Contents::getId));
+        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Content::getId));
 
         return GroomingEstimateInfos.builder()
                 .allEstimates(allContents)
@@ -115,10 +115,10 @@ public class GroomingEstimate {
                 .build();
     }
 
-    private static List<GroomingEstimateInfos.Contents> estimatesToContents(List<GroomingEstimate> estimates) {
-        List<GroomingEstimateInfos.Contents> contents = new ArrayList<>();
+    private static List<GroomingEstimateInfos.Content> estimatesToContents(List<GroomingEstimate> estimates) {
+        List<GroomingEstimateInfos.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
-            contents.add(GroomingEstimateInfos.Contents.builder()
+            contents.add(GroomingEstimateInfos.Content.builder()
                     .id(estimate.getGroomingEstimateId())
                     .image(estimate.getUserImage())
                     .nickname(estimate.getNickname())
