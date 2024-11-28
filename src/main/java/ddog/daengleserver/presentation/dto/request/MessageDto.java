@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MessageDto {
-    private String targetUuid;
+    private String targetUserId;
     private String message;
 }

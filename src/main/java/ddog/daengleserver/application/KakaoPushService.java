@@ -20,7 +20,7 @@ public class KakaoPushService {
     private static final Logger logger = LoggerFactory.getLogger(KakaoPushService.class);
 
     // 알림톡 메시지 전송
-    public boolean sendNotification(String targetUuid, String message) {
+    public boolean sendNotification(String targetUserId, String message) {
         try {
             // 헤더 설정
             HttpHeaders headers = new HttpHeaders();
@@ -51,7 +51,7 @@ public class KakaoPushService {
 
             // 메시지 객체 구성
             JSONObject messageObject = new JSONObject();
-            messageObject.put("receiver_uuids", new String[]{targetUuid}); // 대상 UUID
+            messageObject.put("receiver_uuids", new String[]{targetUserId});
             messageObject.put("template_object", templateObject);
 
             // 요청 전송

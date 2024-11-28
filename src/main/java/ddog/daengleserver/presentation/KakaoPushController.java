@@ -19,7 +19,7 @@ public class KakaoPushController {
     @PostMapping("/api/kakao-send")
     public ResponseEntity<String> sendNotification(@RequestBody MessageDto requestDto) {
         // MessageDto를 이용해 알림톡 메시지 전송
-        boolean isSuccess = kakaoPushService.sendNotification(requestDto.getTargetUuid(), requestDto.getMessage());
+        boolean isSuccess = kakaoPushService.sendNotification(requestDto.getTargetUserId(), requestDto.getMessage());
 
         if (isSuccess) {
             return ResponseEntity.ok("알림톡 전송 성공");
