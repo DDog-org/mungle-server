@@ -1,7 +1,6 @@
 package ddog.daengleserver.presentation.estimate.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.domain.estimate.Proposal;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,17 +12,17 @@ import java.util.List;
 @Builder
 public class GroomingEstimateInfos {
 
-    List<Contents> allGroomingEstimates;
-    List<Contents> designationGroomingEstimates;
+    List<Contents> allEstimates;
+    List<Contents> designationEstimates;
 
     @Getter
     @Builder
     public static class Contents {
-        private Long groomingEstimateId;
-        private String userImage;
+        private Long id;
+        private String image;
         private String nickname;
         private Proposal proposal;
-        private String petSignificant;
+        private String significant;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime reservedDate;

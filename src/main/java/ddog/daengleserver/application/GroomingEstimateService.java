@@ -33,11 +33,11 @@ public class GroomingEstimateService {
     }
 
     @Transactional(readOnly = true)
-    public GroomingEstimateInfos findGroomingEstimateInfos(Long groomerId) {
-        Groomer groomer = groomerRepository.getGroomerByAccountId(groomerId);
+    public GroomingEstimateInfos findGroomingEstimateInfos(Long accountId) {
+        Groomer groomer = groomerRepository.getGroomerByAccountId(accountId);
         List<GroomingEstimate> generalEstimates = groomingEstimateRepository.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimateRepository.findDesignationGroomingEstimates(groomer.getGroomerId());
-        return GroomingEstimate.findGroomingEstimateInfos(generalEstimates, designationEstimates);
+        return GroomingEstimate.toGroomingEstimateInfos(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)

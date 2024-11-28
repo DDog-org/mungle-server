@@ -97,7 +97,7 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static GroomingEstimateInfos findGroomingEstimateInfos(
+    public static GroomingEstimateInfos toGroomingEstimateInfos(
             List<GroomingEstimate> generalEstimates,
             List<GroomingEstimate> designationEstimates
     ) {
@@ -107,11 +107,11 @@ public class GroomingEstimate {
         allContents.addAll(designationContents);
 
         // groomingEstimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Contents::getGroomingEstimateId));
+        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Contents::getId));
 
         return GroomingEstimateInfos.builder()
-                .allGroomingEstimates(allContents)
-                .designationGroomingEstimates(designationContents)
+                .allEstimates(allContents)
+                .designationEstimates(designationContents)
                 .build();
     }
 
@@ -119,11 +119,11 @@ public class GroomingEstimate {
         List<GroomingEstimateInfos.Contents> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             contents.add(GroomingEstimateInfos.Contents.builder()
-                    .groomingEstimateId(estimate.getGroomingEstimateId())
-                    .userImage(estimate.getUserImage())
+                    .id(estimate.getGroomingEstimateId())
+                    .image(estimate.getUserImage())
                     .nickname(estimate.getNickname())
                     .proposal(estimate.getProposal())
-                    .petSignificant(estimate.getPetSignificant())
+                    .significant(estimate.getPetSignificant())
                     .reservedDate(estimate.getReservedDate())
                     .build());
         }

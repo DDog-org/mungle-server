@@ -24,7 +24,7 @@ public class GroomerEstimateController {
 
     private final GroomingEstimateService groomingEstimateService;
 
-    @Operation(summary = "사용자가 요청한 미용 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 견적서 목록 조회 (신규)")
+    @Operation(summary = "사용자가 요청한 미용 신규 견적서 목록 조회")
     @GetMapping("/list")
     public CommonResponseEntity<GroomingEstimateInfos> findGroomingEstimateInfos(PayloadDto payloadDto) {
         return success(groomingEstimateService.findGroomingEstimateInfos(payloadDto.getAccountId()));
