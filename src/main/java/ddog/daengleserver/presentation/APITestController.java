@@ -14,7 +14,7 @@ public class APITestController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = now.format(formatter);
         return "Hello Daengle World ! This Application is new !" +
-                " Made at: " + " 2024-11-28 01:20 " +"   CI/CD SUCCESS";
+                " Made at: " + " 2024-11-28 17:00 " +"   CI/CD SUCCESS";
     }
 
     @PostMapping("")
@@ -23,6 +23,6 @@ public class APITestController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = now.format(formatter);
         return "YOUR REQUEST : " + text +
-                "\nMY RESPONSE : Hello Daengle World ! This Application is new ! Made at: " + " 2024-11-28 01:20 " + "   CI/CD SUCCESS";
+                "\nMY RESPONSE : Hello Daengle World ! This Application is new ! Made at: " + " 2024-11-28 17:00 " + "   CI/CD SUCCESS";
     }
 }
