@@ -7,7 +7,7 @@ import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
 import lombok.RequiredArgsConstructor;
@@ -53,12 +53,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomingEstimateId);
-        return groomingEstimate.getGroomingEstimateDetails();
+        return groomingEstimate.getGroomingEstimateDetail();
     }
 
     @Transactional(readOnly = true)
-    public CareEstimateDetails getCareEstimateDetails(Long careEstimateId) {
+    public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(careEstimateId);
-        return careEstimate.getCareEstimateDetails();
+        return careEstimate.getCareEstimateDetail();
     }
 }

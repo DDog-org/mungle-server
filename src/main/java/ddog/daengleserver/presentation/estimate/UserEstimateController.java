@@ -9,7 +9,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,7 +70,7 @@ public class UserEstimateController {
     }
 
     @GetMapping("/{careEstimateId}/care-detail")
-    public CommonResponseEntity<CareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
-        return success(userService.getCareEstimateDetails(careEstimateId));
+    public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
+        return success(userService.getCareEstimateDetail(careEstimateId));
     }
 }

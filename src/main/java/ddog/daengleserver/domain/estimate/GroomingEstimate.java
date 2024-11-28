@@ -189,7 +189,7 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public GroomingEstimateDetail getGroomingEstimateDetails() {
+    public GroomingEstimateDetail getGroomingEstimateDetail() {
         return GroomingEstimateDetail.builder()
                 .image(groomerImage)
                 .name(groomerName)

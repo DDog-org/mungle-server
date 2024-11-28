@@ -5,7 +5,7 @@ import ddog.daengleserver.domain.account.enums.Weight;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetail;
@@ -190,13 +190,12 @@ public class CareEstimate {
                 .build();
     }
 
-    public CareEstimateDetails getCareEstimateDetails() {
-        return CareEstimateDetails.builder()
-                .careEstimateId(careEstimateId)
-                .vetImage(vetImage)
-                .vetName(vetName)
+    public CareEstimateDetail getCareEstimateDetail() {
+        return CareEstimateDetail.builder()
+                .image(vetImage)
+                .name(vetName)
                 .daengleMeter(daengleMeter)
-                .vetIntroduction(vetIntroduction)
+                .introduction(vetIntroduction)
                 .address(address)
                 .reservedDate(reservedDate)
                 .diagnosis(diagnosis)
