@@ -15,10 +15,10 @@ public class UserDesignationCareEstimateReq {
     private LocalDateTime reservedDate;
     private Long petId;
     private String petImage;
-    private String petName;
-    private String petSignificant;
-    private int petBirth;
-    private Weight petWeight;
+    private String name;
+    private String significant;
+    private int birth;
+    private Weight weight;
     private String symptoms;
     private String requirements;
     private String userImage;

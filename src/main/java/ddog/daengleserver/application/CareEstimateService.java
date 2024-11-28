@@ -23,13 +23,13 @@ public class CareEstimateService {
     private final CareEstimateRepository careEstimateRepository;
 
     @Transactional
-    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long userId) {
-        careEstimateRepository.save(CareEstimate.createUserGeneralCareEstimate(request, userId));
+    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long accountId) {
+        careEstimateRepository.save(CareEstimate.createUserGeneralCareEstimate(request, accountId));
     }
 
     @Transactional
-    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long userId) {
-        careEstimateRepository.save(CareEstimate.createUserDesignationCareEstimate(request, userId));
+    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long accountId) {
+        careEstimateRepository.save(CareEstimate.createUserDesignationCareEstimate(request, accountId));
     }
 
     @Transactional(readOnly = true)

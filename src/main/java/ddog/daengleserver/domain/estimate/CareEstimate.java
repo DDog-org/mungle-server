@@ -55,7 +55,7 @@ public class CareEstimate {
     private String vetIntroduction;
 
 
-    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long userId) {
+    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -63,20 +63,20 @@ public class CareEstimate {
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(userId)
+                .userId(accountId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
-                .petId(request.getPetId())
+                .petId(request.getId())
                 .petImage(request.getPetImage())
-                .petName(request.getPetName())
-                .petBirth(request.getPetBirth())
-                .petWeight(request.getPetWeight())
-                .petSignificant(request.getPetSignificant())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
                 .build();
     }
 
-    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long userId) {
+    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
@@ -84,16 +84,16 @@ public class CareEstimate {
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(userId)
+                .userId(accountId)
                 .userImage(request.getUserImage())
                 .nickname(request.getNickname())
                 .address(request.getAddress())
                 .petId(request.getPetId())
                 .petImage(request.getPetImage())
-                .petName(request.getPetName())
-                .petBirth(request.getPetBirth())
-                .petWeight(request.getPetWeight())
-                .petSignificant(request.getPetSignificant())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
                 .vetId(request.getVetId())
                 .build();
     }
