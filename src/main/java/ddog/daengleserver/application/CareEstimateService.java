@@ -47,9 +47,9 @@ public class CareEstimateService {
     }
 
     @Transactional
-    public void createVetCareEstimate(VetCareEstimateReq request, Long vetId) {
-        CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getCareEstimateId());
-        Vet vet = vetRepository.getVetByAccountId(vetId);
+    public void createVetCareEstimate(VetCareEstimateReq request, Long accountId) {
+        CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getId());
+        Vet vet = vetRepository.getVetByAccountId(accountId);
         careEstimateRepository.save(careEstimate.createVetCareEstimate(request, vet));
     }
 }
