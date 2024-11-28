@@ -11,7 +11,7 @@ import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,9 +99,9 @@ public class UserAccountService {
     }
 
     @Transactional(readOnly = true)
-    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long userId) {
+    public UserInfo getUserAndPetInfos(Long userId) {
         User user = userRepository.findByAccountId(userId);
-        return user.findAddressAndPetsInfo();
+        return user.toUserInfo();
     }
 
     @Transactional

@@ -7,6 +7,8 @@ import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,5 +76,11 @@ public class UserAccountController {
     public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request, PayloadDto payloadDto) {
         userAccountService.deletePet(request.getPetId());
         return success(DELETE_PET_COMPLETED.getMessage());
+    }
+
+    @Operation(summary = "사용자 주소, 반려동물 정보 요청", description = "사용자 주소와 반려동물 id, 사진, 이름 정보를 가져옵니다.")
+    @GetMapping("/user-pets-info")
+    public CommonResponseEntity<UserInfo> getUserAndPetInfos(PayloadDto payloadDto) {
+        return success(userAccountService.getUserAndPetInfos(payloadDto.getAccountId()));
     }
 }

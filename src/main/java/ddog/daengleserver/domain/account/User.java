@@ -4,7 +4,7 @@ import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
 import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -119,20 +119,20 @@ public class User {
                 .build();
     }
 
-    public UserAndPetsInfo findAddressAndPetsInfo() {
-        List<UserAndPetsInfo.PetInfo> petInfos = new ArrayList<>();
+    public UserInfo toUserInfo() {
+        List<UserInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
-            petInfos.add(UserAndPetsInfo.PetInfo.builder()
-                    .petId(pet.getPetId())
-                    .petImage(pet.getPetImage())
-                    .petName(pet.getPetName())
-                    .petSignificant(pet.getPetSignificant())
-                    .petBirth(pet.getPetBirth())
-                    .petWeight(pet.getPetWeight())
+            petInfos.add(UserInfo.PetInfo.builder()
+                    .id(pet.getPetId())
+                    .image(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .significant(pet.getPetSignificant())
+                    .birth(pet.getPetBirth())
+                    .weight(pet.getPetWeight())
                     .build());
         }
 
-        return UserAndPetsInfo.builder()
+        return UserInfo.builder()
                 .nickname(nickname)
                 .userImage(userImage)
                 .address(address)
