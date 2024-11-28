@@ -38,6 +38,7 @@ public class Pet {
                 .petGender(request.getPetGender())
                 .petWeight(request.getPetWeight())
                 .petBirth(request.getPetBirth())
+                .isNeutered(request.getIsNeutered())
                 .breed(request.getBreed())
                 .build();
     }
