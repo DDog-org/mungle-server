@@ -1,1 +1,3 @@
 rootProject.name = 'daengle-server'
+include 'daengle-payment'
+
