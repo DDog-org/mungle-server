@@ -16,18 +16,18 @@ public class EstimateInfo {
     @Getter
     @Builder
     public static class PetInfo {
-        private String petName;
-        private String petImage;
+        private String name;
+        private String image;
         List<Grooming> groomingEstimates;
         List<Care> careEstimates;
 
         @Getter
         @Builder
         public static class Grooming {
-            private Long groomingEstimateId;
-            private String groomerName;
+            private Long id;
+            private String name;
             private int daengleMeter;
-            private String groomerImage;
+            private String image;
             private String shopName;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -37,10 +37,10 @@ public class EstimateInfo {
         @Getter
         @Builder
         public static class Care {
-            private Long careEstimateId;
-            private String vetName;
+            private Long id;
+            private String name;
             private int daengleMeter;
-            private String vetImage;
+            private String image;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
             private LocalDateTime reservedDate;

@@ -20,6 +20,7 @@ public class JoinUserWithPet {
     private String petName;
     private int petBirth;
     private Gender petGender;
+    private Boolean isNeutered;
     private Weight petWeight;
     private Breed breed;
 }

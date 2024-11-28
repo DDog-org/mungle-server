@@ -10,24 +10,24 @@ import java.util.List;
 
 @Getter
 @Builder
-public class PetInfos {
-    List<Details> petDetails;
+public class PetInfo {
+    List<Detail> petDetails;
 
     @Getter
     @Builder
-    public static class Details {
-        private Long petId;
-        private String petImage;
-        private String petName;
-        private int petBirth;
-        private Gender petGender;
+    public static class Detail {
+        private Long id;
+        private String image;
+        private String name;
+        private int birth;
+        private Gender gender;
         private Breed breed;
         private Boolean isNeutered;
-        private Weight petWeight;
+        private Weight weight;
         private Boolean groomingExperience;
         private Boolean isBite;
         private String[] dislikeParts;
-        private String petSignificant;
+        private String significant;
 
     }
 }

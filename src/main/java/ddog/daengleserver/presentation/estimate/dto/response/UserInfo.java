@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class UserAndPetsInfo {
+public class UserInfo {
 
     private String userImage;
     private String nickname;
@@ -18,11 +18,11 @@ public class UserAndPetsInfo {
     @Getter
     @Builder
     public static class PetInfo {
-        private Long petId;
-        private String petImage;
-        private String petName;
-        private String petSignificant;
-        private int petBirth;
-        private Weight petWeight;
+        private Long id;
+        private String image;
+        private String name;
+        private String significant;
+        private int birth;
+        private Weight weight;
     }
 }

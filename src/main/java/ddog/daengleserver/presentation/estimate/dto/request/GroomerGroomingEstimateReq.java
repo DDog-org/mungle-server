@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class GroomerGroomingEstimateReq {
 
-    private Long groomingEstimateId;
+    private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;

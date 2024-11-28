@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Pet {
 
     private Long petId;
-    private Long userId;
+    private Long accountId;
     private Gender petGender;
     private String petName;
     private String petImage;
@@ -33,24 +33,25 @@ public class Pet {
 
     public static Pet toJoinPetInfo(Long accountId, JoinUserWithPet request) {
         return Pet.builder()
-                .userId(accountId)
+                .accountId(accountId)
                 .petName(request.getPetName())
                 .petGender(request.getPetGender())
+                .petWeight(request.getPetWeight())
                 .petBirth(request.getPetBirth())
-                .petBirth(request.getPetBirth())
+                .isNeutered(request.getIsNeutered())
                 .breed(request.getBreed())
                 .build();
     }
 
     public static Pet create(Long accountId, AddPetInfo request) {
         return Pet.builder()
-                .userId(accountId)
-                .petGender(request.getPetGender())
-                .petName(request.getPetName())
-                .petImage(request.getPetImage())
-                .petSignificant(request.getPetSignificant())
-                .petBirth(request.getPetBirth())
-                .petWeight(request.getPetWeight())
+                .accountId(accountId)
+                .petGender(request.getGender())
+                .petName(request.getName())
+                .petImage(request.getImage())
+                .petSignificant(request.getSignificant())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
                 .breed(request.getBreed())
                 .isNeutered(request.getIsNeutered())
                 .groomingExperience(request.getGroomingExperience())
@@ -59,21 +60,21 @@ public class Pet {
                 .build();
     }
 
-    public static Pet withModifyPetInfo(ModifyPetInfo request, Long userId) {
+    public static Pet withModifyPetInfo(ModifyPetInfo request, Long accountId) {
         return Pet.builder()
-                .petId(request.getPetId())
-                .userId(userId)
-                .petImage(request.getPetImage())
-                .petName(request.getPetName())
-                .petBirth(request.getPetBirth())
-                .petGender(request.getPetGender())
+                .petId(request.getId())
+                .accountId(accountId)
+                .petImage(request.getImage())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petGender(request.getGender())
                 .breed(request.getBreed())
                 .isNeutered(request.getIsNeutered())
-                .petWeight(request.getPetWeight())
+                .petWeight(request.getWeight())
                 .groomingExperience(request.getGroomingExperience())
                 .isBite(request.getIsBite())
                 .dislikeParts(request.getDislikeParts())
-                .petSignificant(request.getPetSignificant())
+                .petSignificant(request.getSignificant())
                 .build();
     }
 }

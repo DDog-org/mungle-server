@@ -8,10 +8,10 @@ import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.account.enums.Breed;
 import ddog.daengleserver.presentation.account.dto.request.*;
-import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
-import ddog.daengleserver.presentation.account.dto.response.PetInfos;
+import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
+import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,25 +33,17 @@ public class UserAccountService {
     }
 
     /* TODO PetService 추가하면 그곳으로 옮기기 */
-    public BreedInfos getBreedInfos() {
-        List<BreedInfos.Detail> details = new ArrayList<>();
+    public BreedInfo getBreedInfos() {
+        List<BreedInfo.Detail> details = new ArrayList<>();
         for (Breed breed : Breed.values()) {
-            details.add(BreedInfos.Detail.builder()
+            details.add(BreedInfo.Detail.builder()
                     .breed(breed.toString())
                     .breedName(breed.getName())
                     .build());
         }
-        return BreedInfos.builder()
+        return BreedInfo.builder()
                 .breedList(details)
                 .build();
-    }
-
-    @Transactional
-    public void createUserWithoutPet(JoinUserWithoutPet request) {
-        Account accountToSave = Account.create(request.getEmail(), request.getRole());
-        Account savedAccount = accountRepository.save(accountToSave);
-        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
-        userRepository.save(user);
     }
 
     @Transactional
@@ -64,16 +56,24 @@ public class UserAccountService {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void createUserWithoutPet(JoinUserWithoutPet request) {
+        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+        Account savedAccount = accountRepository.save(accountToSave);
+        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
+        userRepository.save(user);
+    }
+
     @Transactional(readOnly = true)
-    public UserProfileInfo getUserProfileInfo(Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public UserProfileInfo getUserProfileInfo(Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         return user.toUserProfileInfo();
     }
 
     @Transactional
     public void modifyUserProfile(UserProfileModifyReq request, Long accountId) {
         User user = userRepository.findByAccountId(accountId);
-        User modifiedUser = user.withImageAndNickname(request.getUserImage(), request.getNickname());
+        User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
         userRepository.save(modifiedUser);
     }
 
@@ -86,22 +86,22 @@ public class UserAccountService {
     }
 
     @Transactional(readOnly = true)
-    public PetInfos getPetInfos(Long accountId) {
+    public PetInfo getPetInfo(Long accountId) {
         User user = userRepository.findByAccountId(accountId);
-        return user.toPetInfos();
+        return user.toPetInfo();
     }
 
     @Transactional
     public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
-        /* TODO 수정할 반려동물이 해당 사용자의 반려동물인지 유효성 검증 추가해야할듯 */
+        /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = Pet.withModifyPetInfo(request, accountId);
         petRepository.save(modifiedPet);
     }
 
     @Transactional(readOnly = true)
-    public UserAndPetsInfo getUserAddressAndPetsInfoById(Long userId) {
+    public UserInfo getUserAndPetInfos(Long userId) {
         User user = userRepository.findByAccountId(userId);
-        return user.findAddressAndPetsInfo();
+        return user.toUserInfo();
     }
 
     @Transactional
