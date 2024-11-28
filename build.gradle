@@ -69,11 +69,17 @@ dependencies {
 
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     // json
     implementation group: 'org.json', name: 'json', version: '20210307'
 
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
