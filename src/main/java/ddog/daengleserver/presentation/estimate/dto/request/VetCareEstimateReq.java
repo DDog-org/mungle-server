@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class VetCareEstimateReq {
 
-    private Long careEstimateId;
+    private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;

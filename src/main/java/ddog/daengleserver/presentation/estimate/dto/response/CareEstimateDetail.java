@@ -7,13 +7,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class CareEstimateDetails {
+public class CareEstimateDetail {
 
-    private Long careEstimateId;
-    private String vetImage;
-    private String vetName;
+    private String image;
+    private String name;
     private int daengleMeter;
-    private String vetIntroduction;
+    private String introduction;
     private String address;
     private LocalDateTime reservedDate;
     private String diagnosis;

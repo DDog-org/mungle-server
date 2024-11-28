@@ -10,21 +10,22 @@ import java.util.List;
 
 @Getter
 @Builder
-public class CareEstimateInfos {
+public class GroomingEstimateInfo {
 
-    List<Contents> allCareEstimates;
-    List<Contents> designationCareEstimates;
+    List<Content> allEstimates;
+    List<Content> designationEstimates;
 
     @Getter
     @Builder
-    public static class Contents {
-        private Long careEstimateId;
-        private String userImage;
+    public static class Content {
+        private Long id;
+        private String image;
         private String nickname;
         private Proposal proposal;
-        private String petSignificant;
+        private String significant;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime reservedDate;
     }
+
 }

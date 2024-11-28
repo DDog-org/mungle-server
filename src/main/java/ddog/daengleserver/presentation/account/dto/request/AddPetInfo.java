@@ -8,16 +8,16 @@ import lombok.Getter;
 @Getter
 public class AddPetInfo {
 
-    private String petImage;
-    private String petName;
-    private int petBirth;
-    private Gender petGender;
+    private String image;
+    private String name;
+    private int birth;
+    private Gender gender;
     private Breed breed;
     private Boolean isNeutered;
-    private Weight petWeight;
+    private Weight weight;
     private Boolean groomingExperience;
     private Boolean isBite;
     private String dislikeParts;
-    private String petSignificant;
+    private String significant;
 
 }

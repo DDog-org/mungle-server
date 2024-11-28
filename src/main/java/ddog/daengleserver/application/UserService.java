@@ -7,9 +7,9 @@ import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.estimate.CareEstimate;
 import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +26,8 @@ public class UserService {
     private final CareEstimateRepository careEstimateRepository;
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimateInfos(Long userId) {
-        User user = userRepository.findByAccountId(userId);
+    public EstimateInfo findEstimateInfo(Long accountId) {
+        User user = userRepository.findByAccountId(accountId);
         List<Pet> pets = user.getPets();
 
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
@@ -39,8 +39,8 @@ public class UserService {
             List<EstimateInfo.PetInfo.Care> careInfos = CareEstimate.toInfos(careEstimates);
 
             petInfos.add(EstimateInfo.PetInfo.builder()
-                    .petName(pet.getPetName())
-                    .petImage(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .image(pet.getPetImage())
                     .groomingEstimates(groomingInfos)
                     .careEstimates(careInfos)
                     .build());
@@ -51,14 +51,14 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public GroomingEstimateDetails getGroomingEstimateDetails(Long groomingEstimateId) {
+    public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomingEstimateId);
-        return groomingEstimate.getGroomingEstimateDetails();
+        return groomingEstimate.getGroomingEstimateDetail();
     }
 
     @Transactional(readOnly = true)
-    public CareEstimateDetails getCareEstimateDetails(Long careEstimateId) {
+    public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(careEstimateId);
-        return careEstimate.getCareEstimateDetails();
+        return careEstimate.getCareEstimateDetail();
     }
 }

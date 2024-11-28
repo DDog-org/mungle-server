@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class UserProfileModifyReq {
 
-    private String userImage;
+    private String image;
     private String nickname;
 
 }

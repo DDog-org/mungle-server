@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class UserProfileInfo {
 
-    private String userImage;
+    private String image;
     private String nickname;
     private String username;
     private String phoneNumber;
