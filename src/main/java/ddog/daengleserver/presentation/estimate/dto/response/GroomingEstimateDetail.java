@@ -8,17 +8,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GroomingEstimateDetails {
+public class GroomingEstimateDetail {
 
-    private Long groomingEstimateId;
-    private String groomerImage;
-    private String groomerName;
+    private String image;
+    private String name;
     private String shopName;
     private int daengleMeter;
-    private String groomerIntroduction;
+    private String introduction;
     private String address;
     private LocalDateTime reservedDate;
-    private Weight petWeight;
+    private Weight weight;
     private String desiredStyle;
     private String overallOpinion;
 

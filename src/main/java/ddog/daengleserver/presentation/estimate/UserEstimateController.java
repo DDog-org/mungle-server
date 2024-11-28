@@ -11,7 +11,7 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstim
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -65,8 +65,8 @@ public class UserEstimateController {
     }
 
     @GetMapping("/{groomingEstimateId}/grooming-detail")
-    public CommonResponseEntity<GroomingEstimateDetails> getGroomingEstimateDetails(@PathVariable Long groomingEstimateId) {
-        return success(userService.getGroomingEstimateDetails(groomingEstimateId));
+    public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
+        return success(userService.getGroomingEstimateDetail(groomingEstimateId));
     }
 
     @GetMapping("/{careEstimateId}/care-detail")
