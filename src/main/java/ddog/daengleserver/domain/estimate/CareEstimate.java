@@ -144,19 +144,18 @@ public class CareEstimate {
         return careInfos;
     }
 
-    public UserCareEstimateDetail withUserCareEstimate() {
+    public UserCareEstimateDetail toUserCareEstimateDetail() {
         return UserCareEstimateDetail.builder()
-                .careEstimateId(careEstimateId)
                 .userImage(userImage)
                 .nickname(nickname)
                 .address(address)
                 .reservedDate(reservedDate)
-                .petId(petId)
+                .id(petId)
                 .petImage(petImage)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
-                .petSignificant(petSignificant)
-                .petName(petName)
+                .birth(petBirth)
+                .weight(petWeight)
+                .significant(petSignificant)
+                .name(petName)
                 .symptoms(symptoms)
                 .requirements(requirements)
                 .build();

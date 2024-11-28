@@ -30,7 +30,7 @@ public class VetEstimateController {
 
     @Operation(summary = "진료 견적서 상세 내용 조회")
     @GetMapping("/{careEstimateId}/detail")
-    public CommonResponseEntity<UserCareEstimateDetail> getCareEstimateDetails(@PathVariable Long careEstimateId) {
+    public CommonResponseEntity<UserCareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(careEstimateService.getCareEstimateDetailInfo(careEstimateId));
     }
 

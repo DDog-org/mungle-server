@@ -43,7 +43,7 @@ public class CareEstimateService {
     @Transactional(readOnly = true)
     public UserCareEstimateDetail getCareEstimateDetailInfo(Long careEstimateId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(careEstimateId);
-        return careEstimate.withUserCareEstimate();
+        return careEstimate.toUserCareEstimateDetail();
     }
 
     @Transactional
