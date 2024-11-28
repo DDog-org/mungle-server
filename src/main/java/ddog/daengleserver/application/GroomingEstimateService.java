@@ -7,8 +7,8 @@ import ddog.daengleserver.domain.estimate.GroomingEstimate;
 import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
+import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetail;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,17 +33,17 @@ public class GroomingEstimateService {
     }
 
     @Transactional(readOnly = true)
-    public GroomingEstimateInfos findGroomingEstimateInfos(Long accountId) {
+    public GroomingEstimateInfo findGroomingEstimateInfo(Long accountId) {
         Groomer groomer = groomerRepository.getGroomerByAccountId(accountId);
         List<GroomingEstimate> generalEstimates = groomingEstimateRepository.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimateRepository.findDesignationGroomingEstimates(groomer.getGroomerId());
-        return GroomingEstimate.toGroomingEstimateInfos(generalEstimates, designationEstimates);
+        return GroomingEstimate.toGroomingEstimateInfo(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)
-    public UserGroomingEstimateDetails getGroomingEstimateDetailInfo(Long groomingEstimateId) {
+    public UserGroomingEstimateDetail getGroomingEstimateDetailInfo(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimateRepository.getByGroomingEstimateId(groomingEstimateId);
-        return groomingEstimate.withUserGroomingEstimate();
+        return groomingEstimate.toUserGroomingEstimateDetail();
     }
 
     @Transactional

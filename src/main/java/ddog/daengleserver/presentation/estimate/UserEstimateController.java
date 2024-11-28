@@ -64,12 +64,12 @@ public class UserEstimateController {
         return success(userService.findEstimateInfos(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/{groomingEstimateId}/grooming-details")
+    @GetMapping("/{groomingEstimateId}/grooming-detail")
     public CommonResponseEntity<GroomingEstimateDetails> getGroomingEstimateDetails(@PathVariable Long groomingEstimateId) {
         return success(userService.getGroomingEstimateDetails(groomingEstimateId));
     }
 
-    @GetMapping("/{careEstimateId}/care-details")
+    @GetMapping("/{careEstimateId}/care-detail")
     public CommonResponseEntity<CareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
         return success(userService.getCareEstimateDetails(careEstimateId));
     }

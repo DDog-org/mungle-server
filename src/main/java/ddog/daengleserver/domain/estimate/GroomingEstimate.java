@@ -7,8 +7,8 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroom
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfos;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -97,28 +97,28 @@ public class GroomingEstimate {
                 .build();
     }
 
-    public static GroomingEstimateInfos toGroomingEstimateInfos(
+    public static GroomingEstimateInfo toGroomingEstimateInfo(
             List<GroomingEstimate> generalEstimates,
             List<GroomingEstimate> designationEstimates
     ) {
-        List<GroomingEstimateInfos.Content> allContents = estimatesToContents(generalEstimates);
-        List<GroomingEstimateInfos.Content> designationContents = estimatesToContents(designationEstimates);
+        List<GroomingEstimateInfo.Content> allContents = estimatesToContents(generalEstimates);
+        List<GroomingEstimateInfo.Content> designationContents = estimatesToContents(designationEstimates);
 
         allContents.addAll(designationContents);
 
         // groomingEstimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(GroomingEstimateInfos.Content::getId));
+        allContents.sort(Comparator.comparing(GroomingEstimateInfo.Content::getId));
 
-        return GroomingEstimateInfos.builder()
+        return GroomingEstimateInfo.builder()
                 .allEstimates(allContents)
                 .designationEstimates(designationContents)
                 .build();
     }
 
-    private static List<GroomingEstimateInfos.Content> estimatesToContents(List<GroomingEstimate> estimates) {
-        List<GroomingEstimateInfos.Content> contents = new ArrayList<>();
+    private static List<GroomingEstimateInfo.Content> estimatesToContents(List<GroomingEstimate> estimates) {
+        List<GroomingEstimateInfo.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
-            contents.add(GroomingEstimateInfos.Content.builder()
+            contents.add(GroomingEstimateInfo.Content.builder()
                     .id(estimate.getGroomingEstimateId())
                     .image(estimate.getUserImage())
                     .nickname(estimate.getNickname())
@@ -145,19 +145,18 @@ public class GroomingEstimate {
         return groomingInfos;
     }
 
-    public UserGroomingEstimateDetails withUserGroomingEstimate() {
-        return UserGroomingEstimateDetails.builder()
-                .groomingEstimateId(groomingEstimateId)
+    public UserGroomingEstimateDetail toUserGroomingEstimateDetail() {
+        return UserGroomingEstimateDetail.builder()
                 .userImage(userImage)
                 .nickname(nickname)
                 .address(address)
                 .reservedDate(reservedDate)
-                .petId(petId)
+                .id(petId)
                 .petImage(petImage)
-                .petName(petName)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
-                .petSignificant(petSignificant)
+                .name(petName)
+                .birth(petBirth)
+                .weight(petWeight)
+                .significant(petSignificant)
                 .desiredStyle(desiredStyle)
                 .requirements(requirements)
                 .build();

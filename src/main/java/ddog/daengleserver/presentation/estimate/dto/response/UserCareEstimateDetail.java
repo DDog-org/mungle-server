@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class UserCareEstimateDetails {
+public class UserCareEstimateDetail {
 
     private Long careEstimateId;
     private String userImage;

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class CareEstimateInfos {
+public class GroomingEstimateInfo {
 
     List<Content> allEstimates;
     List<Content> designationEstimates;
@@ -27,4 +27,5 @@ public class CareEstimateInfos {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime reservedDate;
     }
+
 }

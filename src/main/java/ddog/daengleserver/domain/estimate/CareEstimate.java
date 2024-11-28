@@ -6,9 +6,9 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -98,27 +98,27 @@ public class CareEstimate {
                 .build();
     }
 
-    public static CareEstimateInfos findCareEstimateInfos(
+    public static CareEstimateInfo findCareEstimateInfo(
             List<CareEstimate> generalEstimates,
             List<CareEstimate> designationEstimates
     ) {
-        List<CareEstimateInfos.Content> allContents = estimatesToContents(generalEstimates);
-        List<CareEstimateInfos.Content> designationContents = estimatesToContents(designationEstimates);
+        List<CareEstimateInfo.Content> allContents = estimatesToContents(generalEstimates);
+        List<CareEstimateInfo.Content> designationContents = estimatesToContents(designationEstimates);
 
         allContents.addAll(designationContents);
 
         // careEstimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(CareEstimateInfos.Content::getId));
-        return CareEstimateInfos.builder()
+        allContents.sort(Comparator.comparing(CareEstimateInfo.Content::getId));
+        return CareEstimateInfo.builder()
                 .allEstimates(allContents)
                 .designationEstimates(designationContents)
                 .build();
     }
 
-    private static List<CareEstimateInfos.Content> estimatesToContents(List<CareEstimate> estimates) {
-        List<CareEstimateInfos.Content> contents = new ArrayList<>();
+    private static List<CareEstimateInfo.Content> estimatesToContents(List<CareEstimate> estimates) {
+        List<CareEstimateInfo.Content> contents = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
-            contents.add(CareEstimateInfos.Content.builder()
+            contents.add(CareEstimateInfo.Content.builder()
                     .id(estimate.getCareEstimateId())
                     .image(estimate.getUserImage())
                     .nickname(estimate.getNickname())
@@ -144,8 +144,8 @@ public class CareEstimate {
         return careInfos;
     }
 
-    public UserCareEstimateDetails withUserCareEstimate() {
-        return UserCareEstimateDetails.builder()
+    public UserCareEstimateDetail withUserCareEstimate() {
+        return UserCareEstimateDetail.builder()
                 .careEstimateId(careEstimateId)
                 .userImage(userImage)
                 .nickname(nickname)
