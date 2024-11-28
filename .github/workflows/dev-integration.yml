@@ -40,6 +40,11 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.jwt_secret_key }}
 
+      - name: Run Tests
+        run: ./gradlew test -Dspring.profiles.active=test
+        env:
+          JWT_SECRET: ${{ secrets.jwt_secret_key }}
+
   dependency-submission:
 
     runs-on: ubuntu-latest
