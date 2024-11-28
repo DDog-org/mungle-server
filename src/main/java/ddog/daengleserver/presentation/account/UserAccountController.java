@@ -4,7 +4,7 @@ import ddog.daengleserver.application.UserAccountService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.account.dto.request.*;
-import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
+import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
@@ -28,19 +28,19 @@ public class UserAccountController {
     }
 
     @GetMapping("/breed-list")
-    public CommonResponseEntity<BreedInfos> getBreedList() {
+    public CommonResponseEntity<BreedInfo> getBreedList() {
         return success(userAccountService.getBreedInfos());
-    }
-
-    @PostMapping("/join-without-pet")
-    public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody JoinUserWithoutPet request) {
-        userAccountService.createUserWithoutPet(request);
-        return success(USER_JOIN_COMPLETED.getMessage());
     }
 
     @PostMapping("/join-with-pet")
     public CommonResponseEntity<String> joinUserWithPet(@RequestBody JoinUserWithPet request) {
         userAccountService.createUserWithPet(request);
+        return success(USER_JOIN_COMPLETED.getMessage());
+    }
+
+    @PostMapping("/join-without-pet")
+    public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody JoinUserWithoutPet request) {
+        userAccountService.createUserWithoutPet(request);
         return success(USER_JOIN_COMPLETED.getMessage());
     }
 

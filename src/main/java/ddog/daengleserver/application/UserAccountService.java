@@ -8,7 +8,7 @@ import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
 import ddog.daengleserver.domain.account.enums.Breed;
 import ddog.daengleserver.presentation.account.dto.request.*;
-import ddog.daengleserver.presentation.account.dto.response.BreedInfos;
+import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
 import ddog.daengleserver.presentation.account.dto.response.PetInfos;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
 import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
@@ -33,25 +33,17 @@ public class UserAccountService {
     }
 
     /* TODO PetService 추가하면 그곳으로 옮기기 */
-    public BreedInfos getBreedInfos() {
-        List<BreedInfos.Detail> details = new ArrayList<>();
+    public BreedInfo getBreedInfos() {
+        List<BreedInfo.Detail> details = new ArrayList<>();
         for (Breed breed : Breed.values()) {
-            details.add(BreedInfos.Detail.builder()
+            details.add(BreedInfo.Detail.builder()
                     .breed(breed.toString())
                     .breedName(breed.getName())
                     .build());
         }
-        return BreedInfos.builder()
+        return BreedInfo.builder()
                 .breedList(details)
                 .build();
-    }
-
-    @Transactional
-    public void createUserWithoutPet(JoinUserWithoutPet request) {
-        Account accountToSave = Account.create(request.getEmail(), request.getRole());
-        Account savedAccount = accountRepository.save(accountToSave);
-        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
-        userRepository.save(user);
     }
 
     @Transactional
@@ -61,6 +53,14 @@ public class UserAccountService {
         Pet pet = Pet.toJoinPetInfo(savedAccount.getAccountId(), request);
         User user = User.createWithPet(savedAccount.getAccountId(), request, pet);
         petRepository.save(pet);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void createUserWithoutPet(JoinUserWithoutPet request) {
+        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+        Account savedAccount = accountRepository.save(accountToSave);
+        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
         userRepository.save(user);
     }
 
