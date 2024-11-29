@@ -3,7 +3,6 @@ package ddog.daengleserver.presentation.account;
 import ddog.daengleserver.application.UserAccountService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
-import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
 import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;

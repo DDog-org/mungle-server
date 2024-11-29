@@ -1,6 +1,7 @@
 package ddog.notification;
-import ddog.daengleserver.presentation.notify.dto.NotificationReq;
-import ddog.daengleserver.presentation.notify.enums.NotifyType;
+
+import ddog.notification.dto.NotificationReq;
+import ddog.notification.enums.NotifyType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

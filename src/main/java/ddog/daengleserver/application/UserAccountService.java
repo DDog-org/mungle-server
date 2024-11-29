@@ -7,7 +7,6 @@ import ddog.daengleserver.domain.account.Account;
 import ddog.daengleserver.domain.account.Pet;
 import ddog.daengleserver.domain.account.User;
 import ddog.account.enums.Breed;
-import ddog.daengleserver.presentation.account.dto.request.*;
 import ddog.daengleserver.presentation.account.dto.response.BreedInfo;
 import ddog.daengleserver.presentation.account.dto.response.PetInfo;
 import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;

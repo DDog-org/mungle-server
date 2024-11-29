@@ -1,8 +1,8 @@
 package ddog.pet;
 
-import ddog.daengleserver.presentation.account.dto.request.AddPetInfo;
-import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.account.dto.request.ModifyPetInfo;
+import ddog.user.dto.request.AddPetInfo;
+import ddog.user.dto.request.JoinUserWithPet;
+import ddog.user.dto.request.ModifyPetInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

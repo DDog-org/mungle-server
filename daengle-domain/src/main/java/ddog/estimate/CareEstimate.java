@@ -1,14 +1,15 @@
 package ddog.estimate;
 
-import ddog.daengleserver.domain.account.Vet;
+
+import ddog.estimate.dto.request.UserDesignationCareEstimateReq;
+import ddog.estimate.dto.request.UserGeneralCareEstimateReq;
+import ddog.estimate.dto.request.VetCareEstimateReq;
+import ddog.estimate.dto.response.CareEstimateDetail;
+import ddog.estimate.dto.response.CareEstimateInfo;
+import ddog.estimate.dto.response.EstimateInfo;
+import ddog.estimate.dto.response.UserCareEstimateDetail;
 import ddog.pet.Weight;
-import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetail;
+import ddog.vet.Vet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

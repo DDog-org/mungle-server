@@ -1,8 +1,7 @@
 package ddog.payment;
 
-import ddog.daengleserver.application.repository.PaymentRepository;
-import ddog.daengleserver.domain.enums.PaymentStatus;
-import ddog.daengleserver.presentation.dto.request.PostOrderReq;
+import ddog.order.enums.PostOrderReq;
+import ddog.payment.enums.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +20,6 @@ public class Payment {
     private Long price;
     private PaymentStatus status;
     private String paymentUid;
-
-    private PaymentRepository paymentRepository;
 
     public static final String PAYMENT_SUCCESS_STATUS = "paid";
 

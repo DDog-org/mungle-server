@@ -1,6 +1,7 @@
 package ddog.order;
 
-import ddog.daengleserver.presentation.dto.request.PostOrderReq;
+import ddog.order.enums.PostOrderReq;
+import ddog.payment.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

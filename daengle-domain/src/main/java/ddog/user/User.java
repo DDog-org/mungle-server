@@ -1,11 +1,12 @@
 package ddog.user;
 
-import ddog.daengleserver.presentation.account.dto.request.JoinUserWithPet;
-import ddog.daengleserver.presentation.account.dto.request.JoinUserWithoutPet;
-import ddog.daengleserver.presentation.account.dto.response.PetInfo;
-import ddog.daengleserver.presentation.account.dto.response.UserProfileInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserInfo;
+
+import ddog.estimate.dto.response.UserInfo;
 import ddog.pet.Pet;
+import ddog.user.dto.request.JoinUserWithPet;
+import ddog.user.dto.request.JoinUserWithoutPet;
+import ddog.user.dto.response.PetInfo;
+import ddog.user.dto.response.UserProfileInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

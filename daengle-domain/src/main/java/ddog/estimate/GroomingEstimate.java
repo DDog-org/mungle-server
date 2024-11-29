@@ -1,14 +1,15 @@
 package ddog.estimate;
 
-import ddog.daengleserver.domain.account.Groomer;
+import ddog.estimate.dto.request.GroomerGroomingEstimateReq;
+import ddog.estimate.dto.request.UserDesignationGroomingEstimateReq;
+import ddog.estimate.dto.request.UserGeneralGroomingEstimateReq;
+import ddog.estimate.dto.response.EstimateInfo;
+import ddog.estimate.dto.response.GroomingEstimateDetail;
+import ddog.estimate.dto.response.GroomingEstimateInfo;
+import ddog.estimate.dto.response.UserGroomingEstimateDetail;
+import ddog.groomer.Groomer;
 import ddog.pet.Weight;
-import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetail;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
