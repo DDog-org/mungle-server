@@ -10,8 +10,6 @@ public interface CareEstimateRepository {
 
     CareEstimate getByCareEstimateId(Long careEstimateId);
 
-    List<CareEstimate> findCareEstimatesByPetId(Long petId);
-
     List<CareEstimate> findGeneralCareEstimates(String address);
 
     List<CareEstimate> findDesignationCareEstimates(Long vetId);

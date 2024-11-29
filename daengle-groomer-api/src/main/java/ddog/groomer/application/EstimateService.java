@@ -1,14 +1,10 @@
 package ddog.groomer.application;
 
-import ddog.daengleserver.application.repository.GroomerRepository;
-import ddog.daengleserver.application.repository.GroomingEstimateRepository;
-import ddog.daengleserver.domain.account.Groomer;
-import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.presentation.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.UserGroomingEstimateDetail;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateInfo;
+import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
+import ddog.domain.estimate.dto.response.GroomingEstimateInfo;
+import ddog.domain.estimate.dto.response.UserGroomingEstimateDetail;
+import ddog.domain.groomer.Groomer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +13,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GroomingEstimateService {
+public class EstimateService {
 
     private final GroomerRepository groomerRepository;
     private final GroomingEstimateRepository groomingEstimateRepository;
-
-    @Transactional
-    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long accountId) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserGeneralGroomingEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long accountId) {
-        groomingEstimateRepository.save(GroomingEstimate.createUserDesignationGroomingEstimate(request, accountId));
-    }
 
     @Transactional(readOnly = true)
     public GroomingEstimateInfo findGroomingEstimateInfo(Long accountId) {

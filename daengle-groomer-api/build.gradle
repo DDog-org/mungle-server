@@ -1,19 +1,20 @@
-plugins {
-    id 'java'
+bootJar {
+    enabled = true
 }
 
-group = 'ddog'
-version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
+jar{
+    enabled = false
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
+    implementation(project(':daengle-domain'))
+    implementation(project(':daengle-persistence'))
+    implementation(project(':daengle-auth'))
 
-test {
-    useJUnitPlatform()
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.springframework:spring-tx'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
