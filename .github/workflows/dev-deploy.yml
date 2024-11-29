@@ -1,6 +1,6 @@
 name: Deploy to EC2
 
-#on:
+on:
 #  push:
 #    branches: [ "develop" ]
 
