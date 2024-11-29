@@ -1,0 +1,20 @@
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
+
+
+dependencies {
+    implementation(project(':daengle-domain'))
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+test {
+    useJUnitPlatform()
+}

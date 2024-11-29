@@ -1,7 +1,7 @@
 package ddog.daengleserver.presentation.estimate.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.daengleserver.domain.account.enums.Weight;
+import ddog.account.enums.Weight;
 import lombok.Builder;
 import lombok.Getter;
 

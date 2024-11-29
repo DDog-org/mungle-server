@@ -1,6 +1,6 @@
 package ddog.daengleserver.presentation.account.dto.request;
 
-import ddog.daengleserver.domain.account.enums.Role;
+import ddog.account.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
 

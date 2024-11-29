@@ -1,3 +1,6 @@
 rootProject.name = 'daengle-server'
-include 'daengle-payment'
+include 'daengle-payment-api'
+include 'daengle-domain'
+include 'daengle-auth'
+include 'daengle-persistence'
 

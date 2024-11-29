@@ -3,7 +3,6 @@ package ddog.daengleserver.infrastructure;
 import ddog.daengleserver.application.repository.OrderRepository;
 import ddog.daengleserver.domain.Order;
 import ddog.daengleserver.domain.enums.OrderExceptionType;
-import ddog.daengleserver.domain.exception.OrderException;
 import ddog.daengleserver.infrastructure.po.OrderJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

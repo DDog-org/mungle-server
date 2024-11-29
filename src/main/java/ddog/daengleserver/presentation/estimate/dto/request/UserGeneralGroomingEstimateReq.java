@@ -1,7 +1,7 @@
 package ddog.daengleserver.presentation.estimate.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.daengleserver.domain.account.enums.Weight;
+import ddog.account.enums.Weight;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
