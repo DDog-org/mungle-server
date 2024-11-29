@@ -1,6 +1,6 @@
 package ddog.vet.application;
 
-import ddog.daengleserver.domain.estimate.CareEstimate;
+import ddog.domain.estimate.CareEstimate;
 
 import java.util.List;
 

@@ -1,14 +1,10 @@
 package ddog.vet.application;
 
-import ddog.daengleserver.application.repository.CareEstimateRepository;
-import ddog.daengleserver.application.repository.VetRepository;
-import ddog.daengleserver.domain.account.Vet;
-import ddog.daengleserver.domain.estimate.CareEstimate;
-import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetail;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfo;
+import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.dto.request.VetCareEstimateReq;
+import ddog.domain.estimate.dto.response.CareEstimateInfo;
+import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
+import ddog.domain.vet.Vet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +13,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CareEstimateService {
+public class EstimateService {
 
     private final VetRepository vetRepository;
     private final CareEstimateRepository careEstimateRepository;
-
-    @Transactional
-    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long accountId) {
-        careEstimateRepository.save(CareEstimate.createUserGeneralCareEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long accountId) {
-        careEstimateRepository.save(CareEstimate.createUserDesignationCareEstimate(request, accountId));
-    }
 
     @Transactional(readOnly = true)
     public CareEstimateInfo findCareEstimateInfo(Long accountId) {
