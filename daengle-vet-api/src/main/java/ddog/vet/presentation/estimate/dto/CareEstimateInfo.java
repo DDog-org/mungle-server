@@ -1,4 +1,4 @@
-package ddog.domain.estimate.dto.response;
+package ddog.vet.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.estimate.Proposal;

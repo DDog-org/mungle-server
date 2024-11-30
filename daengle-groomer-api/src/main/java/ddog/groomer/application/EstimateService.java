@@ -1,11 +1,11 @@
 package ddog.groomer.application;
 
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.groomer.application.mapper.GroomingEstimateMapper;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.domain.groomer.Groomer;
+import ddog.groomer.application.mapper.GroomingEstimateMapper;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateReq;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
 import ddog.persistence.port.GroomerPersist;
 import ddog.persistence.port.GroomingEstimatePersist;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,9 @@ public class EstimateService {
     }
 
     @Transactional
-    public void createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Long accountId) {
+    public void createGroomerGroomingEstimate(GroomingEstimateReq request, Long accountId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(request.getId());
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
-        groomingEstimatePersist.save(groomingEstimate.createGroomerGroomingEstimate(request, groomer));
+        groomingEstimatePersist.save(GroomingEstimateMapper.createGroomerGroomingEstimate(request, groomer, groomingEstimate));
     }
 }

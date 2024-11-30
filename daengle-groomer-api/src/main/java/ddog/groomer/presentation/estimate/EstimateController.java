@@ -1,16 +1,16 @@
 package ddog.groomer.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.groomer.application.EstimateService;
 import ddog.groomer.application.exception.common.CommonResponseEntity;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateReq;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.groomer.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
 import static ddog.groomer.application.exception.common.CommonResponseEntity.success;
+import static ddog.groomer.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
 
 @RestController
 @RequestMapping("/api/groomer/estimate")
@@ -31,7 +31,7 @@ public class EstimateController {
     }
 
     @PostMapping
-    public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
         estimateService.createGroomerGroomingEstimate(request, payloadDto.getAccountId());
 //        sseEmitterService.sendMessageToUser(payloadDto.getAccountId(), REGISTRATION_COMPLETED.getMessage());
         return success(REGISTRATION_COMPLETED.getMessage());

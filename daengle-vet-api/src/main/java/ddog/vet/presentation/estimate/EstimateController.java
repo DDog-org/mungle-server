@@ -1,15 +1,15 @@
-package ddog.vet.presentation;
+package ddog.vet.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.domain.estimate.dto.request.VetCareEstimateReq;
-import ddog.domain.estimate.dto.response.CareEstimateInfo;
-import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
+import ddog.vet.presentation.estimate.dto.CareEstimateReq;
+import ddog.vet.presentation.estimate.dto.CareEstimateInfo;
+import ddog.vet.presentation.estimate.dto.CareEstimateDetail;
 import ddog.vet.application.EstimateService;
 import ddog.vet.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.domain.estimate.enums.VetEstimateControllerResp.REGISTRATION_COMPLETED;
+import static ddog.vet.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
 import static ddog.vet.application.exception.common.CommonResponseEntity.success;
 
 @RestController
@@ -25,12 +25,12 @@ public class EstimateController {
     }
 
     @GetMapping("/{careEstimateId}/detail")
-    public CommonResponseEntity<UserCareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
+    public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(estimateService.getCareEstimateDetailInfo(careEstimateId));
     }
 
     @PostMapping
-    public CommonResponseEntity<String> createCareEstimate(@RequestBody VetCareEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<String> createCareEstimate(@RequestBody CareEstimateReq request, PayloadDto payloadDto) {
         estimateService.createVetCareEstimate(request, payloadDto.getAccountId());
         return success(REGISTRATION_COMPLETED.getMessage());
     }

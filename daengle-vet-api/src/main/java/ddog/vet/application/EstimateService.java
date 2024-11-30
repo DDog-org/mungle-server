@@ -1,9 +1,10 @@
 package ddog.vet.application;
 
 import ddog.domain.estimate.CareEstimate;
-import ddog.domain.estimate.dto.request.VetCareEstimateReq;
-import ddog.domain.estimate.dto.response.CareEstimateInfo;
-import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
+import ddog.vet.application.mapper.CareEstimateMapper;
+import ddog.vet.presentation.estimate.dto.CareEstimateReq;
+import ddog.vet.presentation.estimate.dto.CareEstimateInfo;
+import ddog.vet.presentation.estimate.dto.CareEstimateDetail;
 import ddog.domain.vet.Vet;
 import ddog.persistence.port.CareEstimatePersist;
 import ddog.persistence.port.VetPersist;
@@ -25,19 +26,19 @@ public class EstimateService {
         Vet vet = vetPersist.getVetByAccountId(accountId);
         List<CareEstimate> generalEstimates = careEstimatePersist.findGeneralCareEstimates(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimatePersist.findDesignationCareEstimates(vet.getVetId());
-        return CareEstimate.findCareEstimateInfo(generalEstimates, designationEstimates);
+        return CareEstimateMapper.findCareEstimateInfo(generalEstimates, designationEstimates);
     }
 
     @Transactional(readOnly = true)
-    public UserCareEstimateDetail getCareEstimateDetailInfo(Long careEstimateId) {
+    public CareEstimateDetail getCareEstimateDetailInfo(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
-        return careEstimate.toUserCareEstimateDetail();
+        return CareEstimateMapper.toUserCareEstimateDetail(careEstimate);
     }
 
     @Transactional
-    public void createVetCareEstimate(VetCareEstimateReq request, Long accountId) {
+    public void createVetCareEstimate(CareEstimateReq request, Long accountId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(request.getId());
         Vet vet = vetPersist.getVetByAccountId(accountId);
-        careEstimatePersist.save(careEstimate.createVetCareEstimate(request, vet));
+        careEstimatePersist.save(CareEstimateMapper.createVetCareEstimate(request, vet, careEstimate));
     }
 }

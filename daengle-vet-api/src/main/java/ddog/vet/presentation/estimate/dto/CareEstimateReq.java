@@ -1,4 +1,4 @@
-package ddog.domain.estimate.dto.request;
+package ddog.vet.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -6,12 +6,14 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GroomerGroomingEstimateReq {
+public class CareEstimateReq {
 
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
-    private String overallOpinion;
+    private String diagnosis;
+    private String cause;
+    private String treatment;
 
 }

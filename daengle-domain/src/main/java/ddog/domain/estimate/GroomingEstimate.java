@@ -1,7 +1,5 @@
 package ddog.domain.estimate;
 
-import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Weight;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,32 +41,5 @@ public class GroomingEstimate {
     private String groomerName;
     private String shopName;
     private String groomerIntroduction;
-
-    public GroomingEstimate createGroomerGroomingEstimate(GroomerGroomingEstimateReq request, Groomer groomer) {
-        return GroomingEstimate.builder()
-                .reservedDate(request.getReservedDate())
-                .desiredStyle(desiredStyle)
-                .requirements(requirements)
-                .proposal(proposal)
-                .status(EstimateStatus.PENDING)
-                .createdAt(LocalDateTime.now())
-                .userId(userId)
-                .userImage(userImage)
-                .nickname(nickname)
-                .address(address)
-                .petId(petId)
-                .petImage(petImage)
-                .petName(petName)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
-                .petSignificant(petSignificant)
-                .groomerId(groomer.getGroomerId())
-                .daengleMeter(groomer.getDaengleMeter())
-                .overallOpinion(request.getOverallOpinion())
-                .groomerImage(groomer.getGroomerImage())
-                .groomerName(groomer.getGroomerName())
-                .groomerIntroduction(groomer.getGroomerIntroduction())
-                .build();
-    }
 
 }
