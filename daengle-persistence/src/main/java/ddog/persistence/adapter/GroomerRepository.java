@@ -1,15 +1,14 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.GroomerRepository;
-import ddog.daengleserver.domain.account.Groomer;
-import ddog.daengleserver.domain.enums.UserExceptionType;
-import ddog.daengleserver.domain.exception.UserException;
+import ddog.domain.groomer.Groomer;
+import ddog.persistence.jpa.repository.GroomerJpaRepository;
+import ddog.persistence.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class GroomerRepositoryImpl implements GroomerRepository {
+public class GroomerRepository implements GroomerPersist {
 
     private final GroomerJpaRepository groomerJpaRepository;
 

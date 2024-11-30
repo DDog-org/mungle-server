@@ -1,8 +1,8 @@
-package ddog.groomer.application;
+package ddog.persistence.port;
 
 import ddog.domain.groomer.Groomer;
 
-public interface GroomerRepository {
+public interface GroomerPersist {
 
     Groomer getGroomerByAccountId(Long accountId);
 }

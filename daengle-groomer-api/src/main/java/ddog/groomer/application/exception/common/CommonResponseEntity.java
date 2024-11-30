@@ -1,4 +1,4 @@
-package ddog.groomer.exception.common;
+package ddog.groomer.application.exception.common;
 
 
 import org.springframework.http.HttpStatus;

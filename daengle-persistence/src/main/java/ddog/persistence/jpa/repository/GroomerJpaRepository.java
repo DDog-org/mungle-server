@@ -1,6 +1,6 @@
 package ddog.persistence.jpa.repository;
 
-import ddog.daengleserver.infrastructure.po.GroomerJpaEntity;
+import ddog.persistence.jpa.entity.GroomerJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

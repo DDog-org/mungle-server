@@ -1,6 +1,6 @@
 package ddog.persistence.jpa.repository;
 
-import ddog.daengleserver.infrastructure.po.GroomingEstimateJpaEntity;
+import ddog.persistence.jpa.entity.GroomingEstimateJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

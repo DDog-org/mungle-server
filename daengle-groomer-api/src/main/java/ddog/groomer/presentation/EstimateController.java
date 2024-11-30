@@ -5,12 +5,12 @@ import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
 import ddog.domain.estimate.dto.response.GroomingEstimateInfo;
 import ddog.domain.estimate.dto.response.UserGroomingEstimateDetail;
 import ddog.groomer.application.EstimateService;
-import ddog.groomer.exception.common.CommonResponseEntity;
+import ddog.groomer.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.domain.estimate.enums.GroomerEstimateControllerResp.REGISTRATION_COMPLETED;
-import static ddog.groomer.exception.common.CommonResponseEntity.success;
+import static ddog.groomer.application.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequestMapping("/api/groomer/estimate")

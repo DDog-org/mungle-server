@@ -1,8 +1,9 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.GroomingEstimateRepository;
-import ddog.daengleserver.domain.estimate.GroomingEstimate;
-import ddog.daengleserver.infrastructure.po.GroomingEstimateJpaEntity;
+import ddog.domain.estimate.GroomingEstimate;
+import ddog.persistence.jpa.entity.GroomingEstimateJpaEntity;
+import ddog.persistence.jpa.repository.GroomingEstimateJpaRepository;
+import ddog.persistence.port.GroomingEstimatePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class GroomingEstimateRepositoryImpl implements GroomingEstimateRepository {
+public class GroomingEstimateRepository implements GroomingEstimatePersist {
 
     private final GroomingEstimateJpaRepository groomingEstimateJpaRepository;
 

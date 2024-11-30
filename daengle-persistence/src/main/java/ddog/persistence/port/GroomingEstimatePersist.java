@@ -1,10 +1,10 @@
-package ddog.groomer.application;
+package ddog.persistence.port;
 
 import ddog.domain.estimate.GroomingEstimate;
 
 import java.util.List;
 
-public interface GroomingEstimateRepository {
+public interface GroomingEstimatePersist {
 
     void save(GroomingEstimate groomingEstimate);
 
