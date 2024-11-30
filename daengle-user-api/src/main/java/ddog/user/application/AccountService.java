@@ -1,14 +1,14 @@
 package ddog.user.application;
 
-import ddog.account.Account;
-import ddog.estimate.dto.response.UserInfo;
-import ddog.pet.Breed;
-import ddog.pet.Pet;
-import ddog.user.User;
-import ddog.user.dto.request.*;
-import ddog.user.dto.response.BreedInfo;
-import ddog.user.dto.response.PetInfo;
-import ddog.user.dto.response.UserProfileInfo;
+import ddog.domain.account.Account;
+import ddog.domain.estimate.dto.response.UserInfo;
+import ddog.domain.pet.Breed;
+import ddog.domain.pet.Pet;
+import ddog.domain.user.User;
+import ddog.domain.user.dto.request.*;
+import ddog.domain.user.dto.response.BreedInfo;
+import ddog.domain.user.dto.response.PetInfo;
+import ddog.domain.user.dto.response.UserProfileInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserAccountService {
+public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;

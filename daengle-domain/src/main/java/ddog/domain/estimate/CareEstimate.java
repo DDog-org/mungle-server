@@ -2,14 +2,14 @@ package ddog.domain.estimate;
 
 
 import ddog.domain.estimate.dto.request.UserDesignationCareEstimateReq;
-import ddog.domain.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.domain.estimate.dto.request.VetCareEstimateReq;
 import ddog.domain.estimate.dto.response.CareEstimateDetail;
 import ddog.domain.estimate.dto.response.CareEstimateInfo;
+import ddog.domain.estimate.dto.response.EstimateInfo;
 import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
+import ddog.domain.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.domain.pet.Weight;
 import ddog.domain.vet.Vet;
-import ddog.domain.estimate.dto.response.EstimateInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

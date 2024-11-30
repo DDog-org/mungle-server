@@ -1,6 +1,6 @@
 package ddog.user.application;
 
-import ddog.user.User;
+import ddog.domain.user.User;
 
 public interface UserRepository {
 

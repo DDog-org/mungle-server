@@ -1,7 +1,7 @@
 package ddog.user.application;
 
-import ddog.account.Account;
-import ddog.account.Role;
+import ddog.domain.account.Account;
+import ddog.domain.account.Role;
 
 public interface AccountRepository {
 

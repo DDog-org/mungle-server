@@ -1,6 +1,5 @@
 package ddog.user.exception;
 
-import ddog.enums.UserExceptionType;
 import ddog.user.exception.common.CustomRuntimeException;
 
 public class UserException extends CustomRuntimeException {
