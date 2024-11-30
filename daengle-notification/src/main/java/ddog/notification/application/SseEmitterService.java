@@ -1,14 +1,12 @@
-package ddog.daengleserver.global.infra.sse;
+package ddog.notification.application;
 
-import ddog.daengleserver.application.repository.NotificationRepository;
-import ddog.daengleserver.domain.Notification;
-import ddog.daengleserver.presentation.notify.dto.NotificationReq;
-import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
+import ddog.domain.notification.Notification;
+import ddog.domain.notification.NotificationReq;
+import ddog.persistence.port.NotificationPersist;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,10 +16,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 
 @Slf4j
-public class SseEmitterService implements SseEmitterUsecase {
+public class SseEmitterService {
 
     private final ConcurrentHashMap<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final NotificationRepository notificationRepository;
+    private final NotificationPersist notificationPersist;
 
     // Emitter 추가
     public void addEmitter(Long userId, SseEmitter emitter) {
@@ -66,13 +64,11 @@ public class SseEmitterService implements SseEmitterUsecase {
         emitters.remove(userId);
     }
 
-    @Override
     public boolean isUserConnected(Long userId) {
         return emitters.containsKey(userId);
     }
 
-    @Transactional
     public void saveNotificationToDb(NotificationReq notificationReq) {
-        notificationRepository.save(Notification.createNotificationWithReq(notificationReq)); // DB에 저장
+        notificationPersist.save(Notification.createNotificationWithReq(notificationReq)); // DB에 저장
     }
 }

@@ -1,23 +1,24 @@
-package ddog.daengleserver.application;
+package ddog.notification.application;
 
-import ddog.daengleserver.application.repository.NotificationRepository;
-import ddog.daengleserver.domain.Notification;
-import ddog.daengleserver.global.infra.sse.SseEmitterService;
-import ddog.daengleserver.presentation.notify.dto.NotificationReq;
-import ddog.daengleserver.presentation.usecase.NotificationUsecase;
+
+import ddog.domain.notification.Notification;
+import ddog.domain.notification.NotificationReq;
+import ddog.persistence.adapter.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService implements NotificationUsecase {
+public class NotificationService  {
     private final StringRedisTemplate stringRedisTemplate;
     private final SseEmitterService sseEmitterService;
     private final NotificationRepository notificationRepository;
 
-    @Override
+
     public void sendNotificationToUser(NotificationReq notificationReq) {
         if (isUserLoggedIn(notificationReq.getUserId())) {
             sseEmitterService.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
@@ -26,17 +27,14 @@ public class NotificationService implements NotificationUsecase {
         }
     }
 
-    @Override
     public void sendNotificationToAllUser(String message) {
         stringRedisTemplate.convertAndSend("all_users", message);
     }
 
-    @Override
     public void sendNotifcationToUserByRedis(Long userId, String message) {
         stringRedisTemplate.convertAndSend("user_logged_in:" + userId, message);
     }
 
-    @Override
     public List<Notification> getNotificationsForLogoutUser(Long userId) {
         return notificationRepository.findByUserId(userId);
     }

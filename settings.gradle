@@ -6,4 +6,5 @@ include 'daengle-persistence'
 include 'daengle-user-api'
 include 'daengle-groomer-api'
 include 'daengle-vet-api'
+include 'daengle-notification'
 

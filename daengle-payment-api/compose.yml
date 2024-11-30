@@ -1,7 +1,7 @@
 services:
   daengle-server:
     container_name: server
-    build: .
+    build: ..
     ports:
       - "80:8080"
     depends_on:
