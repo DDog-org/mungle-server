@@ -8,6 +8,7 @@ jar {
 
 dependencies {
     implementation(project(':daengle-domain'))
+    implementation(project(':daengle-persistence'))
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

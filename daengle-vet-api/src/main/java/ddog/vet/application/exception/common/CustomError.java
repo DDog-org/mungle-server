@@ -1,4 +1,4 @@
-package ddog.vet.exception.common;
+package ddog.vet.application.exception.common;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

@@ -28,14 +28,14 @@ public class AccountRepository implements AccountPersist {
     @Override
     public Account findById(Long accountId) {
         return accountJpaRepository.findById(accountId)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
+                .orElseThrow(() -> new RuntimeException("account not found"))
                 .toModel();
     }
 
     @Override
     public Account findAccountByEmailAndRole(String email, Role role) {
         return accountJpaRepository.findByEmailAndRole(email, role)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.NOT_FOUND_ACCOUNT))
+                .orElseThrow(() -> new RuntimeException("account not found"))
                 .toModel();
     }
 }

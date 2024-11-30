@@ -5,12 +5,12 @@ import ddog.domain.estimate.dto.request.VetCareEstimateReq;
 import ddog.domain.estimate.dto.response.CareEstimateInfo;
 import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
 import ddog.vet.application.EstimateService;
-import ddog.vet.exception.common.CommonResponseEntity;
+import ddog.vet.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.domain.estimate.enums.VetEstimateControllerResp.REGISTRATION_COMPLETED;
-import static ddog.vet.exception.common.CommonResponseEntity.success;
+import static ddog.vet.application.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequestMapping("/api/vet/estimate")
