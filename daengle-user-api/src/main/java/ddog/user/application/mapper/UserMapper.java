@@ -2,10 +2,10 @@ package ddog.user.application.mapper;
 
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.user.presentation.dto.request.JoinUserWithPet;
-import ddog.user.presentation.dto.request.JoinUserWithoutPet;
-import ddog.user.presentation.dto.response.PetInfo;
-import ddog.user.presentation.dto.response.UserProfileInfo;
+import ddog.user.presentation.account.dto.JoinUserWithPet;
+import ddog.user.presentation.account.dto.JoinUserWithoutPet;
+import ddog.user.presentation.account.dto.PetInfo;
+import ddog.user.presentation.account.dto.UserProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;

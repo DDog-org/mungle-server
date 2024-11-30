@@ -1,4 +1,4 @@
-package ddog.domain.estimate.dto.response;
+package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

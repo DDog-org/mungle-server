@@ -1,19 +1,19 @@
-package ddog.user.presentation;
+package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.domain.estimate.dto.request.UserDesignationCareEstimateReq;
-import ddog.domain.estimate.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.domain.estimate.dto.request.UserGeneralCareEstimateReq;
-import ddog.domain.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.domain.estimate.dto.response.CareEstimateDetail;
-import ddog.domain.estimate.dto.response.EstimateInfo;
-import ddog.domain.estimate.dto.response.GroomingEstimateDetail;
+import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
+import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
+import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
+import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
+import ddog.user.presentation.estimate.dto.CareEstimateDetail;
+import ddog.user.presentation.estimate.dto.EstimateInfo;
+import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.user.application.EstimateService;
 import ddog.user.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.domain.estimate.enums.UserEstimateControllerResp.*;
+import static ddog.user.presentation.estimate.EstimateControllerResp.*;
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
 
 @RestController
@@ -24,26 +24,26 @@ public class EstimateController {
     private final EstimateService estimateService;
 
     @PostMapping("/general-grooming")
-    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody UserGeneralGroomingEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createUserGeneralGroomingEstimate(request, payloadDto.getAccountId());
+    public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GeneralGroomingEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createGeneralGroomingEstimate(request, payloadDto.getAccountId());
         return success(GENERAL_GROOMING_REGISTRATION.getMessage());
     }
 
     @PostMapping("/designation-grooming")
-    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody UserDesignationGroomingEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createUserDesignationGroomingEstimate(request, payloadDto.getAccountId());
+    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createDesignationGroomingEstimate(request, payloadDto.getAccountId());
         return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
     @PostMapping("/general-care")
-    public CommonResponseEntity<String> createGeneralCareEstimate(@RequestBody UserGeneralCareEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createUserGeneralCareEstimate(request, payloadDto.getAccountId());
+    public CommonResponseEntity<String> createGeneralCareEstimate(@RequestBody GeneralCareEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createGeneralCareEstimate(request, payloadDto.getAccountId());
         return success(GENERAL_CARE_REGISTRATION.getMessage());
     }
 
     @PostMapping("/designation-care")
-    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody UserDesignationCareEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createUserDesignationCareEstimate(request, payloadDto.getAccountId());
+    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody DesignationCareEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createDesignationCareEstimate(request, payloadDto.getAccountId());
         return success(DESIGNATION_CARE_REGISTRATION.getMessage());
     }
 

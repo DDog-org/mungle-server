@@ -1,4 +1,4 @@
-package ddog.domain.estimate.dto.request;
+package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.pet.Weight;
@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class UserDesignationCareEstimateReq {
+public class DesignationCareEstimateReq {
 
     private Long vetId;
     private String address;

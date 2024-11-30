@@ -1,4 +1,4 @@
-package ddog.user.presentation.dto.request;
+package ddog.user.presentation.account.dto;
 
 import ddog.domain.account.Role;
 import ddog.domain.pet.Breed;

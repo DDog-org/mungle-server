@@ -2,13 +2,15 @@ package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.domain.estimate.dto.request.UserDesignationCareEstimateReq;
-import ddog.domain.estimate.dto.request.UserDesignationGroomingEstimateReq;
-import ddog.domain.estimate.dto.request.UserGeneralCareEstimateReq;
-import ddog.domain.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.domain.estimate.dto.response.CareEstimateDetail;
-import ddog.domain.estimate.dto.response.EstimateInfo;
-import ddog.domain.estimate.dto.response.GroomingEstimateDetail;
+import ddog.user.application.mapper.CareEstimateMapper;
+import ddog.user.application.mapper.GroomingEstimateMapper;
+import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
+import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
+import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
+import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
+import ddog.user.presentation.estimate.dto.CareEstimateDetail;
+import ddog.user.presentation.estimate.dto.EstimateInfo;
+import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.persistence.port.CareEstimatePersist;
@@ -30,23 +32,23 @@ public class EstimateService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public void createUserGeneralGroomingEstimate(UserGeneralGroomingEstimateReq request, Long accountId) {
-        groomingEstimatePersist.save(GroomingEstimate.createUserGeneralGroomingEstimate(request, accountId));
+    public void createGeneralGroomingEstimate(GeneralGroomingEstimateReq request, Long accountId) {
+        groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
     }
 
     @Transactional
-    public void createUserDesignationGroomingEstimate(UserDesignationGroomingEstimateReq request, Long accountId) {
-        groomingEstimatePersist.save(GroomingEstimate.createUserDesignationGroomingEstimate(request, accountId));
+    public void createDesignationGroomingEstimate(DesignationGroomingEstimateReq request, Long accountId) {
+        groomingEstimatePersist.save(GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId));
     }
 
     @Transactional
-    public void createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long accountId) {
-        careEstimatePersist.save(CareEstimate.createUserGeneralCareEstimate(request, accountId));
+    public void createGeneralCareEstimate(GeneralCareEstimateReq request, Long accountId) {
+        careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
     }
 
     @Transactional
-    public void createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long accountId) {
-        careEstimatePersist.save(CareEstimate.createUserDesignationCareEstimate(request, accountId));
+    public void createDesignationCareEstimate(DesignationCareEstimateReq request, Long accountId) {
+        careEstimatePersist.save(CareEstimateMapper.createDesignationCareEstimate(request, accountId));
     }
 
     @Transactional(readOnly = true)
@@ -57,10 +59,10 @@ public class EstimateService {
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
             List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findGroomingEstimatesByPetId(pet.getPetId());
-            List<EstimateInfo.PetInfo.Grooming> groomingInfos = GroomingEstimate.toInfos(groomingEstimates);
+            List<EstimateInfo.PetInfo.Grooming> groomingInfos = GroomingEstimateMapper.toInfos(groomingEstimates);
 
             List<CareEstimate> careEstimates = careEstimatePersist.findCareEstimatesByPetId(pet.getPetId());
-            List<EstimateInfo.PetInfo.Care> careInfos = CareEstimate.toInfos(careEstimates);
+            List<EstimateInfo.PetInfo.Care> careInfos = CareEstimateMapper.toInfos(careEstimates);
 
             petInfos.add(EstimateInfo.PetInfo.builder()
                     .name(pet.getPetName())
@@ -77,12 +79,12 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
-        return groomingEstimate.getGroomingEstimateDetail();
+        return GroomingEstimateMapper.getGroomingEstimateDetail(groomingEstimate);
     }
 
     @Transactional(readOnly = true)
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
-        return careEstimate.getCareEstimateDetail();
+        return CareEstimateMapper.getCareEstimateDetail(careEstimate);
     }
 }

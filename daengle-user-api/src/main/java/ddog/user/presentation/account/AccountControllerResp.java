@@ -1,4 +1,4 @@
-package ddog.user.presentation.enums;
+package ddog.user.presentation.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

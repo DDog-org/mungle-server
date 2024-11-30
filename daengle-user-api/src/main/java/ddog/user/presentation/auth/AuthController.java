@@ -1,4 +1,4 @@
-package ddog.user.presentation;
+package ddog.user.presentation.auth;
 
 import ddog.auth.dto.KakaoAccessTokenDto;
 import ddog.auth.dto.LoginResult;

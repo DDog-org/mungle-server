@@ -1,19 +1,19 @@
-package ddog.user.presentation;
+package ddog.user.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.domain.estimate.dto.response.UserInfo;
-import ddog.user.presentation.dto.response.BreedInfo;
-import ddog.user.presentation.dto.response.PetInfo;
-import ddog.user.presentation.dto.response.UserProfileInfo;
+import ddog.user.presentation.account.dto.*;
+import ddog.user.presentation.account.dto.BreedInfo;
+import ddog.user.presentation.account.dto.PetInfo;
+import ddog.user.presentation.account.dto.UserProfileInfo;
 import ddog.user.application.AccountService;
 import ddog.user.application.exception.common.CommonResponseEntity;
-import ddog.user.presentation.dto.response.ValidResponse;
-import ddog.user.presentation.dto.request.*;
+import ddog.user.presentation.account.dto.ValidResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
-import static ddog.user.presentation.enums.AccountControllerResp.*;
+import static ddog.user.presentation.account.AccountControllerResp.*;
 
 
 @RestController

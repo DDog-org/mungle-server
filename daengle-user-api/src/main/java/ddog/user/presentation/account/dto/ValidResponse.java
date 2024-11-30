@@ -1,4 +1,4 @@
-package ddog.user.presentation.dto.response;
+package ddog.user.presentation.account.dto;
 
 import lombok.Builder;
 import lombok.Getter;

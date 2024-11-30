@@ -1,9 +1,9 @@
 package ddog.user.application.mapper;
 
 import ddog.domain.pet.Pet;
-import ddog.user.presentation.dto.request.AddPetInfo;
-import ddog.user.presentation.dto.request.JoinUserWithPet;
-import ddog.user.presentation.dto.request.ModifyPetInfo;
+import ddog.user.presentation.account.dto.AddPetInfo;
+import ddog.user.presentation.account.dto.JoinUserWithPet;
+import ddog.user.presentation.account.dto.ModifyPetInfo;
 
 public class PetMapper {
 

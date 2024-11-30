@@ -1,13 +1,8 @@
 package ddog.domain.estimate;
 
-
-import ddog.domain.estimate.dto.request.UserDesignationCareEstimateReq;
 import ddog.domain.estimate.dto.request.VetCareEstimateReq;
-import ddog.domain.estimate.dto.response.CareEstimateDetail;
 import ddog.domain.estimate.dto.response.CareEstimateInfo;
-import ddog.domain.estimate.dto.response.EstimateInfo;
 import ddog.domain.estimate.dto.response.UserCareEstimateDetail;
-import ddog.domain.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.domain.pet.Weight;
 import ddog.domain.vet.Vet;
 import lombok.AllArgsConstructor;
@@ -55,50 +50,6 @@ public class CareEstimate {
     private String vetName;
     private String vetIntroduction;
 
-
-    public static CareEstimate createUserGeneralCareEstimate(UserGeneralCareEstimateReq request, Long accountId) {
-        return CareEstimate.builder()
-                .reservedDate(request.getReservedDate())
-                .symptoms(request.getSymptoms())
-                .requirements(request.getRequirements())
-                .proposal(Proposal.GENERAL)
-                .status(EstimateStatus.NEW)
-                .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(request.getUserImage())
-                .nickname(request.getNickname())
-                .address(request.getAddress())
-                .petId(request.getId())
-                .petImage(request.getPetImage())
-                .petName(request.getName())
-                .petBirth(request.getBirth())
-                .petWeight(request.getWeight())
-                .petSignificant(request.getSignificant())
-                .build();
-    }
-
-    public static CareEstimate createUserDesignationCareEstimate(UserDesignationCareEstimateReq request, Long accountId) {
-        return CareEstimate.builder()
-                .reservedDate(request.getReservedDate())
-                .symptoms(request.getSymptoms())
-                .requirements(request.getRequirements())
-                .proposal(Proposal.DESIGNATION)
-                .status(EstimateStatus.NEW)
-                .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(request.getUserImage())
-                .nickname(request.getNickname())
-                .address(request.getAddress())
-                .petId(request.getPetId())
-                .petImage(request.getPetImage())
-                .petName(request.getName())
-                .petBirth(request.getBirth())
-                .petWeight(request.getWeight())
-                .petSignificant(request.getSignificant())
-                .vetId(request.getVetId())
-                .build();
-    }
-
     public static CareEstimateInfo findCareEstimateInfo(
             List<CareEstimate> generalEstimates,
             List<CareEstimate> designationEstimates
@@ -129,20 +80,6 @@ public class CareEstimate {
                     .build());
         }
         return contents;
-    }
-
-    public static List<EstimateInfo.PetInfo.Care> toInfos(List<CareEstimate> careEstimates) {
-        List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
-        for (CareEstimate careEstimate : careEstimates) {
-            careInfos.add(EstimateInfo.PetInfo.Care.builder()
-                    .id(careEstimate.getCareEstimateId())
-                    .name(careEstimate.getVetName())
-                    .daengleMeter(careEstimate.getDaengleMeter())
-                    .image(careEstimate.getVetImage())
-                    .reservedDate(careEstimate.getReservedDate())
-                    .build());
-        }
-        return careInfos;
     }
 
     public UserCareEstimateDetail toUserCareEstimateDetail() {
@@ -191,17 +128,4 @@ public class CareEstimate {
                 .build();
     }
 
-    public CareEstimateDetail getCareEstimateDetail() {
-        return CareEstimateDetail.builder()
-                .image(vetImage)
-                .name(vetName)
-                .daengleMeter(daengleMeter)
-                .introduction(vetIntroduction)
-                .address(address)
-                .reservedDate(reservedDate)
-                .diagnosis(diagnosis)
-                .cause(cause)
-                .treatment(treatment)
-                .build();
-    }
 }
