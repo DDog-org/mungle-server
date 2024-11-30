@@ -1,4 +1,4 @@
-package ddog.auth.exception;
+package ddog.groomer.application.exception.common;
 
 import ddog.auth.exception.common.CustomRuntimeException;
 

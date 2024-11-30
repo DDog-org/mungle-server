@@ -1,4 +1,4 @@
-package ddog.auth.application;
+package ddog.payment.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.LoginResult;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthService {
+public class AuthService {
 
     public static final String ROLE = "ROLE_";
     private final KakaoSocialService kakaoSocialService;

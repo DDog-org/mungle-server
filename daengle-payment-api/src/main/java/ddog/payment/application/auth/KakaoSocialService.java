@@ -1,4 +1,4 @@
-package ddog.auth.application;
+package ddog.payment.application.auth;
 
 import com.nimbusds.jose.shaded.gson.JsonElement;
 import com.nimbusds.jose.shaded.gson.JsonParser;
