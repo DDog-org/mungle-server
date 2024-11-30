@@ -1,10 +1,10 @@
 package ddog.auth.resolver;
 
-import ddog.account.enums.Role;
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.PayloadDto;
-import ddog.auth.exception.enums.AuthExceptionType;
+import ddog.auth.exception.AuthExceptionType;
 import ddog.auth.exception.AuthException;
+import ddog.domain.account.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

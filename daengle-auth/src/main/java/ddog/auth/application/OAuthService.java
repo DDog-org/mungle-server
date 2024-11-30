@@ -1,13 +1,13 @@
 package ddog.auth.application;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
+import ddog.auth.dto.LoginResult;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.auth.exception.AuthException;
-import ddog.auth.exception.enums.AuthExceptionType;
-import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.account.enums.Role;
-import ddog.auth.dto.LoginResult;
+import ddog.auth.exception.AuthExceptionType;
+import ddog.domain.account.Role;
+import ddog.persistence.port.AccountPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +27,7 @@ public class OAuthService {
 
     public static final String ROLE = "ROLE_";
     private final KakaoSocialService kakaoSocialService;
-    private final AccountRepository accountRepository;
+    private final AccountPersist accountPersist;
     private final JwtTokenProvider jwtTokenProvider;
 
     public static Role fromString(String roleString) {
@@ -46,7 +46,7 @@ public class OAuthService {
         String email = kakaoUserInfo.get("email").toString();
         Role role = fromString(loginType);
 
-        if (!accountRepository.checkExistsAccountBy(email, role)) {
+        if (!accountPersist.checkExistsAccountBy(email, role)) {
             return LoginResult.builder()
                     .isOnboarding(true)
                     .email(email)
@@ -61,7 +61,7 @@ public class OAuthService {
         authorities.add(new SimpleGrantedAuthority(ROLE + roleString));
 
         Role role = fromString(roleString);
-        Long accountId = accountRepository.findAccountByEmailAndRole(email, role).getAccountId();
+        Long accountId = accountPersist.findAccountByEmailAndRole(email, role).getAccountId();
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);

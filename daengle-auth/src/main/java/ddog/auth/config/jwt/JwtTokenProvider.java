@@ -1,9 +1,9 @@
 package ddog.auth.config.jwt;
 
-import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.account.enums.Role;
 import ddog.auth.dto.LoginResult;
 import ddog.auth.dto.TokenAccountInfoDto;
+import ddog.domain.account.Role;
+import ddog.persistence.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,16 +28,16 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Key key;
-    private final AccountRepository accountRepository;
+    private final AccountPersist accountPersist;
     /* accessToken 만료 시간 */
     private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
     private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret, AccountRepository accountRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret, AccountPersist accountPersist) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.accountRepository = accountRepository;
+        this.accountPersist = accountPersist;
     }
 
     public LoginResult generateToken(Authentication authentication, Role role, HttpServletResponse response) {
