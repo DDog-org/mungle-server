@@ -1,6 +1,6 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.account.Groomer;
+import ddog.domain.groomer.Groomer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

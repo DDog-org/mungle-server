@@ -1,9 +1,9 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.account.Pet;
-import ddog.account.enums.Breed;
-import ddog.account.enums.Gender;
-import ddog.account.enums.Weight;
+import ddog.domain.pet.Breed;
+import ddog.domain.pet.Gender;
+import ddog.domain.pet.Pet;
+import ddog.domain.pet.Weight;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

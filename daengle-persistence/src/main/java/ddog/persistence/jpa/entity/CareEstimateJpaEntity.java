@@ -1,9 +1,9 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.account.enums.Weight;
-import ddog.daengleserver.domain.estimate.CareEstimate;
-import ddog.daengleserver.domain.estimate.EstimateStatus;
-import ddog.daengleserver.domain.estimate.Proposal;
+import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
+import ddog.domain.estimate.Proposal;
+import ddog.domain.pet.Weight;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

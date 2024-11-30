@@ -1,6 +1,6 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.account.Vet;
+import ddog.domain.vet.Vet;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

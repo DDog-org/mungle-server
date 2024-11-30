@@ -1,8 +1,8 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.account.Account;
-import ddog.account.enums.Provider;
-import ddog.account.enums.Role;
+import ddog.domain.account.Account;
+import ddog.domain.account.Provider;
+import ddog.domain.account.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
