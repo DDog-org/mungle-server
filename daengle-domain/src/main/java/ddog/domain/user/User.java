@@ -1,6 +1,5 @@
 package ddog.domain.user;
 
-import ddog.domain.estimate.dto.response.UserInfo;
 import ddog.domain.pet.Pet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -57,24 +55,4 @@ public class User {
                 .build();
     }
 
-    public UserInfo toUserInfo() {
-        List<UserInfo.PetInfo> petInfos = new ArrayList<>();
-        for (Pet pet : pets) {
-            petInfos.add(UserInfo.PetInfo.builder()
-                    .id(pet.getPetId())
-                    .image(pet.getPetImage())
-                    .name(pet.getPetName())
-                    .significant(pet.getPetSignificant())
-                    .birth(pet.getPetBirth())
-                    .weight(pet.getPetWeight())
-                    .build());
-        }
-
-        return UserInfo.builder()
-                .nickname(nickname)
-                .userImage(userImage)
-                .address(address)
-                .petInfos(petInfos)
-                .build();
-    }
 }

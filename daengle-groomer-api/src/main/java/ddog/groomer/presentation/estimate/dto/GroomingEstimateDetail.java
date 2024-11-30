@@ -1,4 +1,4 @@
-package ddog.domain.estimate.dto.response;
+package ddog.groomer.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.pet.Weight;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class UserGroomingEstimateDetail {
+public class GroomingEstimateDetail {
 
     private String userImage;
     private String nickname;

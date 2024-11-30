@@ -1,15 +1,15 @@
-package ddog.groomer.presentation;
+package ddog.groomer.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.domain.estimate.dto.request.GroomerGroomingEstimateReq;
-import ddog.domain.estimate.dto.response.GroomingEstimateInfo;
-import ddog.domain.estimate.dto.response.UserGroomingEstimateDetail;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
+import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.groomer.application.EstimateService;
 import ddog.groomer.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.domain.estimate.enums.GroomerEstimateControllerResp.REGISTRATION_COMPLETED;
+import static ddog.groomer.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
 import static ddog.groomer.application.exception.common.CommonResponseEntity.success;
 
 @RestController
@@ -26,7 +26,7 @@ public class EstimateController {
     }
 
     @GetMapping("/{groomingEstimateId}/detail")
-    public CommonResponseEntity<UserGroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
+    public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
         return success(estimateService.getGroomingEstimateDetailInfo(groomingEstimateId));
     }
 

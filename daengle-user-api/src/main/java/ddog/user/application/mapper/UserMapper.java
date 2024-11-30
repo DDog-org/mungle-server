@@ -2,10 +2,7 @@ package ddog.user.application.mapper;
 
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.user.presentation.account.dto.JoinUserWithPet;
-import ddog.user.presentation.account.dto.JoinUserWithoutPet;
-import ddog.user.presentation.account.dto.PetInfo;
-import ddog.user.presentation.account.dto.UserProfileInfo;
+import ddog.user.presentation.account.dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +65,27 @@ public class UserMapper {
         }
         return PetInfo.builder()
                 .petDetails(petDetails)
+                .build();
+    }
+
+    public static UserInfo toUserInfo(User user) {
+        List<UserInfo.PetInfo> petInfos = new ArrayList<>();
+        for (Pet pet : user.getPets()) {
+            petInfos.add(UserInfo.PetInfo.builder()
+                    .id(pet.getPetId())
+                    .image(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .significant(pet.getPetSignificant())
+                    .birth(pet.getPetBirth())
+                    .weight(pet.getPetWeight())
+                    .build());
+        }
+
+        return UserInfo.builder()
+                .nickname(user.getNickname())
+                .userImage(user.getUserImage())
+                .address(user.getAddress())
+                .petInfos(petInfos)
                 .build();
     }
 

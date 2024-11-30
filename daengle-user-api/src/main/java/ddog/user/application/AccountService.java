@@ -1,7 +1,7 @@
 package ddog.user.application;
 
 import ddog.domain.account.Account;
-import ddog.domain.estimate.dto.response.UserInfo;
+import ddog.user.presentation.account.dto.UserInfo;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
@@ -105,7 +105,7 @@ public class AccountService {
     @Transactional(readOnly = true)
     public UserInfo getUserAndPetInfos(Long userId) {
         User user = userPersist.findByAccountId(userId);
-        return user.toUserInfo();
+        return UserMapper.toUserInfo(user);
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package ddog.user.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.domain.estimate.dto.response.UserInfo;
+import ddog.user.presentation.account.dto.UserInfo;
 import ddog.user.presentation.account.dto.*;
 import ddog.user.presentation.account.dto.BreedInfo;
 import ddog.user.presentation.account.dto.PetInfo;

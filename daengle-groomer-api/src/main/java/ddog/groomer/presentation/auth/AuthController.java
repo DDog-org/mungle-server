@@ -1,4 +1,4 @@
-package ddog.groomer.presentation;
+package ddog.groomer.presentation.auth;
 
 import ddog.auth.dto.KakaoAccessTokenDto;
 import ddog.auth.dto.LoginResult;
