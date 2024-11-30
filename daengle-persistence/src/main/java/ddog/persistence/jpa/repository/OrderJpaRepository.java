@@ -1,6 +1,7 @@
 package ddog.persistence.jpa.repository;
 
-import ddog.daengleserver.infrastructure.po.OrderJpaEntity;
+
+import ddog.persistence.jpa.entity.OrderJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
