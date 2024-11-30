@@ -2,7 +2,8 @@ name: Deploy to Main EC2
 
 on:
   push:
-    branches: [ "main" ]
+    #branches: [ "main" ]
+    branches: [ "non-existent-branch" ]
 
 jobs:
   deploy:

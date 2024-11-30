@@ -1,8 +1,8 @@
 package ddog.daengleserver.infrastructure.po;
 
-import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.domain.Provider;
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.Account;
+import ddog.daengleserver.domain.account.enums.Provider;
+import ddog.daengleserver.domain.account.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,6 @@ public class AccountJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
     private String email;
-    private String nickname;
 
     @Enumerated(value = EnumType.STRING)
     private Provider provider;
@@ -32,7 +31,6 @@ public class AccountJpaEntity {
         return AccountJpaEntity.builder()
                 .accountId(account.getAccountId())
                 .email(account.getEmail())
-                .nickname(account.getNickname())
                 .provider(account.getProvider())
                 .role(account.getRole())
                 .build();
@@ -42,7 +40,6 @@ public class AccountJpaEntity {
         return Account.builder()
                 .accountId(accountId)
                 .email(email)
-                .nickname(nickname)
                 .provider(provider)
                 .role(role)
                 .build();

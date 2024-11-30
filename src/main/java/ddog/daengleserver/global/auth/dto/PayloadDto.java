@@ -1,6 +1,6 @@
 package ddog.daengleserver.global.auth.dto;
 
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

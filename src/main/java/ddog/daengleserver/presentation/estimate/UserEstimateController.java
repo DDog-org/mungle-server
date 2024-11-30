@@ -9,10 +9,9 @@ import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareE
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationGroomingEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralCareEstimateReq;
 import ddog.daengleserver.presentation.estimate.dto.request.UserGeneralGroomingEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateDetail;
 import ddog.daengleserver.presentation.estimate.dto.response.EstimateInfo;
-import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetails;
-import ddog.daengleserver.presentation.estimate.dto.response.UserAndPetsInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +29,6 @@ public class UserEstimateController {
     private final UserService userService;
     private final CareEstimateService careEstimateService;
     private final GroomingEstimateService groomingEstimateService;
-
-    @Operation(summary = "사용자 주소, 반려동물 정보 요청", description = "사용자 주소와 반려동물 id, 사진, 이름 정보를 가져옵니다.")
-    @GetMapping("/user-pets-info")
-    public CommonResponseEntity<UserAndPetsInfo> findAddressAndPetsInfo(PayloadDto payloadDto) {
-        return success(userService.getUserAddressAndPetsInfoById(payloadDto.getAccountId()));
-    }
 
     @Operation(summary = "미용 견적서 작성 (일반)", description = "일반 미용 견적서 작성")
     @PostMapping("/general-grooming")
@@ -67,17 +60,17 @@ public class UserEstimateController {
 
     @Operation(summary = "미용/진료 대기 견적서 목록 조회")
     @GetMapping("/list")
-    public CommonResponseEntity<EstimateInfo> findEstimateInfos(PayloadDto payloadDto) {
-        return success(userService.findEstimateInfos(payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateInfo> findEstimateInfo(PayloadDto payloadDto) {
+        return success(userService.findEstimateInfo(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/{groomingEstimateId}/grooming-details")
-    public CommonResponseEntity<GroomingEstimateDetails> getGroomingEstimateDetails(@PathVariable Long groomingEstimateId) {
-        return success(userService.getGroomingEstimateDetails(groomingEstimateId));
+    @GetMapping("/{groomingEstimateId}/grooming-detail")
+    public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
+        return success(userService.getGroomingEstimateDetail(groomingEstimateId));
     }
 
-    @GetMapping("/{careEstimateId}/care-details")
-    public CommonResponseEntity<CareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
-        return success(userService.getCareEstimateDetails(careEstimateId));
+    @GetMapping("/{careEstimateId}/care-detail")
+    public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
+        return success(userService.getCareEstimateDetail(careEstimateId));
     }
 }

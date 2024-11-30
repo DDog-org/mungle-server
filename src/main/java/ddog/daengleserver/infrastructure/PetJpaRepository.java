@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface PetJpaRepository extends JpaRepository<PetJpaEntity, Long> {
 
-    List<PetJpaEntity> findByUserId(Long userId);
+    List<PetJpaEntity> findByAccountId(Long userId);
+
+    void deleteByPetId(Long petId);
 
 }

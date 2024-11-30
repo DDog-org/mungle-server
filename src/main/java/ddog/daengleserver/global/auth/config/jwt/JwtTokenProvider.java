@@ -1,9 +1,9 @@
 package ddog.daengleserver.global.auth.config.jwt;
 
 import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.enums.Role;
+import ddog.daengleserver.global.auth.dto.LoginResult;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
-import ddog.daengleserver.global.auth.dto.TokenInfoDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         this.accountRepository = accountRepository;
     }
 
-    public TokenInfoDto generateToken(Authentication authentication, Role role, HttpServletResponse response) {
+    public LoginResult generateToken(Authentication authentication, Role role, HttpServletResponse response) {
         String accessToken = createToken(authentication, ACCESSTOKEN_EXPIRATION_TIME);
         String refreshToken = createToken(authentication, REFRESHTOKEN_EXPIRATION_TIME);
         response.setHeader("Set-Cookie", ResponseCookie.from("refreshToken", refreshToken)
@@ -50,10 +50,11 @@ public class JwtTokenProvider {
                 .sameSite("None")
                 .build().toString());
 
-        return TokenInfoDto.builder()
+        return LoginResult.builder()
+                .isOnboarding(false)
+                .role(role)
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .role(role)
                 .build();
     }
 

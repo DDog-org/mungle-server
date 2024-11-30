@@ -4,8 +4,8 @@ import ddog.daengleserver.application.CareEstimateService;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.estimate.dto.request.VetCareEstimateReq;
-import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfos;
-import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetails;
+import ddog.daengleserver.presentation.estimate.dto.response.CareEstimateInfo;
+import ddog.daengleserver.presentation.estimate.dto.response.UserCareEstimateDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +24,13 @@ public class VetEstimateController {
 
     @Operation(summary = "사용자가 요청한 진료 견적서 목록 조회", description = "같은 주소에 위치한 사용자가 요청한 진료 견적서 목록 조회 (신규)")
     @GetMapping("/list")
-    public CommonResponseEntity<CareEstimateInfos> findCareEstimateInfos(PayloadDto payloadDto) {
-        return success(careEstimateService.findCareEstimateInfos(payloadDto.getAccountId()));
+    public CommonResponseEntity<CareEstimateInfo> findCareEstimateInfo(PayloadDto payloadDto) {
+        return success(careEstimateService.findCareEstimateInfo(payloadDto.getAccountId()));
     }
 
     @Operation(summary = "진료 견적서 상세 내용 조회")
-    @GetMapping("/{careEstimateId}/details")
-    public CommonResponseEntity<UserCareEstimateDetails> getCareEstimateDetails(@PathVariable Long careEstimateId) {
+    @GetMapping("/{careEstimateId}/detail")
+    public CommonResponseEntity<UserCareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(careEstimateService.getCareEstimateDetailInfo(careEstimateId));
     }
 

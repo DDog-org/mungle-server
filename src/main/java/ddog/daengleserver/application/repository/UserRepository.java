@@ -1,8 +1,12 @@
 package ddog.daengleserver.application.repository;
 
-import ddog.daengleserver.domain.User;
+import ddog.daengleserver.domain.account.User;
 
 public interface UserRepository {
 
-    User findById(Long accountId);
+    void save(User user);
+
+    User findByAccountId(Long accountId);
+
+    Boolean hasNickname(String nickname);
 }

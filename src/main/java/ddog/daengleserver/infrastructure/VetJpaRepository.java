@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
 
-    Optional<VetJpaEntity> findByVetId(Long accountId);
+    Optional<VetJpaEntity> findByAccountId(Long accountId);
 
-    VetJpaEntity getByVetId(Long accountId);
+    VetJpaEntity getByAccountId(Long accountId);
 }

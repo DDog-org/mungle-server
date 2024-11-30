@@ -1,7 +1,7 @@
 package ddog.daengleserver.presentation.estimate.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.daengleserver.domain.Weight;
+import ddog.daengleserver.domain.account.enums.Weight;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -15,10 +15,10 @@ public class UserDesignationGroomingEstimateReq {
     private LocalDateTime reservedDate;
     private Long petId;
     private String petImage;
-    private String petName;
-    private String petSignificant;
-    private int petBirth;
-    private Weight petWeight;
+    private String name;
+    private String significant;
+    private int birth;
+    private Weight weight;
 
     private String desiredStyle;
     private String requirements;

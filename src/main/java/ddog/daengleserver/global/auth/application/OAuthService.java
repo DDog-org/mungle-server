@@ -1,13 +1,11 @@
 package ddog.daengleserver.global.auth.application;
 
 import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.daengleserver.domain.Account;
-import ddog.daengleserver.domain.Provider;
-import ddog.daengleserver.domain.Role;
+import ddog.daengleserver.domain.account.enums.Role;
 import ddog.daengleserver.global.auth.config.jwt.JwtTokenProvider;
+import ddog.daengleserver.global.auth.dto.LoginResult;
 import ddog.daengleserver.global.auth.dto.RefreshTokenDto;
 import ddog.daengleserver.global.auth.dto.TokenAccountInfoDto;
-import ddog.daengleserver.global.auth.dto.TokenInfoDto;
 import ddog.daengleserver.global.auth.exception.AuthException;
 import ddog.daengleserver.global.auth.exception.enums.AuthExceptionType;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,31 +39,21 @@ public class OAuthService {
         throw new AuthException(AuthExceptionType.UNAVAILABLE_ROLE);
     }
 
-    public TokenInfoDto kakaoOAuthLogin(String kakaoAccessToken, String loginType, HttpServletResponse response) {
-        /* kakaoAccessToken 정보를 가지고 유저의 닉네임, 이메일 정보를 가져온다. */
+    public LoginResult kakaoOAuthLogin(String kakaoAccessToken, String loginType, HttpServletResponse response) {
+        /* kakaoAccessToken 정보를 가지고 유저의 이메일 정보를 가져온다. */
         HashMap<String, Object> kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(kakaoAccessToken);
 
         String email = kakaoUserInfo.get("email").toString();
-
         Role role = fromString(loginType);
+
         if (!accountRepository.checkExistsAccountBy(email, role)) {
-            /* 만약 회원이 아니라면 회원가입 페이지로 보낼 수 있도록 로직 추가해줘야 함. */
-            saveAccount(kakaoUserInfo, email, role);
+            return LoginResult.builder()
+                    .isOnboarding(true)
+                    .email(email)
+                    .role(role)
+                    .build();
         }
-
         return jwtTokenProvider.generateToken(getAuthentication(email, loginType), role, response);
-    }
-
-    private void saveAccount(HashMap<String, Object> kakaoUserInfo, String email, Role role) {
-        String nickname = kakaoUserInfo.get("nickname").toString();
-        Account account = Account.builder()
-                .accountId(null)
-                .provider(Provider.KAKAO)
-                .email(email)
-                .nickname(nickname)
-                .role(role)
-                .build();
-        accountRepository.save(account);
     }
 
     private Authentication getAuthentication(String email, String roleString) {
@@ -76,12 +64,12 @@ public class OAuthService {
         Long accountId = accountRepository.findAccountByEmailAndRole(email, role).getAccountId();
 
         Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + accountId , null, authorities);
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 
-    public TokenInfoDto reGenerateAccessToken(RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
+    public LoginResult reGenerateAccessToken(RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
             /* 추후에 INVALID_TOKEN 으로 변경 예정 */

@@ -3,7 +3,7 @@ package ddog.daengleserver.global.auth.presentation;
 import ddog.daengleserver.global.auth.application.OAuthService;
 import ddog.daengleserver.global.auth.dto.KakaoAccessTokenDto;
 import ddog.daengleserver.global.auth.dto.RefreshTokenDto;
-import ddog.daengleserver.global.auth.dto.TokenInfoDto;
+import ddog.daengleserver.global.auth.dto.LoginResult;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class OAuthController {
     private final OAuthService oAuthService;
 
     @PostMapping("/kakao")
-    public CommonResponseEntity<TokenInfoDto> kakaoLogin(@RequestBody KakaoAccessTokenDto kakaoAccessTokenDto, HttpServletResponse response) {
+    public CommonResponseEntity<LoginResult> kakaoLogin(@RequestBody KakaoAccessTokenDto kakaoAccessTokenDto, HttpServletResponse response) {
         return success(oAuthService.kakaoOAuthLogin(kakaoAccessTokenDto.getKakaoAccessToken(), kakaoAccessTokenDto.getLoginType(), response));
     }
 
     @PostMapping("/refresh-token")
-    public CommonResponseEntity<TokenInfoDto> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
+    public CommonResponseEntity<LoginResult> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
         return success(oAuthService.reGenerateAccessToken(refreshTokenDto, response));
     }
 }
