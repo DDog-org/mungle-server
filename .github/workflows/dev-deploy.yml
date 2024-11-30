@@ -2,7 +2,8 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ "develop" ]
+    # branches: [ "develop" ]
+    branches: [ "non-existent-branch" ]
 
 jobs:
   deploy:
