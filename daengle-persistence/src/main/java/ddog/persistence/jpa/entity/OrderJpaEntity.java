@@ -1,7 +1,7 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.Order;
-import ddog.daengleserver.domain.Payment;
+import ddog.domain.order.Order;
+import ddog.domain.payment.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,7 +1,7 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.Payment;
-import ddog.daengleserver.domain.enums.PaymentStatus;
+import ddog.domain.payment.Payment;
+import ddog.domain.payment.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

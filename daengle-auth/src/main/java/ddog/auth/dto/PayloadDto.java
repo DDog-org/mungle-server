@@ -1,6 +1,7 @@
 package ddog.auth.dto;
 
-import ddog.account.enums.Role;
+
+import ddog.domain.account.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

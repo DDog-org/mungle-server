@@ -6,13 +6,33 @@ jar {
     enabled = false
 }
 
+repositories {
+    mavenCentral()
+
+    //IamPort
+    maven {url 'https://jitpack.io'}
+}
 
 dependencies {
     implementation(project(':daengle-domain'))
+    //implementation(project(':daengle-auth'))
+    implementation(project(':daengle-persistence'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework:spring-tx'   //TODO 과연 아래 data jpa 로 의존해서 사용하는 @Transaction 과 작동 결과가 똑같은가?
+    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    // IamPort //
+    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
+    implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.9.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
+    implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
 }
 
 test {
