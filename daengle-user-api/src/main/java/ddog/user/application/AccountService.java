@@ -12,6 +12,7 @@ import ddog.domain.user.dto.response.UserProfileInfo;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
+import ddog.user.presentation.dto.ValidNickname;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +29,12 @@ public class AccountService {
     private final PetPersist petPersist;
 
     @Transactional(readOnly = true)
-    public Boolean hasNickname(String nickname) {
-        return !userPersist.hasNickname(nickname);
+    public ValidNickname hasNickname(String nickname) {
+        return ValidNickname.builder()
+                .isAvailable(!userPersist.hasNickname(nickname))
+                .build();
     }
 
-    /* TODO PetService 추가하면 그곳으로 옮기기 */
     public BreedInfo getBreedInfos() {
         List<BreedInfo.Detail> details = new ArrayList<>();
         for (Breed breed : Breed.values()) {

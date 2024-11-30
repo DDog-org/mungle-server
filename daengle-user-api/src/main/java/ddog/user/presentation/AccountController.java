@@ -8,6 +8,7 @@ import ddog.domain.user.dto.response.PetInfo;
 import ddog.domain.user.dto.response.UserProfileInfo;
 import ddog.user.application.AccountService;
 import ddog.user.application.exception.common.CommonResponseEntity;
+import ddog.user.presentation.dto.ValidNickname;
 import ddog.user.presentation.enums.AccountControllerResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/available-nickname")
-    public CommonResponseEntity<Boolean> hasNickname(@RequestBody CheckNicknameReq request) {
+    public CommonResponseEntity<ValidNickname> hasNickname(@RequestBody CheckNicknameReq request) {
         return success(accountService.hasNickname(request.getNickname()));
     }
 
