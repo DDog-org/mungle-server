@@ -1,8 +1,8 @@
-package ddog.user.application;
+package ddog.persistence.port;
 
 import ddog.domain.user.User;
 
-public interface UserRepository {
+public interface UserPersist {
 
     void save(User user);
 

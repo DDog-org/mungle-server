@@ -7,12 +7,12 @@ import ddog.domain.user.dto.response.BreedInfo;
 import ddog.domain.user.dto.response.PetInfo;
 import ddog.domain.user.dto.response.UserProfileInfo;
 import ddog.user.application.AccountService;
-import ddog.user.exception.common.CommonResponseEntity;
+import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.enums.AccountControllerResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.user.exception.common.CommonResponseEntity.success;
+import static ddog.user.application.exception.common.CommonResponseEntity.success;
 
 
 @RestController

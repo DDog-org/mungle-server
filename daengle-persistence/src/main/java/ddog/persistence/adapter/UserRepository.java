@@ -1,16 +1,15 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.UserRepository;
-import ddog.daengleserver.domain.account.User;
-import ddog.daengleserver.domain.enums.UserExceptionType;
-import ddog.daengleserver.domain.exception.UserException;
-import ddog.daengleserver.infrastructure.po.UserJpaEntity;
+import ddog.domain.user.User;
+import ddog.persistence.jpa.entity.UserJpaEntity;
+import ddog.persistence.jpa.repository.UserJpaRepository;
+import ddog.persistence.port.UserPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepository implements UserPersist {
 
     private final UserJpaRepository userJpaRepository;
 

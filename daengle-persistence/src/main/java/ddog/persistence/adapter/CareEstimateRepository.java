@@ -1,8 +1,9 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.CareEstimateRepository;
-import ddog.daengleserver.domain.estimate.CareEstimate;
-import ddog.daengleserver.infrastructure.po.CareEstimateJpaEntity;
+import ddog.domain.estimate.CareEstimate;
+import ddog.persistence.jpa.entity.CareEstimateJpaEntity;
+import ddog.persistence.jpa.repository.CareEstimateJpaRepository;
+import ddog.persistence.port.CareEstimatePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CareEstimateRepositoryImpl implements CareEstimateRepository {
+public class CareEstimateRepository implements CareEstimatePersist {
 
     private final CareEstimateJpaRepository careEstimateJpaRepository;
 

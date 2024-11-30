@@ -1,4 +1,4 @@
-package ddog.user.exception.common;
+package ddog.user.application.exception.common;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

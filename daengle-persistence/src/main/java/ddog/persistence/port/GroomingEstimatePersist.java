@@ -13,4 +13,6 @@ public interface GroomingEstimatePersist {
     List<GroomingEstimate> findGeneralGroomingEstimates(String address);
 
     List<GroomingEstimate> findDesignationGroomingEstimates(Long groomerId);
+
+    List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId);
 }

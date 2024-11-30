@@ -1,17 +1,16 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.AccountRepository;
-import ddog.daengleserver.domain.account.Account;
-import ddog.account.enums.Role;
-import ddog.daengleserver.implementation.AccountException;
-import ddog.daengleserver.implementation.enums.AccountExceptionType;
-import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
+import ddog.domain.account.Account;
+import ddog.domain.account.Role;
+import ddog.persistence.jpa.entity.AccountJpaEntity;
+import ddog.persistence.jpa.repository.AccountJpaRepository;
+import ddog.persistence.port.AccountPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class AccountRepositoryImpl implements AccountRepository {
+public class AccountRepository implements AccountPersist {
 
     private final AccountJpaRepository accountJpaRepository;
 

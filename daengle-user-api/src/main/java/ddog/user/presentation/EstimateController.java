@@ -9,12 +9,12 @@ import ddog.domain.estimate.dto.response.CareEstimateDetail;
 import ddog.domain.estimate.dto.response.EstimateInfo;
 import ddog.domain.estimate.dto.response.GroomingEstimateDetail;
 import ddog.user.application.EstimateService;
-import ddog.user.exception.common.CommonResponseEntity;
+import ddog.user.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.domain.estimate.enums.UserEstimateControllerResp.*;
-import static ddog.user.exception.common.CommonResponseEntity.success;
+import static ddog.user.application.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor

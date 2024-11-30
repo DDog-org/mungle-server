@@ -1,4 +1,4 @@
-package ddog.user.exception;
+package ddog.user.application.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

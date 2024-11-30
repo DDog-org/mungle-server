@@ -1,8 +1,9 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.PetRepository;
-import ddog.daengleserver.domain.account.Pet;
-import ddog.daengleserver.infrastructure.po.PetJpaEntity;
+import ddog.domain.pet.Pet;
+import ddog.persistence.jpa.entity.PetJpaEntity;
+import ddog.persistence.jpa.repository.PetJpaRepository;
+import ddog.persistence.port.PetPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class PetRepositoryImpl implements PetRepository {
+public class PetRepository implements PetPersist {
 
     private final PetJpaRepository petJpaRepository;
 

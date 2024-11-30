@@ -1,9 +1,9 @@
-package ddog.user.application;
+package ddog.persistence.port;
 
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 
-public interface AccountRepository {
+public interface AccountPersist {
 
     boolean checkExistsAccountBy(String email, Role role);
 

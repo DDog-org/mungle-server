@@ -1,6 +1,6 @@
-package ddog.user.exception;
+package ddog.user.application.exception;
 
-import ddog.user.exception.common.CustomRuntimeException;
+import ddog.user.application.exception.common.CustomRuntimeException;
 
 public class UserException extends CustomRuntimeException {
     public UserException(UserExceptionType type, Object... args) {

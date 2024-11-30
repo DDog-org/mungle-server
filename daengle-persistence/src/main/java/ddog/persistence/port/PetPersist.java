@@ -1,8 +1,8 @@
-package ddog.user.application;
+package ddog.persistence.port;
 
 import ddog.domain.pet.Pet;
 
-public interface PetRepository {
+public interface PetPersist {
 
     Pet save(Pet pet);
 

@@ -1,12 +1,13 @@
 package ddog.persistence.jpa.repository;
 
-import ddog.account.enums.Provider;
-import ddog.account.enums.Role;
-import ddog.daengleserver.infrastructure.po.AccountJpaEntity;
+import ddog.domain.account.Provider;
+import ddog.domain.account.Role;
+import ddog.persistence.jpa.entity.AccountJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
 
 @Repository
 public interface AccountJpaRepository extends JpaRepository<AccountJpaEntity, Long> {
