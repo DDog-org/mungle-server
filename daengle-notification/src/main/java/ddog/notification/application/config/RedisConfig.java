@@ -1,5 +1,6 @@
-package ddog.daengleserver.global.infra.redis;
+package ddog.notification.application.config;
 
+import ddog.notification.application.RedisMessageListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,5 +43,9 @@ public class RedisConfig {
         container.addMessageListener(redisMessageListener, new ChannelTopic("all_users"));
 
         return container;
+    }
+
+    public String getHost() {
+
     }
 }

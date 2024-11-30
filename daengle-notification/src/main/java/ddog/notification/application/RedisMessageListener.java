@@ -1,6 +1,5 @@
-package ddog.daengleserver.global.infra.redis;
+package ddog.notification.application;
 
-import ddog.daengleserver.global.infra.sse.SseEmitterService;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;

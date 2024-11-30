@@ -1,6 +1,5 @@
 package ddog.domain.notification;
 
-import ddog.domain.notification.dto.NotificationReq;
 import ddog.domain.notification.enums.NotifyType;
 import lombok.Builder;
 import lombok.Getter;

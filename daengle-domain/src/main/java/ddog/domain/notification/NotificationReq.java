@@ -1,4 +1,4 @@
-package ddog.domain.notification.dto;
+package ddog.domain.notification;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
