@@ -1,4 +1,4 @@
-package ddog.domain.user.dto.response;
+package ddog.user.presentation.dto.response;
 
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Gender;

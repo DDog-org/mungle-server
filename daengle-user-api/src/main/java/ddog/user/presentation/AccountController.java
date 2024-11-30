@@ -2,18 +2,18 @@ package ddog.user.presentation;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.domain.estimate.dto.response.UserInfo;
-import ddog.domain.user.dto.request.*;
-import ddog.domain.user.dto.response.BreedInfo;
-import ddog.domain.user.dto.response.PetInfo;
-import ddog.domain.user.dto.response.UserProfileInfo;
+import ddog.user.presentation.dto.response.BreedInfo;
+import ddog.user.presentation.dto.response.PetInfo;
+import ddog.user.presentation.dto.response.UserProfileInfo;
 import ddog.user.application.AccountService;
 import ddog.user.application.exception.common.CommonResponseEntity;
-import ddog.user.presentation.dto.ValidNickname;
-import ddog.user.presentation.enums.AccountControllerResp;
+import ddog.user.presentation.dto.response.ValidResponse;
+import ddog.user.presentation.dto.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
+import static ddog.user.presentation.enums.AccountControllerResp.*;
 
 
 @RestController
@@ -24,7 +24,7 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/available-nickname")
-    public CommonResponseEntity<ValidNickname> hasNickname(@RequestBody CheckNicknameReq request) {
+    public CommonResponseEntity<ValidResponse.Nickname> hasNickname(@RequestBody CheckNicknameReq request) {
         return success(accountService.hasNickname(request.getNickname()));
     }
 
@@ -36,13 +36,13 @@ public class AccountController {
     @PostMapping("/join-with-pet")
     public CommonResponseEntity<String> joinUserWithPet(@RequestBody JoinUserWithPet request) {
         accountService.createUserWithPet(request);
-        return success(AccountControllerResp.USER_JOIN_COMPLETED.getMessage());
+        return success(USER_JOIN_COMPLETED.getMessage());
     }
 
     @PostMapping("/join-without-pet")
     public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody JoinUserWithoutPet request) {
         accountService.createUserWithoutPet(request);
-        return success(AccountControllerResp.USER_JOIN_COMPLETED.getMessage());
+        return success(USER_JOIN_COMPLETED.getMessage());
     }
 
     @GetMapping("/modify-page")
@@ -53,13 +53,13 @@ public class AccountController {
     @PostMapping("/modify-info")
     public CommonResponseEntity<String> modifyUserProfile(@RequestBody UserProfileModifyReq request, PayloadDto payloadDto) {
         accountService.modifyUserProfile(request, payloadDto.getAccountId());
-        return success(AccountControllerResp.PROFILE_MODIFY_COMPLETED.getMessage());
+        return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
     @PostMapping("/add-pet")
     public CommonResponseEntity<String> addPet(@RequestBody AddPetInfo request, PayloadDto payloadDto) {
         accountService.addPet(request, payloadDto.getAccountId());
-        return success(AccountControllerResp.PET_ADD_COMPLETED.getMessage());
+        return success(PET_ADD_COMPLETED.getMessage());
     }
 
     @GetMapping("/pets-info")
@@ -70,13 +70,13 @@ public class AccountController {
     @PostMapping("/modify-pet")
     public CommonResponseEntity<String> modifyPetProfile(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
         accountService.modifyPetProfile(request, payloadDto.getAccountId());
-        return success(AccountControllerResp.PET_PROFILE_MODIFY_COMPLETED.getMessage());
+        return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
     @DeleteMapping("/delete-pet")
     public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request) {
         accountService.deletePet(request.getPetId());
-        return success(AccountControllerResp.DELETE_PET_COMPLETED.getMessage());
+        return success(DELETE_PET_COMPLETED.getMessage());
     }
 
     @GetMapping("/user-pets-info")

@@ -5,14 +5,16 @@ import ddog.domain.estimate.dto.response.UserInfo;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.domain.user.dto.request.*;
-import ddog.domain.user.dto.response.BreedInfo;
-import ddog.domain.user.dto.response.PetInfo;
-import ddog.domain.user.dto.response.UserProfileInfo;
+import ddog.user.application.mapper.PetMapper;
+import ddog.user.application.mapper.UserMapper;
+import ddog.user.presentation.dto.response.BreedInfo;
+import ddog.user.presentation.dto.response.PetInfo;
+import ddog.user.presentation.dto.response.UserProfileInfo;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
-import ddog.user.presentation.dto.ValidNickname;
+import ddog.user.presentation.dto.response.ValidResponse;
+import ddog.user.presentation.dto.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +31,8 @@ public class AccountService {
     private final PetPersist petPersist;
 
     @Transactional(readOnly = true)
-    public ValidNickname hasNickname(String nickname) {
-        return ValidNickname.builder()
+    public ValidResponse.Nickname hasNickname(String nickname) {
+        return ValidResponse.Nickname.builder()
                 .isAvailable(!userPersist.hasNickname(nickname))
                 .build();
     }
@@ -52,8 +54,8 @@ public class AccountService {
     public void createUserWithPet(JoinUserWithPet request) {
         Account accountToSave = Account.create(request.getEmail(), request.getRole());
         Account savedAccount = accountPersist.save(accountToSave);
-        Pet pet = Pet.toJoinPetInfo(savedAccount.getAccountId(), request);
-        User user = User.createWithPet(savedAccount.getAccountId(), request, pet);
+        Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
+        User user = UserMapper.createWithPet(savedAccount.getAccountId(), request, pet);
         petPersist.save(pet);
         userPersist.save(user);
     }
@@ -62,14 +64,14 @@ public class AccountService {
     public void createUserWithoutPet(JoinUserWithoutPet request) {
         Account accountToSave = Account.create(request.getEmail(), request.getRole());
         Account savedAccount = accountPersist.save(accountToSave);
-        User user = User.createWithoutPet(savedAccount.getAccountId(), request);
+        User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
         userPersist.save(user);
     }
 
     @Transactional(readOnly = true)
     public UserProfileInfo getUserProfileInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId);
-        return user.toUserProfileInfo();
+        return UserMapper.toUserProfileInfo(user);
     }
 
     @Transactional
@@ -82,7 +84,7 @@ public class AccountService {
     @Transactional
     public void addPet(AddPetInfo request, Long accountId) {
         User user = userPersist.findByAccountId(accountId);
-        Pet newPet = Pet.create(accountId, request);
+        Pet newPet = PetMapper.create(accountId, request);
         Pet savedPet = petPersist.save(newPet);
         userPersist.save(user.withNewPet(savedPet));
     }
@@ -90,13 +92,13 @@ public class AccountService {
     @Transactional(readOnly = true)
     public PetInfo getPetInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId);
-        return user.toPetInfo();
+        return UserMapper.toPetInfo(user);
     }
 
     @Transactional
     public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
-        Pet modifiedPet = Pet.withModifyPetInfo(request, accountId);
+        Pet modifiedPet = PetMapper.withModifyPetInfo(request, accountId);
         petPersist.save(modifiedPet);
     }
 

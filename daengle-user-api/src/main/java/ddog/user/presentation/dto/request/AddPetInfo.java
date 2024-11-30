@@ -1,4 +1,4 @@
-package ddog.domain.user.dto.request;
+package ddog.user.presentation.dto.request;
 
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Gender;
@@ -6,9 +6,8 @@ import ddog.domain.pet.Weight;
 import lombok.Getter;
 
 @Getter
-public class ModifyPetInfo {
+public class AddPetInfo {
 
-    private Long id;
     private String image;
     private String name;
     private int birth;
