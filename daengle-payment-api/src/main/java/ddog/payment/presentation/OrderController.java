@@ -18,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    public CommonResponseEntity<PostOrderResp> processOrder(@RequestBody PostOrderReq postOrderReq) {
+    public CommonResponseEntity<PostOrderResp> processOrder(PayloadDto payloadDto, @RequestBody PostOrderReq postOrderReq) {
         return success(orderService.processOrder(payloadDto.getAccountId(), postOrderReq));
     }
 }

@@ -2,8 +2,6 @@ package ddog.auth.resolver;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.PayloadDto;
-import ddog.auth.exception.AuthExceptionType;
-import ddog.auth.exception.AuthException;
 import ddog.domain.account.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +53,7 @@ public class PayloadArgumentResolver implements HandlerMethodArgumentResolver {
         }
 
         /* 추후 예외 변경 필요 */
-        throw new AuthException(AuthExceptionType.UNAVAILABLE_TOKEN);
+        throw new RuntimeException();
     }
 
     private Role fromString(String roleString) {
@@ -64,6 +62,6 @@ public class PayloadArgumentResolver implements HandlerMethodArgumentResolver {
                 return role;
             }
         }
-        throw new AuthException(AuthExceptionType.UNAVAILABLE_ROLE);
+        throw new RuntimeException();
     }
 }

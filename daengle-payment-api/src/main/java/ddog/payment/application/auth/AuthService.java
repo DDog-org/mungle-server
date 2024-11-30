@@ -1,12 +1,12 @@
-package ddog.auth.application;
+package ddog.payment.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.LoginResult;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.auth.dto.TokenAccountInfoDto;
-import ddog.auth.exception.AuthException;
-import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Role;
+import ddog.payment.application.exception.common.AuthException;
+import ddog.payment.application.exception.common.AuthExceptionType;
 import ddog.persistence.port.AccountPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
-public class OAuthService {
+public class AuthService {
 
     public static final String ROLE = "ROLE_";
     private final KakaoSocialService kakaoSocialService;

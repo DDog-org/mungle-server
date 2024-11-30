@@ -1,6 +1,4 @@
-package ddog.auth.exception;
-
-import ddog.auth.exception.common.CustomRuntimeException;
+package ddog.payment.application.exception.common;
 
 public class AuthException extends CustomRuntimeException {
     public AuthException(AuthExceptionType type, Object... args) {

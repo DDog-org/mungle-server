@@ -1,6 +1,7 @@
 package ddog.persistence.jpa.repository;
 
-import ddog.daengleserver.infrastructure.po.NotificationJpaEntity;
+
+import ddog.persistence.jpa.entity.NotificationJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

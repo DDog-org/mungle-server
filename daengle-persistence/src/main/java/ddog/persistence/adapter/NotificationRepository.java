@@ -1,8 +1,9 @@
-package ddog.persistence;
+package ddog.persistence.adapter;
 
-import ddog.daengleserver.application.repository.NotificationRepository;
-import ddog.daengleserver.domain.Notification;
-import ddog.daengleserver.infrastructure.po.NotificationJpaEntity;
+import ddog.domain.notification.Notification;
+import ddog.persistence.jpa.entity.NotificationJpaEntity;
+import ddog.persistence.jpa.repository.NotificationJpaRepository;
+import ddog.persistence.port.NotificationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +12,10 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class NotificationRepositoryImpl implements NotificationRepository {
+public class NotificationRepository implements NotificationPersist {
 
     private final NotificationJpaRepository notificationJpaRepository;
+
     @Override
     public List<Notification> findByUserId(Long userId) {
         return Optional.ofNullable(notificationJpaRepository.findByUserId(userId))

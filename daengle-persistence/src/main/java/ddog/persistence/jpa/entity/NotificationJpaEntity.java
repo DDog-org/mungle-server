@@ -1,7 +1,8 @@
 package ddog.persistence.jpa.entity;
 
-import ddog.daengleserver.domain.Notification;
-import ddog.daengleserver.presentation.notify.enums.NotifyType;
+
+import ddog.domain.notification.Notification;
+import ddog.domain.notification.enums.NotifyType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

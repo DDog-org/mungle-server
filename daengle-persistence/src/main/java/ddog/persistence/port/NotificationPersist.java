@@ -1,9 +1,11 @@
-package ddog.daengleserver.application.repository;
+package ddog.persistence.port;
 
-import ddog.daengleserver.domain.Notification;
+
+import ddog.domain.notification.Notification;
+
 import java.util.List;
 
-public interface NotificationRepository {
+public interface NotificationPersist {
 
     List<Notification> findByUserId(Long userId);
 
