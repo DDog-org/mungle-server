@@ -1,8 +1,6 @@
 package ddog.auth.exception;
 
-import ddog.auth.exception.enums.AuthExceptionType;
-import ddog.daengleserver.domain.enums.PaymentExceptionType;
-import ddog.daengleserver.global.exception.CustomRuntimeException;
+import ddog.auth.exception.common.CustomRuntimeException;
 
 public class AuthException extends CustomRuntimeException {
     public AuthException(AuthExceptionType type, Object... args) {

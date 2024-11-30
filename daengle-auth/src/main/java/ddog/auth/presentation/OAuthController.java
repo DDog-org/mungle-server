@@ -4,7 +4,7 @@ import ddog.auth.application.OAuthService;
 import ddog.auth.dto.KakaoAccessTokenDto;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.auth.dto.LoginResult;
-import ddog.daengleserver.global.common.CommonResponseEntity;
+import ddog.auth.exception.common.CommonResponseEntity;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static ddog.daengleserver.global.common.CommonResponseEntity.success;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @Slf4j
 @RestController

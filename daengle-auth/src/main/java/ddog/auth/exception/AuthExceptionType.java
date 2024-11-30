@@ -1,4 +1,4 @@
-package ddog.auth.exception.enums;
+package ddog.auth.exception;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
