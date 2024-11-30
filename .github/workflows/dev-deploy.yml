@@ -1,8 +1,11 @@
 name: Deploy to EC2
+# TODO prTest
+#on:
+#  push:
+#    branches: [ "develop" ]
 
 on:
   push:
-    # branches: [ "develop" ]
     branches: [ "non-existent-branch" ]
 
 jobs:
