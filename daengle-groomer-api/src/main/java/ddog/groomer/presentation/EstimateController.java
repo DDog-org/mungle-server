@@ -18,7 +18,6 @@ import static ddog.groomer.application.exception.common.CommonResponseEntity.suc
 public class EstimateController {
 
     private final EstimateService estimateService;
-//    private final SseEmitterService sseEmitterService;
 
     @GetMapping("/list")
     public CommonResponseEntity<GroomingEstimateInfo> findGroomingEstimateInfo(PayloadDto payloadDto) {
@@ -33,7 +32,6 @@ public class EstimateController {
     @PostMapping
     public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomerGroomingEstimateReq request, PayloadDto payloadDto) {
         estimateService.createGroomerGroomingEstimate(request, payloadDto.getAccountId());
-//        sseEmitterService.sendMessageToUser(payloadDto.getAccountId(), REGISTRATION_COMPLETED.getMessage());
         return success(REGISTRATION_COMPLETED.getMessage());
     }
 }
