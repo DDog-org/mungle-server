@@ -1,5 +1,6 @@
 package ddog.persistence.jpa.entity;
 
+import ddog.domain.account.Status;
 import ddog.domain.groomer.Groomer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class GroomerJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomerId;
     private Long accountId;
+    private Status status;
     private int daengleMeter;
     private String groomerName;
     private String phoneNumber;

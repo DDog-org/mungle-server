@@ -1,5 +1,6 @@
 package ddog.vet.application.mapper;
 
+import ddog.domain.account.Status;
 import ddog.domain.vet.Vet;
 import ddog.vet.presentation.account.dto.ModifyInfoReq;
 import ddog.vet.presentation.account.dto.ProfileInfo;
@@ -12,6 +13,7 @@ public class VetMapper {
     public static Vet create(Long accountId, SignUpReq request) {
         return Vet.builder()
                 .accountId(accountId)
+                .status(Status.PENDING)
                 .daengleMeter(0)
                 .vetName(request.getName())
                 .address(request.getAddress())
@@ -42,6 +44,7 @@ public class VetMapper {
         return Vet.builder()
                 .vetId(vet.getVetId())
                 .accountId(vet.getAccountId())
+                .status(vet.getStatus())
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
                 .vetName(vet.getVetName())

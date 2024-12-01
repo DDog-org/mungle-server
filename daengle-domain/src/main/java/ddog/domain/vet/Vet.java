@@ -1,5 +1,6 @@
 package ddog.domain.vet;
 
+import ddog.domain.account.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class Vet {
 
     private Long vetId;
     private Long accountId;
+    private Status status;
     private String email;
     private int daengleMeter;
     private String vetName;

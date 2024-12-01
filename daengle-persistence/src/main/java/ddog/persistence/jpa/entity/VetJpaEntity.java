@@ -1,5 +1,6 @@
 package ddog.persistence.jpa.entity;
 
+import ddog.domain.account.Status;
 import ddog.domain.vet.Day;
 import ddog.domain.vet.Vet;
 import jakarta.persistence.*;
@@ -22,6 +23,7 @@ public class VetJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vetId;
     private Long accountId;
+    private Status status;
     private String email;
     private int daengleMeter;
     private String vetName;
@@ -47,6 +49,7 @@ public class VetJpaEntity {
         return VetJpaEntity.builder()
                 .vetId(vet.getVetId())
                 .accountId(vet.getAccountId())
+                .status(vet.getStatus())
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
                 .vetName(vet.getVetName())
@@ -66,6 +69,7 @@ public class VetJpaEntity {
         return Vet.builder()
                 .vetId(vetId)
                 .accountId(accountId)
+                .status(status)
                 .email(email)
                 .daengleMeter(daengleMeter)
                 .vetName(vetName)
