@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -15,8 +17,12 @@ public class Groomer {
     private Long accountId;
     private int daengleMeter;
     private String groomerName;
+    private String phoneNumber;
     private String groomerImage;
     private String address;
     private String shopName;
     private String groomerIntroduction;
+    private List<String> businessLicenses;
+    private List<String> licenses;
+
 }

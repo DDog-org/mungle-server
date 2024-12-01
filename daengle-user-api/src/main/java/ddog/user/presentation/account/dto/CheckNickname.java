@@ -3,8 +3,6 @@ package ddog.user.presentation.account.dto;
 import lombok.Getter;
 
 @Getter
-public class CheckNicknameReq {
-
+public class CheckNickname {
     private String nickname;
-
 }

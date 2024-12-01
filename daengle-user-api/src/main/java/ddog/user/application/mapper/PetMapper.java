@@ -2,12 +2,12 @@ package ddog.user.application.mapper;
 
 import ddog.domain.pet.Pet;
 import ddog.user.presentation.account.dto.AddPetInfo;
-import ddog.user.presentation.account.dto.JoinUserWithPet;
+import ddog.user.presentation.account.dto.SignUpWithPet;
 import ddog.user.presentation.account.dto.ModifyPetInfo;
 
 public class PetMapper {
 
-    public static Pet toJoinPetInfo(Long accountId, JoinUserWithPet request) {
+    public static Pet toJoinPetInfo(Long accountId, SignUpWithPet request) {
         return Pet.builder()
                 .accountId(accountId)
                 .petName(request.getPetName())

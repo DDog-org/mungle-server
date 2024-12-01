@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -20,10 +22,21 @@ public class GroomerJpaEntity {
     private Long accountId;
     private int daengleMeter;
     private String groomerName;
+    private String phoneNumber;
     private String groomerImage;
     private String address;
     private String shopName;
     private String groomerIntroduction;
+
+    @ElementCollection // 사업자 등록증 URL 리스트
+    @CollectionTable(name = "groomer_business_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
+    @Column(name = "business_license_url")
+    private List<String> businessLicenses;
+
+    @ElementCollection // 자격증 URL 리스트
+    @CollectionTable(name = "groomer_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
+    @Column(name = "license_url")
+    private List<String> licenses;
 
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
@@ -31,10 +44,13 @@ public class GroomerJpaEntity {
                 .accountId(groomer.getAccountId())
                 .daengleMeter(groomer.getDaengleMeter())
                 .groomerName(groomer.getGroomerName())
+                .phoneNumber(groomer.getPhoneNumber())
                 .groomerImage(groomer.getGroomerName())
                 .address(groomer.getAddress())
                 .shopName(groomer.getShopName())
                 .groomerIntroduction(groomer.getGroomerIntroduction())
+                .businessLicenses(groomer.getBusinessLicenses())
+                .licenses(groomer.getLicenses())
                 .build();
     }
 
@@ -44,10 +60,13 @@ public class GroomerJpaEntity {
                 .accountId(accountId)
                 .daengleMeter(daengleMeter)
                 .groomerName(groomerName)
+                .phoneNumber(phoneNumber)
                 .groomerImage(groomerImage)
                 .address(address)
                 .shopName(shopName)
                 .groomerIntroduction(groomerIntroduction)
+                .businessLicenses(businessLicenses)
+                .licenses(licenses)
                 .build();
     }
 }

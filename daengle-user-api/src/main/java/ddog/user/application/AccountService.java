@@ -1,6 +1,7 @@
 package ddog.user.application;
 
 import ddog.domain.account.Account;
+import ddog.domain.account.Role;
 import ddog.user.presentation.account.dto.UserInfo;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
@@ -8,7 +9,7 @@ import ddog.domain.user.User;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
-import ddog.user.presentation.account.dto.BreedInfo;
+import ddog.user.presentation.account.dto.BreedList;
 import ddog.user.presentation.account.dto.PetInfo;
 import ddog.user.presentation.account.dto.UserProfileInfo;
 import ddog.persistence.port.AccountPersist;
@@ -37,22 +38,22 @@ public class AccountService {
                 .build();
     }
 
-    public BreedInfo getBreedInfos() {
-        List<BreedInfo.Detail> details = new ArrayList<>();
+    public BreedList getBreedInfos() {
+        List<BreedList.Detail> details = new ArrayList<>();
         for (Breed breed : Breed.values()) {
-            details.add(BreedInfo.Detail.builder()
+            details.add(BreedList.Detail.builder()
                     .breed(breed.toString())
                     .breedName(breed.getName())
                     .build());
         }
-        return BreedInfo.builder()
+        return BreedList.builder()
                 .breedList(details)
                 .build();
     }
 
     @Transactional
-    public void createUserWithPet(JoinUserWithPet request) {
-        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+    public void signUpWithPet(SignUpWithPet request) {
+        Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
         User user = UserMapper.createWithPet(savedAccount.getAccountId(), request, pet);
@@ -61,8 +62,8 @@ public class AccountService {
     }
 
     @Transactional
-    public void createUserWithoutPet(JoinUserWithoutPet request) {
-        Account accountToSave = Account.create(request.getEmail(), request.getRole());
+    public void signUpWithoutPet(SignUpWithoutPet request) {
+        Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
         userPersist.save(user);

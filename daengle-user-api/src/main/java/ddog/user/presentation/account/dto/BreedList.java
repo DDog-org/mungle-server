@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class BreedInfo {
+public class BreedList {
 
     private List<Detail> breedList;
 

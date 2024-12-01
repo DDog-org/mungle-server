@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserMapper {
 
-    public static User createWithPet(Long accountId, JoinUserWithPet request, Pet pet) {
+    public static User createWithPet(Long accountId, SignUpWithPet request, Pet pet) {
         List<Pet> pets = new ArrayList<>();
         pets.add(pet);
         return User.builder()
@@ -23,7 +23,7 @@ public class UserMapper {
                 .build();
     }
 
-    public static User createWithoutPet(Long accountId, JoinUserWithoutPet request) {
+    public static User createWithoutPet(Long accountId, SignUpWithoutPet request) {
         return User.builder()
                 .accountId(accountId)
                 .username(request.getUsername())

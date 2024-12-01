@@ -3,7 +3,7 @@ package ddog.user.presentation.account;
 import ddog.auth.dto.PayloadDto;
 import ddog.user.presentation.account.dto.UserInfo;
 import ddog.user.presentation.account.dto.*;
-import ddog.user.presentation.account.dto.BreedInfo;
+import ddog.user.presentation.account.dto.BreedList;
 import ddog.user.presentation.account.dto.PetInfo;
 import ddog.user.presentation.account.dto.UserProfileInfo;
 import ddog.user.application.AccountService;
@@ -24,24 +24,24 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/available-nickname")
-    public CommonResponseEntity<ValidResponse.Nickname> hasNickname(@RequestBody CheckNicknameReq request) {
+    public CommonResponseEntity<ValidResponse.Nickname> hasNickname(@RequestBody CheckNickname request) {
         return success(accountService.hasNickname(request.getNickname()));
     }
 
     @GetMapping("/breed-list")
-    public CommonResponseEntity<BreedInfo> getBreedList() {
+    public CommonResponseEntity<BreedList> getBreedList() {
         return success(accountService.getBreedInfos());
     }
 
     @PostMapping("/join-with-pet")
-    public CommonResponseEntity<String> joinUserWithPet(@RequestBody JoinUserWithPet request) {
-        accountService.createUserWithPet(request);
+    public CommonResponseEntity<String> joinUserWithPet(@RequestBody SignUpWithPet request) {
+        accountService.signUpWithPet(request);
         return success(USER_JOIN_COMPLETED.getMessage());
     }
 
     @PostMapping("/join-without-pet")
-    public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody JoinUserWithoutPet request) {
-        accountService.createUserWithoutPet(request);
+    public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody SignUpWithoutPet request) {
+        accountService.signUpWithoutPet(request);
         return success(USER_JOIN_COMPLETED.getMessage());
     }
 
