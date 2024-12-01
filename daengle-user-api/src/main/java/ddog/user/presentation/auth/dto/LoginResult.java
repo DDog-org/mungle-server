@@ -1,6 +1,5 @@
-package ddog.auth.dto;
+package ddog.user.presentation.auth.dto;
 
-import ddog.domain.account.Role;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +9,6 @@ public class LoginResult {
 
     private final Boolean isOnboarding;
     private final String email;
-    private final Role role;
     private final String grantType;
     private final String accessToken;
 

@@ -1,23 +1,17 @@
 package ddog.user.application;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
-import ddog.auth.dto.LoginResult;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
-import ddog.user.presentation.account.dto.UserInfo;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.user.application.mapper.PetMapper;
-import ddog.user.application.mapper.UserMapper;
-import ddog.user.presentation.account.dto.*;
-import ddog.user.presentation.account.dto.BreedList;
-import ddog.user.presentation.account.dto.PetInfo;
-import ddog.user.presentation.account.dto.ProfileInfo;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
-import ddog.user.presentation.account.dto.ValidResponse;
+import ddog.user.application.mapper.PetMapper;
+import ddog.user.application.mapper.UserMapper;
+import ddog.user.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,33 +58,33 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
-        Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
+        Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
         User user = UserMapper.createWithPet(savedAccount.getAccountId(), request, pet);
         petPersist.save(pet);
         userPersist.save(user);
 
-        LoginResult loginResult = jwtTokenProvider
-                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.DAENGLE, response);
+        Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
         return SignUpResp.builder()
-                .accessToken(loginResult.getAccessToken())
+                .accessToken(accessToken)
                 .build();
     }
 
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
-        Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
+        Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
         userPersist.save(user);
 
-        LoginResult loginResult = jwtTokenProvider
-                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.DAENGLE, response);
+        Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
         return SignUpResp.builder()
-                .accessToken(loginResult.getAccessToken())
+                .accessToken(accessToken)
                 .build();
     }
 
