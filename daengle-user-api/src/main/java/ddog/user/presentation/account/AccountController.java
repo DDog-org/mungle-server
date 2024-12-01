@@ -5,10 +5,11 @@ import ddog.user.presentation.account.dto.UserInfo;
 import ddog.user.presentation.account.dto.*;
 import ddog.user.presentation.account.dto.BreedList;
 import ddog.user.presentation.account.dto.PetInfo;
-import ddog.user.presentation.account.dto.UserProfileInfo;
+import ddog.user.presentation.account.dto.ProfileInfo;
 import ddog.user.application.AccountService;
 import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.account.dto.ValidResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,19 +35,17 @@ public class AccountController {
     }
 
     @PostMapping("/join-with-pet")
-    public CommonResponseEntity<String> joinUserWithPet(@RequestBody SignUpWithPet request) {
-        accountService.signUpWithPet(request);
-        return success(USER_JOIN_COMPLETED.getMessage());
+    public CommonResponseEntity<SignUpResp> joinUserWithPet(@RequestBody SignUpWithPet request, HttpServletResponse response) {
+        return success(accountService.signUpWithPet(request, response));
     }
 
     @PostMapping("/join-without-pet")
-    public CommonResponseEntity<String> joinUserWithoutPet(@RequestBody SignUpWithoutPet request) {
-        accountService.signUpWithoutPet(request);
-        return success(USER_JOIN_COMPLETED.getMessage());
+    public CommonResponseEntity<SignUpResp> joinUserWithoutPet(@RequestBody SignUpWithoutPet request, HttpServletResponse response) {
+        return success(accountService.signUpWithoutPet(request, response));
     }
 
     @GetMapping("/modify-page")
-    public CommonResponseEntity<UserProfileInfo> getUserProfileInfo(PayloadDto payloadDto) {
+    public CommonResponseEntity<ProfileInfo.ModifyPage> getUserProfileInfo(PayloadDto payloadDto) {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
 

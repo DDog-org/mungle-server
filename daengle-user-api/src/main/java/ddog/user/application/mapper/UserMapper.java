@@ -35,8 +35,8 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserProfileInfo toUserProfileInfo(User user) {
-        return UserProfileInfo.builder()
+    public static ProfileInfo.ModifyPage toUserProfileInfo(User user) {
+        return ProfileInfo.ModifyPage.builder()
                 .image(user.getUserImage())
                 .nickname(user.getNickname())
                 .username(user.getUsername())

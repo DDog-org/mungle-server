@@ -1,5 +1,7 @@
 package ddog.user.application;
 
+import ddog.auth.config.jwt.JwtTokenProvider;
+import ddog.auth.dto.LoginResult;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.user.presentation.account.dto.UserInfo;
@@ -11,16 +13,23 @@ import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
 import ddog.user.presentation.account.dto.BreedList;
 import ddog.user.presentation.account.dto.PetInfo;
-import ddog.user.presentation.account.dto.UserProfileInfo;
+import ddog.user.presentation.account.dto.ProfileInfo;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
 import ddog.user.presentation.account.dto.ValidResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -30,6 +39,7 @@ public class AccountService {
     private final AccountPersist accountPersist;
     private final UserPersist userPersist;
     private final PetPersist petPersist;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional(readOnly = true)
     public ValidResponse.Nickname hasNickname(String nickname) {
@@ -38,6 +48,7 @@ public class AccountService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public BreedList getBreedInfos() {
         List<BreedList.Detail> details = new ArrayList<>();
         for (Breed breed : Breed.values()) {
@@ -52,25 +63,49 @@ public class AccountService {
     }
 
     @Transactional
-    public void signUpWithPet(SignUpWithPet request) {
+    public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
         User user = UserMapper.createWithPet(savedAccount.getAccountId(), request, pet);
         petPersist.save(pet);
         userPersist.save(user);
+
+        LoginResult loginResult = jwtTokenProvider
+                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.DAENGLE, response);
+
+        return SignUpResp.builder()
+                .accessToken(loginResult.getAccessToken())
+                .build();
     }
 
     @Transactional
-    public void signUpWithoutPet(SignUpWithoutPet request) {
+    public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
         Account accountToSave = Account.create(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
         userPersist.save(user);
+
+        LoginResult loginResult = jwtTokenProvider
+                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.DAENGLE, response);
+
+        return SignUpResp.builder()
+                .accessToken(loginResult.getAccessToken())
+                .build();
+    }
+
+    private Authentication getAuthentication(Long accountId, String email) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 
     @Transactional(readOnly = true)
-    public UserProfileInfo getUserProfileInfo(Long accountId) {
+    public ProfileInfo.ModifyPage getUserProfileInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId);
         return UserMapper.toUserProfileInfo(user);
     }
