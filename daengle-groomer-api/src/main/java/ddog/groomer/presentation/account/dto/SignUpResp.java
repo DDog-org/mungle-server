@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SignUpResp {
-    private boolean isRegistered;
+    private String accessToken;
 }

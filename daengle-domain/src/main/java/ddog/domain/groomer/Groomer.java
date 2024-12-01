@@ -19,6 +19,7 @@ public class Groomer {
     private String groomerName;
     private String phoneNumber;
     private String groomerImage;
+    private String email;
     private String address;
     private String shopName;
     private String groomerIntroduction;
