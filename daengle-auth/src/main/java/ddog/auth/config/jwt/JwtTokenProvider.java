@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final AccountPersist accountPersist;
     /* accessToken 만료 시간 */
-    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
+    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;    // 14일
     /* refreshToken 만료 시간*/
     private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 

@@ -36,12 +36,14 @@ public class AuthService {
         if (account == null) {
             return LoginResult.builder()
                     .isOnboarding(true)
+                    .isPending(false)
                     .email(email)
                     .build();
         }
 
         if (account.getStatus().equals(Status.PENDING)) {
             return LoginResult.builder()
+                    .isOnboarding(false)
                     .isPending(true)
                     .build();
         }

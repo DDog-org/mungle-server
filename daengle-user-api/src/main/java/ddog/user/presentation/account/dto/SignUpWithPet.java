@@ -1,6 +1,5 @@
 package ddog.user.presentation.account.dto;
 
-import ddog.domain.account.Role;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Gender;
 import ddog.domain.pet.Weight;
@@ -11,7 +10,6 @@ import lombok.Getter;
 @Builder
 public class SignUpWithPet {
     private String email;
-    private Role role;
 
     private String username;
     private String phoneNumber;

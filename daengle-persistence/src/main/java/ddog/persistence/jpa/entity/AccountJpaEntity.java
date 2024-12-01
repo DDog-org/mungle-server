@@ -27,6 +27,8 @@ public class AccountJpaEntity {
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    @Enumerated(value = EnumType.STRING)
     private Status status;
 
     public static AccountJpaEntity from(Account account) {
