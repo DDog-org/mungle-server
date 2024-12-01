@@ -1,6 +1,7 @@
 package ddog.persistence.adapter;
 
 import ddog.domain.vet.Vet;
+import ddog.persistence.jpa.entity.VetJpaEntity;
 import ddog.persistence.jpa.repository.VetJpaRepository;
 import ddog.persistence.port.VetPersist;
 import lombok.RequiredArgsConstructor;
@@ -16,5 +17,10 @@ public class VetRepository implements VetPersist {
     public Vet getVetByAccountId(Long accountId) {
         return vetJpaRepository.getByAccountId(accountId)
                 .toModel();
+    }
+
+    @Override
+    public void save(Vet vet) {
+        vetJpaRepository.save(VetJpaEntity.from(vet));
     }
 }

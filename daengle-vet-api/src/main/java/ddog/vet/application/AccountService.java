@@ -1,17 +1,18 @@
-package ddog.groomer.application;
+package ddog.vet.application;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.LoginResult;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
-import ddog.groomer.application.mapper.GroomerMapper;
-import ddog.groomer.presentation.account.dto.ModifyInfoReq;
-import ddog.groomer.presentation.account.dto.ProfileInfo;
-import ddog.groomer.presentation.account.dto.SignUpReq;
-import ddog.groomer.presentation.account.dto.SignUpResp;
+import ddog.domain.vet.Vet;
 import ddog.persistence.port.AccountPersist;
-import ddog.persistence.port.GroomerPersist;
+import ddog.persistence.port.VetPersist;
+import ddog.vet.application.mapper.VetMapper;
+import ddog.vet.presentation.account.dto.ModifyInfoReq;
+import ddog.vet.presentation.account.dto.ProfileInfo;
+import ddog.vet.presentation.account.dto.SignUpReq;
+import ddog.vet.presentation.account.dto.SignUpResp;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,19 +31,19 @@ import java.util.Collection;
 public class AccountService {
 
     private final AccountPersist accountPersist;
-    private final GroomerPersist groomerPersist;
+    private final VetPersist vetPersist;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
-        Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
+        Account newAccount = Account.create(request.getEmail(), Role.VET);
         Account savedAccount = accountPersist.save(newAccount);
 
-        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request);
-        groomerPersist.save(newGroomer);
+        Vet newVet = VetMapper.create(savedAccount.getAccountId(), request);
+        vetPersist.save(newVet);
 
         LoginResult loginResult = jwtTokenProvider
-                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.GROOMER, response);
+                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.VET, response);
 
         return SignUpResp.builder()
                 .accessToken(loginResult.getAccessToken())
@@ -51,7 +52,7 @@ public class AccountService {
 
     private Authentication getAuthentication(Long accountId, String email) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_GROOMER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_VET"));
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
@@ -61,15 +62,15 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
-        return GroomerMapper.toModifyPage(groomer);
+        Vet vet = vetPersist.getVetByAccountId(accountId);
+        return VetMapper.toModifyPage(vet);
     }
 
     @Transactional
     public void modifyInfo(ModifyInfoReq request, Long accountId) {
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
-        Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
-        groomerPersist.save(updatedGroomer);
+        Vet vet = vetPersist.getVetByAccountId(accountId);
+        Vet updatedVet = VetMapper.withUpdate(vet, request);
+        vetPersist.save(updatedVet);
     }
 
 

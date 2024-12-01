@@ -26,6 +26,7 @@ public class GroomerJpaEntity {
     private String groomerImage;
     private String email;
     private String address;
+    private String detailAddress;
     private String shopName;
     private String groomerIntroduction;
 
@@ -49,6 +50,7 @@ public class GroomerJpaEntity {
                 .groomerImage(groomer.getGroomerImage())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
+                .detailAddress(groomer.getDetailAddress())
                 .shopName(groomer.getShopName())
                 .groomerIntroduction(groomer.getGroomerIntroduction())
                 .businessLicenses(groomer.getBusinessLicenses())
@@ -66,6 +68,7 @@ public class GroomerJpaEntity {
                 .groomerImage(groomerImage)
                 .email(email)
                 .address(address)
+                .detailAddress(detailAddress)
                 .shopName(shopName)
                 .groomerIntroduction(groomerIntroduction)
                 .businessLicenses(businessLicenses)

@@ -5,7 +5,7 @@ import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
 import ddog.groomer.presentation.account.dto.SignUpReq;
 
-public class GroomerMapping {
+public class GroomerMapper {
 
     public static Groomer create(Long accountId, SignUpReq request) {
         return Groomer.builder()
@@ -15,6 +15,7 @@ public class GroomerMapping {
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .address(request.getAddress())
+                .detailAddress(request.getDetailAddress())
                 .shopName(request.getShopName())
                 .businessLicenses(request.getBusinessLicenses())
                 .licenses(request.getLicenses())
