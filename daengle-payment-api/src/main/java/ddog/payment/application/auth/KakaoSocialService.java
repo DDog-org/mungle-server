@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -22,7 +21,15 @@ public class KakaoSocialService {
 
     private static final String KAKAO_TOKEN_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
-    public HashMap<String, Object> getKakaoUserInfo(String kakaoAccessToken){
+    private static HttpURLConnection getKakaoServerConnectionForTokenInfo(String kakaoAccessToken) throws IOException {
+        URL url = new URL(KAKAO_TOKEN_INFO_URL);
+        HttpURLConnection kakaoServerConnection = (HttpURLConnection) url.openConnection();
+        kakaoServerConnection.setRequestMethod("GET");
+        kakaoServerConnection.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
+        return kakaoServerConnection;
+    }
+
+    public String getKakaoEmail(String kakaoAccessToken) {
         try {
             HttpURLConnection kakaoServerConnection = getKakaoServerConnectionForTokenInfo(kakaoAccessToken);
             if (kakaoServerConnection.getResponseCode() == 200) {
@@ -34,26 +41,14 @@ public class KakaoSocialService {
         }
     }
 
-    private static HttpURLConnection getKakaoServerConnectionForTokenInfo(String kakaoAccessToken) throws IOException {
-        URL url = new URL(KAKAO_TOKEN_INFO_URL);
-        HttpURLConnection kakaoServerConnection = (HttpURLConnection) url.openConnection();
-        kakaoServerConnection.setRequestMethod("GET");
-        kakaoServerConnection.setRequestProperty("Authorization", "Bearer " + kakaoAccessToken);
-        return kakaoServerConnection;
-    }
-
-    private HashMap<String, Object> getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException{
+    private String getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException {
         String responseBody = readResponse(kakaoServerConnection);
         JsonElement jsonElement = JsonParser.parseString(responseBody);
 
-        String email = jsonElement.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-
-        HashMap<String, Object> kakaoUserInfo = new HashMap<>();
-        kakaoUserInfo.put("email", email);
-        return kakaoUserInfo;
+        return jsonElement.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
     }
 
-    private String readResponse(HttpURLConnection kakaoServerConnection) throws IOException{
+    private String readResponse(HttpURLConnection kakaoServerConnection) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(kakaoServerConnection.getInputStream()));
         String responseBodyInput = "";
         StringBuilder responseBody = new StringBuilder();

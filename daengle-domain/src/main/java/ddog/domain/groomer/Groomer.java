@@ -1,6 +1,5 @@
 package ddog.domain.groomer;
 
-import ddog.domain.account.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +15,6 @@ public class Groomer {
 
     private Long groomerId;
     private Long accountId;
-    private Status status;
     private int daengleMeter;
     private String groomerName;
     private String phoneNumber;

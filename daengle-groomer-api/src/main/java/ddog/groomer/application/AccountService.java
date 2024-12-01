@@ -1,7 +1,6 @@
 package ddog.groomer.application;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
-import ddog.auth.dto.LoginResult;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
@@ -41,11 +40,11 @@ public class AccountService {
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request);
         groomerPersist.save(newGroomer);
 
-        LoginResult loginResult = jwtTokenProvider
-                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.GROOMER, response);
+        Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
         return SignUpResp.builder()
-                .accessToken(loginResult.getAccessToken())
+                .accessToken(accessToken)
                 .build();
     }
 

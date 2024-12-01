@@ -17,7 +17,6 @@ public class Vet {
 
     private Long vetId;
     private Long accountId;
-    private Status status;
     private String email;
     private int daengleMeter;
     private String vetName;

@@ -21,7 +21,6 @@ public class GroomerJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomerId;
     private Long accountId;
-    private Status status;
     private int daengleMeter;
     private String groomerName;
     private String phoneNumber;

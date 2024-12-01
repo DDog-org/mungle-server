@@ -1,4 +1,4 @@
-package ddog.groomer.presentation.auth.dto;
+package ddog.payment.presentation;
 
 import lombok.Builder;
 import lombok.Getter;

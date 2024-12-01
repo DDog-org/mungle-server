@@ -1,7 +1,6 @@
 package ddog.payment.presentation;
 
 import ddog.auth.dto.KakaoAccessTokenDto;
-import ddog.auth.dto.LoginResult;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.payment.application.auth.AuthService;
 import ddog.payment.application.exception.common.CommonResponseEntity;
@@ -25,11 +24,11 @@ public class AuthController {
 
     @PostMapping("/kakao")
     public CommonResponseEntity<LoginResult> kakaoLogin(@RequestBody KakaoAccessTokenDto kakaoAccessTokenDto, HttpServletResponse response) {
-        return success(authService.kakaoOAuthLogin(kakaoAccessTokenDto.getKakaoAccessToken(), kakaoAccessTokenDto.getLoginType(), response));
+        return success(authService.kakaoOAuthLogin(kakaoAccessTokenDto.getKakaoAccessToken(), response));
     }
 
     @PostMapping("/refresh-token")
     public CommonResponseEntity<LoginResult> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
-        return success(authService.reGenerateAccessToken(refreshTokenDto, response));
+        return success(authService.reGenerateAccessToken(refreshTokenDto.getRefreshToken(), response));
     }
 }

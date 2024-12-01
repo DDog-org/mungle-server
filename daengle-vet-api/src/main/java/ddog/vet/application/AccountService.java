@@ -1,10 +1,8 @@
 package ddog.vet.application;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
-import ddog.auth.dto.LoginResult;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
-import ddog.domain.groomer.Groomer;
 import ddog.domain.vet.Vet;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.VetPersist;
@@ -42,11 +40,11 @@ public class AccountService {
         Vet newVet = VetMapper.create(savedAccount.getAccountId(), request);
         vetPersist.save(newVet);
 
-        LoginResult loginResult = jwtTokenProvider
-                .generateToken(getAuthentication(savedAccount.getAccountId(), request.getEmail()), Role.VET, response);
+        Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
         return SignUpResp.builder()
-                .accessToken(loginResult.getAccessToken())
+                .accessToken(accessToken)
                 .build();
     }
 
