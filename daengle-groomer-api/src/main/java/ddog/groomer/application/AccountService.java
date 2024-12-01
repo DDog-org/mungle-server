@@ -6,6 +6,7 @@ import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
 import ddog.groomer.application.mapper.GroomerMapping;
+import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
 import ddog.groomer.presentation.account.dto.SignUpReq;
 import ddog.groomer.presentation.account.dto.SignUpResp;
@@ -63,4 +64,13 @@ public class AccountService {
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         return GroomerMapping.toModifyPage(groomer);
     }
+
+    @Transactional
+    public void modifyInfo(ModifyInfoReq request, Long accountId) {
+        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+        Groomer updatedGroomer = GroomerMapping.withUpdate(groomer, request);
+        groomerPersist.save(updatedGroomer);
+    }
+
+
 }

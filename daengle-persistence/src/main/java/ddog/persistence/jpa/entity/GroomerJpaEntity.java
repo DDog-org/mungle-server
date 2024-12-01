@@ -46,7 +46,7 @@ public class GroomerJpaEntity {
                 .daengleMeter(groomer.getDaengleMeter())
                 .groomerName(groomer.getGroomerName())
                 .phoneNumber(groomer.getPhoneNumber())
-                .groomerImage(groomer.getGroomerName())
+                .groomerImage(groomer.getGroomerImage())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
                 .shopName(groomer.getShopName())

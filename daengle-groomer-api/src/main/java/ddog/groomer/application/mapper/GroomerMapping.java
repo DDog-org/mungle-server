@@ -1,6 +1,7 @@
 package ddog.groomer.application.mapper;
 
 import ddog.domain.groomer.Groomer;
+import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
 import ddog.groomer.presentation.account.dto.SignUpReq;
 
@@ -28,6 +29,23 @@ public class GroomerMapping {
                 .email(groomer.getEmail())
                 .introduction(groomer.getGroomerIntroduction())
                 .businessLicences(groomer.getBusinessLicenses())
+                .licenses(groomer.getLicenses())
+                .build();
+    }
+
+    public static Groomer withUpdate(Groomer groomer, ModifyInfoReq request) {
+        return Groomer.builder()
+                .groomerId(groomer.getGroomerId())
+                .accountId(groomer.getAccountId())
+                .daengleMeter(groomer.getDaengleMeter())
+                .groomerName(groomer.getGroomerName())
+                .phoneNumber(groomer.getPhoneNumber())
+                .groomerImage(request.getImage())
+                .email(groomer.getEmail())
+                .address(groomer.getAddress())
+                .shopName(groomer.getShopName())
+                .groomerIntroduction(request.getIntroduction())
+                .businessLicenses(groomer.getBusinessLicenses())
                 .licenses(groomer.getLicenses())
                 .build();
     }
