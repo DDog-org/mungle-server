@@ -4,6 +4,9 @@ import ddog.auth.dto.PayloadDto;
 import ddog.domain.notification.enums.NotifyType;
 import ddog.notification.application.KakaoNotificationService;
 import ddog.notification.application.NotificationService;
+import ddog.persistence.adapter.GroomerRepository;
+import ddog.persistence.adapter.UserRepository;
+import ddog.persistence.port.GroomerPersist;
 import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
 import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
 import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
@@ -14,6 +17,7 @@ import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.user.application.EstimateService;
 import ddog.user.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,6 +33,7 @@ public class EstimateController {
     private final EstimateService estimateService;
     private final KakaoNotificationService kakaoNotificationService;
     private final NotificationService notificationService;
+    private final Environment environment;
 
     @PostMapping("/general-grooming")
     public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GeneralGroomingEstimateReq request, PayloadDto payloadDto) {
@@ -40,7 +45,8 @@ public class EstimateController {
     public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq request, PayloadDto payloadDto) throws IOException {
         estimateService.createDesignationGroomingEstimate(request, payloadDto.getAccountId());
         notificationService.sendNotification(request.getGroomerId(), NotifyType.CALL, "지정 견적서가 도착했습니다!");
-        kakaoNotificationService.sendOneTalk("", "");
+//        request.getGroomerId()
+        //        kakaoNotificationService.sendOneTalk("", "",   environment.getProperty("templateId.CALL"));
         return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
