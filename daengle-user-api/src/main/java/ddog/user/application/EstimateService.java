@@ -28,12 +28,11 @@ public class EstimateService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public void createGeneralGroomingEstimate(GeneralGroomingEstimateReq request, Long accountId) {
-        groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createDesignationGroomingEstimate(DesignationGroomingEstimateReq request, Long accountId) {
+    public void createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+        if (request.getGroomerId() == null) {
+            groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
+            return;
+        }
         groomingEstimatePersist.save(GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId));
     }
 

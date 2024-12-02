@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GroomingEstimateMapper {
 
-    public static GroomingEstimate createGeneralGroomingEstimate(GeneralGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createGeneralGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
@@ -36,7 +36,7 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static GroomingEstimate createDesignationGroomingEstimate(DesignationGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createDesignationGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
@@ -48,7 +48,7 @@ public class GroomingEstimateMapper {
                 .userImage(estimateReq.getUserImage())
                 .nickname(estimateReq.getNickname())
                 .address(estimateReq.getAddress())
-                .petId(estimateReq.getPetId())
+                .petId(estimateReq.getId())
                 .petImage(estimateReq.getPetImage())
                 .petName(estimateReq.getName())
                 .petBirth(estimateReq.getBirth())

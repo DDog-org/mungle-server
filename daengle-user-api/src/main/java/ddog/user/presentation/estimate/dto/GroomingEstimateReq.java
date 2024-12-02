@@ -8,7 +8,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class GeneralGroomingEstimateReq {
+public class GroomingEstimateReq {
+    private Long groomerId;
 
     private String address;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

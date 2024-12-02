@@ -31,6 +31,10 @@ public class EstimateController {
     private final EstimateService estimateService;
     private final NotificationService notificationService;
 
+    @PostMapping("/grooming")
+    public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createGroomingEstimate(request, payloadDto.getAccountId());
+        return success(GROOMING_ESTIMATE_REGISTRATION.getMessage());
     @PostMapping("/general-grooming")
     public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GeneralGroomingEstimateReq request, PayloadDto payloadDto) {
         estimateService.createGeneralGroomingEstimate(request, payloadDto.getAccountId());
