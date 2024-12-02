@@ -22,7 +22,7 @@ public class KakaoSocialService {
 
     private static final String KAKAO_TOKEN_INFO_URL = "https://kapi.kakao.com/v2/user/me";
 
-    public HashMap<String, Object> getKakaoUserInfo(String kakaoAccessToken){
+    public String getKakaoEmail(String kakaoAccessToken){
         try {
             HttpURLConnection kakaoServerConnection = getKakaoServerConnectionForTokenInfo(kakaoAccessToken);
             if (kakaoServerConnection.getResponseCode() == 200) {
@@ -42,15 +42,11 @@ public class KakaoSocialService {
         return kakaoServerConnection;
     }
 
-    private HashMap<String, Object> getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException{
+    private String getKakaoUserInfoResponse(HttpURLConnection kakaoServerConnection) throws IOException{
         String responseBody = readResponse(kakaoServerConnection);
         JsonElement jsonElement = JsonParser.parseString(responseBody);
 
-        String email = jsonElement.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-
-        HashMap<String, Object> kakaoUserInfo = new HashMap<>();
-        kakaoUserInfo.put("email", email);
-        return kakaoUserInfo;
+        return jsonElement.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
     }
 
     private String readResponse(HttpURLConnection kakaoServerConnection) throws IOException{
