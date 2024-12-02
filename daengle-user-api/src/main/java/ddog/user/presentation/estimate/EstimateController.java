@@ -48,6 +48,10 @@ public class EstimateController {
         return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
+    @PostMapping("/care")
+    public CommonResponseEntity<String> createCareEstimate(@RequestBody CareEstimateReq request, PayloadDto payloadDto) {
+        estimateService.createCareEstimate(request, payloadDto.getAccountId());
+        return success(CARE_ESTIMATE_REGISTRATION.getMessage());
     @PostMapping("/general-care")
     public CommonResponseEntity<String> createGeneralCareEstimate(@RequestBody GeneralCareEstimateReq request, PayloadDto payloadDto) {
         estimateService.createGeneralCareEstimate(request, payloadDto.getAccountId());

@@ -37,12 +37,11 @@ public class EstimateService {
     }
 
     @Transactional
-    public void createGeneralCareEstimate(GeneralCareEstimateReq request, Long accountId) {
-        careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createDesignationCareEstimate(DesignationCareEstimateReq request, Long accountId) {
+    public void createCareEstimate(CareEstimateReq request, Long accountId) {
+        if (request.getVetId() == null) {
+            careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
+            return;
+        }
         careEstimatePersist.save(CareEstimateMapper.createDesignationCareEstimate(request, accountId));
     }
 

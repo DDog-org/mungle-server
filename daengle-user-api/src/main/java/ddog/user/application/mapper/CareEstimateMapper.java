@@ -4,9 +4,8 @@ import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
 import ddog.user.presentation.estimate.dto.CareEstimateDetail;
-import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
+import ddog.user.presentation.estimate.dto.CareEstimateReq;
 import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,46 +13,46 @@ import java.util.List;
 
 public class CareEstimateMapper {
 
-    public static CareEstimate createGeneralCareEstimate(GeneralCareEstimateReq estimateReq, Long accountId) {
+    public static CareEstimate createGeneralCareEstimate(CareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
-                .reservedDate(estimateReq.getReservedDate())
-                .symptoms(estimateReq.getSymptoms())
-                .requirements(estimateReq.getRequirements())
+                .reservedDate(request.getReservedDate())
+                .symptoms(request.getSymptoms())
+                .requirements(request.getRequirements())
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
                 .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
+                .userImage(request.getUserImage())
+                .nickname(request.getNickname())
+                .address(request.getAddress())
+                .petId(request.getId())
+                .petImage(request.getPetImage())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
                 .build();
     }
 
-    public static CareEstimate createDesignationCareEstimate(DesignationCareEstimateReq estimateReq, Long accountId) {
+    public static CareEstimate createDesignationCareEstimate(CareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
-                .reservedDate(estimateReq.getReservedDate())
-                .symptoms(estimateReq.getSymptoms())
-                .requirements(estimateReq.getRequirements())
+                .reservedDate(request.getReservedDate())
+                .symptoms(request.getSymptoms())
+                .requirements(request.getRequirements())
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
                 .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getPetId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
-                .vetId(estimateReq.getVetId())
+                .userImage(request.getUserImage())
+                .nickname(request.getNickname())
+                .address(request.getAddress())
+                .petId(request.getId())
+                .petImage(request.getPetImage())
+                .petName(request.getName())
+                .petBirth(request.getBirth())
+                .petWeight(request.getWeight())
+                .petSignificant(request.getSignificant())
+                .vetId(request.getVetId())
                 .build();
     }
 
