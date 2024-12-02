@@ -1,4 +1,4 @@
-package ddog.user.presentation;
+package ddog.user.presentation.notification;
 
 import ddog.notification.application.NotificationService;
 import lombok.RequiredArgsConstructor;
