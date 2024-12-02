@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class Pet {
     private Boolean isNeutered;
     private Boolean groomingExperience;
     private Boolean isBite;
-    private String dislikeParts;
+    private List<Part> dislikeParts;
+    private List<SignificantTag> significantTags;
 
 }
