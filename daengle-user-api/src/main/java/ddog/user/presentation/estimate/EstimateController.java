@@ -1,13 +1,11 @@
 package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
 import static ddog.user.presentation.estimate.EstimateControllerResp.CARE_ESTIMATE_REGISTRATION;
 import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ESTIMATE_REGISTRATION;
@@ -18,7 +16,6 @@ import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ES
 public class EstimateController {
 
     private final EstimateService estimateService;
-    private final NotificationService notificationService;
 
     @PostMapping("/groomer-user-info")
     public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
