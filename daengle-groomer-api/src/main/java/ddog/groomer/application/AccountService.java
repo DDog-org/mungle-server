@@ -70,6 +70,4 @@ public class AccountService {
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
         groomerPersist.save(updatedGroomer);
     }
-
-
 }

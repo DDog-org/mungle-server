@@ -150,10 +150,10 @@ public class AccountService {
 
     private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
         try {
-            Account.validateUsername(request.getUsername());
-            Account.validatePhoneNumber(request.getPhoneNumber());
-            Account.validateNickname(request.getNickname());
-            Account.validateAddress(request.getAddress());
+            User.validateUsername(request.getUsername());
+            User.validatePhoneNumber(request.getPhoneNumber());
+            User.validateNickname(request.getNickname());
+            User.validateAddress(request.getAddress());
 
             Pet.validatePetName(request.getPetName());
             Pet.validatePetBirth(request.getPetBirth());
@@ -169,10 +169,10 @@ public class AccountService {
 
     private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
         try {
-            Account.validateUsername(request.getUsername());
-            Account.validatePhoneNumber(request.getPhoneNumber());
-            Account.validateNickname(request.getNickname());
-            Account.validateAddress(request.getAddress());
+            User.validateUsername(request.getUsername());
+            User.validatePhoneNumber(request.getPhoneNumber());
+            User.validateNickname(request.getNickname());
+            User.validateAddress(request.getAddress());
 
             return false; // 모든 유효성 검사 통과
         } catch (IllegalArgumentException e) {
