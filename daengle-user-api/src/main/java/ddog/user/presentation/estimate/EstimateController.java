@@ -2,6 +2,7 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.domain.notification.enums.NotifyType;
+import ddog.notification.application.KakaoNotificationService;
 import ddog.notification.application.NotificationService;
 import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
 import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
@@ -26,6 +27,7 @@ import static ddog.user.application.exception.common.CommonResponseEntity.succes
 public class EstimateController {
 
     private final EstimateService estimateService;
+    private final KakaoNotificationService kakaoNotificationService;
     private final NotificationService notificationService;
 
     @PostMapping("/general-grooming")
@@ -38,6 +40,7 @@ public class EstimateController {
     public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq request, PayloadDto payloadDto) throws IOException {
         estimateService.createDesignationGroomingEstimate(request, payloadDto.getAccountId());
         notificationService.sendNotification(request.getGroomerId(), NotifyType.CALL, "지정 견적서가 도착했습니다!");
+        kakaoNotificationService.sendOneTalk("", "");
         return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
