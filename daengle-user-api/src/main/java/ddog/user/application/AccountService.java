@@ -62,7 +62,7 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
-        if(this.hasInValidSignUpRequestDataFormat(request))
+        if(this.hasInValidSignUpWithPetDataFormat(request))
             throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
@@ -82,6 +82,9 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
+        if(this.hasInValidSignUpWithoutPetDataFormat(request))
+            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
@@ -145,7 +148,7 @@ public class AccountService {
         petPersist.deletePetById(petId);
     }
 
-    private boolean hasInValidSignUpRequestDataFormat(SignUpWithPet request) {
+    private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
         try {
             Account.validateUsername(request.getUsername());
             Account.validatePhoneNumber(request.getPhoneNumber());
@@ -157,6 +160,19 @@ public class AccountService {
             Pet.validatePetGender(request.getPetGender());
             Pet.validatePetWeight(request.getPetWeight());
             Pet.validateBreed(request.getBreed());
+
+            return false; // 모든 유효성 검사 통과
+        } catch (IllegalArgumentException e) {
+            return true; // 유효성 검사 실패
+        }
+    }
+
+    private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+        try {
+            Account.validateUsername(request.getUsername());
+            Account.validatePhoneNumber(request.getPhoneNumber());
+            Account.validateNickname(request.getNickname());
+            Account.validateAddress(request.getAddress());
 
             return false; // 모든 유효성 검사 통과
         } catch (IllegalArgumentException e) {
