@@ -2,20 +2,13 @@ package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.user.application.mapper.CareEstimateMapper;
-import ddog.user.application.mapper.GroomingEstimateMapper;
-import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
-import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
-import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.CareEstimateDetail;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.persistence.port.CareEstimatePersist;
-import ddog.persistence.port.GroomingEstimatePersist;
-import ddog.persistence.port.UserPersist;
+import ddog.persistence.port.*;
+import ddog.user.application.mapper.CareEstimateMapper;
+import ddog.user.application.mapper.GroomingEstimateMapper;
+import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +21,8 @@ import java.util.List;
 public class EstimateService {
 
     private final UserPersist userPersist;
+    private final GroomerPersist groomerPersist;
+    private final VetPersist vetPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;
 
@@ -86,5 +81,13 @@ public class EstimateService {
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
         return CareEstimateMapper.getCareEstimateDetail(careEstimate);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountInfo.Grooming getGroomerAndUserInfo(Long groomerId, Long userId) {
+        Groomer groomer = groomerPersist.getGroomerByAccountId(groomerId);
+        User user = userPersist.findByAccountId(userId);
+
+        return GroomingEstimateMapper.toGroomingInfo(groomer, user);
     }
 }

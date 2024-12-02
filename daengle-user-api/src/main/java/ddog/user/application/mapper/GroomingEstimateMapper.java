@@ -3,10 +3,10 @@ package ddog.user.application.mapper;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.Proposal;
-import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.domain.groomer.Groomer;
+import ddog.domain.pet.Pet;
+import ddog.domain.user.User;
+import ddog.user.presentation.estimate.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -87,4 +87,27 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
+    public static AccountInfo.Grooming toGroomingInfo(Groomer groomer, User user) {
+        List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
+        for (Pet pet : user.getPets()) {
+            petInfos.add(AccountInfo.PetInfo.builder()
+                    .id(pet.getPetId())
+                    .image(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .significant(pet.getPetSignificant())
+                    .birth(pet.getPetBirth())
+                    .weight(pet.getPetWeight())
+                    .build());
+        }
+
+        return AccountInfo.Grooming.builder()
+                .groomerImage(groomer.getGroomerImage())
+                .groomerName(groomer.getGroomerName())
+                .shopName(groomer.getShopName())
+                .nickname(user.getNickname())
+                .userImage(user.getUserImage())
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
 }

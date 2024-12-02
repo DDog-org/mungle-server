@@ -132,12 +132,6 @@ public class AccountService {
         petPersist.save(modifiedPet);
     }
 
-    @Transactional(readOnly = true)
-    public UserInfo getUserAndPetInfos(Long userId) {
-        User user = userPersist.findByAccountId(userId);
-        return UserMapper.toUserInfo(user);
-    }
-
     @Transactional
     public void deletePet(Long petId) {
         /* TODO PetService 추가하면 그곳으로 옮기기 */

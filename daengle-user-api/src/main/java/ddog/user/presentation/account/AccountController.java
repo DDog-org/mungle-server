@@ -1,14 +1,9 @@
 package ddog.user.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
-import ddog.user.presentation.account.dto.UserInfo;
-import ddog.user.presentation.account.dto.*;
-import ddog.user.presentation.account.dto.BreedList;
-import ddog.user.presentation.account.dto.PetInfo;
-import ddog.user.presentation.account.dto.ProfileInfo;
 import ddog.user.application.AccountService;
 import ddog.user.application.exception.common.CommonResponseEntity;
-import ddog.user.presentation.account.dto.ValidResponse;
+import ddog.user.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -76,10 +71,5 @@ public class AccountController {
     public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request) {
         accountService.deletePet(request.getPetId());
         return success(DELETE_PET_COMPLETED.getMessage());
-    }
-
-    @GetMapping("/user-pets-info")
-    public CommonResponseEntity<UserInfo> getUserAndPetInfos(PayloadDto payloadDto) {
-        return success(accountService.getUserAndPetInfos(payloadDto.getAccountId()));
     }
 }

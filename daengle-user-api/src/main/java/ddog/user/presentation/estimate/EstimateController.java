@@ -12,6 +12,7 @@ import ddog.user.presentation.estimate.dto.EstimateInfo;
 import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.user.application.EstimateService;
 import ddog.user.application.exception.common.CommonResponseEntity;
+import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.io.IOException;
 import static ddog.user.presentation.estimate.EstimateControllerResp.*;
 
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
+import static ddog.user.presentation.estimate.EstimateControllerResp.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,5 +70,10 @@ public class EstimateController {
     @GetMapping("/{careEstimateId}/care-detail")
     public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(estimateService.getCareEstimateDetail(careEstimateId));
+    }
+
+    @PostMapping("/groomer-user-info")
+    public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
+        return success(estimateService.getGroomerAndUserInfo(request.getGroomerId(), payloadDto.getAccountId()));
     }
 }
