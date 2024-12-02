@@ -1,9 +1,9 @@
 package ddog.user.presentation.account.dto;
 
-import ddog.domain.pet.Breed;
-import ddog.domain.pet.Gender;
-import ddog.domain.pet.Weight;
+import ddog.domain.pet.*;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class ModifyPetInfo {
@@ -18,7 +18,8 @@ public class ModifyPetInfo {
     private Weight weight;
     private Boolean groomingExperience;
     private Boolean isBite;
-    private String dislikeParts;
+    private List<Part> dislikeParts;
+    private List<SignificantTag> significantTags;
     private String significant;
 
 }
