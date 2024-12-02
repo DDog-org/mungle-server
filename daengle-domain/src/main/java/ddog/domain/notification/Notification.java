@@ -15,11 +15,4 @@ public class Notification {
     private final String message;
     private final Long userId; // 알림대상
 
-    public static Notification createNotificationWithReq(NotificationReq notificationReq) {
-        return Notification.builder()
-                .notifyType(notificationReq.getNotifyType())
-                .message(notificationReq.getMessage())
-                .userId(notificationReq.getUserId())
-                .build();
-    }
 }

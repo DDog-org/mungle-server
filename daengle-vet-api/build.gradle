@@ -10,6 +10,7 @@ dependencies {
     implementation(project(':daengle-domain'))
     implementation(project(':daengle-persistence'))
     implementation(project(':daengle-auth'))
+    implementation(project(':daengle-notification'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
