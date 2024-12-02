@@ -1,51 +1,77 @@
 package ddog.notification.application;
 
-
 import ddog.domain.notification.Notification;
-import ddog.domain.notification.NotificationReq;
-import ddog.persistence.adapter.NotificationRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import ddog.domain.notification.enums.NotifyType;
+import ddog.persistence.port.NotificationPersist;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
-
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@RequiredArgsConstructor
-public class NotificationService  {
-    private final StringRedisTemplate stringRedisTemplate;
-    private final SseEmitterService sseEmitterService;
-    private final NotificationRepository notificationRepository;
+public class NotificationService {
 
+    // 연결된 SseEmitter 목록
+    private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
 
-    public void sendNotificationToUser(NotificationReq notificationReq) {
-        if (isUserLoggedIn(notificationReq.getUserId())) {
-            sseEmitterService.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
-        } else {
-            saveNotificationToDb(notificationReq);
+    private final RedisService redisService;
+
+    private final NotificationPersist notificationPersist;
+
+    public NotificationService(RedisService redisService, NotificationPersist notificationPersist) {
+        this.redisService = redisService;
+        this.notificationPersist = notificationPersist;
+    }
+
+    // SSE 연결
+    public SseEmitter connect(Long userId) {
+        SseEmitter emitter = new SseEmitter();
+        ssemitters.put(userId, emitter);
+
+        redisService.loginUser(userId);
+
+        emitter.onTimeout(() -> {
+            ssemitters.remove(userId);
+            redisService.logoutUser(userId);
+
+        });
+        emitter.onCompletion(() -> {
+            ssemitters.remove(userId);
+            redisService.logoutUser(userId);
+        });
+
+        return emitter;
+    }
+
+    // 알림 전송
+    public void sendNotification(Long receiverId, NotifyType notifyType, String message) throws IOException {
+        if (ssemitters.containsKey(receiverId)) {
+            SseEmitter emitter = ssemitters.get(receiverId);
+            emitter.send(message);
+        }
+
+        else if (redisService.isUserLoggedIn(receiverId)) {
+            SseEmitter emitter = ssemitters.get(receiverId);
+            if (emitter != null) {
+                emitter.send(message);
+            }
+        }
+
+        else {
+            Notification notification = Notification.builder()
+                    .userId(receiverId)
+                    .message(message)
+                    .notifyType(notifyType)
+                    .build();
+
+            notificationPersist.save(notification);
         }
     }
 
-    public void sendNotificationToAllUser(String message) {
-        stringRedisTemplate.convertAndSend("all_users", message);
-    }
-
-    public void sendNotifcationToUserByRedis(Long userId, String message) {
-        stringRedisTemplate.convertAndSend("user_logged_in:" + userId, message);
-    }
-
-    public List<Notification> getNotificationsForLogoutUser(Long userId) {
-        return notificationRepository.findByUserId(userId);
-    }
-
-    // 사용자 로그인 상태 체크
-    private boolean isUserLoggedIn(Long userId) {
-        return stringRedisTemplate.hasKey("user_logged_in:" + userId); // Redis에서 로그인 여부 체크
-    }
-
-    // DB에 알림 메시지 저장
-    private void saveNotificationToDb(NotificationReq notificationReq) {
-        notificationRepository.save(Notification.createNotificationWithReq(notificationReq)); // DB에 저장
+    // 로그인 시, 알림 목록 불러오기
+    public List<Notification> getAllNotifications(Long userId) {
+        return notificationPersist.findByUserId(userId);
     }
 }

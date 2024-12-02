@@ -27,7 +27,6 @@ public class NotificationJpaEntity {
 
     private Long userId;
 
-
     public static NotificationJpaEntity from(Notification notification) {
         return NotificationJpaEntity.builder()
                 .id(notification.getId())

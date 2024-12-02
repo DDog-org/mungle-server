@@ -1,6 +1,8 @@
 package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.domain.notification.enums.NotifyType;
+import ddog.notification.application.NotificationService;
 import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
 import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
 import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
@@ -13,7 +15,10 @@ import ddog.user.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 import static ddog.user.presentation.estimate.EstimateControllerResp.*;
+
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
 
 @RestController
@@ -22,6 +27,7 @@ import static ddog.user.application.exception.common.CommonResponseEntity.succes
 public class EstimateController {
 
     private final EstimateService estimateService;
+    private final NotificationService notificationService;
 
     @PostMapping("/general-grooming")
     public CommonResponseEntity<String> createGeneralGroomingEstimate(@RequestBody GeneralGroomingEstimateReq request, PayloadDto payloadDto) {
@@ -30,8 +36,9 @@ public class EstimateController {
     }
 
     @PostMapping("/designation-grooming")
-    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<String> createDesignationGroomingEstimate(@RequestBody DesignationGroomingEstimateReq request, PayloadDto payloadDto) throws IOException {
         estimateService.createDesignationGroomingEstimate(request, payloadDto.getAccountId());
+        notificationService.sendNotification(request.getGroomerId(), NotifyType.CALL, "지정 견적서가 도착했습니다!");
         return success(DESIGNATION_GROOMING_REGISTRATION.getMessage());
     }
 
@@ -42,8 +49,9 @@ public class EstimateController {
     }
 
     @PostMapping("/designation-care")
-    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody DesignationCareEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody DesignationCareEstimateReq request, PayloadDto payloadDto) throws IOException {
         estimateService.createDesignationCareEstimate(request, payloadDto.getAccountId());
+        notificationService.sendNotification(request.getVetId(), NotifyType.CALL, "지정 견적서가 도착했습니다!");
         return success(DESIGNATION_CARE_REGISTRATION.getMessage());
     }
 
