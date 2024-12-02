@@ -16,6 +16,7 @@ public class EstimateInfo {
     @Getter
     @Builder
     public static class PetInfo {
+        private Long petId;
         private String name;
         private String image;
         List<Grooming> groomingEstimates;
@@ -24,7 +25,7 @@ public class EstimateInfo {
         @Getter
         @Builder
         public static class Grooming {
-            private Long id;
+            private Long groomingEstimateId;
             private String name;
             private int daengleMeter;
             private String image;
@@ -37,7 +38,7 @@ public class EstimateInfo {
         @Getter
         @Builder
         public static class Care {
-            private Long id;
+            private Long careEstimateId;
             private String name;
             private int daengleMeter;
             private String image;

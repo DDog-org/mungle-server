@@ -1,8 +1,6 @@
 package ddog.user.presentation.account.dto;
 
-import ddog.domain.pet.Breed;
-import ddog.domain.pet.Gender;
-import ddog.domain.pet.Weight;
+import ddog.domain.pet.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -26,7 +24,22 @@ public class PetInfo {
         private Weight weight;
         private Boolean groomingExperience;
         private Boolean isBite;
-        private String[] dislikeParts;
+        private List<PartDetail> dislikeParts;
+        private List<TagDetail> significantTags;
         private String significant;
+
+        @Getter
+        @Builder
+        public static class PartDetail {
+            private String partName;
+            private String part;
+        }
+
+        @Getter
+        @Builder
+        public static class TagDetail {
+            private String tagName;
+            private String tag;
+        }
     }
 }

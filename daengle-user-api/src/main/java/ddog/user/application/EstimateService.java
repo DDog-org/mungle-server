@@ -2,20 +2,14 @@ package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.user.application.mapper.CareEstimateMapper;
-import ddog.user.application.mapper.GroomingEstimateMapper;
-import ddog.user.presentation.estimate.dto.DesignationCareEstimateReq;
-import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.GeneralCareEstimateReq;
-import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.CareEstimateDetail;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.persistence.port.CareEstimatePersist;
-import ddog.persistence.port.GroomingEstimatePersist;
-import ddog.persistence.port.UserPersist;
+import ddog.domain.vet.Vet;
+import ddog.persistence.port.*;
+import ddog.user.application.mapper.CareEstimateMapper;
+import ddog.user.application.mapper.GroomingEstimateMapper;
+import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,26 +22,26 @@ import java.util.List;
 public class EstimateService {
 
     private final UserPersist userPersist;
+    private final GroomerPersist groomerPersist;
+    private final VetPersist vetPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public void createGeneralGroomingEstimate(GeneralGroomingEstimateReq request, Long accountId) {
-        groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createDesignationGroomingEstimate(DesignationGroomingEstimateReq request, Long accountId) {
+    public void createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+        if (request.getGroomerId() == null) {
+            groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
+            return;
+        }
         groomingEstimatePersist.save(GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId));
     }
 
     @Transactional
-    public void createGeneralCareEstimate(GeneralCareEstimateReq request, Long accountId) {
-        careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
-    }
-
-    @Transactional
-    public void createDesignationCareEstimate(DesignationCareEstimateReq request, Long accountId) {
+    public void createCareEstimate(CareEstimateReq request, Long accountId) {
+        if (request.getVetId() == null) {
+            careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
+            return;
+        }
         careEstimatePersist.save(CareEstimateMapper.createDesignationCareEstimate(request, accountId));
     }
 
@@ -65,6 +59,7 @@ public class EstimateService {
             List<EstimateInfo.PetInfo.Care> careInfos = CareEstimateMapper.toInfos(careEstimates);
 
             petInfos.add(EstimateInfo.PetInfo.builder()
+                    .petId(pet.getPetId())
                     .name(pet.getPetName())
                     .image(pet.getPetImage())
                     .groomingEstimates(groomingInfos)
@@ -86,5 +81,21 @@ public class EstimateService {
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
         return CareEstimateMapper.getCareEstimateDetail(careEstimate);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountInfo.Grooming getGroomerAndUserInfo(Long groomerId, Long userId) {
+        Groomer groomer = groomerPersist.getGroomerByAccountId(groomerId);
+        User user = userPersist.findByAccountId(userId);
+
+        return GroomingEstimateMapper.toGroomingInfo(groomer, user);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountInfo.Care getVetAndUserInfo(Long vetId, Long userId) {
+        Vet vet = vetPersist.getVetByAccountId(vetId);
+        User user = userPersist.findByAccountId(userId);
+
+        return GroomingEstimateMapper.toCareInfo(vet, user);
     }
 }

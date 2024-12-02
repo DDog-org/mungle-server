@@ -33,6 +33,7 @@ public class PetMapper {
                 .groomingExperience(request.getGroomingExperience())
                 .isBite(request.getIsBite())
                 .dislikeParts(request.getDislikeParts())
+                .significantTags(request.getSignificantTags())
                 .build();
     }
 
@@ -50,6 +51,7 @@ public class PetMapper {
                 .groomingExperience(request.getGroomingExperience())
                 .isBite(request.getIsBite())
                 .dislikeParts(request.getDislikeParts())
+                .significantTags(request.getSignificantTags())
                 .petSignificant(request.getSignificant())
                 .build();
     }

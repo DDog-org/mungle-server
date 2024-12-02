@@ -3,10 +3,11 @@ package ddog.user.application.mapper;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.Proposal;
-import ddog.user.presentation.estimate.dto.DesignationGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GeneralGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.domain.groomer.Groomer;
+import ddog.domain.pet.Pet;
+import ddog.domain.user.User;
+import ddog.domain.vet.Vet;
+import ddog.user.presentation.estimate.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public class GroomingEstimateMapper {
 
-    public static GroomingEstimate createGeneralGroomingEstimate(GeneralGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createGeneralGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
@@ -35,7 +36,7 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static GroomingEstimate createDesignationGroomingEstimate(DesignationGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createDesignationGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
@@ -47,7 +48,7 @@ public class GroomingEstimateMapper {
                 .userImage(estimateReq.getUserImage())
                 .nickname(estimateReq.getNickname())
                 .address(estimateReq.getAddress())
-                .petId(estimateReq.getPetId())
+                .petId(estimateReq.getId())
                 .petImage(estimateReq.getPetImage())
                 .petName(estimateReq.getName())
                 .petBirth(estimateReq.getBirth())
@@ -61,7 +62,7 @@ public class GroomingEstimateMapper {
         List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
-                    .id(estimate.getGroomingEstimateId())
+                    .groomingEstimateId(estimate.getGroomingEstimateId())
                     .name(estimate.getGroomerName())
                     .daengleMeter(estimate.getDaengleMeter())
                     .image(estimate.getGroomerImage())
@@ -87,4 +88,45 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
+    public static AccountInfo.Grooming toGroomingInfo(Groomer groomer, User user) {
+        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
+
+        return AccountInfo.Grooming.builder()
+                .groomerImage(groomer.getGroomerImage())
+                .groomerName(groomer.getGroomerName())
+                .shopName(groomer.getShopName())
+                .nickname(user.getNickname())
+                .userImage(user.getUserImage())
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
+
+    public static AccountInfo.Care toCareInfo(Vet vet, User user) {
+        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
+
+        return AccountInfo.Care.builder()
+                .vetImage(vet.getVetImage())
+                .vetName(vet.getVetName())
+                .userImage(user.getUserImage())
+                .nickname(user.getNickname())
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
+
+    private static List<AccountInfo.PetInfo> toPetInfos(User user) {
+        List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
+        for (Pet pet : user.getPets()) {
+            petInfos.add(AccountInfo.PetInfo.builder()
+                    .id(pet.getPetId())
+                    .image(pet.getPetImage())
+                    .name(pet.getPetName())
+                    .significant(pet.getPetSignificant())
+                    .birth(pet.getPetBirth())
+                    .weight(pet.getPetWeight())
+                    .build());
+        }
+        return petInfos;
+    }
 }
