@@ -49,8 +49,9 @@ public class EstimateController {
     }
 
     @PostMapping("/designation-care")
-    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody DesignationCareEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody DesignationCareEstimateReq request, PayloadDto payloadDto) throws IOException {
         estimateService.createDesignationCareEstimate(request, payloadDto.getAccountId());
+        notificationService.sendNotification(request.getVetId(), NotifyType.CALL, "지정 견적서가 도착했습니다!");
         return success(DESIGNATION_CARE_REGISTRATION.getMessage());
     }
 
