@@ -13,7 +13,7 @@ import static ddog.user.presentation.account.AccountControllerResp.*;
 
 
 @RestController
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class AccountController {
 
