@@ -62,7 +62,7 @@ public class GroomingEstimateMapper {
         List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
-                    .id(estimate.getGroomingEstimateId())
+                    .groomingEstimateId(estimate.getGroomingEstimateId())
                     .name(estimate.getGroomerName())
                     .daengleMeter(estimate.getDaengleMeter())
                     .image(estimate.getGroomerImage())

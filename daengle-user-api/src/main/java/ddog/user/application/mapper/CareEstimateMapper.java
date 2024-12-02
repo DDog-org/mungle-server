@@ -60,7 +60,7 @@ public class CareEstimateMapper {
         List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
             careInfos.add(EstimateInfo.PetInfo.Care.builder()
-                    .id(estimate.getCareEstimateId())
+                    .careEstimateId(estimate.getCareEstimateId())
                     .name(estimate.getVetName())
                     .daengleMeter(estimate.getDaengleMeter())
                     .image(estimate.getVetImage())

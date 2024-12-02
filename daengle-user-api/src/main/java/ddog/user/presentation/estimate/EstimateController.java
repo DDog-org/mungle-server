@@ -21,7 +21,8 @@ import java.io.IOException;
 import static ddog.user.presentation.estimate.EstimateControllerResp.*;
 
 import static ddog.user.application.exception.common.CommonResponseEntity.success;
-import static ddog.user.presentation.estimate.EstimateControllerResp.*;
+import static ddog.user.presentation.estimate.EstimateControllerResp.CARE_ESTIMATE_REGISTRATION;
+import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ESTIMATE_REGISTRATION;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +31,16 @@ public class EstimateController {
 
     private final EstimateService estimateService;
     private final NotificationService notificationService;
+
+    @PostMapping("/groomer-user-info")
+    public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
+        return success(estimateService.getGroomerAndUserInfo(request.getGroomerId(), payloadDto.getAccountId()));
+    }
+
+    @PostMapping("/vet-user-info")
+    public CommonResponseEntity<AccountInfo.Care> getVetAndUserInfo(@RequestBody VetInfoReq request, PayloadDto payloadDto) {
+        return success(estimateService.getVetAndUserInfo(request.getVetId(), payloadDto.getAccountId()));
+    }
 
     @PostMapping("/grooming")
     public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
@@ -70,23 +81,13 @@ public class EstimateController {
         return success(estimateService.findEstimateInfo(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/{groomingEstimateId}/grooming-detail")
+    @GetMapping("/{groomingEstimateId}/detail")
     public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
         return success(estimateService.getGroomingEstimateDetail(groomingEstimateId));
     }
 
-    @GetMapping("/{careEstimateId}/care-detail")
+    @GetMapping("/{careEstimateId}/detail")
     public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(estimateService.getCareEstimateDetail(careEstimateId));
-    }
-
-    @PostMapping("/groomer-user-info")
-    public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
-        return success(estimateService.getGroomerAndUserInfo(request.getGroomerId(), payloadDto.getAccountId()));
-    }
-
-    @PostMapping("/vet-user-info")
-    public CommonResponseEntity<AccountInfo.Care> getVetAndUserInfo(@RequestBody VetInfoReq request, PayloadDto payloadDto) {
-        return success(estimateService.getVetAndUserInfo(request.getVetId(), payloadDto.getAccountId()));
     }
 }

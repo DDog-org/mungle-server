@@ -59,6 +59,7 @@ public class EstimateService {
             List<EstimateInfo.PetInfo.Care> careInfos = CareEstimateMapper.toInfos(careEstimates);
 
             petInfos.add(EstimateInfo.PetInfo.builder()
+                    .petId(pet.getPetId())
                     .name(pet.getPetName())
                     .image(pet.getPetImage())
                     .groomingEstimates(groomingInfos)

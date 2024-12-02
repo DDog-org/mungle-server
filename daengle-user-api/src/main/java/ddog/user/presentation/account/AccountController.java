@@ -44,13 +44,13 @@ public class AccountController {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
 
-    @PostMapping("/modify-info")
+    @PatchMapping("/profile")
     public CommonResponseEntity<String> modifyUserProfile(@RequestBody UserProfileModifyReq request, PayloadDto payloadDto) {
         accountService.modifyUserProfile(request, payloadDto.getAccountId());
         return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
-    @PostMapping("/add-pet")
+    @PostMapping("/pet")
     public CommonResponseEntity<String> addPet(@RequestBody AddPetInfo request, PayloadDto payloadDto) {
         accountService.addPet(request, payloadDto.getAccountId());
         return success(PET_ADD_COMPLETED.getMessage());
@@ -61,13 +61,13 @@ public class AccountController {
         return success(accountService.getPetInfo(payloadDto.getAccountId()));
     }
 
-    @PostMapping("/modify-pet")
+    @PatchMapping("/pet-profile")
     public CommonResponseEntity<String> modifyPetProfile(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
         accountService.modifyPetProfile(request, payloadDto.getAccountId());
         return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
-    @DeleteMapping("/delete-pet")
+    @DeleteMapping("/pet")
     public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request) {
         accountService.deletePet(request.getPetId());
         return success(DELETE_PET_COMPLETED.getMessage());
