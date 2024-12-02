@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final AccountPersist accountPersist;
     /* accessToken 만료 시간 */
-    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;    // 14일
+    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
     private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
@@ -124,8 +124,9 @@ public class JwtTokenProvider {
         if (token.startsWith("Bearer ")) {
             String resolvedToken = token.substring(7).trim();
             Claims claims = parseClaims(resolvedToken);
-            String email = claims.getSubject();
-            String role = claims.get("role", String.class);
+
+            String email = claims.getSubject().split(",")[0];
+            String role = claims.get("auth", String.class);
 
             return TokenAccountInfoDto.TokenInfo.builder()
                     .email(email)

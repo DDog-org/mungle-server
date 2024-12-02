@@ -1,4 +1,4 @@
-package ddog.groomer.application.exception.common;
+package ddog.auth.exception.common;
 
 public class AuthException extends CustomRuntimeException {
     public AuthException(AuthExceptionType type, Object... args) {
