@@ -1,8 +1,6 @@
 package ddog.auth.config.jwt;
 
-import ddog.auth.dto.LoginResult;
 import ddog.auth.dto.TokenAccountInfoDto;
-import ddog.domain.account.Role;
 import ddog.persistence.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +28,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final AccountPersist accountPersist;
     /* accessToken 만료 시간 */
-    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
+    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;    // 14일
     /* refreshToken 만료 시간*/
     private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
@@ -40,7 +38,7 @@ public class JwtTokenProvider {
         this.accountPersist = accountPersist;
     }
 
-    public LoginResult generateToken(Authentication authentication, Role role, HttpServletResponse response) {
+    public String generateToken(Authentication authentication, HttpServletResponse response) {
         String accessToken = createToken(authentication, ACCESSTOKEN_EXPIRATION_TIME);
         String refreshToken = createToken(authentication, REFRESHTOKEN_EXPIRATION_TIME);
         response.setHeader("Set-Cookie", ResponseCookie.from("refreshToken", refreshToken)
@@ -50,12 +48,7 @@ public class JwtTokenProvider {
                 .sameSite("None")
                 .build().toString());
 
-        return LoginResult.builder()
-                .isOnboarding(false)
-                .role(role)
-                .grantType("Bearer")
-                .accessToken(accessToken)
-                .build();
+        return accessToken;
     }
 
     private String createToken(Authentication authentication, int expirationTime) {

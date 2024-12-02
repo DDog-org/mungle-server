@@ -3,6 +3,7 @@ package ddog.persistence.jpa.entity;
 import ddog.domain.account.Account;
 import ddog.domain.account.Provider;
 import ddog.domain.account.Role;
+import ddog.domain.account.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,12 +28,16 @@ public class AccountJpaEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @Enumerated(value = EnumType.STRING)
+    private Status status;
+
     public static AccountJpaEntity from(Account account) {
         return AccountJpaEntity.builder()
                 .accountId(account.getAccountId())
                 .email(account.getEmail())
                 .provider(account.getProvider())
                 .role(account.getRole())
+                .status(account.getStatus())
                 .build();
     }
 
@@ -42,6 +47,7 @@ public class AccountJpaEntity {
                 .email(email)
                 .provider(provider)
                 .role(role)
+                .status(status)
                 .build();
     }
 }
