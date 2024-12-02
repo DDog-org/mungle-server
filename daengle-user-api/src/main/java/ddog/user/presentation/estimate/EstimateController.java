@@ -76,4 +76,9 @@ public class EstimateController {
     public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
         return success(estimateService.getGroomerAndUserInfo(request.getGroomerId(), payloadDto.getAccountId()));
     }
+
+    @PostMapping("/vet-user-info")
+    public CommonResponseEntity<AccountInfo.Care> getVetAndUserInfo(@RequestBody VetInfoReq request, PayloadDto payloadDto) {
+        return success(estimateService.getVetAndUserInfo(request.getVetId(), payloadDto.getAccountId()));
+    }
 }

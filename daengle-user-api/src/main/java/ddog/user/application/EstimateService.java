@@ -5,6 +5,7 @@ import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
+import ddog.domain.vet.Vet;
 import ddog.persistence.port.*;
 import ddog.user.application.mapper.CareEstimateMapper;
 import ddog.user.application.mapper.GroomingEstimateMapper;
@@ -89,5 +90,13 @@ public class EstimateService {
         User user = userPersist.findByAccountId(userId);
 
         return GroomingEstimateMapper.toGroomingInfo(groomer, user);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountInfo.Care getVetAndUserInfo(Long vetId, Long userId) {
+        Vet vet = vetPersist.getVetByAccountId(vetId);
+        User user = userPersist.findByAccountId(userId);
+
+        return GroomingEstimateMapper.toCareInfo(vet, user);
     }
 }

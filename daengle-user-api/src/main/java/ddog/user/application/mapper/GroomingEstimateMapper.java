@@ -6,6 +6,7 @@ import ddog.domain.estimate.Proposal;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
+import ddog.domain.vet.Vet;
 import ddog.user.presentation.estimate.dto.*;
 
 import java.time.LocalDateTime;
@@ -88,6 +89,33 @@ public class GroomingEstimateMapper {
     }
 
     public static AccountInfo.Grooming toGroomingInfo(Groomer groomer, User user) {
+        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
+
+        return AccountInfo.Grooming.builder()
+                .groomerImage(groomer.getGroomerImage())
+                .groomerName(groomer.getGroomerName())
+                .shopName(groomer.getShopName())
+                .nickname(user.getNickname())
+                .userImage(user.getUserImage())
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
+
+    public static AccountInfo.Care toCareInfo(Vet vet, User user) {
+        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
+
+        return AccountInfo.Care.builder()
+                .vetImage(vet.getVetImage())
+                .vetName(vet.getVetName())
+                .userImage(user.getUserImage())
+                .nickname(user.getNickname())
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
+
+    private static List<AccountInfo.PetInfo> toPetInfos(User user) {
         List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : user.getPets()) {
             petInfos.add(AccountInfo.PetInfo.builder()
@@ -99,15 +127,6 @@ public class GroomingEstimateMapper {
                     .weight(pet.getPetWeight())
                     .build());
         }
-
-        return AccountInfo.Grooming.builder()
-                .groomerImage(groomer.getGroomerImage())
-                .groomerName(groomer.getGroomerName())
-                .shopName(groomer.getShopName())
-                .nickname(user.getNickname())
-                .userImage(user.getUserImage())
-                .address(user.getAddress())
-                .petInfos(petInfos)
-                .build();
+        return petInfos;
     }
 }
