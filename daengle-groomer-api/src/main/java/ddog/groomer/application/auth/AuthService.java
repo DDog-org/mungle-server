@@ -1,12 +1,11 @@
 package ddog.groomer.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
-import ddog.auth.dto.LoginResult;
-import ddog.auth.dto.RefreshTokenDto;
+import ddog.domain.account.Account;
+import ddog.domain.account.Status;
+import ddog.groomer.presentation.auth.dto.LoginResult;
 import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.domain.account.Role;
-import ddog.groomer.application.exception.common.AuthException;
-import ddog.groomer.application.exception.common.AuthExceptionType;
 import ddog.persistence.port.AccountPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,49 +18,51 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    public static final String ROLE = "ROLE_";
     private final KakaoSocialService kakaoSocialService;
     private final AccountPersist accountPersist;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public static Role fromString(String roleString) {
-        for (Role role : Role.values()) {
-            if (role.name().equalsIgnoreCase(roleString)) {
-                return role;
-            }
-        }
-        throw new AuthException(AuthExceptionType.UNAVAILABLE_ROLE);
-    }
-
-    public LoginResult kakaoOAuthLogin(String kakaoAccessToken, String loginType, HttpServletResponse response) {
+    public LoginResult kakaoOAuthLogin(String kakaoAccessToken, HttpServletResponse response) {
         /* kakaoAccessToken 정보를 가지고 유저의 이메일 정보를 가져온다. */
-        HashMap<String, Object> kakaoUserInfo = kakaoSocialService.getKakaoUserInfo(kakaoAccessToken);
+        String email = kakaoSocialService.getKakaoEmail(kakaoAccessToken);
+        Role role = Role.GROOMER;
 
-        String email = kakaoUserInfo.get("email").toString();
-        Role role = fromString(loginType);
-
-        if (!accountPersist.checkExistsAccountBy(email, role)) {
+        Account account = accountPersist.findAccountByEmailAndRole(email, role);
+        if (account == null) {
             return LoginResult.builder()
                     .isOnboarding(true)
+                    .isPending(false)
                     .email(email)
-                    .role(role)
                     .build();
         }
-        return jwtTokenProvider.generateToken(getAuthentication(email, loginType), role, response);
+
+        if (account.getStatus().equals(Status.PENDING)) {
+            return LoginResult.builder()
+                    .isOnboarding(false)
+                    .isPending(true)
+                    .build();
+        }
+        Authentication authentication = getAuthentication(email, role);
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
+        return LoginResult.builder()
+                .isOnboarding(false)
+                .isPending(false)
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .build();
     }
 
-    private Authentication getAuthentication(String email, String roleString) {
+    private Authentication getAuthentication(String email, Role role) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(ROLE + roleString));
+        authorities.add(new SimpleGrantedAuthority(role.toString()));
 
-        Role role = fromString(roleString);
-        Long accountId = accountPersist.findAccountByEmailAndRole(email, role).getAccountId();
+        Long accountId = accountPersist.findAccountByEmailAndRole(email, role)
+                .getAccountId();
 
         Authentication authentication
                 = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
@@ -69,8 +70,7 @@ public class AuthService {
         return authentication;
     }
 
-    public LoginResult reGenerateAccessToken(RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
-        String refreshToken = refreshTokenDto.getRefreshToken();
+    public LoginResult reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
             /* 추후에 INVALID_TOKEN 으로 변경 예정 */
             throw new RuntimeException();
@@ -79,6 +79,13 @@ public class AuthService {
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
 
-        return jwtTokenProvider.generateToken(getAuthentication(email, ROLE + refreshTokenDto.getLoginType()), Role.DAENGLE, response);
+        Authentication authentication = getAuthentication(email, Role.GROOMER);
+        String accessToken = jwtTokenProvider.generateToken(authentication, response);
+        return LoginResult.builder()
+                .isOnboarding(false)
+                .isPending(false)
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .build();
     }
 }

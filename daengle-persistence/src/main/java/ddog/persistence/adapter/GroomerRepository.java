@@ -1,6 +1,7 @@
 package ddog.persistence.adapter;
 
 import ddog.domain.groomer.Groomer;
+import ddog.persistence.jpa.entity.GroomerJpaEntity;
 import ddog.persistence.jpa.repository.GroomerJpaRepository;
 import ddog.persistence.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
@@ -16,5 +17,10 @@ public class GroomerRepository implements GroomerPersist {
     public Groomer getGroomerByAccountId(Long accountId) {
         return groomerJpaRepository.getByAccountId(accountId)
                 .toModel();
+    }
+
+    @Override
+    public void save(Groomer newGroomer) {
+        groomerJpaRepository.save(GroomerJpaEntity.from(newGroomer));
     }
 }
