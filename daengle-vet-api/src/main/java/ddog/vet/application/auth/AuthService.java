@@ -2,6 +2,8 @@ package ddog.vet.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.TokenAccountInfoDto;
+import ddog.auth.exception.common.AuthException;
+import ddog.auth.exception.common.AuthExceptionType;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.Status;
@@ -72,14 +74,13 @@ public class AuthService {
 
     public LoginResult reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
-            /* 추후에 INVALID_TOKEN 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
 
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
         String email = tokenInfo.getEmail();
 
-        Authentication authentication = getAuthentication(email, Role.GROOMER);
+        Authentication authentication = getAuthentication(email, Role.VET);
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
         return LoginResult.builder()
                 .isOnboarding(false)

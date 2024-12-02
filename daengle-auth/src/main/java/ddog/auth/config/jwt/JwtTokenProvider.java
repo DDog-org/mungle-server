@@ -1,6 +1,8 @@
 package ddog.auth.config.jwt;
 
 import ddog.auth.dto.TokenAccountInfoDto;
+import ddog.auth.exception.common.AuthException;
+import ddog.auth.exception.common.AuthExceptionType;
 import ddog.persistence.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -92,8 +94,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(accessToken)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            /* 추후 에러 처리 작업 들어가면 RuntimeException 대신 커스텀 예외로 수정해줘야 함. */
-            throw new RuntimeException(e);
+            throw new AuthException(AuthExceptionType.EXPIRED_TOKEN);
         }
     }
 
@@ -106,17 +107,13 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            /* 추후 INVALID_TOKEN 으로 변경 예정*/
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         } catch (ExpiredJwtException e) {
-            /* 추후 EXPIRED_TOKEN 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            /* 추후 UNSUPPORTED_TOKEN 으로 변경 예정*/
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            /* 추후 UNKNOWN_ERROR 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.UNKNOWN_TOKEN);
         }
     }
 
