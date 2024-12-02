@@ -1,4 +1,4 @@
-package ddog.payment.presentation;
+package ddog.vet.presentation;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class TestController {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = now.format(formatter);
-        return "Hello Daengle World - PAYMENT API !" +
+        return "Hello Daengle World - VET API !" +
                 " Made at: " + formattedDate + "   CI/CD SUCCESS";
     }
 }
