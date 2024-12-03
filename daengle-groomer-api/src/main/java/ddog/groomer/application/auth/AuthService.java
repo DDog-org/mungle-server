@@ -1,11 +1,14 @@
 package ddog.groomer.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
+import ddog.auth.dto.AccessTokenInfo;
+import ddog.auth.dto.TokenAccountInfoDto;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Account;
+import ddog.domain.account.Role;
 import ddog.domain.account.Status;
 import ddog.groomer.presentation.auth.dto.LoginResult;
-import ddog.auth.dto.TokenAccountInfoDto;
-import ddog.domain.account.Role;
 import ddog.persistence.port.AccountPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -70,10 +73,9 @@ public class AuthService {
         return authentication;
     }
 
-    public LoginResult reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
+    public AccessTokenInfo reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
-            /* 추후에 INVALID_TOKEN 으로 변경 예정 */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
 
         TokenAccountInfoDto.TokenInfo tokenInfo = jwtTokenProvider.extractTokenInfoFromJwt(refreshToken);
@@ -81,9 +83,7 @@ public class AuthService {
 
         Authentication authentication = getAuthentication(email, Role.GROOMER);
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
-        return LoginResult.builder()
-                .isOnboarding(false)
-                .isPending(false)
+        return AccessTokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .build();

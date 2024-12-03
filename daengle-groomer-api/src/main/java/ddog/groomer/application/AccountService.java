@@ -4,6 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
+import ddog.groomer.application.exception.GroomerException;
+import ddog.groomer.application.exception.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
@@ -13,6 +15,7 @@ import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.GroomerPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -34,6 +38,10 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
+        if (this.hasInvalidGroomerDataFormat(request)) {
+            throw new GroomerException(GroomerExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        }
+
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
 
@@ -71,5 +79,19 @@ public class AccountService {
         groomerPersist.save(updatedGroomer);
     }
 
+    private boolean hasInvalidGroomerDataFormat(SignUpReq request) {
+        try {
+            Groomer.validateShopName(request.getShopName());
+            Groomer.validateName(request.getName());
+            Groomer.validatePhoneNumber(request.getPhoneNumber());
+            Groomer.validateAddress(request.getAddress());
+            Groomer.validateDetailAddress(request.getDetailAddress());
+            Groomer.validateBusinessLicenses(request.getBusinessLicenses());
+            Groomer.validateLicenses(request.getLicenses());
 
+            return false; // 모든 유효성 검사 통과
+        } catch (IllegalArgumentException e) {
+            return true; // 유효성 검사 실패
+        }
+    }
 }

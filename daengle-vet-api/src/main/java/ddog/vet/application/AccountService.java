@@ -6,6 +6,8 @@ import ddog.domain.account.Role;
 import ddog.domain.vet.Vet;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.VetPersist;
+import ddog.vet.application.exception.VetException;
+import ddog.vet.application.exception.VetExceptionType;
 import ddog.vet.application.mapper.VetMapper;
 import ddog.vet.presentation.account.dto.ModifyInfoReq;
 import ddog.vet.presentation.account.dto.ProfileInfo;
@@ -13,6 +15,7 @@ import ddog.vet.presentation.account.dto.SignUpReq;
 import ddog.vet.presentation.account.dto.SignUpResp;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -34,6 +38,9 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
+        if(this.hasInValidSignUpRequestDataFormat(request))
+            throw new VetException(VetExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         Account newAccount = Account.create(request.getEmail(), Role.VET);
         Account savedAccount = accountPersist.save(newAccount);
 
@@ -71,5 +78,17 @@ public class AccountService {
         vetPersist.save(updatedVet);
     }
 
+    private boolean hasInValidSignUpRequestDataFormat(SignUpReq request) {
+        try {
+            Vet.validateName(request.getName());
+            Vet.validateAddress(request.getAddress());
+            Vet.validateDetailAddress(request.getDetailAddress());
+            Vet.validatePhoneNumber(request.getPhoneNumber());
+            Vet.validateLicenses(request.getLicenses());
 
+            return false; // 모든 유효성 검사를 통과
+        } catch (IllegalArgumentException e) {
+            return true; // 유효성 검사 실패
+        }
+    }
 }

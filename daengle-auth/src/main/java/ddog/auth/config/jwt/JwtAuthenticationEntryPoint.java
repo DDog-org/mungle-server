@@ -1,5 +1,7 @@
 package ddog.auth.config.jwt;
 
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +16,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         /* 유효한 자격증명을 제공하지 않고 접근할 시 401 에러 */
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        throw new AuthException(AuthExceptionType.INVALID_TOKEN);
     }
 }
