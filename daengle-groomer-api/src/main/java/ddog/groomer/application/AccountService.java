@@ -73,8 +73,7 @@ public class AccountService {
 
     @Transactional
     public void modifyInfo(ModifyInfoReq request, Long accountId) {
-        if(this.hasInvalidModifyInfoReqDataFormat(request))
-            throw new GroomerException(GroomerExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        this.hasInvalidModifyInfoReqDataFormat(request);
 
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
@@ -97,13 +96,7 @@ public class AccountService {
         }
     }
 
-    private boolean hasInvalidModifyInfoReqDataFormat(ModifyInfoReq request) {
-        try {
+    private void hasInvalidModifyInfoReqDataFormat(ModifyInfoReq request) {
             Groomer.validateIntroduction(request.getIntroduction());
-
-            return false;
-        } catch (IllegalArgumentException e) {
-            return true;
-        }
     }
 }

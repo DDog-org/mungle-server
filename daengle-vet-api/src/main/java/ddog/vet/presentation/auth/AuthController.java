@@ -3,8 +3,8 @@ package ddog.vet.presentation.auth;
 import ddog.auth.dto.AccessTokenInfo;
 import ddog.auth.dto.KakaoAccessTokenDto;
 import ddog.auth.dto.RefreshTokenDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.vet.application.auth.AuthService;
-import ddog.vet.application.exception.common.CommonResponseEntity;
 import ddog.vet.presentation.auth.dto.LoginResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static ddog.vet.application.exception.common.CommonResponseEntity.success;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
+
 
 @Slf4j
 @RestController

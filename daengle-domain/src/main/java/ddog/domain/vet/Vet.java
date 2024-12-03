@@ -69,4 +69,31 @@ public class Vet {
 
     public static void validateLicenses(List<String> licenses) { //현재 별다른 예외 처리 없음
     }
+
+    public static void validateTimeRange(LocalTime startTime, LocalTime endTime) {
+        if (startTime == null || endTime == null) {
+            throw new IllegalArgumentException("Invalid time: startTime and endTime cannot be null.");
+        }
+        if (endTime.isBefore(startTime)) {
+            throw new IllegalArgumentException("Invalid time range: endTime cannot be before startTime.");
+        }
+    }
+
+    public static void validateClosedDays(List<Day> closedDays) {
+        if (closedDays == null || closedDays.isEmpty()) {
+            return; // null or empty list is valid
+        }
+        for (Day day : closedDays) {
+            if (day == null) {
+                throw new IllegalArgumentException("Invalid closed day: element cannot be null.");
+            }
+        }
+    }
+
+    public static void validateIntroduction(String introduction) {
+        if (introduction == null || introduction.length() <= 50) {
+            return; // valid case
+        }
+        throw new IllegalArgumentException("Invalid introduction: must be 50 characters or less.");
+    }
 }

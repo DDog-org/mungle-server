@@ -1,16 +1,16 @@
 package ddog.vet.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.vet.presentation.estimate.dto.CareEstimateReq;
 import ddog.vet.presentation.estimate.dto.CareEstimateInfo;
 import ddog.vet.presentation.estimate.dto.CareEstimateDetail;
 import ddog.vet.application.EstimateService;
-import ddog.vet.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 import static ddog.vet.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
-import static ddog.vet.application.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequestMapping("/api/vet/estimate")
