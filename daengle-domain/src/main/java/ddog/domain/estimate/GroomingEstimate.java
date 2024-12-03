@@ -41,5 +41,4 @@ public class GroomingEstimate {
     private String groomerName;
     private String shopName;
     private String groomerIntroduction;
-
 }

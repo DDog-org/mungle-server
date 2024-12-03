@@ -28,12 +28,24 @@ public class EstimateService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public void createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+    public EstimateResp.Grooming createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+        User.validateAddress(request.getAddress());
+
         if (request.getGroomerId() == null) {
-            groomingEstimatePersist.save(GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId));
-            return;
+
+            GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
+            groomingEstimatePersist.save(newEstimate);
+
+            return EstimateResp.Grooming.builder()
+                    .requestResult("(일반)사용자 미용 견적서 등록 완료")
+                    .build();
         }
-        groomingEstimatePersist.save(GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId));
+
+        GroomingEstimate newEstimate = GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId);
+        groomingEstimatePersist.save(newEstimate);
+        return EstimateResp.Grooming.builder()
+                .requestResult("(지정)사용자 미용 견적서 등록 완료")
+                .build();
     }
 
     @Transactional

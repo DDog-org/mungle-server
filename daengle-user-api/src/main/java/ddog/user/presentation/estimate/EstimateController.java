@@ -1,12 +1,13 @@
 package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.application.EstimateService;
-import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import static ddog.user.application.exception.common.CommonResponseEntity.success;
+
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 import static ddog.user.presentation.estimate.EstimateControllerResp.CARE_ESTIMATE_REGISTRATION;
 import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ESTIMATE_REGISTRATION;
 
@@ -28,9 +29,8 @@ public class EstimateController {
     }
 
     @PostMapping("/grooming")
-    public CommonResponseEntity<String> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createGroomingEstimate(request, payloadDto.getAccountId());
-        return success(GROOMING_ESTIMATE_REGISTRATION.getMessage());
+    public CommonResponseEntity<EstimateResp.Grooming> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
     @PostMapping("/care")

@@ -1,14 +1,14 @@
 package ddog.user.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.application.AccountService;
-import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.user.application.exception.common.CommonResponseEntity.success;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 import static ddog.user.presentation.account.AccountControllerResp.*;
 
 

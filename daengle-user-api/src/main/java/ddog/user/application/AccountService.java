@@ -64,8 +64,8 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
-        if(this.hasInValidSignUpWithPetDataFormat(request))
-            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        this.hasInValidSignUpWithPetDataFormat(request);
+//            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -160,8 +160,8 @@ public class AccountService {
         petPersist.deletePetById(petId);
     }
 
-    private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
-        try {
+    private void hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
+
             User.validateUsername(request.getUsername());
             User.validatePhoneNumber(request.getPhoneNumber());
             User.validateNickname(request.getNickname());
@@ -173,10 +173,6 @@ public class AccountService {
             Pet.validatePetWeight(request.getPetWeight());
             Pet.validateBreed(request.getBreed());
 
-            return false; // 모든 유효성 검사 통과
-        } catch (IllegalArgumentException e) {
-            return true; // 유효성 검사 실패
-        }
     }
 
     private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {

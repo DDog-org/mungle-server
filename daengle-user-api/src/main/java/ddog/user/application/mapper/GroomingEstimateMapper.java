@@ -20,44 +20,29 @@ public class GroomingEstimateMapper {
 
     public static GroomingEstimate createGeneralGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
+                .userId(accountId)
+                .petId(estimateReq.getPetId())
+                .address(estimateReq.getAddress())
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
                 .requirements(estimateReq.getRequirements())
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
                 .build();
     }
 
     public static GroomingEstimate createDesignationGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
+                .groomerId(estimateReq.getGroomerId())
+                .userId(accountId)
+                .address(estimateReq.getAddress())
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
                 .requirements(estimateReq.getRequirements())
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
-                .groomerId(estimateReq.getGroomerId())
                 .build();
     }
 
