@@ -11,6 +11,8 @@ import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
 import ddog.user.application.exception.AccountException;
 import ddog.user.application.exception.AccountExceptionType;
+import ddog.user.application.exception.UserException;
+import ddog.user.application.exception.UserExceptionType;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -63,7 +65,7 @@ public class AccountService {
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         if(this.hasInValidSignUpWithPetDataFormat(request))
-            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);

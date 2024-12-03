@@ -4,8 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
-import ddog.groomer.application.exception.AccountException;
-import ddog.groomer.application.exception.AccountExceptionType;
+import ddog.groomer.application.exception.GroomerException;
+import ddog.groomer.application.exception.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
@@ -39,7 +39,7 @@ public class AccountService {
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
         if (this.hasInvalidGroomerDataFormat(request)) {
-            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+            throw new GroomerException(GroomerExceptionType.INVALID_REQUEST_DATA_FORMAT);
         }
 
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
@@ -82,17 +82,11 @@ public class AccountService {
     private boolean hasInvalidGroomerDataFormat(SignUpReq request) {
         try {
             Groomer.validateShopName(request.getShopName());
-            log.info("1");
             Groomer.validateName(request.getName());
-            log.info("2");
             Groomer.validatePhoneNumber(request.getPhoneNumber());
-            log.info("3");
             Groomer.validateAddress(request.getAddress());
-            log.info("4");
             Groomer.validateDetailAddress(request.getDetailAddress());
-            log.info("5");
             Groomer.validateBusinessLicenses(request.getBusinessLicenses());
-            log.info("6");
             Groomer.validateLicenses(request.getLicenses());
 
             return false; // 모든 유효성 검사 통과
