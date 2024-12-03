@@ -38,9 +38,8 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
-        if (this.hasInvalidGroomerDataFormat(request)) {
+        if (this.hasInvalidSignUpReqDataFormat(request))
             throw new GroomerException(GroomerExceptionType.INVALID_REQUEST_DATA_FORMAT);
-        }
 
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
@@ -74,12 +73,14 @@ public class AccountService {
 
     @Transactional
     public void modifyInfo(ModifyInfoReq request, Long accountId) {
+        this.hasInvalidModifyInfoReqDataFormat(request);
+
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
         groomerPersist.save(updatedGroomer);
     }
 
-    private boolean hasInvalidGroomerDataFormat(SignUpReq request) {
+    private boolean hasInvalidSignUpReqDataFormat(SignUpReq request) {
         try {
             Groomer.validateShopName(request.getShopName());
             Groomer.validateName(request.getName());
@@ -93,5 +94,9 @@ public class AccountService {
         } catch (IllegalArgumentException e) {
             return true; // 유효성 검사 실패
         }
+    }
+
+    private void hasInvalidModifyInfoReqDataFormat(ModifyInfoReq request) {
+            Groomer.validateIntroduction(request.getIntroduction());
     }
 }

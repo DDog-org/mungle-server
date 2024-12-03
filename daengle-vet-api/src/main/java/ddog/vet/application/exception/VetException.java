@@ -1,6 +1,6 @@
 package ddog.vet.application.exception;
 
-import ddog.vet.application.exception.common.CustomRuntimeException;
+import ddog.auth.exception.common.CustomRuntimeException;
 
 public class VetException extends CustomRuntimeException {
     public VetException(VetExceptionType type, Object... args) {

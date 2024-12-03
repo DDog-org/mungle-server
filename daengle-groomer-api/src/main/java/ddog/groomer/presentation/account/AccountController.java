@@ -1,8 +1,9 @@
 package ddog.groomer.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.AccountService;
-import ddog.groomer.application.exception.common.CommonResponseEntity;
+
 import ddog.groomer.presentation.account.dto.ModifyInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
 import ddog.groomer.presentation.account.dto.SignUpReq;
@@ -11,7 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.groomer.application.exception.common.CommonResponseEntity.*;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
+
 
 @RestController
 @RequestMapping("/api/groomer")
@@ -30,7 +32,7 @@ public class AccountController {
         return success(accountService.getModifyPage(payloadDto.getAccountId()));
     }
 
-    @PatchMapping("/profile")
+    @PatchMapping("/info")
     public CommonResponseEntity<String> modifyInfo(@RequestBody ModifyInfoReq request, PayloadDto payloadDto) {
         accountService.modifyInfo(request, payloadDto.getAccountId());
         return success("미용사 페이지가 정상적으로 수정됐습니다.");

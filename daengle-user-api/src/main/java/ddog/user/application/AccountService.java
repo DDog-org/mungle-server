@@ -117,7 +117,10 @@ public class AccountService {
     }
 
     @Transactional
-    public void modifyUserProfile(UserProfileModifyReq request, Long accountId) {
+    public void modifyUserInfo(UserInfoModifyReq request, Long accountId) {
+        if(this.hasInValidUserInfoModifyReqDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         User user = userPersist.findByAccountId(accountId);
         User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
         userPersist.save(modifiedUser);
@@ -125,6 +128,9 @@ public class AccountService {
 
     @Transactional
     public void addPet(AddPetInfo request, Long accountId) {
+        if(this.hasInValidAddPetInfoDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         User user = userPersist.findByAccountId(accountId);
         Pet newPet = PetMapper.create(accountId, request);
         Pet savedPet = petPersist.save(newPet);
@@ -138,7 +144,11 @@ public class AccountService {
     }
 
     @Transactional
-    public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
+    public void modifyPetInfo(ModifyPetInfo request, Long accountId) {
+        if(this.hasInValidModifyPetInfoDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
+
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = PetMapper.withModifyPetInfo(request, accountId);
         petPersist.save(modifiedPet);
@@ -179,6 +189,48 @@ public class AccountService {
             return false; // 모든 유효성 검사 통과
         } catch (IllegalArgumentException e) {
             return true; // 유효성 검사 실패
+        }
+    }
+
+    private boolean hasInValidUserInfoModifyReqDataFormat(UserInfoModifyReq request) {
+        try {
+            User.validateUsername(request.getNickname());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    private boolean hasInValidAddPetInfoDataFormat(AddPetInfo request) {
+        try {
+            Pet.validatePetName(request.getName());
+            Pet.validatePetBirth(request.getBirth());
+            Pet.validatePetGender(request.getGender());
+            Pet.validateBreed(request.getBreed());
+            Pet.validatePetWeight(request.getWeight());
+            Pet.validatePetDislikeParts(request.getDislikeParts());
+            Pet.validateSignificantTags(request.getSignificantTags());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    private boolean hasInValidModifyPetInfoDataFormat(ModifyPetInfo request) {
+        try {
+            Pet.validatePetName(request.getName());
+            Pet.validatePetBirth(request.getBirth());
+            Pet.validatePetGender(request.getGender());
+            Pet.validateBreed(request.getBreed());
+            Pet.validatePetWeight(request.getWeight());
+            Pet.validatePetDislikeParts(request.getDislikeParts());
+            Pet.validateSignificantTags(request.getSignificantTags());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
         }
     }
 }

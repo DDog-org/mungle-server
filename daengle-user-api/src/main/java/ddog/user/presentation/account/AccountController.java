@@ -44,9 +44,9 @@ public class AccountController {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
 
-    @PatchMapping("/profile")
-    public CommonResponseEntity<String> modifyUserProfile(@RequestBody UserProfileModifyReq request, PayloadDto payloadDto) {
-        accountService.modifyUserProfile(request, payloadDto.getAccountId());
+    @PatchMapping("/info")
+    public CommonResponseEntity<String> modifyUserInfo(@RequestBody UserInfoModifyReq request, PayloadDto payloadDto) {
+        accountService.modifyUserInfo(request, payloadDto.getAccountId());
         return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
@@ -56,14 +56,14 @@ public class AccountController {
         return success(PET_ADD_COMPLETED.getMessage());
     }
 
-    @GetMapping("/pets-info")
+    @GetMapping("/pet-info")
     public CommonResponseEntity<PetInfo> getPetInfo(PayloadDto payloadDto) {
         return success(accountService.getPetInfo(payloadDto.getAccountId()));
     }
 
-    @PatchMapping("/pet-profile")
-    public CommonResponseEntity<String> modifyPetProfile(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
-        accountService.modifyPetProfile(request, payloadDto.getAccountId());
+    @PatchMapping("/pet-info")
+    public CommonResponseEntity<String> modifyPetInfo(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
+        accountService.modifyPetInfo(request, payloadDto.getAccountId());
         return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
