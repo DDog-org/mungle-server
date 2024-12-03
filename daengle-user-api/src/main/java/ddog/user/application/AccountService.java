@@ -117,7 +117,10 @@ public class AccountService {
     }
 
     @Transactional
-    public void modifyUserProfile(UserProfileModifyReq request, Long accountId) {
+    public void modifyUserInfo(UserInfoModifyReq request, Long accountId) {
+        if(this.hasInValidUserInfoModifyReqDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         User user = userPersist.findByAccountId(accountId);
         User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
         userPersist.save(modifiedUser);
@@ -179,6 +182,16 @@ public class AccountService {
             return false; // 모든 유효성 검사 통과
         } catch (IllegalArgumentException e) {
             return true; // 유효성 검사 실패
+        }
+    }
+
+    private boolean hasInValidUserInfoModifyReqDataFormat(UserInfoModifyReq request) {
+        try {
+            User.validateUsername(request.getNickname());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
         }
     }
 }

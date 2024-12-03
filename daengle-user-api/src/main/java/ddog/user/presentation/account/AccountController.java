@@ -44,9 +44,9 @@ public class AccountController {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
 
-    @PatchMapping("/profile")
-    public CommonResponseEntity<String> modifyUserProfile(@RequestBody UserProfileModifyReq request, PayloadDto payloadDto) {
-        accountService.modifyUserProfile(request, payloadDto.getAccountId());
+    @PatchMapping("/info")
+    public CommonResponseEntity<String> modifyUserInfo(@RequestBody UserInfoModifyReq request, PayloadDto payloadDto) {
+        accountService.modifyUserInfo(request, payloadDto.getAccountId());
         return success(PROFILE_MODIFY_COMPLETED.getMessage());
     }
 
