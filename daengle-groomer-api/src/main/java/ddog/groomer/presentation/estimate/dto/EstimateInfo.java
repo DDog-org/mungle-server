@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class GroomingEstimateInfo {
+public class EstimateInfo {
 
     List<Content> allEstimates;
     List<Content> designationEstimates;

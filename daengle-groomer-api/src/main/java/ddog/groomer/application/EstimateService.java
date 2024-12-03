@@ -2,16 +2,23 @@ package ddog.groomer.application;
 
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.groomer.Groomer;
+import ddog.domain.pet.Pet;
+import ddog.domain.user.User;
 import ddog.groomer.application.mapper.GroomingEstimateMapper;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateReq;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
-import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
+import ddog.groomer.presentation.estimate.dto.EstimateDetail;
+import ddog.groomer.presentation.estimate.dto.EstimateInfo;
+import ddog.groomer.presentation.estimate.dto.EstimateReq;
+import ddog.groomer.presentation.estimate.dto.EstimateResp;
 import ddog.persistence.port.GroomerPersist;
 import ddog.persistence.port.GroomingEstimatePersist;
+import ddog.persistence.port.PetPersist;
+import ddog.persistence.port.UserPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -19,26 +26,58 @@ import java.util.List;
 public class EstimateService {
 
     private final GroomerPersist groomerPersist;
+    private final PetPersist petPersist;
+    private final UserPersist userPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
 
     @Transactional(readOnly = true)
-    public GroomingEstimateInfo findGroomingEstimateInfo(Long accountId) {
+    public EstimateInfo findEstimateInfo(Long accountId) {
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         List<GroomingEstimate> generalEstimates = groomingEstimatePersist.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimatePersist.findDesignationGroomingEstimates(groomer.getGroomerId());
-        return GroomingEstimateMapper.toGroomingEstimateInfo(generalEstimates, designationEstimates);
+
+        List<EstimateInfo.Content> allContents = estimatesToContents(generalEstimates);
+        List<EstimateInfo.Content> designationContents = estimatesToContents(designationEstimates);
+
+        allContents.addAll(designationContents);
+
+        // groomingEstimateId 기준으로 오름차순 정렬
+        allContents.sort(Comparator.comparing(EstimateInfo.Content::getId));
+
+        return EstimateInfo.builder()
+                .allEstimates(allContents)
+                .designationEstimates(designationContents)
+                .build();
+    }
+
+    private List<EstimateInfo.Content> estimatesToContents(List<GroomingEstimate> estimates) {
+        List<EstimateInfo.Content> contents = new ArrayList<>();
+        for (GroomingEstimate estimate : estimates) {
+            User user = userPersist.findByAccountId(estimate.getUserId());
+            Pet pet = petPersist.findByAccountId(estimate.getPetId());
+
+            contents.add(GroomingEstimateMapper.estimateToContent(estimate, user, pet));
+        }
+        return contents;
     }
 
     @Transactional(readOnly = true)
-    public GroomingEstimateDetail getGroomingEstimateDetailInfo(Long groomingEstimateId) {
+    public EstimateDetail getEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
-        return GroomingEstimateMapper.toGroomingEstimateDetail(groomingEstimate);
+        User user = userPersist.findByAccountId(groomingEstimate.getUserId());
+        Pet pet = petPersist.findByAccountId(groomingEstimate.getPetId());
+
+        return GroomingEstimateMapper.toEstimateDetail(groomingEstimate, user, pet);
     }
 
     @Transactional
-    public void createGroomerGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+    public EstimateResp createEstimate(EstimateReq request, Long accountId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(request.getId());
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
-        groomingEstimatePersist.save(GroomingEstimateMapper.createGroomerGroomingEstimate(request, groomer, groomingEstimate));
+
+        groomingEstimatePersist.save(GroomingEstimateMapper.createGroomingEstimate(request, groomer, groomingEstimate));
+        return EstimateResp.builder()
+                .requestResult("대기 미용 견적서 등록 완료")
+                .build();
     }
 }

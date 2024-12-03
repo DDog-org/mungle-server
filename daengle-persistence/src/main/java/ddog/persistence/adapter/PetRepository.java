@@ -20,6 +20,13 @@ public class PetRepository implements PetPersist {
     }
 
     @Override
+    public Pet findByAccountId(Long accountId) {
+        return petJpaRepository.findPetsByAccountId(accountId)
+                .orElseThrow(() -> new RuntimeException("pet not found"))
+                .toModel();
+    }
+
+    @Override
     public void deletePetById(Long petId) {
         petJpaRepository.deleteByPetId(petId);
     }
