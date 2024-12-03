@@ -1,15 +1,15 @@
 package ddog.groomer.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.EstimateService;
-import ddog.groomer.application.exception.common.CommonResponseEntity;
 import ddog.groomer.presentation.estimate.dto.GroomingEstimateReq;
 import ddog.groomer.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.groomer.presentation.estimate.dto.GroomingEstimateInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.groomer.application.exception.common.CommonResponseEntity.success;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 import static ddog.groomer.presentation.estimate.EstimateControllerResp.REGISTRATION_COMPLETED;
 
 @RestController

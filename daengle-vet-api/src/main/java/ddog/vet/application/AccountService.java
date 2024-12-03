@@ -73,6 +73,8 @@ public class AccountService {
 
     @Transactional
     public void modifyInfo(ModifyInfoReq request, Long accountId) {
+        this.hasInValidModifyInfoDataFormat(request);
+
         Vet vet = vetPersist.getVetByAccountId(accountId);
         Vet updatedVet = VetMapper.withUpdate(vet, request);
         vetPersist.save(updatedVet);
@@ -90,5 +92,12 @@ public class AccountService {
         } catch (IllegalArgumentException e) {
             return true; // 유효성 검사 실패
         }
+    }
+
+    private void hasInValidModifyInfoDataFormat(ModifyInfoReq request) {
+        Vet.validateTimeRange(request.getStartTime(), request.getEndTime());
+        Vet.validateClosedDays(request.getClosedDays());
+        Vet.validatePhoneNumber(request.getPhoneNumber());
+        Vet.validateIntroduction(request.getIntroduction());
     }
 }

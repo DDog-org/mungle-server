@@ -58,4 +58,20 @@ public class Pet {
             throw new IllegalArgumentException("Invalid breed: must be a valid value.");
         }
     }
+
+    public static void validatePetDislikeParts(List<Part> dislikeParts) {
+        for (Part part : dislikeParts) {
+            if (part == null) {
+                throw new IllegalArgumentException("Invalid dislike part: element cannot be null.");
+            }
+        }
+    }
+
+    public static void validateSignificantTags(List<SignificantTag> significantTags) {
+        for (SignificantTag tag : significantTags) {
+            if (tag == null) {
+                throw new IllegalArgumentException("Invalid significant tag: element cannot be null.");
+            }
+        }
+    }
 }
