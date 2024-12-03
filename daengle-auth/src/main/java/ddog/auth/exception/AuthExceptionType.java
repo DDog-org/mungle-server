@@ -14,10 +14,10 @@ public enum AuthExceptionType {
     MISSING_AUTH_CLAIM(HttpStatus.FORBIDDEN, 1006, "토큰에 권한 정보가 없습니다."),
 
     /* 권한 관련 오류 */
-    UNAVAILABLE_ROLE(HttpStatus.FORBIDDEN, 1101, "사용자 권한이 부족합니다"),
+    UNAVAILABLE_ROLE(HttpStatus.FORBIDDEN, 1101, "접근할 권한이 없습니다."),
 
     /* 요청 및 응답 오류 */
-    RESPONSE_CODE_ERROR(HttpStatus.BAD_REQUEST, 1201, "잘못된 요청입니다."),
+    RESPONSE_CODE_ERROR(HttpStatus.BAD_REQUEST, 1201, "잘못된 카카오 토큰 정보입니다."),
     FAILED_TO_RETRIEVE_KAKAO_USER_INFO(HttpStatus.BAD_REQUEST, 1202, "카카오 계정 정보를 가져오는 데 실패했습니다.");
 
     private final HttpStatus httpStatus;
