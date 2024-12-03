@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
-import static ddog.user.presentation.estimate.EstimateControllerResp.CARE_ESTIMATE_REGISTRATION;
-import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ESTIMATE_REGISTRATION;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,14 +27,13 @@ public class EstimateController {
     }
 
     @PostMapping("/grooming")
-    public CommonResponseEntity<EstimateResp.Grooming> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
         return success(estimateService.createGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
     @PostMapping("/care")
-    public CommonResponseEntity<String> createCareEstimate(@RequestBody CareEstimateReq request, PayloadDto payloadDto) {
-        estimateService.createCareEstimate(request, payloadDto.getAccountId());
-        return success(CARE_ESTIMATE_REGISTRATION.getMessage());
+    public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CareEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createCareEstimate(request, payloadDto.getAccountId()));
     }
 
     @GetMapping("/list")

@@ -6,10 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class EstimateResp {
-
-    @Getter
-    @Builder
-    public static class Grooming {
-        private String requestResult;
-    }
+    private String requestResult;
 }

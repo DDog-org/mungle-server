@@ -28,33 +28,44 @@ public class EstimateService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public EstimateResp.Grooming createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+    public EstimateResp createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
 
         if (request.getGroomerId() == null) {
-
             GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
             groomingEstimatePersist.save(newEstimate);
 
-            return EstimateResp.Grooming.builder()
-                    .requestResult("(일반)사용자 미용 견적서 등록 완료")
+            return EstimateResp.builder()
+                    .requestResult("(일반)신규 미용 견적서 등록 완료")
                     .build();
         }
 
         GroomingEstimate newEstimate = GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId);
         groomingEstimatePersist.save(newEstimate);
-        return EstimateResp.Grooming.builder()
-                .requestResult("(지정)사용자 미용 견적서 등록 완료")
+        return EstimateResp.builder()
+                .requestResult("(지정)신규 미용 견적서 등록 완료")
                 .build();
     }
 
     @Transactional
-    public void createCareEstimate(CareEstimateReq request, Long accountId) {
+    public EstimateResp createCareEstimate(CareEstimateReq request, Long accountId) {
+        User.validateAddress(request.getAddress());
+
         if (request.getVetId() == null) {
-            careEstimatePersist.save(CareEstimateMapper.createGeneralCareEstimate(request, accountId));
-            return;
+            CareEstimate newEstimate = CareEstimateMapper.createGeneralCareEstimate(request, accountId);
+            careEstimatePersist.save(newEstimate);
+
+            return EstimateResp.builder()
+                    .requestResult("(일반)신규 진료 견적서 등록 완료")
+                    .build();
         }
-        careEstimatePersist.save(CareEstimateMapper.createDesignationCareEstimate(request, accountId));
+
+        CareEstimate newEstimate = CareEstimateMapper.createDesignationCareEstimate(request, accountId);
+        careEstimatePersist.save(newEstimate);
+
+        return EstimateResp.builder()
+                .requestResult("(지정)신규 진료 견적서 등록 완료")
+                .build();
     }
 
     @Transactional(readOnly = true)

@@ -15,44 +15,30 @@ public class CareEstimateMapper {
 
     public static CareEstimate createGeneralCareEstimate(CareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
+                .userId(accountId)
+                .petId(request.getPetId())
+                .address(request.getAddress())
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
                 .requirements(request.getRequirements())
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(request.getUserImage())
-                .nickname(request.getNickname())
-                .address(request.getAddress())
-                .petId(request.getId())
-                .petImage(request.getPetImage())
-                .petName(request.getName())
-                .petBirth(request.getBirth())
-                .petWeight(request.getWeight())
-                .petSignificant(request.getSignificant())
                 .build();
     }
 
     public static CareEstimate createDesignationCareEstimate(CareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
+                .userId(accountId)
+                .vetId(request.getVetId())
+                .petId(request.getPetId())
+                .address(request.getAddress())
                 .reservedDate(request.getReservedDate())
                 .symptoms(request.getSymptoms())
                 .requirements(request.getRequirements())
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(request.getUserImage())
-                .nickname(request.getNickname())
-                .address(request.getAddress())
-                .petId(request.getId())
-                .petImage(request.getPetImage())
-                .petName(request.getName())
-                .petBirth(request.getBirth())
-                .petWeight(request.getWeight())
-                .petSignificant(request.getSignificant())
-                .vetId(request.getVetId())
                 .build();
     }
 
