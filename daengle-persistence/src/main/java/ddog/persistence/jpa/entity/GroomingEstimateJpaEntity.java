@@ -3,7 +3,6 @@ package ddog.persistence.jpa.entity;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.Proposal;
-import ddog.domain.pet.Weight;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,91 +21,55 @@ public class GroomingEstimateJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomingEstimateId;
+    private Long userId;
+    private Long petId;
+    private Long groomerId;
+
+    private String address;
     private LocalDateTime reservedDate;
     private String desiredStyle;
     private String requirements;
+    private String overallOpinion;
+
     @Enumerated(EnumType.STRING)
     private Proposal proposal;
+
     @Enumerated(EnumType.STRING)
     private EstimateStatus status;
+
     private LocalDateTime createdAt;
 
-    private Long userId;
-    private String userImage;
-    private String nickname;
-    private String address;
-
-    private Long petId;
-    private String petImage;
-    private String petName;
-    private int petBirth;
-    @Enumerated(EnumType.STRING)
-    private Weight petWeight;
-    private String petSignificant;
-
-    private Long groomerId;
-    private int daengleMeter;
-    private String overallOpinion;
-    private String groomerImage;
-    private String groomerName;
-    private String shopName;
-    private String groomerIntroduction;
+    public static GroomingEstimateJpaEntity from(GroomingEstimate estimate) {
+        return GroomingEstimateJpaEntity.builder()
+                .groomingEstimateId(estimate.getGroomingEstimateId())
+                .userId(estimate.getUserId())
+                .petId(estimate.getPetId())
+                .groomerId(estimate.getGroomerId())
+                .address(estimate.getAddress())
+                .reservedDate(estimate.getReservedDate())
+                .desiredStyle(estimate.getDesiredStyle())
+                .requirements(estimate.getRequirements())
+                .overallOpinion(estimate.getOverallOpinion())
+                .proposal(estimate.getProposal())
+                .status(estimate.getStatus())
+                .createdAt(estimate.getCreatedAt())
+                .build();
+    }
 
     public GroomingEstimate toModel() {
         return GroomingEstimate.builder()
                 .groomingEstimateId(groomingEstimateId)
+                .userId(userId)
+                .petId(petId)
+                .groomerId(groomerId)
+                .address(address)
                 .reservedDate(reservedDate)
                 .desiredStyle(desiredStyle)
                 .requirements(requirements)
+                .overallOpinion(overallOpinion)
                 .proposal(proposal)
                 .status(status)
                 .createdAt(createdAt)
-                .userId(userId)
-                .userImage(userImage)
-                .nickname(nickname)
-                .address(address)
-                .petId(petId)
-                .petImage(petImage)
-                .petName(petName)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
-                .petSignificant(petSignificant)
-                .groomerId(groomerId)
-                .daengleMeter(daengleMeter)
-                .overallOpinion(overallOpinion)
-                .groomerImage(groomerImage)
-                .groomerName(groomerName)
-                .shopName(shopName)
-                .groomerIntroduction(groomerIntroduction)
-                .build();
-    }
-
-    public static GroomingEstimateJpaEntity from(GroomingEstimate groomingEstimate) {
-        return GroomingEstimateJpaEntity.builder()
-                .groomingEstimateId(groomingEstimate.getGroomingEstimateId())
-                .reservedDate(groomingEstimate.getReservedDate())
-                .desiredStyle(groomingEstimate.getDesiredStyle())
-                .requirements(groomingEstimate.getRequirements())
-                .proposal(groomingEstimate.getProposal())
-                .status(groomingEstimate.getStatus())
-                .createdAt(groomingEstimate.getCreatedAt())
-                .userId(groomingEstimate.getUserId())
-                .userImage(groomingEstimate.getUserImage())
-                .nickname(groomingEstimate.getNickname())
-                .address(groomingEstimate.getAddress())
-                .petId(groomingEstimate.getPetId())
-                .petImage(groomingEstimate.getPetImage())
-                .petName(groomingEstimate.getPetName())
-                .petBirth(groomingEstimate.getPetBirth())
-                .petWeight(groomingEstimate.getPetWeight())
-                .petSignificant(groomingEstimate.getPetSignificant())
-                .groomerId(groomingEstimate.getGroomerId())
-                .daengleMeter(groomingEstimate.getDaengleMeter())
-                .overallOpinion(groomingEstimate.getOverallOpinion())
-                .groomerImage(groomingEstimate.getGroomerImage())
-                .groomerName(groomingEstimate.getGroomerName())
-                .shopName(groomingEstimate.getShopName())
-                .groomerIntroduction(groomingEstimate.getGroomerIntroduction())
                 .build();
     }
 }
