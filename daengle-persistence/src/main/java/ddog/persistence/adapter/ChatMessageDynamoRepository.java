@@ -1,12 +1,10 @@
-package ddog.persistence.jpa.repository;
+package ddog.persistence.adapter;
 
 import ddog.domain.chat.ChatMessage;
 import ddog.persistence.jpa.entity.ChatMessageDynamoEntity;
 import ddog.persistence.port.ChatMessagePersist;
 import org.springframework.stereotype.Repository;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
@@ -69,7 +67,11 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
         try {
             dynamoDbClient.createTable(createTableRequest);
             System.out.println("Table created successfully.");
-        } catch (DynamoDbException e) {
+
+            // 테이블 생성 후 일정 시간 기다리기 (DynamoDB는 비동기적으로 테이블을 생성)
+            Thread.sleep(5000);  // 5초 대기 (필요에 따라 조정 가능)
+
+        } catch (DynamoDbException | InterruptedException e) {
             System.err.println("Error creating table: " + e.getMessage());
         }
     }
@@ -93,7 +95,7 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
     public List<ChatMessage> findByChatRoomId(Long chatRoomId) {
         // DynamoDB에서 채팅방 ID로 메시지 조회
         return getTable()
-                .scan()  // 테이블 스캔
+                .scan()  // 테이블 스캔 (비효율적, 개선 필요)
                 .items()
                 .stream()
                 .filter(item -> chatRoomId.equals(item.getChatRoomId()))  // chatRoomId로 필터링
