@@ -72,6 +72,9 @@ public class EstimateService {
 
     @Transactional
     public EstimateResp createEstimate(EstimateReq request, Long accountId) {
+
+        GroomingEstimate.validateOverallOpinion(request.getOverallOpinion());
+
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(request.getId());
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
 

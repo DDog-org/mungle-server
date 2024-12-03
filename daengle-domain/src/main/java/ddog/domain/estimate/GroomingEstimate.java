@@ -27,4 +27,13 @@ public class GroomingEstimate {
     private EstimateStatus status;
     private LocalDateTime createdAt;
 
+    public static void validateOverallOpinion(String overallOpinion) {
+        if (overallOpinion == null) {
+            throw new IllegalArgumentException("Invalid Overall Opinion: Overall Opinion is null.");
+        }
+
+        if (overallOpinion.isEmpty() || overallOpinion.length() > 400) {
+            throw new IllegalArgumentException("Invalid Overall Opinion: Overall Opinion is empty or exceeds 400 characters.");
+        }
+    }
 }
