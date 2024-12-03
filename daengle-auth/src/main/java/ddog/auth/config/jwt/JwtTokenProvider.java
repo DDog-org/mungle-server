@@ -1,8 +1,8 @@
 package ddog.auth.config.jwt;
 
 import ddog.auth.dto.TokenAccountInfoDto;
-import ddog.auth.exception.common.AuthException;
-import ddog.auth.exception.common.AuthExceptionType;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import ddog.persistence.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -32,7 +32,7 @@ public class JwtTokenProvider {
     /* accessToken 만료 시간 */
     private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
-    private final int REFRESHTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
+    private final int REFRESHTOKEN_EXPIRATION_TIME = 1000;   // 14일
 
     @Autowired
     public JwtTokenProvider(@Value("${jwt.secret}") String secret, AccountPersist accountPersist) {
@@ -74,8 +74,7 @@ public class JwtTokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get("auth") == null) {
-            /* 추후 에러 처리 작업 들어가면 RuntimeException 대신 커스텀 예외로 수정해줘야 함. */
-            throw new RuntimeException();
+            throw new AuthException(AuthExceptionType.MISSING_AUTH_CLAIM);
         }
 
         Collection<? extends GrantedAuthority> authorities =
@@ -106,8 +105,10 @@ public class JwtTokenProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException e) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
+        } catch (MalformedJwtException e) {
+            throw new AuthException(AuthExceptionType.INVALID_TOKEN_STRUCTURE);
         } catch (ExpiredJwtException e) {
             throw new AuthException(AuthExceptionType.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {

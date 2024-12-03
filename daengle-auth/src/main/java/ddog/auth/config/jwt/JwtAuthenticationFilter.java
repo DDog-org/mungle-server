@@ -1,5 +1,7 @@
 package ddog.auth.config.jwt;
 
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
@@ -51,14 +53,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (ExpiredJwtException e) {
-            /* 추후에 EXPIRED_TOKEN 으로 변경 예정 */
-            throw new RuntimeException(e);
+            throw new AuthException(AuthExceptionType.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            /* 추후에 UNSUPPORTED_TOKEN 으로 변경 예정 */
-            throw new RuntimeException(e);
+            throw new AuthException(AuthExceptionType.UNSUPPORTED_TOKEN);
         } catch (Exception e) {
-            /* 추후에 UNKNOWN_ERROR 으로 변경 예정 */
-            throw new RuntimeException(e);
+            throw new AuthException(AuthExceptionType.UNKNOWN_TOKEN);
         }
 
         chain.doFilter(request, response);

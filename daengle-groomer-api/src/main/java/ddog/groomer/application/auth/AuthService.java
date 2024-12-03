@@ -1,8 +1,8 @@
 package ddog.groomer.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
-import ddog.auth.exception.common.AuthException;
-import ddog.auth.exception.common.AuthExceptionType;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Account;
 import ddog.domain.account.Status;
 import ddog.groomer.presentation.auth.dto.LoginResult;
