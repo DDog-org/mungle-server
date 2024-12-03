@@ -1,6 +1,6 @@
 package ddog.user.application.exception;
 
-import ddog.user.application.exception.common.CustomRuntimeException;
+import ddog.auth.exception.common.CustomRuntimeException;
 
 public class AccountException extends CustomRuntimeException {
     public AccountException(AccountExceptionType type, Object... args) {

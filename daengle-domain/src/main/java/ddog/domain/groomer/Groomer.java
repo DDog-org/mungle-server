@@ -69,4 +69,10 @@ public class Groomer {
             throw new IllegalArgumentException("Licenses must contain between 1 and 2 entries.");
         }
     }
+
+    public static void validateIntroduction(String introduction) {
+        if (introduction != null && (introduction.isEmpty() || introduction.length() > 50)) {
+            throw new IllegalArgumentException("Invalid introduction: must be 50 characters or less if provided.");
+        }
+    }
 }
