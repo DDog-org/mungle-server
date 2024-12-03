@@ -2,8 +2,8 @@ package ddog.groomer.application.auth;
 
 import com.nimbusds.jose.shaded.gson.JsonElement;
 import com.nimbusds.jose.shaded.gson.JsonParser;
-import ddog.groomer.application.exception.common.AuthException;
-import ddog.groomer.application.exception.common.AuthExceptionType;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 
 @Slf4j
 @Service

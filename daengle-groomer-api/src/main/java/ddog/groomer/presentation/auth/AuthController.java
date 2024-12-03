@@ -1,10 +1,11 @@
 package ddog.groomer.presentation.auth;
 
+import ddog.auth.dto.AccessTokenInfo;
 import ddog.auth.dto.KakaoAccessTokenDto;
-import ddog.groomer.presentation.auth.dto.LoginResult;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.groomer.application.auth.AuthService;
 import ddog.groomer.application.exception.common.CommonResponseEntity;
+import ddog.groomer.presentation.auth.dto.LoginResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public CommonResponseEntity<LoginResult> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
+    public CommonResponseEntity<AccessTokenInfo> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
         return success(authService.reGenerateAccessToken(refreshTokenDto.getRefreshToken(), response));
     }
 }

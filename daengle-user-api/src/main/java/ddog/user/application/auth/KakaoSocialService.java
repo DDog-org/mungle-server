@@ -2,8 +2,8 @@ package ddog.user.application.auth;
 
 import com.nimbusds.jose.shaded.gson.JsonElement;
 import com.nimbusds.jose.shaded.gson.JsonParser;
-import ddog.user.application.exception.common.AuthException;
-import ddog.user.application.exception.common.AuthExceptionType;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
