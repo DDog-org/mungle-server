@@ -48,7 +48,7 @@ public class GlobalControllerAdvice {
                 new CommonResponseEntity<>(
                         false,
                         null,
-                        new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST, null)
+                        new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST, 400)
                 ),
                 HttpStatus.BAD_REQUEST
         );
