@@ -128,6 +128,9 @@ public class AccountService {
 
     @Transactional
     public void addPet(AddPetInfo request, Long accountId) {
+        if(this.hasInValidAddPetInfoDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         User user = userPersist.findByAccountId(accountId);
         Pet newPet = PetMapper.create(accountId, request);
         Pet savedPet = petPersist.save(newPet);
@@ -192,6 +195,22 @@ public class AccountService {
     private boolean hasInValidUserInfoModifyReqDataFormat(UserInfoModifyReq request) {
         try {
             User.validateUsername(request.getNickname());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    private boolean hasInValidAddPetInfoDataFormat(AddPetInfo request) {
+        try {
+            Pet.validatePetName(request.getName());
+            Pet.validatePetBirth(request.getBirth());
+            Pet.validatePetGender(request.getGender());
+            Pet.validateBreed(request.getBreed());
+            Pet.validatePetWeight(request.getWeight());
+            Pet.validatePetDislikeParts(request.getDislikeParts());
+            Pet.validateSignificantTags(request.getSignificantTags());
 
             return false;
         } catch (IllegalArgumentException e) {
