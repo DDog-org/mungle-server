@@ -57,16 +57,16 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate) {
+    public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet) {
         return GroomingEstimateDetail.builder()
-                .image(estimate.getGroomerImage())
-                .name(estimate.getGroomerName())
-                .shopName(estimate.getShopName())
-                .daengleMeter(estimate.getDaengleMeter())
-                .introduction(estimate.getGroomerIntroduction())
+                .image(groomer.getGroomerImage())
+                .name(groomer.getGroomerName())
+                .shopName(groomer.getShopName())
+                .daengleMeter(groomer.getDaengleMeter())
+                .introduction(groomer.getGroomerIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
-                .weight(estimate.getPetWeight())
+                .weight(pet.getPetWeight())
                 .desiredStyle(estimate.getDesiredStyle())
                 .overallOpinion(estimate.getOverallOpinion())
                 .build();

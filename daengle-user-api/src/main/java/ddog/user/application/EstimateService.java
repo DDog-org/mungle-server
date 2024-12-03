@@ -24,6 +24,7 @@ public class EstimateService {
     private final UserPersist userPersist;
     private final GroomerPersist groomerPersist;
     private final VetPersist vetPersist;
+    private final PetPersist petPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;
 
@@ -108,7 +109,10 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
-        return GroomingEstimateMapper.getGroomingEstimateDetail(groomingEstimate);
+        Groomer groomer = groomerPersist.getGroomerByAccountId(groomingEstimate.getGroomerId());
+        Pet pet = petPersist.findByAccountId(groomingEstimate.getPetId());
+
+        return GroomingEstimateMapper.getGroomingEstimateDetail(groomingEstimate, groomer, pet);
     }
 
     @Transactional(readOnly = true)
