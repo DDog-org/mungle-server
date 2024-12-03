@@ -7,7 +7,10 @@ import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
-import ddog.user.presentation.estimate.dto.*;
+import ddog.user.presentation.estimate.dto.AccountInfo;
+import ddog.user.presentation.estimate.dto.EstimateInfo;
+import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.user.presentation.estimate.dto.GroomingEstimateReq;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -115,6 +118,7 @@ public class GroomingEstimateMapper {
         List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : user.getPets()) {
             petInfos.add(AccountInfo.PetInfo.builder()
+                    .petId(pet.getPetId())
                     .image(pet.getPetImage())
                     .name(pet.getPetName())
                     .build());
