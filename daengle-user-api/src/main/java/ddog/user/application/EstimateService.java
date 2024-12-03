@@ -76,10 +76,21 @@ public class EstimateService {
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : pets) {
             List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findGroomingEstimatesByPetId(pet.getPetId());
-            List<EstimateInfo.PetInfo.Grooming> groomingInfos = GroomingEstimateMapper.toInfos(groomingEstimates);
-
             List<CareEstimate> careEstimates = careEstimatePersist.findCareEstimatesByPetId(pet.getPetId());
-            List<EstimateInfo.PetInfo.Care> careInfos = CareEstimateMapper.toInfos(careEstimates);
+
+            List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
+            for (GroomingEstimate estimate : groomingEstimates) {
+                Groomer groomer = groomerPersist.getGroomerByAccountId(estimate.getGroomerId());
+
+                groomingInfos.add(GroomingEstimateMapper.toGrooming(estimate, groomer));
+            }
+
+            List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
+            for (CareEstimate estimate : careEstimates) {
+                Vet vet = vetPersist.getVetByAccountId(estimate.getVetId());
+
+                careInfos.add(CareEstimateMapper.toCare(estimate, vet));
+            }
 
             petInfos.add(EstimateInfo.PetInfo.builder()
                     .petId(pet.getPetId())

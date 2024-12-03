@@ -3,13 +3,12 @@ package ddog.user.application.mapper;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.vet.Vet;
 import ddog.user.presentation.estimate.dto.CareEstimateDetail;
 import ddog.user.presentation.estimate.dto.CareEstimateReq;
 import ddog.user.presentation.estimate.dto.EstimateInfo;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CareEstimateMapper {
 
@@ -42,18 +41,14 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static List<EstimateInfo.PetInfo.Care> toInfos(List<CareEstimate> estimates) {
-        List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
-        for (CareEstimate estimate : estimates) {
-            careInfos.add(EstimateInfo.PetInfo.Care.builder()
-                    .careEstimateId(estimate.getCareEstimateId())
-                    .name(estimate.getVetName())
-                    .daengleMeter(estimate.getDaengleMeter())
-                    .image(estimate.getVetImage())
-                    .reservedDate(estimate.getReservedDate())
-                    .build());
-        }
-        return careInfos;
+    public static EstimateInfo.PetInfo.Care toCare(CareEstimate estimates, Vet vet) {
+        return EstimateInfo.PetInfo.Care.builder()
+                .careEstimateId(estimate.getCareEstimateId())
+                .name(estimate.getVetName())
+                .daengleMeter(estimate.getDaengleMeter())
+                .image(estimate.getVetImage())
+                .reservedDate(estimate.getReservedDate())
+                .build();
     }
 
     public static CareEstimateDetail getCareEstimateDetail(CareEstimate estimate) {

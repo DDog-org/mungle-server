@@ -46,19 +46,15 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static List<EstimateInfo.PetInfo.Grooming> toInfos(List<GroomingEstimate> estimates) {
-        List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
-        for (GroomingEstimate estimate : estimates) {
-            groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
-                    .groomingEstimateId(estimate.getGroomingEstimateId())
-                    .name(estimate.getGroomerName())
-                    .daengleMeter(estimate.getDaengleMeter())
-                    .image(estimate.getGroomerImage())
-                    .shopName(estimate.getShopName())
-                    .reservedDate(estimate.getReservedDate())
-                    .build());
-        }
-        return groomingInfos;
+    public static EstimateInfo.PetInfo.Grooming toGrooming(GroomingEstimate estimate, Groomer groomer) {
+        return EstimateInfo.PetInfo.Grooming.builder()
+                .groomingEstimateId(estimate.getGroomingEstimateId())
+                .name(groomer.getGroomerName())
+                .daengleMeter(groomer.getDaengleMeter())
+                .image(groomer.getGroomerImage())
+                .shopName(groomer.getShopName())
+                .reservedDate(estimate.getReservedDate())
+                .build();
     }
 
     public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate) {
