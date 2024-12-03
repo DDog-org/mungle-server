@@ -118,7 +118,10 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
-        return CareEstimateMapper.getCareEstimateDetail(careEstimate);
+        Vet vet = vetPersist.getVetByAccountId(careEstimate.getVetId());
+        Pet pet = petPersist.findByAccountId(careEstimate.getPetId());
+
+        return CareEstimateMapper.getCareEstimateDetail(careEstimate, vet, pet);
     }
 
     @Transactional(readOnly = true)

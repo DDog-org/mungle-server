@@ -3,6 +3,7 @@ package ddog.user.application.mapper;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.pet.Pet;
 import ddog.domain.vet.Vet;
 import ddog.user.presentation.estimate.dto.CareEstimateDetail;
 import ddog.user.presentation.estimate.dto.CareEstimateReq;
@@ -41,22 +42,22 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static EstimateInfo.PetInfo.Care toCare(CareEstimate estimates, Vet vet) {
+    public static EstimateInfo.PetInfo.Care toCare(CareEstimate estimate, Vet vet) {
         return EstimateInfo.PetInfo.Care.builder()
                 .careEstimateId(estimate.getCareEstimateId())
-                .name(estimate.getVetName())
-                .daengleMeter(estimate.getDaengleMeter())
-                .image(estimate.getVetImage())
+                .name(vet.getVetName())
+                .daengleMeter(vet.getDaengleMeter())
+                .image(vet.getVetImage())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }
 
-    public static CareEstimateDetail getCareEstimateDetail(CareEstimate estimate) {
+    public static CareEstimateDetail getCareEstimateDetail(CareEstimate estimate, Vet vet, Pet pet) {
         return CareEstimateDetail.builder()
-                .image(estimate.getVetImage())
-                .name(estimate.getVetName())
-                .daengleMeter(estimate.getDaengleMeter())
-                .introduction(estimate.getVetIntroduction())
+                .image(vet.getVetImage())
+                .name(vet.getVetName())
+                .daengleMeter(vet.getDaengleMeter())
+                .introduction(vet.getVetIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .diagnosis(estimate.getDiagnosis())
