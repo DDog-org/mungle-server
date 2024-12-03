@@ -1,6 +1,7 @@
 package ddog.user.application.auth;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
+import ddog.auth.dto.AccessTokenInfo;
 import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.auth.exception.AuthException;
 import ddog.auth.exception.AuthExceptionType;
@@ -60,7 +61,7 @@ public class AuthService {
         return authentication;
     }
 
-    public LoginResult reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
+    public AccessTokenInfo reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
@@ -70,8 +71,7 @@ public class AuthService {
 
         Authentication authentication = getAuthentication(email, Role.DAENGLE);
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
-        return LoginResult.builder()
-                .isOnboarding(false)
+        return AccessTokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .build();

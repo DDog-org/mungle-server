@@ -1,5 +1,6 @@
 package ddog.user.presentation.auth;
 
+import ddog.auth.dto.AccessTokenInfo;
 import ddog.auth.dto.KakaoAccessTokenDto;
 import ddog.auth.dto.RefreshTokenDto;
 import ddog.user.application.auth.AuthService;
@@ -19,7 +20,7 @@ import static ddog.user.application.exception.common.CommonResponseEntity.succes
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/user")
 public class AuthController {
 
     private final AuthService authService;
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public CommonResponseEntity<LoginResult> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
+    public CommonResponseEntity<AccessTokenInfo> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
         return success(authService.reGenerateAccessToken(refreshTokenDto.getRefreshToken(), response));
     }
 }
