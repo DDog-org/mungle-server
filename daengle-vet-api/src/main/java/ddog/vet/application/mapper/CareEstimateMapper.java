@@ -43,6 +43,10 @@ public class CareEstimateMapper {
 
     public static CareEstimate createVetCareEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
         return CareEstimate.builder()
+                .userId(estimate.getUserId())
+                .petId(estimate.getPetId())
+                .vetId(vet.getVetId())
+                .address(estimate.getAddress())
                 .reservedDate(request.getReservedDate())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
@@ -52,21 +56,6 @@ public class CareEstimateMapper {
                 .diagnosis(request.getDiagnosis())
                 .cause(request.getCause())
                 .treatment(request.getTreatment())
-                .userId(estimate.getUserId())
-                .userImage(estimate.getUserImage())
-                .nickname(estimate.getNickname())
-                .address(estimate.getAddress())
-                .petId(estimate.getPetId())
-                .petImage(estimate.getPetImage())
-                .petName(estimate.getPetName())
-                .petBirth(estimate.getPetBirth())
-                .petWeight(estimate.getPetWeight())
-                .petSignificant(estimate.getPetSignificant())
-                .vetId(vet.getVetId())
-                .daengleMeter(vet.getDaengleMeter())
-                .vetImage(vet.getVetImage())
-                .vetName(vet.getVetName())
-                .vetIntroduction(vet.getVetIntroduction())
                 .build();
     }
 
