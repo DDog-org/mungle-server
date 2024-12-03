@@ -1,16 +1,14 @@
 package ddog.user.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.application.AccountService;
-import ddog.user.application.exception.common.CommonResponseEntity;
 import ddog.user.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.user.application.exception.common.CommonResponseEntity.success;
-import static ddog.user.presentation.account.AccountControllerResp.*;
-
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequestMapping("/api/user")
@@ -45,15 +43,13 @@ public class AccountController {
     }
 
     @PatchMapping("/info")
-    public CommonResponseEntity<String> modifyUserInfo(@RequestBody UserInfoModifyReq request, PayloadDto payloadDto) {
-        accountService.modifyUserInfo(request, payloadDto.getAccountId());
-        return success(PROFILE_MODIFY_COMPLETED.getMessage());
+    public CommonResponseEntity<AccountResp> modifyUserInfo(@RequestBody UserInfoModifyReq request, PayloadDto payloadDto) {
+        return success(accountService.modifyUserInfo(request, payloadDto.getAccountId()));
     }
 
     @PostMapping("/pet")
-    public CommonResponseEntity<String> addPet(@RequestBody AddPetInfo request, PayloadDto payloadDto) {
-        accountService.addPet(request, payloadDto.getAccountId());
-        return success(PET_ADD_COMPLETED.getMessage());
+    public CommonResponseEntity<AccountResp> addPet(@RequestBody AddPetInfo request, PayloadDto payloadDto) {
+        return success(accountService.addPet(request, payloadDto.getAccountId()));
     }
 
     @GetMapping("/pet-info")
@@ -62,14 +58,12 @@ public class AccountController {
     }
 
     @PatchMapping("/pet-info")
-    public CommonResponseEntity<String> modifyPetInfo(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
-        accountService.modifyPetInfo(request, payloadDto.getAccountId());
-        return success(PET_PROFILE_MODIFY_COMPLETED.getMessage());
+    public CommonResponseEntity<AccountResp> modifyPetInfo(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
+        return success(accountService.modifyPetInfo(request, payloadDto.getAccountId()));
     }
 
     @DeleteMapping("/pet")
-    public CommonResponseEntity<String> deletePet(@RequestBody DeletePetId request) {
-        accountService.deletePet(request.getPetId());
-        return success(DELETE_PET_COMPLETED.getMessage());
+    public CommonResponseEntity<AccountResp> deletePet(@RequestBody DeletePetId request) {
+        return success(accountService.deletePet(request.getPetId()));
     }
 }

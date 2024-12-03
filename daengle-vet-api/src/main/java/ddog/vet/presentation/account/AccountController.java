@@ -3,10 +3,7 @@ package ddog.vet.presentation.account;
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.vet.application.AccountService;
-import ddog.vet.presentation.account.dto.ModifyInfoReq;
-import ddog.vet.presentation.account.dto.ProfileInfo;
-import ddog.vet.presentation.account.dto.SignUpReq;
-import ddog.vet.presentation.account.dto.SignUpResp;
+import ddog.vet.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +29,7 @@ public class AccountController {
     }
 
     @PatchMapping("/info")
-    public CommonResponseEntity<String> modifyInfo(@RequestBody ModifyInfoReq request, PayloadDto payloadDto) {
-        accountService.modifyInfo(request, payloadDto.getAccountId());
-        return success("병원 페이지가 정상적으로 수정됐습니다.");
+    public CommonResponseEntity<AccountResp> modifyInfo(@RequestBody ModifyInfoReq request, PayloadDto payloadDto) {
+        return success(accountService.modifyInfo(request, payloadDto.getAccountId()));
     }
 }

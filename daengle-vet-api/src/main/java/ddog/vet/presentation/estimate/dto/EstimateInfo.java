@@ -1,4 +1,4 @@
-package ddog.groomer.presentation.estimate.dto;
+package ddog.vet.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.estimate.Proposal;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class GroomingEstimateInfo {
+public class EstimateInfo {
 
     List<Content> allEstimates;
     List<Content> designationEstimates;
@@ -27,5 +27,4 @@ public class GroomingEstimateInfo {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime reservedDate;
     }
-
 }
