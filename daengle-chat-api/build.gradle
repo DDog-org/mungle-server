@@ -9,8 +9,6 @@ jar {
 repositories {
     mavenCentral()
 
-    //IamPort
-    maven {url 'https://jitpack.io'}
 }
 
 
