@@ -30,7 +30,7 @@ public class AccountController {
         return success(accountService.getModifyPage(payloadDto.getAccountId()));
     }
 
-    @PatchMapping("/modify-info")
+    @PatchMapping("/profile")
     public CommonResponseEntity<String> modifyInfo(@RequestBody ModifyInfoReq request, PayloadDto payloadDto) {
         accountService.modifyInfo(request, payloadDto.getAccountId());
         return success("병원 페이지가 정상적으로 수정됐습니다.");

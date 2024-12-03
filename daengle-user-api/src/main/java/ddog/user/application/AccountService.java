@@ -9,11 +9,14 @@ import ddog.domain.user.User;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
+import ddog.user.application.exception.AccountException;
+import ddog.user.application.exception.AccountExceptionType;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
@@ -58,6 +62,9 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
+        if(this.hasInValidSignUpWithPetDataFormat(request))
+            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
@@ -75,6 +82,9 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
+        if(this.hasInValidSignUpWithoutPetDataFormat(request))
+            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
@@ -132,15 +142,41 @@ public class AccountService {
         petPersist.save(modifiedPet);
     }
 
-    @Transactional(readOnly = true)
-    public UserInfo getUserAndPetInfos(Long userId) {
-        User user = userPersist.findByAccountId(userId);
-        return UserMapper.toUserInfo(user);
-    }
-
     @Transactional
     public void deletePet(Long petId) {
         /* TODO PetService 추가하면 그곳으로 옮기기 */
         petPersist.deletePetById(petId);
+    }
+
+    private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
+        try {
+            Account.validateUsername(request.getUsername());
+            Account.validatePhoneNumber(request.getPhoneNumber());
+            Account.validateNickname(request.getNickname());
+            Account.validateAddress(request.getAddress());
+
+            Pet.validatePetName(request.getPetName());
+            Pet.validatePetBirth(request.getPetBirth());
+            Pet.validatePetGender(request.getPetGender());
+            Pet.validatePetWeight(request.getPetWeight());
+            Pet.validateBreed(request.getBreed());
+
+            return false; // 모든 유효성 검사 통과
+        } catch (IllegalArgumentException e) {
+            return true; // 유효성 검사 실패
+        }
+    }
+
+    private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+        try {
+            Account.validateUsername(request.getUsername());
+            Account.validatePhoneNumber(request.getPhoneNumber());
+            Account.validateNickname(request.getNickname());
+            Account.validateAddress(request.getAddress());
+
+            return false; // 모든 유효성 검사 통과
+        } catch (IllegalArgumentException e) {
+            return true; // 유효성 검사 실패
+        }
     }
 }

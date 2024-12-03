@@ -1,8 +1,13 @@
 package ddog.user.application.mapper;
 
+import ddog.domain.pet.Part;
 import ddog.domain.pet.Pet;
+import ddog.domain.pet.SignificantTag;
 import ddog.domain.user.User;
-import ddog.user.presentation.account.dto.*;
+import ddog.user.presentation.account.dto.PetInfo;
+import ddog.user.presentation.account.dto.ProfileInfo;
+import ddog.user.presentation.account.dto.SignUpWithPet;
+import ddog.user.presentation.account.dto.SignUpWithoutPet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,23 @@ public class UserMapper {
     public static PetInfo toPetInfo(User user) {
         List<PetInfo.Detail> petDetails = new ArrayList<>();
         for (Pet pet : user.getPets()) {
+
+            List<PetInfo.Detail.PartDetail> dislikeParts = new ArrayList<>();
+            for (Part part : pet.getDislikeParts()) {
+                dislikeParts.add(PetInfo.Detail.PartDetail.builder()
+                        .partName(part.getName())
+                        .part(part.toString())
+                        .build());
+            }
+
+            List<PetInfo.Detail.TagDetail> significantTags = new ArrayList<>();
+            for (SignificantTag tag : pet.getSignificantTags()) {
+                significantTags.add(PetInfo.Detail.TagDetail.builder()
+                        .tagName(tag.getName())
+                        .tag(tag.toString())
+                        .build());
+            }
+
             petDetails.add(PetInfo.Detail.builder()
                     .id(pet.getPetId())
                     .image(pet.getPetImage())
@@ -59,7 +81,8 @@ public class UserMapper {
                     .weight(pet.getPetWeight())
                     .groomingExperience(pet.getGroomingExperience())
                     .isBite(pet.getIsBite())
-                    .dislikeParts(pet.getDislikeParts().split(","))
+                    .dislikeParts(dislikeParts)
+                    .significantTags(significantTags)
                     .significant(pet.getPetSignificant())
                     .build());
         }
@@ -67,26 +90,4 @@ public class UserMapper {
                 .petDetails(petDetails)
                 .build();
     }
-
-    public static UserInfo toUserInfo(User user) {
-        List<UserInfo.PetInfo> petInfos = new ArrayList<>();
-        for (Pet pet : user.getPets()) {
-            petInfos.add(UserInfo.PetInfo.builder()
-                    .id(pet.getPetId())
-                    .image(pet.getPetImage())
-                    .name(pet.getPetName())
-                    .significant(pet.getPetSignificant())
-                    .birth(pet.getPetBirth())
-                    .weight(pet.getPetWeight())
-                    .build());
-        }
-
-        return UserInfo.builder()
-                .nickname(user.getNickname())
-                .userImage(user.getUserImage())
-                .address(user.getAddress())
-                .petInfos(petInfos)
-                .build();
-    }
-
 }
