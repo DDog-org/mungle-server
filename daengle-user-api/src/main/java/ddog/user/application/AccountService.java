@@ -11,6 +11,8 @@ import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
 import ddog.user.application.exception.AccountException;
 import ddog.user.application.exception.AccountExceptionType;
+import ddog.user.application.exception.UserException;
+import ddog.user.application.exception.UserExceptionType;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -63,7 +65,7 @@ public class AccountService {
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         if(this.hasInValidSignUpWithPetDataFormat(request))
-            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -150,10 +152,10 @@ public class AccountService {
 
     private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
         try {
-            Account.validateUsername(request.getUsername());
-            Account.validatePhoneNumber(request.getPhoneNumber());
-            Account.validateNickname(request.getNickname());
-            Account.validateAddress(request.getAddress());
+            User.validateUsername(request.getUsername());
+            User.validatePhoneNumber(request.getPhoneNumber());
+            User.validateNickname(request.getNickname());
+            User.validateAddress(request.getAddress());
 
             Pet.validatePetName(request.getPetName());
             Pet.validatePetBirth(request.getPetBirth());
@@ -169,10 +171,10 @@ public class AccountService {
 
     private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
         try {
-            Account.validateUsername(request.getUsername());
-            Account.validatePhoneNumber(request.getPhoneNumber());
-            Account.validateNickname(request.getNickname());
-            Account.validateAddress(request.getAddress());
+            User.validateUsername(request.getUsername());
+            User.validatePhoneNumber(request.getPhoneNumber());
+            User.validateNickname(request.getNickname());
+            User.validateAddress(request.getAddress());
 
             return false; // 모든 유효성 검사 통과
         } catch (IllegalArgumentException e) {

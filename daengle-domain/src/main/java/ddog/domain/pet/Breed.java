@@ -46,7 +46,9 @@ public enum Breed {
     POMERANIAN("포메라니안"),
     POODLE("푸들"),
     KOREAN_MASTIFF("한국 토종 마스티프"),
-    WHIPPET("휘핏");
+    WHIPPET("휘핏"),
+
+    ETC("기타");
 
     private String name;
 }
