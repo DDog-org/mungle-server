@@ -31,6 +31,7 @@ public class EstimateService {
     @Transactional
     public EstimateResp createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
+        GroomingEstimate.validateRequirements(request.getRequirements());
 
         if (request.getGroomerId() == null) {
             GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
@@ -51,6 +52,7 @@ public class EstimateService {
     @Transactional
     public EstimateResp createCareEstimate(CareEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
+        CareEstimate.validateRequirements(request.getRequirements());
 
         if (request.getVetId() == null) {
             CareEstimate newEstimate = CareEstimateMapper.createGeneralCareEstimate(request, accountId);

@@ -27,6 +27,16 @@ public class GroomingEstimate {
     private EstimateStatus status;
     private LocalDateTime createdAt;
 
+    public static void validateRequirements(String requirements) {
+        if (requirements == null) {
+            throw new IllegalArgumentException("Invalid Requirements: Requirements is null.");
+        }
+
+        if (requirements.isEmpty() || requirements.length() > 400) {
+            throw new IllegalArgumentException("Invalid Requirements: Requirements is empty or exceeds 400 characters.");
+        }
+    }
+
     public static void validateOverallOpinion(String overallOpinion) {
         if (overallOpinion == null) {
             throw new IllegalArgumentException("Invalid Overall Opinion: Overall Opinion is null.");

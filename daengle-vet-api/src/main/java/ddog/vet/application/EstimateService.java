@@ -72,6 +72,10 @@ public class EstimateService {
 
     @Transactional
     public EstimateResp createEstimate(EstimateReq request, Long accountId) {
+        CareEstimate.validateDiagnosis(request.getDiagnosis());
+        CareEstimate.validateCause(request.getCause());
+        CareEstimate.validateTreatment(request.getTreatment());
+
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(request.getId());
         Vet vet = vetPersist.getVetByAccountId(accountId);
 
