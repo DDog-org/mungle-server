@@ -141,7 +141,11 @@ public class AccountService {
     }
 
     @Transactional
-    public void modifyPetProfile(ModifyPetInfo request, Long accountId) {
+    public void modifyPetInfo(ModifyPetInfo request, Long accountId) {
+        if(this.hasInValidModifyPetInfoDataFormat(request))
+            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
+
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = PetMapper.withModifyPetInfo(request, accountId);
         petPersist.save(modifiedPet);
@@ -188,6 +192,22 @@ public class AccountService {
     private boolean hasInValidUserInfoModifyReqDataFormat(UserInfoModifyReq request) {
         try {
             User.validateUsername(request.getNickname());
+
+            return false;
+        } catch (IllegalArgumentException e) {
+            return true;
+        }
+    }
+
+    private boolean hasInValidModifyPetInfoDataFormat(ModifyPetInfo request) {
+        try {
+            Pet.validatePetName(request.getName());
+            Pet.validatePetBirth(request.getBirth());
+            Pet.validatePetGender(request.getGender());
+            Pet.validateBreed(request.getBreed());
+            Pet.validatePetWeight(request.getWeight());
+            Pet.validatePetDislikeParts(request.getDislikeParts());
+            Pet.validateSignificantTags(request.getSignificantTags());
 
             return false;
         } catch (IllegalArgumentException e) {
