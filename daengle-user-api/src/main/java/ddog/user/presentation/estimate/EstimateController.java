@@ -12,7 +12,7 @@ import static ddog.user.presentation.estimate.EstimateControllerResp.GROOMING_ES
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle/estimate")
+@RequestMapping("/api/user/estimate")
 public class EstimateController {
 
     private final EstimateService estimateService;

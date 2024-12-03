@@ -95,8 +95,6 @@ public class GroomingEstimateMapper {
                 .groomerImage(groomer.getGroomerImage())
                 .groomerName(groomer.getGroomerName())
                 .shopName(groomer.getShopName())
-                .nickname(user.getNickname())
-                .userImage(user.getUserImage())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
@@ -108,8 +106,6 @@ public class GroomingEstimateMapper {
         return AccountInfo.Care.builder()
                 .vetImage(vet.getVetImage())
                 .vetName(vet.getVetName())
-                .userImage(user.getUserImage())
-                .nickname(user.getNickname())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
@@ -119,12 +115,8 @@ public class GroomingEstimateMapper {
         List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : user.getPets()) {
             petInfos.add(AccountInfo.PetInfo.builder()
-                    .id(pet.getPetId())
                     .image(pet.getPetImage())
                     .name(pet.getPetName())
-                    .significant(pet.getPetSignificant())
-                    .birth(pet.getPetBirth())
-                    .weight(pet.getPetWeight())
                     .build());
         }
         return petInfos;
