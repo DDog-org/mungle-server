@@ -112,7 +112,7 @@ public class EstimateService {
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
         Groomer groomer = groomerPersist.getGroomerByAccountId(groomingEstimate.getGroomerId());
-        Pet pet = petPersist.findByAccountId(groomingEstimate.getPetId());
+        Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
 
         return GroomingEstimateMapper.getGroomingEstimateDetail(groomingEstimate, groomer, pet);
     }
@@ -121,7 +121,7 @@ public class EstimateService {
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
         Vet vet = vetPersist.getVetByAccountId(careEstimate.getVetId());
-        Pet pet = petPersist.findByAccountId(careEstimate.getPetId());
+        Pet pet = petPersist.findByPetId(careEstimate.getPetId());
 
         return CareEstimateMapper.getCareEstimateDetail(careEstimate, vet, pet);
     }

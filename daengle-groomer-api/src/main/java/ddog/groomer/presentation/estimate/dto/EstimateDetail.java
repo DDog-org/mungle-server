@@ -21,7 +21,7 @@ public class EstimateDetail {
     private Long petId;
     private String petImage;
     private String petName;
-    private int birth;
+    private int age;
     private Weight weight;
     private String significant;
     private String desiredStyle;

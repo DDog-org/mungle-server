@@ -41,12 +41,12 @@ public class EstimateController {
         return success(estimateService.findEstimateInfo(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/{groomingEstimateId}/detail")
+    @GetMapping("/{groomingEstimateId}/grooming-detail")
     public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
         return success(estimateService.getGroomingEstimateDetail(groomingEstimateId));
     }
 
-    @GetMapping("/{careEstimateId}/detail")
+    @GetMapping("/{careEstimateId}/care-detail")
     public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(estimateService.getCareEstimateDetail(careEstimateId));
     }

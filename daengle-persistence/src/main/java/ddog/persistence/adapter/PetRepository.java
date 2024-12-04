@@ -20,8 +20,8 @@ public class PetRepository implements PetPersist {
     }
 
     @Override
-    public Pet findByAccountId(Long accountId) {
-        return petJpaRepository.findPetsByAccountId(accountId)
+    public Pet findByPetId(Long petId) {
+        return petJpaRepository.findPetByPetId(petId)
                 .orElseThrow(() -> new RuntimeException("pet not found"))
                 .toModel();
     }

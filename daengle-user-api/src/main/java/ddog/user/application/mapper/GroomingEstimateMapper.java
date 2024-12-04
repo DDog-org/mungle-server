@@ -36,6 +36,7 @@ public class GroomingEstimateMapper {
         return GroomingEstimate.builder()
                 .groomerId(estimateReq.getGroomerId())
                 .userId(accountId)
+                .petId(estimateReq.getPetId())
                 .address(estimateReq.getAddress())
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())

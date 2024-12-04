@@ -34,7 +34,7 @@ public class EstimateService {
     public EstimateInfo findEstimateInfo(Long accountId) {
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         List<GroomingEstimate> generalEstimates = groomingEstimatePersist.findGeneralGroomingEstimates(groomer.getAddress());
-        List<GroomingEstimate> designationEstimates = groomingEstimatePersist.findDesignationGroomingEstimates(groomer.getGroomerId());
+        List<GroomingEstimate> designationEstimates = groomingEstimatePersist.findDesignationGroomingEstimates(groomer.getAccountId());
 
         List<EstimateInfo.Content> allContents = estimatesToContents(generalEstimates);
         List<EstimateInfo.Content> designationContents = estimatesToContents(designationEstimates);
@@ -54,7 +54,7 @@ public class EstimateService {
         List<EstimateInfo.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             User user = userPersist.findByAccountId(estimate.getUserId());
-            Pet pet = petPersist.findByAccountId(estimate.getPetId());
+            Pet pet = petPersist.findByPetId(estimate.getPetId());
 
             contents.add(GroomingEstimateMapper.estimateToContent(estimate, user, pet));
         }
@@ -65,7 +65,7 @@ public class EstimateService {
     public EstimateDetail getEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
         User user = userPersist.findByAccountId(groomingEstimate.getUserId());
-        Pet pet = petPersist.findByAccountId(groomingEstimate.getPetId());
+        Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
 
         return GroomingEstimateMapper.toEstimateDetail(groomingEstimate, user, pet);
     }
