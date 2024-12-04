@@ -20,5 +20,6 @@ public class ChatMessage {
     private Long senderId; // 보내는 사람
     private Long recipientId; // 받는 사람
     private LocalDateTime timestamp;
+    private String content;
 
 }

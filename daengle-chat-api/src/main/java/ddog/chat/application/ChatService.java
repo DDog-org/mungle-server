@@ -1,10 +1,15 @@
 package ddog.chat.application;
 
 import ddog.domain.chat.ChatMessage;
+import ddog.persistence.port.ChatMessagePersist;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ChatService {
+
+    private final ChatMessagePersist chatMessagePersist;
 
     // 채팅방 생성
     public void startChatWith(Long userId, Long partnerId) {
@@ -23,6 +28,7 @@ public class ChatService {
 
 
     // 메시지 전송 - 사진 or 텍스트
-    public void saveMessage(Long roomId, ChatMessage message) {
+    public ChatMessage saveMessage(Long roomId, ChatMessage message) {
+        return chatMessagePersist.save(message);
     }
 }

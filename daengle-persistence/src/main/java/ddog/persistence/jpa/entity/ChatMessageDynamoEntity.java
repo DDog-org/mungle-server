@@ -14,21 +14,20 @@ import java.time.ZoneId;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @DynamoDbBean
+@Data
 public class ChatMessageDynamoEntity {
-
-    private Long chatMessageId; // 파티션 키
+    private Long messageId; // 파티션 키
     private Long chatRoomId;    // 정렬 키
     private ChatType messageType;
     private Long senderId;
     private Long recipientId;
     private Long timestamp;
+    private String content;
 
     @DynamoDbPartitionKey
-    public Long getChatMessageId() {
-        return chatMessageId;
+    public Long getMessageId() {
+        return messageId;
     }
 
     @DynamoDbSortKey
@@ -36,27 +35,27 @@ public class ChatMessageDynamoEntity {
         return chatRoomId;
     }
 
-    // 엔티티 → 도메인
     public ChatMessage toModel() {
         return ChatMessage.builder()
                 .chatRoomId(chatRoomId)
-                .messageId(chatMessageId)
+                .messageId(messageId)
                 .messageType(messageType)
                 .senderId(senderId)
                 .recipientId(recipientId)
                 .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()))
+                .content(content)
                 .build();
     }
 
-    // 도메인 → 엔티티
     public static ChatMessageDynamoEntity from(ChatMessage message) {
         return ChatMessageDynamoEntity.builder()
                 .chatRoomId(message.getChatRoomId())
-                .chatMessageId(message.getMessageId())
+                .messageId(message.getMessageId())
                 .messageType(message.getMessageType())
                 .senderId(message.getSenderId())
                 .recipientId(message.getRecipientId())
                 .timestamp(message.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .content(message.getContent())
                 .build();
     }
 }

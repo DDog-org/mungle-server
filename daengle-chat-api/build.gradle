@@ -27,9 +27,10 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.4'
 
     // dynamo
-    implementation platform('software.amazon.awssdk:bom:2.20.85')
-    implementation("software.amazon.awssdk:dynamodb")
+    implementation platform('software.amazon.awssdk:bom:2.20.56')
+    implementation 'software.amazon.awssdk:dynamodb'
     implementation 'software.amazon.awssdk:dynamodb-enhanced'
+
 }
 
 test {
