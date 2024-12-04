@@ -1,4 +1,4 @@
-package ddog.persistence.jpa.entity;
+package ddog.persistence.dynamo.entity;
 
 import ddog.domain.chat.ChatMessage;
 import ddog.domain.chat.enums.ChatType;

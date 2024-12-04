@@ -1,7 +1,7 @@
 package ddog.persistence.adapter;
 
 import ddog.domain.chat.ChatMessage;
-import ddog.persistence.jpa.entity.ChatMessageDynamoEntity;
+import ddog.persistence.dynamo.entity.ChatMessageDynamoEntity;
 import ddog.persistence.port.ChatMessagePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
