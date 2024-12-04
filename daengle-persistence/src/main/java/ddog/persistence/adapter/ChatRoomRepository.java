@@ -17,26 +17,22 @@ public class ChatRoomRepository implements ChatRoomPersist {
     private final ChatRoomJpaRepository chatRoomJpaRepository;
 
     @Override
-    public void save(ChatRoom chatRoom) {
-        chatRoomJpaRepository.save(ChatRoomJpaEntity.from(chatRoom));
+    public ChatRoom enterChatRoom(Long userId, Long partnerId) {
+        if (chatRoomJpaRepository.findByUserIdAndPartnerId(userId,partnerId) != null) {
+            ChatRoom chatRoom = ChatRoom.builder()
+                    .userId(userId)
+                    .partnerId(partnerId)
+                    .build();
+            return chatRoomJpaRepository.save(ChatRoomJpaEntity.from(chatRoom)).toModel();
+        }
+        else {
+            return chatRoomJpaRepository.findByUserIdAndPartnerId(userId, partnerId).toModel();
+        }
     }
 
     @Override
-    public List<ChatRoom> findByUserId(Long userId) {
-        List<ChatRoom> chatRooms = new ArrayList<>();
-        for (ChatRoomJpaEntity chatRoomJpaEntity : chatRoomJpaRepository.findByUserId(userId)) {
-            chatRooms.add(chatRoomJpaEntity.toModel());
-        }
-        return chatRooms;
-    }
-
-
-    @Override
-    public List<ChatRoom> findByPartnerId(Long partnerId) {
-        List<ChatRoom> chatRooms = new ArrayList<>();
-        for (ChatRoomJpaEntity chatRoomJpaEntity : chatRoomJpaRepository.findByPartnerId(partnerId)) {
-            chatRooms.add(chatRoomJpaEntity.toModel());
-        }
-        return chatRooms;
+    public void exitChatRoom(Long userId, Long partnerId) {
+        ChatRoom findRoom = chatRoomJpaRepository.findByUserIdAndPartnerId(userId, partnerId).toModel();
+        chatRoomJpaRepository.delete(ChatRoomJpaEntity.from(findRoom));
     }
 }

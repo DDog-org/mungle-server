@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface ChatRoomPersist {
 
-    void save(ChatRoom chatRoom);
+    ChatRoom enterChatRoom(Long userId, Long partnerId);
 
-    List<ChatRoom> findByUserId(Long userId);
+    void exitChatRoom(Long userId, Long partnerId);
 
-    List<ChatRoom> findByPartnerId(Long partnerId);
 }
