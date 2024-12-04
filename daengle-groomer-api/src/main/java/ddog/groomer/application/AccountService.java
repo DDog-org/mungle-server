@@ -4,13 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
-import ddog.groomer.application.exception.GroomerException;
-import ddog.groomer.application.exception.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
-import ddog.groomer.presentation.account.dto.ModifyInfoReq;
-import ddog.groomer.presentation.account.dto.ProfileInfo;
-import ddog.groomer.presentation.account.dto.SignUpReq;
-import ddog.groomer.presentation.account.dto.SignUpResp;
+import ddog.groomer.presentation.account.dto.*;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.GroomerPersist;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,8 +33,8 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
-        if (this.hasInvalidSignUpReqDataFormat(request))
-            throw new GroomerException(GroomerExceptionType.INVALID_REQUEST_DATA_FORMAT);
+
+        validateSignUpReqDataFormat(request);
 
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
@@ -53,6 +48,16 @@ public class AccountService {
         return SignUpResp.builder()
                 .accessToken(accessToken)
                 .build();
+    }
+
+    private void validateSignUpReqDataFormat(SignUpReq request) {
+        Groomer.validateShopName(request.getShopName());
+        Groomer.validateName(request.getName());
+        Groomer.validatePhoneNumber(request.getPhoneNumber());
+        Groomer.validateAddress(request.getAddress());
+        Groomer.validateDetailAddress(request.getDetailAddress());
+        Groomer.validateBusinessLicenses(request.getBusinessLicenses());
+        Groomer.validateLicenses(request.getLicenses());
     }
 
     private Authentication getAuthentication(Long accountId, String email) {
@@ -72,31 +77,15 @@ public class AccountService {
     }
 
     @Transactional
-    public void modifyInfo(ModifyInfoReq request, Long accountId) {
-        this.hasInvalidModifyInfoReqDataFormat(request);
+    public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
+        Groomer.validateIntroduction(request.getIntroduction());
 
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
         groomerPersist.save(updatedGroomer);
-    }
 
-    private boolean hasInvalidSignUpReqDataFormat(SignUpReq request) {
-        try {
-            Groomer.validateShopName(request.getShopName());
-            Groomer.validateName(request.getName());
-            Groomer.validatePhoneNumber(request.getPhoneNumber());
-            Groomer.validateAddress(request.getAddress());
-            Groomer.validateDetailAddress(request.getDetailAddress());
-            Groomer.validateBusinessLicenses(request.getBusinessLicenses());
-            Groomer.validateLicenses(request.getLicenses());
-
-            return false; // 모든 유효성 검사 통과
-        } catch (IllegalArgumentException e) {
-            return true; // 유효성 검사 실패
-        }
-    }
-
-    private void hasInvalidModifyInfoReqDataFormat(ModifyInfoReq request) {
-            Groomer.validateIntroduction(request.getIntroduction());
+        return AccountResp.builder()
+                .requestResult("미용사 정보가 성공적으로 수정 되었습니다.")
+                .build();
     }
 }

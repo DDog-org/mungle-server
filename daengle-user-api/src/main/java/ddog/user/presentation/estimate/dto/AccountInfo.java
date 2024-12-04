@@ -1,6 +1,5 @@
 package ddog.user.presentation.estimate.dto;
 
-import ddog.domain.pet.Weight;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,13 +11,11 @@ public class AccountInfo {
 
     @Getter
     @Builder
-    public static class Grooming{
+    public static class Grooming {
         private String groomerImage;
         private String groomerName;
         private String shopName;
 
-        private String userImage;
-        private String nickname;
         private String address;
         private List<PetInfo> petInfos;
     }
@@ -29,8 +26,6 @@ public class AccountInfo {
         private String vetImage;
         private String vetName;
 
-        private String userImage;
-        private String nickname;
         private String address;
         private List<PetInfo> petInfos;
     }
@@ -38,11 +33,8 @@ public class AccountInfo {
     @Getter
     @Builder
     public static class PetInfo {
-        private Long id;
+        private Long petId;
         private String image;
         private String name;
-        private String significant;
-        private int birth;
-        private Weight weight;
     }
 }

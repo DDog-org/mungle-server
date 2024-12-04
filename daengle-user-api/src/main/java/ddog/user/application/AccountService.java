@@ -9,10 +9,6 @@ import ddog.domain.user.User;
 import ddog.persistence.port.AccountPersist;
 import ddog.persistence.port.PetPersist;
 import ddog.persistence.port.UserPersist;
-import ddog.user.application.exception.AccountException;
-import ddog.user.application.exception.AccountExceptionType;
-import ddog.user.application.exception.UserException;
-import ddog.user.application.exception.UserExceptionType;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -64,8 +60,7 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
-        if(this.hasInValidSignUpWithPetDataFormat(request))
-            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        validateSignUpWithPetDataFormat(request);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -82,10 +77,22 @@ public class AccountService {
                 .build();
     }
 
+    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
+
+        Pet.validatePetName(request.getPetName());
+        Pet.validatePetBirth(request.getPetBirth());
+        Pet.validatePetGender(request.getPetGender());
+        Pet.validatePetWeight(request.getPetWeight());
+        Pet.validateBreed(request.getBreed());
+    }
+
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
-        if(this.hasInValidSignUpWithoutPetDataFormat(request))
-            throw new AccountException(AccountExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        validateSignUpWithoutPetDataFormat(request);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -98,6 +105,13 @@ public class AccountService {
         return SignUpResp.builder()
                 .accessToken(accessToken)
                 .build();
+    }
+
+    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
     }
 
     private Authentication getAuthentication(Long accountId, String email) {
@@ -113,124 +127,86 @@ public class AccountService {
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getUserProfileInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId);
+
         return UserMapper.toUserProfileInfo(user);
     }
 
     @Transactional
-    public void modifyUserInfo(UserInfoModifyReq request, Long accountId) {
-        if(this.hasInValidUserInfoModifyReqDataFormat(request))
-            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+    public AccountResp modifyUserInfo(UserInfoModifyReq request, Long accountId) {
+        User.validateUsername(request.getNickname());
 
         User user = userPersist.findByAccountId(accountId);
         User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
+
         userPersist.save(modifiedUser);
+
+        return AccountResp.builder()
+                .requestResult("사용자 프로필 수정 완료")
+                .build();
     }
 
     @Transactional
-    public void addPet(AddPetInfo request, Long accountId) {
-        if(this.hasInValidAddPetInfoDataFormat(request))
-            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
+    public AccountResp addPet(AddPetInfo request, Long accountId) {
+        validateAddPetInfoDataFormat(request);
 
         User user = userPersist.findByAccountId(accountId);
+
         Pet newPet = PetMapper.create(accountId, request);
         Pet savedPet = petPersist.save(newPet);
+
         userPersist.save(user.withNewPet(savedPet));
+
+        return AccountResp.builder()
+                .requestResult("반려견 등록 완료")
+                .build();
+    }
+
+    private void validateAddPetInfoDataFormat(AddPetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
     }
 
     @Transactional(readOnly = true)
     public PetInfo getPetInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId);
+
         return UserMapper.toPetInfo(user);
     }
 
     @Transactional
-    public void modifyPetInfo(ModifyPetInfo request, Long accountId) {
-        if(this.hasInValidModifyPetInfoDataFormat(request))
-            throw new UserException(UserExceptionType.INVALID_REQUEST_DATA_FORMAT);
-
+    public AccountResp modifyPetInfo(ModifyPetInfo request, Long accountId) {
+        this.validateModifyPetInfoDataFormat(request);
 
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = PetMapper.withModifyPetInfo(request, accountId);
         petPersist.save(modifiedPet);
+
+        return AccountResp.builder()
+                .requestResult("반려견 프로필 수정 완료")
+                .build();
+    }
+
+    private void validateModifyPetInfoDataFormat(ModifyPetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
     }
 
     @Transactional
-    public void deletePet(Long petId) {
-        /* TODO PetService 추가하면 그곳으로 옮기기 */
+    public AccountResp deletePet(Long petId) {
         petPersist.deletePetById(petId);
-    }
 
-    private boolean hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
-        try {
-            User.validateUsername(request.getUsername());
-            User.validatePhoneNumber(request.getPhoneNumber());
-            User.validateNickname(request.getNickname());
-            User.validateAddress(request.getAddress());
-
-            Pet.validatePetName(request.getPetName());
-            Pet.validatePetBirth(request.getPetBirth());
-            Pet.validatePetGender(request.getPetGender());
-            Pet.validatePetWeight(request.getPetWeight());
-            Pet.validateBreed(request.getBreed());
-
-            return false; // 모든 유효성 검사 통과
-        } catch (IllegalArgumentException e) {
-            return true; // 유효성 검사 실패
-        }
-    }
-
-    private boolean hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
-        try {
-            User.validateUsername(request.getUsername());
-            User.validatePhoneNumber(request.getPhoneNumber());
-            User.validateNickname(request.getNickname());
-            User.validateAddress(request.getAddress());
-
-            return false; // 모든 유효성 검사 통과
-        } catch (IllegalArgumentException e) {
-            return true; // 유효성 검사 실패
-        }
-    }
-
-    private boolean hasInValidUserInfoModifyReqDataFormat(UserInfoModifyReq request) {
-        try {
-            User.validateUsername(request.getNickname());
-
-            return false;
-        } catch (IllegalArgumentException e) {
-            return true;
-        }
-    }
-
-    private boolean hasInValidAddPetInfoDataFormat(AddPetInfo request) {
-        try {
-            Pet.validatePetName(request.getName());
-            Pet.validatePetBirth(request.getBirth());
-            Pet.validatePetGender(request.getGender());
-            Pet.validateBreed(request.getBreed());
-            Pet.validatePetWeight(request.getWeight());
-            Pet.validatePetDislikeParts(request.getDislikeParts());
-            Pet.validateSignificantTags(request.getSignificantTags());
-
-            return false;
-        } catch (IllegalArgumentException e) {
-            return true;
-        }
-    }
-
-    private boolean hasInValidModifyPetInfoDataFormat(ModifyPetInfo request) {
-        try {
-            Pet.validatePetName(request.getName());
-            Pet.validatePetBirth(request.getBirth());
-            Pet.validatePetGender(request.getGender());
-            Pet.validateBreed(request.getBreed());
-            Pet.validatePetWeight(request.getWeight());
-            Pet.validatePetDislikeParts(request.getDislikeParts());
-            Pet.validateSignificantTags(request.getSignificantTags());
-
-            return false;
-        } catch (IllegalArgumentException e) {
-            return true;
-        }
+        return AccountResp.builder()
+                .requestResult("반려견 프로필 삭제 완료")
+                .build();
     }
 }

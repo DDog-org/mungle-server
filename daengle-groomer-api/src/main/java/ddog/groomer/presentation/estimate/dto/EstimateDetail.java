@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class GroomingEstimateDetail {
+public class EstimateDetail {
 
     private String userImage;
     private String nickname;
@@ -18,10 +18,10 @@ public class GroomingEstimateDetail {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
 
-    private Long id;
+    private Long petId;
     private String petImage;
-    private String name;
-    private int birth;
+    private String petName;
+    private int age;
     private Weight weight;
     private String significant;
     private String desiredStyle;

@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static java.time.Year.now;
 
 @Getter
 @Builder
@@ -35,7 +38,7 @@ public class Pet {
     }
 
     public static void validatePetBirth(int petBirth) {
-        int currentYear = java.time.Year.now().getValue();
+        int currentYear = now().getValue();
         if (petBirth < currentYear - 30 || petBirth > currentYear) {
             throw new IllegalArgumentException("Invalid pet birth year: must be within last 30 years.");
         }
@@ -73,5 +76,11 @@ public class Pet {
                 throw new IllegalArgumentException("Invalid significant tag: element cannot be null.");
             }
         }
+    }
+
+    public int getAge() {
+        int currentYear = LocalDate.now().getYear();
+
+        return currentYear - petBirth + 1;
     }
 }

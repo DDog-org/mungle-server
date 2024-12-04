@@ -7,7 +7,10 @@ import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
-import ddog.user.presentation.estimate.dto.*;
+import ddog.user.presentation.estimate.dto.AccountInfo;
+import ddog.user.presentation.estimate.dto.EstimateInfo;
+import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
+import ddog.user.presentation.estimate.dto.GroomingEstimateReq;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,72 +20,54 @@ public class GroomingEstimateMapper {
 
     public static GroomingEstimate createGeneralGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
+                .userId(accountId)
+                .petId(estimateReq.getPetId())
+                .address(estimateReq.getAddress())
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
                 .requirements(estimateReq.getRequirements())
                 .proposal(Proposal.GENERAL)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
                 .build();
     }
 
     public static GroomingEstimate createDesignationGroomingEstimate(GroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
+                .groomerId(estimateReq.getGroomerId())
+                .userId(accountId)
+                .petId(estimateReq.getPetId())
+                .address(estimateReq.getAddress())
                 .reservedDate(estimateReq.getReservedDate())
                 .desiredStyle(estimateReq.getDesiredStyle())
                 .requirements(estimateReq.getRequirements())
                 .proposal(Proposal.DESIGNATION)
                 .status(EstimateStatus.NEW)
                 .createdAt(LocalDateTime.now())
-                .userId(accountId)
-                .userImage(estimateReq.getUserImage())
-                .nickname(estimateReq.getNickname())
-                .address(estimateReq.getAddress())
-                .petId(estimateReq.getId())
-                .petImage(estimateReq.getPetImage())
-                .petName(estimateReq.getName())
-                .petBirth(estimateReq.getBirth())
-                .petWeight(estimateReq.getWeight())
-                .petSignificant(estimateReq.getSignificant())
-                .groomerId(estimateReq.getGroomerId())
                 .build();
     }
 
-    public static List<EstimateInfo.PetInfo.Grooming> toInfos(List<GroomingEstimate> estimates) {
-        List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
-        for (GroomingEstimate estimate : estimates) {
-            groomingInfos.add(EstimateInfo.PetInfo.Grooming.builder()
-                    .groomingEstimateId(estimate.getGroomingEstimateId())
-                    .name(estimate.getGroomerName())
-                    .daengleMeter(estimate.getDaengleMeter())
-                    .image(estimate.getGroomerImage())
-                    .shopName(estimate.getShopName())
-                    .reservedDate(estimate.getReservedDate())
-                    .build());
-        }
-        return groomingInfos;
+    public static EstimateInfo.PetInfo.Grooming toGrooming(GroomingEstimate estimate, Groomer groomer) {
+        return EstimateInfo.PetInfo.Grooming.builder()
+                .groomingEstimateId(estimate.getGroomingEstimateId())
+                .name(groomer.getGroomerName())
+                .daengleMeter(groomer.getDaengleMeter())
+                .image(groomer.getGroomerImage())
+                .shopName(groomer.getShopName())
+                .reservedDate(estimate.getReservedDate())
+                .build();
     }
 
-    public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate) {
+    public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet) {
         return GroomingEstimateDetail.builder()
-                .image(estimate.getGroomerImage())
-                .name(estimate.getGroomerName())
-                .shopName(estimate.getShopName())
-                .daengleMeter(estimate.getDaengleMeter())
-                .introduction(estimate.getGroomerIntroduction())
+                .image(groomer.getGroomerImage())
+                .name(groomer.getGroomerName())
+                .shopName(groomer.getShopName())
+                .daengleMeter(groomer.getDaengleMeter())
+                .introduction(groomer.getGroomerIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
-                .weight(estimate.getPetWeight())
+                .weight(pet.getPetWeight())
                 .desiredStyle(estimate.getDesiredStyle())
                 .overallOpinion(estimate.getOverallOpinion())
                 .build();
@@ -95,8 +80,6 @@ public class GroomingEstimateMapper {
                 .groomerImage(groomer.getGroomerImage())
                 .groomerName(groomer.getGroomerName())
                 .shopName(groomer.getShopName())
-                .nickname(user.getNickname())
-                .userImage(user.getUserImage())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
@@ -108,8 +91,6 @@ public class GroomingEstimateMapper {
         return AccountInfo.Care.builder()
                 .vetImage(vet.getVetImage())
                 .vetName(vet.getVetName())
-                .userImage(user.getUserImage())
-                .nickname(user.getNickname())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
@@ -119,12 +100,9 @@ public class GroomingEstimateMapper {
         List<AccountInfo.PetInfo> petInfos = new ArrayList<>();
         for (Pet pet : user.getPets()) {
             petInfos.add(AccountInfo.PetInfo.builder()
-                    .id(pet.getPetId())
+                    .petId(pet.getPetId())
                     .image(pet.getPetImage())
                     .name(pet.getPetName())
-                    .significant(pet.getPetSignificant())
-                    .birth(pet.getPetBirth())
-                    .weight(pet.getPetWeight())
                     .build());
         }
         return petInfos;
