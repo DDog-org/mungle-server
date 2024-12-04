@@ -3,6 +3,7 @@ package ddog.notification.application;
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
 import ddog.persistence.port.NotificationPersist;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
 
     // 연결된 SseEmitter 목록
@@ -19,11 +21,6 @@ public class NotificationService {
     private final RedisService redisService;
 
     private final NotificationPersist notificationPersist;
-
-    public NotificationService(RedisService redisService, NotificationPersist notificationPersist) {
-        this.redisService = redisService;
-        this.notificationPersist = notificationPersist;
-    }
 
     // SSE 연결
     public SseEmitter connect(Long userId) {

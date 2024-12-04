@@ -1,15 +1,14 @@
 package ddog.notification.application;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RedisService {
-    private RedisTemplate<String, String> redisTemplate;
 
-    public RedisService(RedisTemplate<String, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
+    private final RedisTemplate<String, String> redisTemplate;
 
     public boolean isUserLoggedIn(Long userId) {
         return redisTemplate.hasKey("user_loggedIn:" + userId);
