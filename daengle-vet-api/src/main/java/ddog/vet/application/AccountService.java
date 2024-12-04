@@ -33,7 +33,7 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
-        hasInValidSignUpRequestDataFormat(request);
+        validateSignUpRequestDataFormat(request);
 
         Account newAccount = Account.create(request.getEmail(), Role.VET);
         Account savedAccount = accountPersist.save(newAccount);
@@ -49,7 +49,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidSignUpRequestDataFormat(SignUpReq request) {
+    private void validateSignUpRequestDataFormat(SignUpReq request) {
         Vet.validateName(request.getName());
         Vet.validateAddress(request.getAddress());
         Vet.validateDetailAddress(request.getDetailAddress());
@@ -75,7 +75,7 @@ public class AccountService {
 
     @Transactional
     public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
-        hasInValidModifyInfoDataFormat(request);
+        validateModifyInfoDataFormat(request);
 
         Vet vet = vetPersist.getVetByAccountId(accountId);
         Vet updatedVet = VetMapper.withUpdate(vet, request);
@@ -86,7 +86,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidModifyInfoDataFormat(ModifyInfoReq request) {
+    private void validateModifyInfoDataFormat(ModifyInfoReq request) {
         Vet.validateTimeRange(request.getStartTime(), request.getEndTime());
         Vet.validateClosedDays(request.getClosedDays());
         Vet.validatePhoneNumber(request.getPhoneNumber());

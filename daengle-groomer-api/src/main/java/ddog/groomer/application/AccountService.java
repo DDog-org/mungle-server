@@ -34,7 +34,7 @@ public class AccountService {
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
 
-        hasInvalidSignUpReqDataFormat(request);
+        validateSignUpReqDataFormat(request);
 
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
@@ -50,7 +50,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInvalidSignUpReqDataFormat(SignUpReq request) {
+    private void validateSignUpReqDataFormat(SignUpReq request) {
         Groomer.validateShopName(request.getShopName());
         Groomer.validateName(request.getName());
         Groomer.validatePhoneNumber(request.getPhoneNumber());

@@ -60,7 +60,7 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
-        hasInValidSignUpWithPetDataFormat(request);
+        validateSignUpWithPetDataFormat(request);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -77,7 +77,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidSignUpWithPetDataFormat(SignUpWithPet request) {
+    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
         User.validateUsername(request.getUsername());
         User.validatePhoneNumber(request.getPhoneNumber());
         User.validateNickname(request.getNickname());
@@ -92,7 +92,7 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
-        hasInValidSignUpWithoutPetDataFormat(request);
+        validateSignUpWithoutPetDataFormat(request);
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -107,7 +107,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
         User.validateUsername(request.getUsername());
         User.validatePhoneNumber(request.getPhoneNumber());
         User.validateNickname(request.getNickname());
@@ -147,7 +147,7 @@ public class AccountService {
 
     @Transactional
     public AccountResp addPet(AddPetInfo request, Long accountId) {
-        hasInValidAddPetInfoDataFormat(request);
+        validateAddPetInfoDataFormat(request);
 
         User user = userPersist.findByAccountId(accountId);
 
@@ -161,7 +161,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidAddPetInfoDataFormat(AddPetInfo request) {
+    private void validateAddPetInfoDataFormat(AddPetInfo request) {
         Pet.validatePetName(request.getName());
         Pet.validatePetBirth(request.getBirth());
         Pet.validatePetGender(request.getGender());
@@ -180,7 +180,7 @@ public class AccountService {
 
     @Transactional
     public AccountResp modifyPetInfo(ModifyPetInfo request, Long accountId) {
-        this.hasInValidModifyPetInfoDataFormat(request);
+        this.validateModifyPetInfoDataFormat(request);
 
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
         Pet modifiedPet = PetMapper.withModifyPetInfo(request, accountId);
@@ -191,7 +191,7 @@ public class AccountService {
                 .build();
     }
 
-    private void hasInValidModifyPetInfoDataFormat(ModifyPetInfo request) {
+    private void validateModifyPetInfoDataFormat(ModifyPetInfo request) {
         Pet.validatePetName(request.getName());
         Pet.validatePetBirth(request.getBirth());
         Pet.validatePetGender(request.getGender());
