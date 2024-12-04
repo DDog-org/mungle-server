@@ -1,14 +1,13 @@
 package ddog.persistence.jpa.repository;
 
-
 import ddog.persistence.jpa.entity.PetJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface PetJpaRepository extends JpaRepository<PetJpaEntity, Long> {
 
-    List<PetJpaEntity> findByAccountId(Long userId);
+    Optional<PetJpaEntity> findPetByPetId(Long petId);
 
     void deleteByPetId(Long petId);
 
