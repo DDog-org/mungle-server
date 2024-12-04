@@ -30,6 +30,7 @@ public class ChatRoomJpaEntity {
                 .partnerId(chatRoom.getPartnerId())
                 .build();
     }
+
     public ChatRoom toModel() {
         return ChatRoom.builder()
                 .chatRoomId(chatRoomId)

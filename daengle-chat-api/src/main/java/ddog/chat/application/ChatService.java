@@ -2,6 +2,7 @@ package ddog.chat.application;
 
 import ddog.domain.chat.ChatMessage;
 import ddog.persistence.port.ChatMessagePersist;
+import ddog.persistence.port.ChatRoomPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,20 +11,16 @@ import org.springframework.stereotype.Service;
 public class ChatService {
 
     private final ChatMessagePersist chatMessagePersist;
+    private final ChatRoomPersist chatRoomPersist;
 
-    // 채팅방 생성
-    public void startChatWith(Long userId, Long partnerId) {
-
-    }
-
-    // 채팅방 입장 - 데이터 불러오기
-    public void enterChat(Long roomId){
-
+    // 채팅방 입장 or 생성
+    public void enterChat(Long userId, Long partnerId){
+        chatRoomPersist.enterChatRoom(userId, partnerId);
     }
 
     // 채팅방 나가기 - 데이터 삭제 및 방 삭제
-    public void endChat(Long roomId){
-
+    public void endChat(Long userId, Long partnerId){
+        chatRoomPersist.exitChatRoom(userId, partnerId);
     }
 
 
