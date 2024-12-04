@@ -22,7 +22,7 @@ public class AccountController {
         return success(accountService.hasNickname(request.getNickname()));
     }
 
-    @GetMapping("/breed-list")
+    @GetMapping("/breed/list")
     public CommonResponseEntity<BreedList> getBreedList() {
         return success(accountService.getBreedInfos());
     }
@@ -37,7 +37,7 @@ public class AccountController {
         return success(accountService.signUpWithoutPet(request, response));
     }
 
-    @GetMapping("/modify-page")
+    @GetMapping("/info")
     public CommonResponseEntity<ProfileInfo.ModifyPage> getUserProfileInfo(PayloadDto payloadDto) {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
