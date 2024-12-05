@@ -34,6 +34,7 @@ public class GroomingReviewJpaEntity {
 
     @ElementCollection // 키워드 리스트
     @CollectionTable(name = "grooming_review_keyword_list", joinColumns = @JoinColumn(name = "grooming_review_id"))
+    @Enumerated(EnumType.STRING)
     @Column(name = "keyword_list")
     private List<GroomingKeywordReview> groomingKeywordReviewList;
 
