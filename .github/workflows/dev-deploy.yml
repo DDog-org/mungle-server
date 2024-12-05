@@ -14,19 +14,15 @@ jobs:
         module:
           - name: daengle-payment
             path: daengle-payment-api
-            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_PAYMENT_HOST }}
           - name: daengle-user
             path: daengle-user-api
-            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_USER_HOST }}
           - name: daengle-vet
             path: daengle-vet-api
-            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_VET_HOST }}
           - name: daengle-groomer
             path: daengle-groomer-api
-            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
 
     steps:
@@ -104,7 +100,7 @@ jobs:
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ matrix.module.ssh_user }}@${{ matrix.module.ssh_host }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.ssh_host }} << 'EOF'
           MODULE=${{ matrix.module.name }}
 
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
