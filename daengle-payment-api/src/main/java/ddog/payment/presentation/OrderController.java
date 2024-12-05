@@ -1,14 +1,15 @@
 package ddog.payment.presentation;
 
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.domain.order.enums.PostOrderReq;
 import ddog.payment.application.OrderService;
 import ddog.payment.application.dto.response.PostOrderResp;
-import ddog.payment.application.exception.common.CommonResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import static ddog.payment.application.exception.common.CommonResponseEntity.success;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
+
 
 @RestController
 @RequiredArgsConstructor
