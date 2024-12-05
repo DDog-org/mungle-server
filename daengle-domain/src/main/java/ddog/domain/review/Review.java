@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -17,5 +18,6 @@ public abstract class Review {
     private Long revieweeId;
     private Long starRating;
     private String content;
+    private LocalDateTime createTime;
     private List<String> imageUrlList;
 }
