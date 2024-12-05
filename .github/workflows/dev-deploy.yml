@@ -73,50 +73,44 @@ jobs:
           set -e
           cd ${{ matrix.module.path }}
           
-          # 태그 설정: PR 생성 또는 병합 여부에 따라 다르게 태그 생성
+          # 태그 생성
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             PR_NUMBER=${{ github.event.pull_request.number }}
-            IMAGE_TAG=pr-$PR_NUMBER-$(date +%Y%m%d%H%M%S)
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)  # 태그 생성 시점 통일
+            IMAGE_TAG=pr-$PR_NUMBER-$TIMESTAMP
           else
-            IMAGE_TAG=release-$(date +%Y%m%d%H%M%S)
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            IMAGE_TAG=release-$TIMESTAMP
           fi
+          
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV  # GitHub 환경 변수로 저장
           
           echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           
-          # 병합 후만 latest 태그 추가
           if [[ "${{ github.event_name }}" != "pull_request" ]]; then
             docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
             docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
           fi
 
-      # 9. Set up SSH
+      # 8. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
+  
 
-      # 10. Deploy to EC2
+      # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.name == 'daengle-payment' && env.SSH_PAYMENT_HOST || matrix.module.name == 'daengle-user' && env.SSH_USER_HOST || matrix.module.name == 'daengle-vet' && env.SSH_VET_HOST || env.SSH_GROOMER_HOST  }} << 'EOF'
+          echo "=== Logging into EC2 ==="
+          ssh -i ~/.ssh/id_rsa ${{ matrix.module.ssh_user }}@${{ matrix.module.ssh_host }} << 'EOF'
           MODULE=${{ matrix.module.name }}
-          
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            PR_NUMBER=${{ github.event.pull_request.number }}
-            IMAGE_TAG=pr-$PR_NUMBER-$(date +%Y%m%d%H%M%S)
-            CONTAINER_NAME=pr-$PR_NUMBER-${MODULE}
-          else
-            IMAGE_TAG=release-$(date +%Y%m%d%H%M%S)
-            CONTAINER_NAME=${MODULE}
-          fi
-          
-          echo "=== Logging into ECR ==="
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+          IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
           echo "=== Pulling the latest Docker image ==="
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
