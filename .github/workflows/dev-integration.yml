@@ -7,7 +7,6 @@ on:
   pull_request:
     branches: [ "develop" ]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,14 +26,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Debug current directory
+        run: |
+          echo "Current working directory:"
+          pwd
+          echo "Listing files in the current directory:"
+          ls -l
+
       - name: Debug workspace
-        run: ls -R src
+        run: |
+          echo "Listing files in the module path:"
+          ls -l ${{ matrix.module.path }}
 
       - name: Create application-test.yml
         run: |
@@ -44,7 +53,8 @@ jobs:
       - name: Build and Test
         run: |
           cd ${{ matrix.module.path }}
-          ls -l ${{ matrix.module.path }}
+          echo "Listing files in module path after changing directory:"
+          ls -l
           ./gradlew clean build -Dspring.profiles.active=test --no-build-cache
         env:
           JWT_SECRET: ${{ secrets.jwt_secret_key }}
@@ -58,7 +68,6 @@ jobs:
             ${{ runner.os }}-gradle-
 
   dependency-submission:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
