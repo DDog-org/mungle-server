@@ -146,17 +146,27 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public AccountInfo.Grooming getGroomerAndUserInfo(Long groomerId, Long userId) {
-        Groomer groomer = groomerPersist.getGroomerByAccountId(groomerId);
+
         User user = userPersist.findByAccountId(userId);
 
-        return GroomingEstimateMapper.toGroomingInfo(groomer, user);
+        if (groomerId == null) {
+            return GroomingEstimateMapper.withoutGroomingInfo(user);
+        }
+
+        Groomer groomer = groomerPersist.getGroomerByAccountId(groomerId);
+        return GroomingEstimateMapper.withGroomingInfo(groomer, user);
     }
 
     @Transactional(readOnly = true)
     public AccountInfo.Care getVetAndUserInfo(Long vetId, Long userId) {
-        Vet vet = vetPersist.getVetByAccountId(vetId);
+
         User user = userPersist.findByAccountId(userId);
 
-        return GroomingEstimateMapper.toCareInfo(vet, user);
+        if (vetId == null) {
+            return CareEstimateMapper.withoutCareInfo(user);
+        }
+
+        Vet vet = vetPersist.getVetByAccountId(vetId);
+        return CareEstimateMapper.withCareInfo(vet, user);
     }
 }

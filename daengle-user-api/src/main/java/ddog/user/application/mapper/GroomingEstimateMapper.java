@@ -6,7 +6,6 @@ import ddog.domain.estimate.Proposal;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.domain.vet.Vet;
 import ddog.user.presentation.estimate.dto.AccountInfo;
 import ddog.user.presentation.estimate.dto.EstimateInfo;
 import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
@@ -75,24 +74,22 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static AccountInfo.Grooming toGroomingInfo(Groomer groomer, User user) {
+    public static AccountInfo.Grooming withoutGroomingInfo(User user) {
+        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
+
+        return AccountInfo.Grooming.builder()
+                .address(user.getAddress())
+                .petInfos(petInfos)
+                .build();
+    }
+
+    public static AccountInfo.Grooming withGroomingInfo(Groomer groomer, User user) {
         List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
 
         return AccountInfo.Grooming.builder()
                 .groomerImage(groomer.getGroomerImage())
                 .groomerName(groomer.getGroomerName())
                 .shopName(groomer.getShopName())
-                .address(user.getAddress())
-                .petInfos(petInfos)
-                .build();
-    }
-
-    public static AccountInfo.Care toCareInfo(Vet vet, User user) {
-        List<AccountInfo.PetInfo> petInfos = toPetInfos(user);
-
-        return AccountInfo.Care.builder()
-                .vetImage(vet.getVetImage())
-                .vetName(vet.getVetName())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
