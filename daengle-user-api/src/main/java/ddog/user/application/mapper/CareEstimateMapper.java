@@ -53,6 +53,7 @@ public class CareEstimateMapper {
                 .careEstimateId(estimate.getEstimateId())
                 .name(vet.getVetName())
                 .daengleMeter(vet.getDaengleMeter())
+                .proposal(estimate.getProposal())
                 .image(vet.getVetImage())
                 .reservedDate(estimate.getReservedDate())
                 .build();
@@ -63,6 +64,7 @@ public class CareEstimateMapper {
                 .image(vet.getVetImage())
                 .name(vet.getVetName())
                 .daengleMeter(vet.getDaengleMeter())
+                .proposal(estimate.getProposal())
                 .introduction(vet.getVetIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
