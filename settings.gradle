@@ -8,5 +8,5 @@ include 'daengle-groomer-api'
 include 'daengle-vet-api'
 include 'daengle-notification'
 include 'daengle-chat-api'
-include 'daengle-persistence-dynamo'
+include 'daengle-persistence-dynamodb'
 
