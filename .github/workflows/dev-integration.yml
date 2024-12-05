@@ -52,8 +52,8 @@ jobs:
 
       - name: Build and Test
         run: |
-          ./gradlew clean build -Dspring.profiles.active=test --no-build-cache
           cd ${{ matrix.module.path }}
+          ./gradlew :${{ matrix.module.name }}:build -Dspring.profiles.active=prod --no-build-cache
         env:
           JWT_SECRET: ${{ secrets.jwt_secret_key }}
 
