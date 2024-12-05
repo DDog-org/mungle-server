@@ -18,6 +18,16 @@ public class CareEstimate extends Estimate {
     private String cause;
     private String treatment;
 
+    public static void validateSymptoms(String symptoms) {
+        if (symptoms == null) {
+            throw new IllegalArgumentException("Invalid Symptoms: Symptoms is null.");
+        }
+
+        if (symptoms.isEmpty() || symptoms.length() > 100) {
+            throw new IllegalArgumentException("Invalid Symptoms: Symptoms is empty or exceeds 50 characters.");
+        }
+    }
+
     public static void validateDiagnosis(String diagnosis) {
         if (diagnosis == null) {
             throw new IllegalArgumentException("Invalid Diagnosis: Diagnosis is null.");
