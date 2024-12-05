@@ -49,7 +49,7 @@ public class GroomingEstimateMapper {
 
     public static EstimateInfo.PetInfo.Grooming toGrooming(GroomingEstimate estimate, Groomer groomer) {
         return EstimateInfo.PetInfo.Grooming.builder()
-                .groomingEstimateId(estimate.getGroomingEstimateId())
+                .groomingEstimateId(estimate.getEstimateId())
                 .name(groomer.getGroomerName())
                 .daengleMeter(groomer.getDaengleMeter())
                 .image(groomer.getGroomerImage())

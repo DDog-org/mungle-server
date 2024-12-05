@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CareEstimatePersist {
     void save(CareEstimate careEstimate);
-    CareEstimate getByCareEstimateId(Long careEstimateId);
+    CareEstimate getByEstimateId(Long careEstimateId);
     List<CareEstimate> findCareEstimatesByPetId(Long petId);
     List<CareEstimate> findGeneralCareEstimates(String address);
     List<CareEstimate> findDesignationCareEstimates(Long vetId);

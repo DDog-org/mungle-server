@@ -40,8 +40,8 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public CareEstimate getByCareEstimateId(Long careEstimateId) {
-        return careEstimateJpaRepository.getCareEstimateJpaEntityByCareEstimateId(careEstimateId).toModel();
+    public CareEstimate getByEstimateId(Long estimateId) {
+        return careEstimateJpaRepository.getCareEstimateJpaEntityByEstimateId(estimateId).toModel();
     }
 
     @Override

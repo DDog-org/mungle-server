@@ -1,6 +1,6 @@
-package ddog.persistence.mysql.jpa.entity;
+package ddog.persistence.jpa.entity;
 
-import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.CareEstimateLog;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
 import jakarta.persistence.*;
@@ -15,11 +15,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "CareEstimates")
-public class CareEstimateJpaEntity {
+@Entity(name = "CareEstimateLogs")
+public class CareEstimateLogJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long estimateLogId;
     private Long estimateId;
     private Long userId;
     private Long petId;
@@ -43,28 +44,30 @@ public class CareEstimateJpaEntity {
     private String cause;
     private String treatment;
 
-    public static CareEstimateJpaEntity from(CareEstimate estimate) {
-        return CareEstimateJpaEntity.builder()
-                .estimateId(estimate.getEstimateId())
-                .userId(estimate.getUserId())
-                .petId(estimate.getPetId())
-                .vetId(estimate.getVetId())
-                .address(estimate.getAddress())
-                .reservedDate(estimate.getReservedDate())
-                .requirements(estimate.getRequirements())
-                .status(estimate.getStatus())
-                .proposal(estimate.getProposal())
-                .createdAt(estimate.getCreatedAt())
-                .updatedAt(estimate.getUpdatedAt())
-                .symptoms(estimate.getSymptoms())
-                .diagnosis(estimate.getDiagnosis())
-                .cause(estimate.getCause())
-                .treatment(estimate.getTreatment())
+    public static CareEstimateLogJpaEntity from(CareEstimateLog estimateLog) {
+        return CareEstimateLogJpaEntity.builder()
+                .estimateLogId(estimateLog.getEstimateLogId())
+                .estimateId(estimateLog.getEstimateId())
+                .userId(estimateLog.getUserId())
+                .petId(estimateLog.getPetId())
+                .vetId(estimateLog.getVetId())
+                .address(estimateLog.getAddress())
+                .reservedDate(estimateLog.getReservedDate())
+                .requirements(estimateLog.getRequirements())
+                .status(estimateLog.getStatus())
+                .proposal(estimateLog.getProposal())
+                .createdAt(estimateLog.getCreatedAt())
+                .updatedAt(estimateLog.getUpdatedAt())
+                .symptoms(estimateLog.getSymptoms())
+                .diagnosis(estimateLog.getDiagnosis())
+                .cause(estimateLog.getCause())
+                .treatment(estimateLog.getTreatment())
                 .build();
     }
 
-    public CareEstimate toModel() {
-        return CareEstimate.builder()
+    public CareEstimateLog toModel() {
+        return CareEstimateLog.builder()
+                .estimateLogId(estimateLogId)
                 .estimateId(estimateId)
                 .userId(userId)
                 .petId(petId)

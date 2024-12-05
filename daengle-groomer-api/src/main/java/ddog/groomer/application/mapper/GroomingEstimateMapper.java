@@ -15,7 +15,7 @@ public class GroomingEstimateMapper {
 
     public static EstimateInfo.Content estimateToContent(GroomingEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Content.builder()
-                .id(estimate.getGroomingEstimateId())
+                .id(estimate.getEstimateId())
                 .image(user.getUserImage())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())

@@ -40,8 +40,8 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public GroomingEstimate getByGroomingEstimateId(Long groomingEstimateId) {
-        return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByGroomingEstimateId(groomingEstimateId)
+    public GroomingEstimate getByEstimateId(Long estimateId) {
+        return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByEstimateId(estimateId)
                 .toModel();
     }
 

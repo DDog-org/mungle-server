@@ -110,7 +110,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(groomingEstimateId);
         Groomer groomer = groomerPersist.getGroomerByAccountId(groomingEstimate.getGroomerId());
         Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
 
@@ -119,7 +119,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
-        CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
+        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(careEstimateId);
         Vet vet = vetPersist.getVetByAccountId(careEstimate.getVetId());
         Pet pet = petPersist.findByPetId(careEstimate.getPetId());
 

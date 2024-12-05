@@ -63,7 +63,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long groomingEstimateId) {
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(groomingEstimateId);
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(groomingEstimateId);
         User user = userPersist.findByAccountId(groomingEstimate.getUserId());
         Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
 
@@ -75,7 +75,7 @@ public class EstimateService {
 
         GroomingEstimate.validateOverallOpinion(request.getOverallOpinion());
 
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByGroomingEstimateId(request.getId());
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(request.getId());
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
 
         groomingEstimatePersist.save(GroomingEstimateMapper.createGroomingEstimate(request, groomer, groomingEstimate));

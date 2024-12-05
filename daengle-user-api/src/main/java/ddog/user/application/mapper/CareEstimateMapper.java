@@ -44,7 +44,7 @@ public class CareEstimateMapper {
 
     public static EstimateInfo.PetInfo.Care toCare(CareEstimate estimate, Vet vet) {
         return EstimateInfo.PetInfo.Care.builder()
-                .careEstimateId(estimate.getCareEstimateId())
+                .careEstimateId(estimate.getEstimateId())
                 .name(vet.getVetName())
                 .daengleMeter(vet.getDaengleMeter())
                 .image(vet.getVetImage())

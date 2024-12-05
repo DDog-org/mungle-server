@@ -17,7 +17,7 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
             "WHERE g.proposal = 'DESIGNATION' AND g.status = 'NEW' AND g.groomerId = :groomerId")
     List<GroomingEstimateJpaEntity> findDesignationGroomingEstimatesByGroomerId(@Param("groomerId") Long groomerId);
 
-    GroomingEstimateJpaEntity getGroomingEstimateJpaEntityByGroomingEstimateId(Long groomingEstimateId);
+    GroomingEstimateJpaEntity getGroomingEstimateJpaEntityByEstimateId(Long estimateId);
 
     @Query("SELECT g FROM GroomingEstimates g " +
             "WHERE g.status = 'PENDING' AND g.petId = :petId")

@@ -1,43 +1,22 @@
 package ddog.domain.estimate;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CareEstimate {
+public class CareEstimate extends Estimate {
 
-    private Long careEstimateId;
-    private Long userId;
-    private Long petId;
     private Long vetId;
 
-    private String address;
-    private LocalDateTime reservedDate;
     private String symptoms;
-    private String requirements;
-    private Proposal proposal;
-    private EstimateStatus status;
-    private LocalDateTime createdAt;
     private String diagnosis;
     private String cause;
     private String treatment;
-
-    public static void validateRequirements(String requirements) {
-        if (requirements == null) {
-            throw new IllegalArgumentException("Invalid Requirements: Requirements is null.");
-        }
-
-        if (requirements.isEmpty() || requirements.length() > 400) {
-            throw new IllegalArgumentException("Invalid Requirements: Requirements is empty or exceeds 400 characters.");
-        }
-    }
 
     public static void validateDiagnosis(String diagnosis) {
         if (diagnosis == null) {

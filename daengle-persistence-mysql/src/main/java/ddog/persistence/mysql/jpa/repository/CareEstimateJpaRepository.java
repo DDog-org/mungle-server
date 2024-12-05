@@ -18,7 +18,7 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
             "WHERE c.proposal = 'DESIGNATION' AND c.status = 'NEW' AND c.vetId = :vetId")
     List<CareEstimateJpaEntity> findDesignationCareEstimatesByVetId(@Param("vetId") Long vetId);
 
-    CareEstimateJpaEntity getCareEstimateJpaEntityByCareEstimateId(Long careEstimateId);
+    CareEstimateJpaEntity getCareEstimateJpaEntityByEstimateId(Long estimateId);
 
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.status = 'PENDING' AND c.petId = :petId")

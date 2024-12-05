@@ -64,7 +64,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long careEstimateId) {
-        CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(careEstimateId);
+        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(careEstimateId);
         User user = userPersist.findByAccountId(careEstimate.getUserId());
         Pet pet = petPersist.findByPetId(careEstimate.getPetId());
 
@@ -77,7 +77,7 @@ public class EstimateService {
         CareEstimate.validateCause(request.getCause());
         CareEstimate.validateTreatment(request.getTreatment());
 
-        CareEstimate careEstimate = careEstimatePersist.getByCareEstimateId(request.getId());
+        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(request.getId());
         Vet vet = vetPersist.getVetByAccountId(accountId);
 
         careEstimatePersist.save(CareEstimateMapper.createVetCareEstimate(request, vet, careEstimate));
