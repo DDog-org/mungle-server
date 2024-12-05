@@ -36,7 +36,8 @@ jobs:
       # 2. Create application.yml
       - name: Create application.yml
         run: |
-          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
+          mkdir -p ${{ matrix.module.path }}/src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
 
       # 3. Create .env file
       - name: Create .env file
