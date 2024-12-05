@@ -1,6 +1,7 @@
 package ddog.groomer.application;
 
 import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
@@ -28,7 +29,9 @@ public class EstimateService {
     private final GroomerPersist groomerPersist;
     private final PetPersist petPersist;
     private final UserPersist userPersist;
+
     private final GroomingEstimatePersist groomingEstimatePersist;
+    private final GroomingEstimateLogPersist groomingEstimateLogPersist;
 
     @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfo(Long accountId) {
@@ -76,13 +79,17 @@ public class EstimateService {
 
     @Transactional
     public EstimateResp createEstimate(EstimateReq request, Long accountId) {
-
         GroomingEstimate.validateOverallOpinion(request.getOverallOpinion());
 
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(request.getId());
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
 
-        groomingEstimatePersist.save(GroomingEstimateMapper.createGroomingEstimate(request, groomer, groomingEstimate));
+        GroomingEstimate updatedEstimate = GroomingEstimateMapper.updateEstimate(request, groomer, groomingEstimate);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.save(updatedEstimate);
+
+        GroomingEstimateLog newEstimateLog = GroomingEstimateLog.from(savedEstimate);
+        groomingEstimateLogPersist.save(newEstimateLog);
+
         return EstimateResp.builder()
                 .requestResult("대기 미용 견적서 등록 완료")
                 .build();

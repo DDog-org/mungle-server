@@ -24,8 +24,6 @@ public abstract class Estimate {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    /* TODO Estimate 의 속성값에 관련된 유효성 검증 추가 */
-
     public static void validateRequirements(String requirements) {
         if (requirements == null) {
             throw new IllegalArgumentException("Invalid Requirements: Requirements is null.");
