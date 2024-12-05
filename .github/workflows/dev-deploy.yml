@@ -94,9 +94,9 @@ jobs:
       # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
+          
           set -e
-          echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ env.SSH_USER }}@${{ matrix.module.name == 'daengle-payment' && env.SSH_PAYMENT_HOST || matrix.module.name == 'daengle-user' && env.SSH_USER_HOST || matrix.module.name == 'daengle-vet' && env.SSH_VET_HOST || env.SSH_GROOMER_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.name == 'daengle-payment' && env.SSH_PAYMENT_HOST || matrix.module.name == 'daengle-user' && env.SSH_USER_HOST || matrix.module.name == 'daengle-vet' && env.SSH_VET_HOST || env.SSH_GROOMER_HOST  }} << 'EOF'
           MODULE=${{ matrix.module.name }}
           
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
