@@ -1,4 +1,4 @@
-package ddog.persistence.port;
+package ddog.persistence.mysql.port;
 
 import ddog.domain.estimate.CareEstimateLog;
 

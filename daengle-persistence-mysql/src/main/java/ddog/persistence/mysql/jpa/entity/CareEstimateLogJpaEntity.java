@@ -1,4 +1,4 @@
-package ddog.persistence.jpa.entity;
+package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.estimate.CareEstimateLog;
 import ddog.domain.estimate.EstimateStatus;

@@ -1,9 +1,9 @@
-package ddog.persistence.adapter;
+package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.CareEstimateLog;
-import ddog.persistence.jpa.entity.CareEstimateLogJpaEntity;
-import ddog.persistence.jpa.repository.CareEstimateLogJpaRepository;
-import ddog.persistence.port.CareEstimateLogPersist;
+import ddog.persistence.mysql.jpa.entity.CareEstimateLogJpaEntity;
+import ddog.persistence.mysql.jpa.repository.CareEstimateLogJpaRepository;
+import ddog.persistence.mysql.port.CareEstimateLogPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

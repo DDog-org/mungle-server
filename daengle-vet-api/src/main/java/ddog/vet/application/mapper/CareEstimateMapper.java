@@ -45,8 +45,9 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static CareEstimate createVetCareEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
+    public static CareEstimate updateEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
         return CareEstimate.builder()
+                .estimateId(estimate.getEstimateId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
                 .vetId(vet.getAccountId())
@@ -54,9 +55,10 @@ public class CareEstimateMapper {
                 .reservedDate(request.getReservedDate())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
-                .proposal(estimate.getProposal())
                 .status(EstimateStatus.PENDING)
-                .createdAt(LocalDateTime.now())
+                .proposal(estimate.getProposal())
+                .createdAt(estimate.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
                 .diagnosis(request.getDiagnosis())
                 .cause(request.getCause())
                 .treatment(request.getTreatment())
