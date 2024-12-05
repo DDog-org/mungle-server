@@ -9,14 +9,14 @@ import java.util.List;
 
 public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEstimateJpaEntity, Long> {
 
-    GroomingEstimateJpaEntity save(GroomingEstimateJpaEntity groomingEstimateJpaEntity);
+    GroomingEstimateJpaEntity save(GroomingEstimateJpaEntity estimateJpaEntity);
 
     @Query("SELECT g FROM GroomingEstimates g " +
-            "WHERE g.proposal = 'GENERAL' AND g.status = 'NEW' AND g.address = :address")
+            "WHERE g.proposal = 'GENERAL' AND (g.status = 'NEW' OR g.status = 'PENDING') AND g.address = :address")
     List<GroomingEstimateJpaEntity> findGeneralGroomingEstimatesByAddress(@Param("address") String address);
 
     @Query("SELECT g FROM GroomingEstimates g " +
-            "WHERE g.proposal = 'DESIGNATION' AND g.status = 'NEW' AND g.groomerId = :groomerId")
+            "WHERE g.proposal = 'DESIGNATION' AND (g.status = 'NEW' OR g.status = 'PENDING') AND g.groomerId = :groomerId")
     List<GroomingEstimateJpaEntity> findDesignationGroomingEstimatesByGroomerId(@Param("groomerId") Long groomerId);
 
     GroomingEstimateJpaEntity getGroomingEstimateJpaEntityByEstimateId(Long estimateId);

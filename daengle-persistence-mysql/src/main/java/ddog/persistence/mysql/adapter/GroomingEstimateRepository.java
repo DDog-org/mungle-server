@@ -25,8 +25,10 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     @Override
     public List<GroomingEstimate> findGeneralGroomingEstimates(String address) {
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
+
         for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGeneralGroomingEstimatesByAddress(address)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
+
         }
         return groomingEstimates;
     }

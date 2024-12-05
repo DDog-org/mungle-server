@@ -30,6 +30,7 @@ public class GroomingEstimateMapper {
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
                 .petImage(pet.getPetImage())
                 .petName(pet.getPetName())
@@ -38,6 +39,7 @@ public class GroomingEstimateMapper {
                 .significant(pet.getPetSignificant())
                 .desiredStyle(estimate.getDesiredStyle())
                 .requirements(estimate.getRequirements())
+                .overallOpinion(estimate.getOverallOpinion())
                 .build();
     }
 

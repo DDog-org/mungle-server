@@ -33,6 +33,7 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfo(Long accountId) {
         Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+
         List<GroomingEstimate> generalEstimates = groomingEstimatePersist.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimatePersist.findDesignationGroomingEstimates(groomer.getAccountId());
 
@@ -52,18 +53,21 @@ public class EstimateService {
 
     private List<EstimateInfo.Content> estimatesToContents(List<GroomingEstimate> estimates) {
         List<EstimateInfo.Content> contents = new ArrayList<>();
+
         for (GroomingEstimate estimate : estimates) {
             User user = userPersist.findByAccountId(estimate.getUserId());
             Pet pet = petPersist.findByPetId(estimate.getPetId());
 
             contents.add(GroomingEstimateMapper.estimateToContent(estimate, user, pet));
         }
+
         return contents;
     }
 
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(groomingEstimateId);
+
         User user = userPersist.findByAccountId(groomingEstimate.getUserId());
         Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
 
