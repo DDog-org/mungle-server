@@ -7,4 +7,4 @@ include 'daengle-user-api'
 include 'daengle-groomer-api'
 include 'daengle-vet-api'
 include 'daengle-notification'
-
+include 'daengle-chat-api'
