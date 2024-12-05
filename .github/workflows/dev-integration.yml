@@ -52,10 +52,8 @@ jobs:
 
       - name: Build and Test
         run: |
-          cd ${{ matrix.module.path }}
-          echo "Listing files in module path after changing directory:"
-          ls -l
           ./gradlew clean build -Dspring.profiles.active=test --no-build-cache
+          cd ${{ matrix.module.path }}
         env:
           JWT_SECRET: ${{ secrets.jwt_secret_key }}
 
@@ -79,9 +77,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
 
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
