@@ -33,6 +33,7 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfo(Long accountId) {
         Vet vet = vetPersist.getVetByAccountId(accountId);
+
         List<CareEstimate> generalEstimates = careEstimatePersist.findGeneralCareEstimates(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimatePersist.findDesignationCareEstimates(vet.getAccountId());
 
@@ -52,8 +53,8 @@ public class EstimateService {
 
     private List<EstimateInfo.Content> estimatesToContents(List<CareEstimate> estimates) {
         List<EstimateInfo.Content> contents = new ArrayList<>();
+
         for (CareEstimate estimate : estimates) {
-            System.out.println(estimate.getUserId()+ " " + estimate.getPetId());
             User user = userPersist.findByAccountId(estimate.getUserId());
             Pet pet = petPersist.findByPetId(estimate.getPetId());
 
@@ -65,6 +66,7 @@ public class EstimateService {
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long careEstimateId) {
         CareEstimate careEstimate = careEstimatePersist.getByEstimateId(careEstimateId);
+
         User user = userPersist.findByAccountId(careEstimate.getUserId());
         Pet pet = petPersist.findByPetId(careEstimate.getPetId());
 

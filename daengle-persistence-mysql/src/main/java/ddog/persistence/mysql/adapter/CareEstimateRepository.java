@@ -25,9 +25,11 @@ public class CareEstimateRepository implements CareEstimatePersist {
     @Override
     public List<CareEstimate> findGeneralCareEstimates(String address) {
         List<CareEstimate> careEstimates = new ArrayList<>();
+
         for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findGeneralCareEstimatesByAddress(address)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 

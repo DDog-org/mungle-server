@@ -15,7 +15,7 @@ public class CareEstimateMapper {
 
     public static EstimateInfo.Content estimateToContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Content.builder()
-                .id(estimate.getCareEstimateId())
+                .id(estimate.getEstimateId())
                 .image(user.getUserImage())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
@@ -30,14 +30,18 @@ public class CareEstimateMapper {
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
                 .petImage(pet.getPetImage())
+                .petName(pet.getPetName())
                 .age(pet.getAge())
                 .weight(pet.getPetWeight())
                 .significant(pet.getPetSignificant())
-                .petName(pet.getPetName())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
+                .diagnosis(estimate.getDiagnosis())
+                .cause(estimate.getCause())
+                .treatment(estimate.getTreatment())
                 .build();
     }
 
