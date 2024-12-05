@@ -1,8 +1,8 @@
 package ddog.chat.application;
 
 import ddog.domain.chat.ChatMessage;
-import ddog.persistence.port.ChatMessagePersist;
-import ddog.persistence.port.ChatRoomPersist;
+import ddog.persistence.dynamo.port.ChatMessagePersist;
+import ddog.persistence.mysql.port.ChatRoomPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -15,7 +15,8 @@ repositories {
 dependencies {
     implementation(project(':daengle-domain'))
     implementation(project(':daengle-auth'))
-    implementation(project(':daengle-persistence'))
+    implementation(project(':daengle-persistence-mysql'))
+    implementation(project(':daengle-persistence-dynamo'))
     implementation(project(':daengle-notification'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'

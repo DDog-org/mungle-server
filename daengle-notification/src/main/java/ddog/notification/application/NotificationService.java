@@ -2,7 +2,7 @@ package ddog.notification.application;
 
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
-import ddog.persistence.port.NotificationPersist;
+import ddog.persistence.mysql.port.NotificationPersist;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
