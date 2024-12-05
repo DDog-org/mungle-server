@@ -8,7 +8,7 @@ jar {
 
 dependencies {
     implementation(project(':daengle-domain'))
-    implementation(project(':daengle-persistence'))
+    implementation(project(':daengle-persistence-mysql'))
     implementation(project(':daengle-auth'))
     
     testImplementation platform('org.junit:junit-bom:5.10.0')
