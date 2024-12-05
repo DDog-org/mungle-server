@@ -46,10 +46,10 @@ public class Groomer {
         }
     }
 
-    public static void validateAddress(String address) {
-        if (address == null || !address.matches("^[가-힣a-zA-Z\\s]+\\s[가-힣a-zA-Z\\s]+\\s[가-힣a-zA-Z\\s]+$")) {
-            throw new IllegalArgumentException("Address must be in the format 'City District Neighborhood' separated by spaces.");
-        }
+    public static void validateAddress(String address) { //TODO 공공 데이터 추가 후 재작업
+//        if (address == null || !address.matches("^[가-힣a-zA-Z\\s]+\\s[가-힣a-zA-Z\\s]+\\s[가-힣a-zA-Z\\s]+$")) {
+//            throw new IllegalArgumentException("Address must be in the format 'City District Neighborhood' separated by spaces.");
+//        }
     }
 
     public static void validateDetailAddress(String detailAddress) {

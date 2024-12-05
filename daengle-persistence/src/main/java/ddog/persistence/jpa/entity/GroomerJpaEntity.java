@@ -35,10 +35,10 @@ public class GroomerJpaEntity {
     @CollectionTable(name = "groomer_business_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
     @Column(name = "business_license_url")
     private List<String> businessLicenses;
-
     @ElementCollection // 자격증 URL 리스트
     @CollectionTable(name = "groomer_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
     @Column(name = "license_url")
+
     private List<String> licenses;
 
     public static GroomerJpaEntity from(Groomer groomer) {
