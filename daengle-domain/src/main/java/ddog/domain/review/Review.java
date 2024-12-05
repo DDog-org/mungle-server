@@ -13,9 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Review {
-    private Long reservationId;
+    private Long reviewId;
     private Long reviewerId;
     private Long revieweeId;
+    private Long reviewCount;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;

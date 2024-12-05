@@ -14,5 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroomingReview extends Review {
-    List<GroomingKeywordReview> groomingKeywordReviewList;
+    private Long groomingReviewId;
+    private List<GroomingKeywordReview> groomingKeywordReviewList;
 }
