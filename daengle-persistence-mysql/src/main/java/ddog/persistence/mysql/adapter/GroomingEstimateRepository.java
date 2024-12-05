@@ -17,8 +17,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     private final GroomingEstimateJpaRepository groomingEstimateJpaRepository;
 
     @Override
-    public void save(GroomingEstimate groomingEstimate) {
-        groomingEstimateJpaRepository.save(GroomingEstimateJpaEntity.from(groomingEstimate));
+    public GroomingEstimate save(GroomingEstimate groomingEstimate) {
+        return groomingEstimateJpaRepository.save(GroomingEstimateJpaEntity.from(groomingEstimate))
+                .toModel();
     }
 
     @Override

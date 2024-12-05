@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEstimateJpaEntity, Long> {
 
+    GroomingEstimateJpaEntity save(GroomingEstimateJpaEntity groomingEstimateJpaEntity);
+
     @Query("SELECT g FROM GroomingEstimates g " +
             "WHERE g.proposal = 'GENERAL' AND g.status = 'NEW' AND g.address = :address")
     List<GroomingEstimateJpaEntity> findGeneralGroomingEstimatesByAddress(@Param("address") String address);

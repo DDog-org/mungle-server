@@ -5,7 +5,7 @@ import ddog.domain.estimate.CareEstimate;
 import java.util.List;
 
 public interface CareEstimatePersist {
-    void save(CareEstimate careEstimate);
+    CareEstimate save(CareEstimate careEstimate);
     CareEstimate getByEstimateId(Long careEstimateId);
     List<CareEstimate> findCareEstimatesByPetId(Long petId);
     List<CareEstimate> findGeneralCareEstimates(String address);

@@ -17,8 +17,9 @@ public class CareEstimateRepository implements CareEstimatePersist {
     private final CareEstimateJpaRepository careEstimateJpaRepository;
 
     @Override
-    public void save(CareEstimate careEstimate) {
-        careEstimateJpaRepository.save(CareEstimateJpaEntity.from(careEstimate));
+    public CareEstimate save(CareEstimate careEstimate) {
+        return careEstimateJpaRepository.save(CareEstimateJpaEntity.from(careEstimate))
+                .toModel();
     }
 
     @Override

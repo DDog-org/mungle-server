@@ -1,7 +1,9 @@
 package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.CareEstimateLog;
 import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
@@ -22,11 +24,14 @@ import java.util.List;
 public class EstimateService {
 
     private final UserPersist userPersist;
+    private final PetPersist petPersist;
     private final GroomerPersist groomerPersist;
     private final VetPersist vetPersist;
-    private final PetPersist petPersist;
+
     private final GroomingEstimatePersist groomingEstimatePersist;
+    private final GroomingEstimateLogPersist groomingEstimateLogPersist;
     private final CareEstimatePersist careEstimatePersist;
+    private final CareEstimateLogPersist careEstimateLogPersist;
 
     @Transactional
     public EstimateResp createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
@@ -35,7 +40,10 @@ public class EstimateService {
 
         if (request.getGroomerId() == null) {
             GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
-            groomingEstimatePersist.save(newEstimate);
+            GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
+
+            GroomingEstimateLog newEstimateLog = GroomingEstimateLog.from(savedEstimate);
+            groomingEstimateLogPersist.save(newEstimateLog);
 
             return EstimateResp.builder()
                     .requestResult("(일반)신규 미용 견적서 등록 완료")
@@ -43,7 +51,11 @@ public class EstimateService {
         }
 
         GroomingEstimate newEstimate = GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId);
-        groomingEstimatePersist.save(newEstimate);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
+
+        GroomingEstimateLog newEstimateLog = GroomingEstimateLog.from(savedEstimate);
+        groomingEstimateLogPersist.save(newEstimateLog);
+
         return EstimateResp.builder()
                 .requestResult("(지정)신규 미용 견적서 등록 완료")
                 .build();
@@ -56,7 +68,10 @@ public class EstimateService {
 
         if (request.getVetId() == null) {
             CareEstimate newEstimate = CareEstimateMapper.createGeneralCareEstimate(request, accountId);
-            careEstimatePersist.save(newEstimate);
+            CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
+
+            CareEstimateLog newEstimateLog = CareEstimateLog.from(savedEstimate);
+            careEstimateLogPersist.save(newEstimateLog);
 
             return EstimateResp.builder()
                     .requestResult("(일반)신규 진료 견적서 등록 완료")
@@ -64,7 +79,10 @@ public class EstimateService {
         }
 
         CareEstimate newEstimate = CareEstimateMapper.createDesignationCareEstimate(request, accountId);
-        careEstimatePersist.save(newEstimate);
+        CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
+
+        CareEstimateLog newEstimateLog = CareEstimateLog.from(savedEstimate);
+        careEstimateLogPersist.save(newEstimateLog);
 
         return EstimateResp.builder()
                 .requestResult("(지정)신규 진료 견적서 등록 완료")
