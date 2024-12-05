@@ -91,10 +91,17 @@ jobs:
             docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
           fi
 
-      # 9. Deploy to EC2
+      # 9. Set up SSH
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      # 10. Deploy to EC2
       - name: Deploy to EC2
         run: |
-          
           set -e
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.name == 'daengle-payment' && env.SSH_PAYMENT_HOST || matrix.module.name == 'daengle-user' && env.SSH_USER_HOST || matrix.module.name == 'daengle-vet' && env.SSH_VET_HOST || env.SSH_GROOMER_HOST  }} << 'EOF'
           MODULE=${{ matrix.module.name }}
