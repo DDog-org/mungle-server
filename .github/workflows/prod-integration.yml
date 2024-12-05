@@ -2,7 +2,7 @@ name: Java CI with Gradle (Prod Integration)
 
 on:
   pull_request:
-    branches: [ "main" ]  # main 브랜치에 대한 pull request 트리거
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
             path: daengle-groomer-api
 
     permissions:
-      contents: read  # contents에 대한 권한을 read로 설정
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
