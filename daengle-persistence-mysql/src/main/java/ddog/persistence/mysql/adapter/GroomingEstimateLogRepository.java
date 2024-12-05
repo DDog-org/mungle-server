@@ -1,9 +1,9 @@
-package ddog.persistence.adapter;
+package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.persistence.jpa.entity.GroomingEstimateLogJpaEntity;
 import ddog.persistence.jpa.repository.GroomingEstimateLogJpaRepository;
-import ddog.persistence.port.GroomingEstimateLogPersist;
+import ddog.persistence.mysql.port.GroomingEstimateLogPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
