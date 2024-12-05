@@ -49,14 +49,6 @@ jobs:
         env:
           JWT_SECRET: ${{ secrets.MAIN_JWT_SECRET_KEY }}
 
-      - name: Cache Gradle
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:
