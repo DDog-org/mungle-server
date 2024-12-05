@@ -1,15 +1,70 @@
-name: Java CI with Gradle (Main)
+# Actions 탭에 나타날 Workflow 이름
+name: Java CI with Gradle
 
+# Workflow가 실행되지 위한 조건(트리거)
+# develop 브랜치에 push, pull request가 일어 났을 경우 Actions가 실행됨
 on:
   pull_request:
-    #branches: [ "main" ]
-    branches: [ "non-existent-branch" ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        module:
+          - name: daengle-payment
+            path: daengle-payment-api
+          - name: daengle-user
+            path: daengle-user-api
+          - name: daengle-vet
+            path: daengle-vet-api
+          - name: daengle-groomer
+            path: daengle-groomer-api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: 6
+
+      - name: Debug workspace
+        run: ls -R src
+
+      - name: Create application-test.yml
+        run: |
+          mkdir -p ${{ matrix.module.path }}/src/test/resources
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/test/resources/application-test.yml
+
+      - name: Build and Test
+        run: |
+          cd ${{ matrix.module.path }}
+          ./gradlew clean build -Dspring.profiles.active=test --no-build-cache
+        env:
+          JWT_SECRET: ${{ secrets.jwt_secret_key }}
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+  dependency-submission:
+
+    runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -19,13 +74,5 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - name: Build with Gradle Wrapper
-        run: ./gradlew build -Dspring.profiles.active=main
-        env:
-          JWT_SECRET: ${{ secrets.MAIN_JWT_SECRET_KEY }}
-
-      - name: Run Tests
-        run: ./gradlew test -Dspring.profiles.active=main
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
