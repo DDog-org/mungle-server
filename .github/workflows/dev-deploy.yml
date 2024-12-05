@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to Develop EC2
 on:
   push:
     branches: [ "develop" ]
@@ -10,21 +10,22 @@ jobs:
     strategy:
       matrix:
         module:
-          - name : daengle-payment
-            ssh_user: ${{secrets.SSH_USER }}
+          - name: daengle-payment
+            path: daengle-payment-api
+            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_PAYMENT_HOST }}
-          - name : daengle-user
-            ssh_user: ${{secrets.SSH_USER }}
+          - name: daengle-user
+            path: daengle-user-api
+            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_USER_HOST }}
-          - name : daengle-vet
-            ssh_user: ${{secrets.SSH_USER }}
+          - name: daengle-vet
+            path: daengle-vet-api
+            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_VET_HOST }}
-          - name : daengle-groomer
-            ssh_user: ${{secrets.SSH_USER }}
+          - name: daengle-groomer
+            path: daengle-groomer-api
+            ssh_user: ${{ secrets.SSH_USER }}
             ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
-#          - name : daengle-chat
-#            ssh_user: ${{secrets.SSH_USER }}
-#            ssh_host: ${{ secrets.SSH_CHAT_HOST }}
 
     steps:
       # 1. Checkout Repository
@@ -34,16 +35,16 @@ jobs:
       # 2. Create application.yml
       - name: Create application.yml
         run: |
-          echo "${{ secrets.APPLICATION_YML_TEST }}" > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
 
       # 3. Create .env file
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > ${{ matrix.module.path }}/.env
 
       # 4. Verify .env File
       - name: Verify .env File
-        run: cat .env
+        run: cat ${{ matrix.module.path }}/.env
 
       # 5. Set up JDK and Build JAR
       - name: Set up JDK 17
@@ -53,11 +54,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Build JAR with Gradle
-        run: ./gradlew clean build -x test
+        run: |
+          cd ${{ matrix.module.path }}
+          ./gradlew clean build -x test
 
       # 6. Verify Build Output
       - name: Verify Build Output
-        run: ls -l build/libs
+        run: ls -l ${{ matrix.module.path }}/build/libs
 
       # 7. Log in to Amazon ECR
       - name: Log in to Amazon ECR
@@ -71,9 +74,10 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           set -e
+          cd ${{ matrix.module.path }}
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
           echo "Building Docker image..."
-          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
@@ -96,7 +100,7 @@ jobs:
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
           
           echo "=== Pulling the latest Docker image ==="
-                    docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
 
           echo "=== Stopping and removing existing container ==="
           docker ps --filter "name=$MODULE" | grep $MODULE && docker stop $MODULE && docker rm $MODULE || echo "No running container to stop."
