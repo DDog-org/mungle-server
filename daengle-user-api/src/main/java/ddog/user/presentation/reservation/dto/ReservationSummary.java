@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class reservationSummary {
+public class ReservationSummary {
     private Long reservationId;
     private String recipientName;
     private String shopName;
