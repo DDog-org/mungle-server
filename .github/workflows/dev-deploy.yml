@@ -25,9 +25,6 @@ jobs:
             path: daengle-groomer-api
             ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
 
-    env:
-      SSH_USER: ${{ secrets.SSH_USER }}
-
     steps:
       # 1. Checkout Repository
       - name: Checkout code
@@ -107,7 +104,7 @@ jobs:
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ env.SSH_USER }}@${{ matrix.module.ssh_host }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.ssh_host }} << 'EOF'
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
