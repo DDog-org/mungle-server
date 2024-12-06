@@ -2,8 +2,8 @@ name: Deploy to Develop EC2
 on:
   pull_request:
     branches: [ "develop" ]
-  push:
-    branches: [ "develop" ]
+ #  push:
+#    branches: [ "develop" ]
 
 jobs:
   deploy:

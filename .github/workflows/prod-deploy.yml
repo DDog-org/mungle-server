@@ -1,7 +1,5 @@
 name: Deploy to Develop EC2
 on:
-  pull_request:
-    branches: [ "main" ]
   push:
     branches: [ "main" ]
 
