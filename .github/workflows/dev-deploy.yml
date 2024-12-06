@@ -124,13 +124,21 @@ jobs:
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
-          echo "=== Pulling the latest Docker image ==="
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+          else
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
-          
+          fi
+    
           echo "=== Stopping and removing existing container ==="
           docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
           
           echo "=== Running new container ==="
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker run failed"; exit 1; }
+          else
+          # 실제 배포일 때는 latest 태그 사용
           docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          fi
           
           echo "=== Deployment completed successfully ==="
