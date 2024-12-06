@@ -15,12 +15,12 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/payment")
 public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/payment")
+    @PostMapping("/validate")
     public CommonResponseEntity<PaymentCallbackResp> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
         return success(paymentService.validationPayment(paymentCallbackReq));
     }

@@ -1,12 +1,13 @@
 package ddog.domain.payment;
 
-import ddog.domain.order.enums.PostOrderReq;
+import ddog.domain.payment.dto.PostOrderInfo;
 import ddog.domain.payment.enums.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -17,17 +18,21 @@ import java.util.Objects;
 public class Payment {
 
     private Long paymentId;
+    private Long payerId;
     private Long price;
     private PaymentStatus status;
+    private LocalDateTime paymentDate;
     private String paymentUid;
 
     public static final String PAYMENT_SUCCESS_STATUS = "paid";
 
-    public static Payment createTemporaryHistoryBy(PostOrderReq postOrderReq) {
+    public static Payment createTemporaryHistoryBy(Long accountId, PostOrderInfo postOrderInfo) {
         return Payment.builder()
                 .paymentId(null)
-                .price(postOrderReq.getPrice())
+                .payerId(accountId)
+                .price(postOrderInfo.getPrice())
                 .status(PaymentStatus.READY)
+                .paymentDate(LocalDateTime.now())
                 .paymentUid(null)
                 .build();
     }
