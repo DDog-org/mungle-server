@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PaymentCallbackResp {
-    private Long userId;
+    private Long customerId;
+    private Long reservationId;
     private Long paymentId;
     private Long price;
 }

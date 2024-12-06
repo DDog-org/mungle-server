@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.adapter;
 
-import ddog.domain.order.Order;
+import ddog.domain.payment.Order;
 import ddog.persistence.mysql.jpa.entity.OrderJpaEntity;
 import ddog.persistence.mysql.jpa.repository.OrderJpaRepository;
 import ddog.persistence.mysql.port.OrderPersist;
