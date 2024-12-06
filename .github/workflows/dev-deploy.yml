@@ -65,8 +65,8 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_ROOT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_ROOT_SECRET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
       # 7. Build and Push Docker Image
@@ -106,8 +106,8 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
           
           # EC2에서 AWS 인증 정보 설정
-          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_ROOT_KEY }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_ACCESS_ROOT_SECRET }}"
           export AWS_REGION="${{ secrets.AWS_REGION }}"
           
           MODULE=${{ matrix.module.name }}
