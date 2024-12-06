@@ -1,6 +1,6 @@
 name: Deploy to Develop EC2
 on:
-   push:
+  pull_request:
     branches: [ "develop" ]
 
 jobs:
@@ -65,7 +65,7 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         env:
-          AWS_  ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
@@ -104,8 +104,7 @@ jobs:
           set -e
           echo "=== Logging into EC2 ==="
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
-
+          
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
