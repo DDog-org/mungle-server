@@ -14,11 +14,11 @@ public class RedisService {
         return redisTemplate.hasKey("user_loggedIn:" + userId);
     }
 
-    public void loginUser(Long userId) {
+    public void setUserLoggedIn(Long userId) {
         redisTemplate.opsForValue().set("user_loggedIn:" + userId, "true");
     }
 
-    public void logoutUser(Long userId) {
+    public void setUserLoggedOut(Long userId) {
         redisTemplate.delete("user_loggedIn:" + userId);
     }
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum NotificationType {
+public enum NotificationExceptionType {
     ALERT_CAN_NOT(HttpStatus.BAD_REQUEST, 400, "알림을 전송할 수 없음");
 
     private final HttpStatus httpStatus;
