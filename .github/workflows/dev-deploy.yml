@@ -106,22 +106,25 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+      # 9. Set up EC2 Host from Secrets
       - name: Set up EC2 Host
         run: |
-          export EC2_HOST=$(eval echo \$${{ matrix.module.ssh_host_var }})
+          # Dynamically resolve EC2 Host from the correct secret
+          EC2_HOST=${{ secrets[ matrix.module.ssh_host_var ] }}
+          echo "Resolved EC2_HOST: $EC2_HOST"
           echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
 
-      # 9. Deploy to EC2
+      # 10. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
+          
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
           echo "=== Pulling the latest Docker image ==="
-          echo "DEBUG: docker pull ${{ secrets.ECR_REPOSITORY_URI }}:${IMAGE_TAG}"
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
           
           echo "=== Stopping and removing existing container ==="
@@ -131,4 +134,3 @@ jobs:
           docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
           
           echo "=== Deployment completed successfully ==="
-          EOF
