@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.port;
 
-import ddog.domain.order.Order;
+import ddog.domain.payment.Order;
 import java.util.Optional;
 
 public interface OrderPersist {

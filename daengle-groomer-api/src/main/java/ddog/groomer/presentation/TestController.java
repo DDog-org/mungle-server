@@ -15,7 +15,7 @@ public class TestController {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDate = now.format(formatter);
-        return "Hello Daengle World - Groomer API !" +
+        return "Hello Daengle World - MULTI MODULE !!!! Groomer API !" +
                 " Made at: " + formattedDate + "   CI/CD SUCCESS";
     }
 }
