@@ -1,6 +1,7 @@
 package ddog.domain.review;
 
 import ddog.domain.payment.Reservation;
+import ddog.domain.review.dto.ModifyCareReviewInfo;
 import ddog.domain.review.dto.PostCareReviewInfo;
 import ddog.domain.review.enums.CareKeywordReview;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,25 @@ public class CareReview extends Review {
                 .content(postCareReviewInfo.getContent())
                 .createTime(LocalDateTime.now())
                 .imageUrlList(postCareReviewInfo.getImageUrlList())
+                .vetId(reservation.getReservationId())
+                .careKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList())
+                .build();
+    }
+
+    public static CareReview modifyBy(CareReview careReview, ModifyCareReviewInfo modifyCareReviewInfo) {
+        return CareReview.builder()
+                .careReviewId(careReview.getCareReviewId())
+                .reservationId(careReview.getReservationId())
+                .reviewerId(careReview.getReviewerId())
+                .vetId(careReview.getVetId())
+                .revieweeName(careReview.getRevieweeName())
+                .starRating(modifyCareReviewInfo.getStarRating())
+                .content(modifyCareReviewInfo.getContent())
+                .createTime(careReview.getCreateTime())
+                .modifiedTime(LocalDateTime.now())
+                .imageUrlList(modifyCareReviewInfo.getImageUrlList())
+                .vetId(careReview.getReservationId())
+                .careKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList())
                 .build();
     }
 }

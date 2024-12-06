@@ -7,11 +7,18 @@ import ddog.persistence.mysql.port.CareReviewPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class CareReviewRepository implements CareReviewPersist {
 
     private final CareReviewJpaRepository careReviewJpaRepository;
+
+    @Override
+    public Optional<CareReview> findBy(Long careReviewId) {
+        return careReviewJpaRepository.findById(careReviewId).map(CareReviewJpaEntity::toModel);
+    }
 
     @Override
     public CareReview save(CareReview careReview) {

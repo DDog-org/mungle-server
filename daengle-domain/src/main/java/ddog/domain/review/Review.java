@@ -20,5 +20,6 @@ public abstract class Review {
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
+    private LocalDateTime modifiedTime;
     private List<String> imageUrlList;
 }

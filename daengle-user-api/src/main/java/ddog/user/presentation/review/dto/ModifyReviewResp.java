@@ -5,10 +5,8 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PostReviewResp {
+public class ModifyReviewResp {
     private Long reviewId;
     private Long reviewerId;
     private Long revieweeId;
 }
-
-
