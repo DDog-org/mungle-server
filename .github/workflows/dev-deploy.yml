@@ -14,16 +14,23 @@ jobs:
         module:
           - name: daengle-payment
             path: daengle-payment-api
-            ssh_host: ${{ secrets.SSH_PAYMENT_HOST }}
+            ssh_host_var: SSH_PAYMENT_HOST
           - name: daengle-user
             path: daengle-user-api
-            ssh_host: ${{ secrets.SSH_USER_HOST }}
+            ssh_host_var: SSH_USER_HOST
           - name: daengle-vet
             path: daengle-vet-api
-            ssh_host: ${{ secrets.SSH_VET_HOST }}
+            ssh_host_var: SSH_VET_HOST
           - name: daengle-groomer
             path: daengle-groomer-api
-            ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
+            ssh_host_var: SSH_GROOMER_HOST
+
+    env:
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PAYMENT_HOST: ${{ secrets.SSH_PAYMENT_HOST }}
+      SSH_USER_HOST: ${{ secrets.SSH_USER_HOST }}
+      SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
+      SSH_GROOMER_HOST: ${{ secrets.SSH_GROOMER_HOST }}
 
     steps:
       # 1. Checkout Repository
