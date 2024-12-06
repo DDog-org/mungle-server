@@ -20,6 +20,8 @@ public class CareReviewJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long careReviewId;
+    private Long vetId;
+    private Long reservationId;
     private Long reviewerId;
     private Long revieweeId;
     private Long reviewCount;
@@ -41,6 +43,8 @@ public class CareReviewJpaEntity {
     public static CareReviewJpaEntity from (CareReview careReview) {
         return CareReviewJpaEntity.builder()
                 .careReviewId(careReview.getCareReviewId())
+                .vetId(careReview.getVetId())
+                .reservationId(careReview.getReservationId())
                 .reviewerId(careReview.getReviewerId())
                 .revieweeId(careReview.getRevieweeId())
                 .reviewCount(careReview.getReviewCount())
@@ -55,6 +59,8 @@ public class CareReviewJpaEntity {
     public CareReview toModel() {
         return CareReview.builder()
                 .careReviewId(careReviewId)
+                .vetId(vetId)
+                .reservationId(reservationId)
                 .reviewerId(reviewerId)
                 .revieweeId(revieweeId)
                 .reviewCount(reviewCount)

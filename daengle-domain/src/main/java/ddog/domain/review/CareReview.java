@@ -14,5 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CareReview extends Review {
     private Long careReviewId;
+    private Long vetId;
     private List<CareKeywordReview> careKeywordReviewList;
 }

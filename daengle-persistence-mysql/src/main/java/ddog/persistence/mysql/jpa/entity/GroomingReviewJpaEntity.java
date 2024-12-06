@@ -20,6 +20,8 @@ public class GroomingReviewJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groomingReviewId;
+    private Long reservationId;
+    private Long groomerId;
     private Long reviewerId;
     private Long revieweeId;
     private Long reviewCount;
@@ -41,6 +43,8 @@ public class GroomingReviewJpaEntity {
     public static GroomingReviewJpaEntity from(GroomingReview groomingReview) {
         return GroomingReviewJpaEntity.builder()
                 .groomingReviewId(groomingReview.getGroomingReviewId())
+                .groomerId(groomingReview.getGroomerId())
+                .reservationId(groomingReview.getReservationId())
                 .reviewerId(groomingReview.getReviewerId())
                 .revieweeId(groomingReview.getRevieweeId())
                 .reviewCount(groomingReview.getReviewCount())
@@ -55,6 +59,8 @@ public class GroomingReviewJpaEntity {
     public GroomingReview toModel() {
         return GroomingReview.builder()
                 .groomingReviewId(groomingReviewId)
+                .groomerId(groomerId)
+                .reservationId(reservationId)
                 .reviewerId(reviewerId)
                 .revieweeId(revieweeId)
                 .reviewCount(reviewCount)

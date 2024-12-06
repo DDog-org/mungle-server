@@ -15,5 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GroomingReview extends Review {
     private Long groomingReviewId;
+    private Long groomerId;
     private List<GroomingKeywordReview> groomingKeywordReviewList;
 }

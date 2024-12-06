@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public abstract class Review {
     private Long reviewId;
+    private Long reservationId;
     private Long reviewerId;
     private Long revieweeId;
     private Long reviewCount;
