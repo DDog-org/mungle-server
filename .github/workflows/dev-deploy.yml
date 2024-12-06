@@ -109,6 +109,8 @@ jobs:
           IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
           
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+          
           # Pull latest image
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
           
