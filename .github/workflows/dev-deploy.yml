@@ -120,4 +120,3 @@ jobs:
           docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
                     
           echo "=== Deployment completed successfully ==="
-          EOF
