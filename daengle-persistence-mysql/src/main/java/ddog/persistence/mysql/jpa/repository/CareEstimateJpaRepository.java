@@ -10,15 +10,17 @@ import java.util.List;
 
 public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpaEntity, Long> {
 
+    CareEstimateJpaEntity save(CareEstimateJpaEntity careEstimate);
+
     @Query("SELECT c FROM CareEstimates c " +
-            "WHERE c.proposal = 'GENERAL' AND c.status = 'NEW' AND c.address = :address")
+            "WHERE c.proposal = 'GENERAL' AND (c.status = 'NEW' OR c.status = 'PENDING') AND c.address = :address")
     List<CareEstimateJpaEntity> findGeneralCareEstimatesByAddress(@Param("address") String address);
 
     @Query("SELECT c FROM CareEstimates c " +
-            "WHERE c.proposal = 'DESIGNATION' AND c.status = 'NEW' AND c.vetId = :vetId")
+            "WHERE c.proposal = 'DESIGNATION' AND (c.status = 'NEW' OR c.status = 'PENDING') AND c.vetId = :vetId")
     List<CareEstimateJpaEntity> findDesignationCareEstimatesByVetId(@Param("vetId") Long vetId);
 
-    CareEstimateJpaEntity getCareEstimateJpaEntityByCareEstimateId(Long careEstimateId);
+    CareEstimateJpaEntity getCareEstimateJpaEntityByEstimateId(Long estimateId);
 
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.status = 'PENDING' AND c.petId = :petId")

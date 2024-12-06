@@ -15,7 +15,7 @@ public class CareEstimateMapper {
 
     public static EstimateInfo.Content estimateToContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Content.builder()
-                .id(estimate.getCareEstimateId())
+                .id(estimate.getEstimateId())
                 .image(user.getUserImage())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
@@ -30,19 +30,24 @@ public class CareEstimateMapper {
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
                 .petImage(pet.getPetImage())
+                .petName(pet.getPetName())
                 .age(pet.getAge())
                 .weight(pet.getPetWeight())
                 .significant(pet.getPetSignificant())
-                .petName(pet.getPetName())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
+                .diagnosis(estimate.getDiagnosis())
+                .cause(estimate.getCause())
+                .treatment(estimate.getTreatment())
                 .build();
     }
 
-    public static CareEstimate createVetCareEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
+    public static CareEstimate updateEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
         return CareEstimate.builder()
+                .estimateId(estimate.getEstimateId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
                 .vetId(vet.getAccountId())
@@ -50,9 +55,10 @@ public class CareEstimateMapper {
                 .reservedDate(request.getReservedDate())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
-                .proposal(estimate.getProposal())
                 .status(EstimateStatus.PENDING)
-                .createdAt(LocalDateTime.now())
+                .proposal(estimate.getProposal())
+                .createdAt(estimate.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
                 .diagnosis(request.getDiagnosis())
                 .cause(request.getCause())
                 .treatment(request.getTreatment())
