@@ -26,7 +26,6 @@ public class CareReview extends Review {
                 .reviewerId(reservation.getCustomerId())
                 .vetId(reservation.getRecipientId())
                 .revieweeName(reservation.getRecipientName())
-                .reviewCount(0L)
                 .starRating(postCareReviewInfo.getStarRating())
                 .content(postCareReviewInfo.getContent())
                 .createTime(LocalDateTime.now())

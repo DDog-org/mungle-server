@@ -24,7 +24,6 @@ public class GroomingReviewJpaEntity {
     private Long groomerId;
     private Long reviewerId;
     private Long revieweeId;
-    private Long reviewCount;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
@@ -47,7 +46,6 @@ public class GroomingReviewJpaEntity {
                 .reservationId(groomingReview.getReservationId())
                 .reviewerId(groomingReview.getReviewerId())
                 .revieweeId(groomingReview.getGroomerId())
-                .reviewCount(groomingReview.getReviewCount())
                 .starRating(groomingReview.getStarRating())
                 .content(groomingReview.getContent())
                 .createTime(groomingReview.getCreateTime())
@@ -63,7 +61,6 @@ public class GroomingReviewJpaEntity {
                 .reservationId(reservationId)
                 .reviewerId(reviewerId)
                 .groomerId(revieweeId)
-                .reviewCount(reviewCount)
                 .starRating(starRating)
                 .content(content)
                 .createTime(createTime)

@@ -24,7 +24,6 @@ public class CareReviewJpaEntity {
     private Long reservationId;
     private Long reviewerId;
     private Long revieweeId;
-    private Long reviewCount;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
@@ -47,7 +46,6 @@ public class CareReviewJpaEntity {
                 .reservationId(reservationId)
                 .reviewerId(reviewerId)
                 .vetId(revieweeId)
-                .reviewCount(reviewCount)
                 .starRating(starRating)
                 .content(content)
                 .createTime(createTime)
@@ -63,7 +61,6 @@ public class CareReviewJpaEntity {
                 .reservationId(careReview.getReservationId())
                 .reviewerId(careReview.getReviewerId())
                 .revieweeId(careReview.getVetId())
-                .reviewCount(careReview.getReviewCount())
                 .starRating(careReview.getStarRating())
                 .content(careReview.getContent())
                 .createTime(careReview.getCreateTime())
