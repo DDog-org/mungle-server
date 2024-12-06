@@ -118,7 +118,7 @@ jobs:
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
           
           # Pull latest image
-          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG:latest || { echo "Docker pull failed"; exit 1; }
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
           
           echo "=== Stopping and removing existing container ==="
           docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
