@@ -111,7 +111,7 @@ jobs:
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.ssh_host }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.ssh_host_var }} << 'EOF'
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
