@@ -1,9 +1,7 @@
 name: Deploy to Develop EC2
 on:
-  pull_request:
+   push:
     branches: [ "develop" ]
- #  push:
-#    branches: [ "develop" ]
 
 jobs:
   deploy:
@@ -67,7 +65,7 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_  ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
@@ -77,14 +75,9 @@ jobs:
           set -e
           cd ${{ matrix.module.path }}
           
-          # PR 이벤트일 때는 IMAGE_TAG를 latest로 설정
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            IMAGE_TAG="latest"
-          else
-            IMAGE_TAG=$(date +%Y%m%d%H%M%S)
-          fi
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
           
-          echo "Building Docker image with tag: $IMAGE_TAG"
+          echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
@@ -111,7 +104,8 @@ jobs:
           set -e
           echo "=== Logging into EC2 ==="
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
-          
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
