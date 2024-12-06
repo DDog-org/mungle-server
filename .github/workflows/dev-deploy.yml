@@ -1,16 +1,36 @@
-name: Deploy to EC2
-# TODO prTest
-#on:
-#  push:
-#    branches: [ "develop" ]
-
+name: Deploy to Develop EC2
 on:
+  pull_request:
+    branches: [ "develop" ]
   push:
-    branches: [ "non-existent-branch" ]
+    branches: [ "develop" ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        module:
+          - name: daengle-payment
+            path: daengle-payment-api
+            ssh_host_var: SSH_PAYMENT_HOST
+          - name: daengle-user
+            path: daengle-user-api
+            ssh_host_var: SSH_USER_HOST
+          - name: daengle-vet
+            path: daengle-vet-api
+            ssh_host_var: SSH_VET_HOST
+          - name: daengle-groomer
+            path: daengle-groomer-api
+            ssh_host_var: SSH_GROOMER_HOST
+
+    env:
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PAYMENT_HOST: ${{ secrets.SSH_PAYMENT_HOST }}
+      SSH_USER_HOST: ${{ secrets.SSH_USER_HOST }}
+      SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
+      SSH_GROOMER_HOST: ${{ secrets.SSH_GROOMER_HOST }}
 
     steps:
       # 1. Checkout Repository
@@ -20,18 +40,15 @@ jobs:
       # 2. Create application.yml
       - name: Create application.yml
         run: |
-          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          mkdir -p ${{ matrix.module.path }}/src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
 
       # 3. Create .env file
       - name: Create .env file
         run: |
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+          echo "${{ secrets.ENV_FILE_CONTENT }}" > ${{ matrix.module.path }}/.env
 
-      # 4. Verify .env File
-      - name: Verify .env File
-        run: cat .env
-
-      # 5. Set up JDK and Build JAR
+      # 4. Set up JDK and Build JAR
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -39,32 +56,49 @@ jobs:
           distribution: 'temurin'
 
       - name: Build JAR with Gradle
-        run: ./gradlew clean build -x test
+        run: |
+          ./gradlew :${{ matrix.module.name }}:build -x test
 
-      # 6. Verify Build Output
+      # 5. Verify Build Output
       - name: Verify Build Output
-        run: ls -l build/libs
+        run: ls -l ${{ matrix.module.path }}/build/libs
 
-      # 7. Log in to Amazon ECR
+      # 6. Log in to Amazon ECR
       - name: Log in to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      # 8. Build and Push Docker Image
+      # 7. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          cd ${{ matrix.module.path }}
+          
+          # 태그 생성
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            PR_NUMBER=${{ github.event.pull_request.number }}
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)  # 태그 생성 시점 통일
+            IMAGE_TAG=pr-$PR_NUMBER-$TIMESTAMP
+          else
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            IMAGE_TAG=release-$TIMESTAMP
+          fi
+          
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV  # GitHub 환경 변수로 저장
+          
           echo "Building Docker image..."
-          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/daengle-server-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
-          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
-          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+            docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+            docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          fi
 
-      # 9. Set up SSH
+      # 8. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -72,40 +106,41 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+      # 9. Set up EC2 Host from Secrets
+      - name: Set up EC2 Host
+        run: |
+          # Dynamically resolve EC2 Host from the correct secret
+          EC2_HOST=${{ secrets[ matrix.module.ssh_host_var ] }}
+          echo "Resolved EC2_HOST: $EC2_HOST"
+          echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
+
       # 10. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          echo "=== Logging into ECR ==="
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
-
-          echo "=== Pulling the latest Docker image ==="
+          echo "=== Logging into EC2 ==="
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
+          
+          MODULE=${{ matrix.module.name }}
+          IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
+          CONTAINER_NAME="${{matrix.module.name}}-container"
+          
+          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
-
-          echo "=== Stopping and removing existing container ==="
-          CONTAINER_ID=$(docker ps -aq --filter "name=spring-app")
-          if [ -n "$CONTAINER_ID" ]; then
-            echo "Stopping existing container..."
-            docker stop spring-app || { echo "Failed to stop container"; exit 1; }
-            docker rm spring-app || { echo "Failed to remove container"; exit 1; }
           else
-            echo "No existing container to stop."
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
           fi
-
+    
+          echo "=== Stopping and removing existing container ==="
+          docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
+          
           echo "=== Running new container ==="
-          docker run -d --name spring-app -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
-
-          echo "=== Verifying the new container ==="
-          sleep 10 # Allow container to initialize
-          if ! docker ps --filter "name=spring-app" --filter "status=running" | grep spring-app; then
-            echo "New container is not running. Check logs for errors."
-            docker logs spring-app
-            exit 1
-          fi
-
-          echo "=== Fetching container logs ==="
-          docker logs spring-app
-
+          # PR일 때는 PR-specific 태그 사용
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker run failed"; exit 1; }
+            else
+            # 실제 배포일 때는 latest 태그 사용
+            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+            fi
+                    
           echo "=== Deployment completed successfully ==="
-          EOF

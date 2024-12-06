@@ -1,0 +1,39 @@
+bootJar {
+    enabled = true
+}
+
+jar {
+    enabled = false
+}
+
+repositories {
+    mavenCentral()
+
+}
+
+
+dependencies {
+    implementation(project(':daengle-domain'))
+    implementation(project(':daengle-auth'))
+    implementation(project(':daengle-persistence-mysql'))
+    implementation(project(':daengle-persistence-dynamodb'))
+    implementation(project(':daengle-notification'))
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+
+    // dynamo
+    implementation platform('software.amazon.awssdk:bom:2.20.56')
+    implementation 'software.amazon.awssdk:dynamodb'
+    implementation 'software.amazon.awssdk:dynamodb-enhanced'
+
+}
+
+test {
+    useJUnitPlatform()
+}

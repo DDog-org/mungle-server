@@ -1,11 +1,11 @@
 package ddog.payment.application;
 
-import ddog.domain.order.Order;
-import ddog.domain.order.enums.PostOrderReq;
+import ddog.domain.payment.Order;
+import ddog.domain.payment.dto.PostOrderInfo;
 import ddog.domain.payment.Payment;
 import ddog.payment.application.dto.response.PostOrderResp;
-import ddog.persistence.port.OrderPersist;
-import ddog.persistence.port.PaymentPersist;
+import ddog.persistence.mysql.port.OrderPersist;
+import ddog.persistence.mysql.port.PaymentPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +18,16 @@ public class OrderService {
     private final PaymentPersist paymentPersist;
 
     @Transactional
-    public PostOrderResp processOrder(Long accountId, PostOrderReq postOrderReq) {
-        Payment paymentToSave = Payment.createTemporaryHistoryBy(postOrderReq);
+    public PostOrderResp processOrder(Long accountId, PostOrderInfo postOrderInfo) {
+        Payment paymentToSave = Payment.createTemporaryHistoryBy(accountId, postOrderInfo);
         Payment SavedPayment = paymentPersist.save(paymentToSave);
 
-        Order order = Order.createBy(accountId, postOrderReq, SavedPayment);
+        Order order = Order.createBy(accountId, postOrderInfo, SavedPayment);
         orderPersist.save(order);
 
         return PostOrderResp.builder()
                 .accountId(accountId)
-                .itemId(postOrderReq.getItemId())
+                .estimateId(postOrderInfo.getEstimateId())
                 .orderUId(order.getOrderUid())
                 .build();
     }

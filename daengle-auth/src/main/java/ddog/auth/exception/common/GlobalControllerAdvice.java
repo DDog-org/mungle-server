@@ -42,7 +42,19 @@ public class GlobalControllerAdvice {
         );
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)  //ENUM 값 불일치
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalParameterException(IllegalArgumentException e) {
+        return new ResponseEntity<>(
+                new CommonResponseEntity<>(
+                        false,
+                        null,
+                        new CustomError(e.getMessage(), HttpStatus.BAD_REQUEST, 400)
+                ),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)  //Jackson 역직렬화 실패
     public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return new ResponseEntity<>(
                 new CommonResponseEntity<>(
