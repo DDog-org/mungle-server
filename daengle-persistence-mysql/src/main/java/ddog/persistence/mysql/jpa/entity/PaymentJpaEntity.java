@@ -38,7 +38,7 @@ public class PaymentJpaEntity {
                 .build();
     }
 
-    public static PaymentJpaEntity fromModel(Payment payment) {
+    public static PaymentJpaEntity from(Payment payment) {
         return PaymentJpaEntity.builder()
                 .paymentId(payment.getPaymentId())
                 .payerId(payment.getPayerId())

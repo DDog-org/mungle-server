@@ -16,7 +16,7 @@ public abstract class Review {
     private Long reviewId;
     private Long reservationId;
     private Long reviewerId;
-    private Long revieweeId;
+    private String revieweeName;
     private Long reviewCount;
     private Long starRating;
     private String content;

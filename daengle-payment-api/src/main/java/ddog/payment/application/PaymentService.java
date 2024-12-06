@@ -72,6 +72,7 @@ public class PaymentService {
                     .estimateId(order.getEstimateId())
                     .serviceType(order.getServiceType())
                     .reservationStatus(ReservationStatus.DEPOSIT_PAID)
+                    .recipientId(order.getRecipientId())
                     .recipientName(order.getRecipientName())
                     .shopName(order.getShopName())
                     .schedule(order.getSchedule())

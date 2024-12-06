@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 public class GroomingEstimateDetail {
 
+    private Long groomingEstimateId;
+    private Long groomerId;
     private String image;
     private String name;
     private String shopName;

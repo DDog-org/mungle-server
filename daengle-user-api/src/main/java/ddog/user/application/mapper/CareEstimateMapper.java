@@ -61,6 +61,8 @@ public class CareEstimateMapper {
 
     public static CareEstimateDetail getCareEstimateDetail(CareEstimate estimate, Vet vet, Pet pet) {
         return CareEstimateDetail.builder()
+                .careEstimateId(estimate.getCareEstimateId())
+                .vetId(vet.getVetId())
                 .image(vet.getVetImage())
                 .name(vet.getVetName())
                 .daengleMeter(vet.getDaengleMeter())
