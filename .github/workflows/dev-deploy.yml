@@ -75,7 +75,7 @@ jobs:
           set -e
           cd ${{ matrix.module.path }}
           
-          IMAGE_TAG= ${{ matrix.module.name }}
+          IMAGE_TAG=${{ matrix.module.name }}
           
           echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
