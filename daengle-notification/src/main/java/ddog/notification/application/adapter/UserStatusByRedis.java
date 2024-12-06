@@ -1,24 +1,28 @@
-package ddog.notification.application;
+package ddog.notification.application.adapter;
 
+import ddog.notification.application.port.UserStatusPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class RedisService {
+public class UserStatusByRedis implements UserStatusPersist {
 
     private final RedisTemplate<String, String> redisTemplate;
 
+    @Override
     public boolean isUserLoggedIn(Long userId) {
         return redisTemplate.hasKey("user_loggedIn:" + userId);
     }
 
-    public void setUserLoggedIn(Long userId) {
+    @Override
+    public void setUserLogIn(Long userId) {
         redisTemplate.opsForValue().set("user_loggedIn:" + userId, "true");
     }
 
-    public void setUserLoggedOut(Long userId) {
+    @Override
+    public void setUserLogOut(Long userId) {
         redisTemplate.delete("user_loggedIn:" + userId);
     }
 }

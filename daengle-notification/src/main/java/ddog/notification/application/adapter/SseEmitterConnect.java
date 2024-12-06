@@ -1,17 +1,18 @@
-package ddog.notification.application;
+package ddog.notification.application.adapter;
 
-import org.springframework.stereotype.Service;
+import ddog.notification.application.port.EmitterConnectPersist;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service
-public class SseService {
+@Component
+public class SseEmitterConnect implements EmitterConnectPersist {
 
     private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
 
-    public SseEmitter toConnectSseEmitter(Long userId) {
+    public SseEmitter toConnectEmitter(Long userId) {
         SseEmitter emitter = new SseEmitter();
         ssemitters.put(userId, emitter);
 
@@ -26,14 +27,14 @@ public class SseService {
         return emitter;
     }
 
-    public void sendNotificationToUserBySseEmitter(Long receiverId, String message) throws IOException {
+    public void sendNotificationToUserByEmitter(Long receiverId, String message) throws IOException {
         if (ssemitters.containsKey(receiverId))  {
             SseEmitter emitter = ssemitters.get(receiverId);
             emitter.send(message);
         }
     }
 
-    public boolean isUserSseConnected(Long userId) {
+    public boolean isUserEmitterConnected(Long userId) {
         return ssemitters.containsKey(userId);
     }
 

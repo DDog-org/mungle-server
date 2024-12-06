@@ -2,6 +2,12 @@ package ddog.notification.application;
 
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
+import ddog.notification.application.adapter.SseEmitterConnect;
+import ddog.notification.application.adapter.UserStatusByRedis;
+import ddog.notification.application.exception.NotificationException;
+import ddog.notification.application.exception.NotificationExceptionType;
+import ddog.notification.application.port.EmitterConnectPersist;
+import ddog.notification.application.port.UserStatusPersist;
 import ddog.persistence.mysql.port.NotificationPersist;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +17,27 @@ import java.util.List;
 @Service
 public class NotificationService {
 
-    private final SseService sseService;
-    private final RedisService redisService;
+    private final EmitterConnectPersist emitterConnectPersist;
+    private final UserStatusPersist userStatusPersist;
     private final NotificationPersist notificationPersist;
 
-    public NotificationService(SseService sseService, RedisService redisService, NotificationPersist notificationPersist) {
-        this.sseService = sseService;
-        this.redisService = redisService;
+    public NotificationService(SseEmitterConnect emitterConnectPersist, UserStatusByRedis userStatusPersist, NotificationPersist notificationPersist) {
+        this.emitterConnectPersist = emitterConnectPersist;
+        this.userStatusPersist = userStatusPersist;
         this.notificationPersist = notificationPersist;
     }
 
     public void sendNotifiacationToUser(Long receiverId, NotifyType notifyType, String message) {
         try {
-            if (sseService.isUserSseConnected(receiverId)) {
-                sseService.sendNotificationToUserBySseEmitter(receiverId, message);
-            } else if (redisService.isUserLoggedIn(receiverId)) {
-                sseService.toConnectSseEmitter(receiverId);
-                sseService.sendNotificationToUserBySseEmitter(receiverId, message);
+            if (receiverId == null || message == null || notifyType == null) {
+                throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "Invalid parameters provided");
+            }
+
+            if (emitterConnectPersist.isUserEmitterConnected(receiverId)) {
+                emitterConnectPersist.sendNotificationToUserByEmitter(receiverId, message);
+            } else if (userStatusPersist.isUserLoggedIn(receiverId)) {
+                emitterConnectPersist.toConnectEmitter(receiverId);
+                emitterConnectPersist.sendNotificationToUserByEmitter(receiverId, message);
             } else {
                 Notification notification = Notification.builder()
                         .userId(receiverId)
@@ -38,11 +48,15 @@ public class NotificationService {
                 notificationPersist.saveNotificationWithLogoutUser(notification);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to send notification", e);
+            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, e.getMessage());
         }
     }
 
     public List<Notification> getAllNotificationsByUserId(Long userId) {
+        if (userId == null) {
+            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "User ID cannot be null");
+        }
+
         return notificationPersist.findNotificationsByUserId(userId);
     }
 }
