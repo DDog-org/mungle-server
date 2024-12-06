@@ -106,12 +106,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+      - name: Set up EC2 Host
+        run: |
+          export EC2_HOST=$(eval echo \$${{ matrix.module.ssh_host_var }})
+          echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
+
       # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ matrix.module.ssh_host_var }} << 'EOF'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST << 'EOF'
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
