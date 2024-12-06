@@ -1,9 +1,9 @@
 name: Deploy to Develop EC2
 on:
   pull_request:
-    branches: [ "develop" ] # PR 생성 시 임시 배포
+    branches: [ "develop" ]
   push:
-    branches: [ "develop" ] # 병합 후 정식 배포
+    branches: [ "develop" ]
 
 jobs:
   deploy:
@@ -14,19 +14,20 @@ jobs:
         module:
           - name: daengle-payment
             path: daengle-payment-api
+            ssh_user: ${{ secrets.SSH_USER }}
+            ssh_host: ${{ secrets.SSH_PAYMENT_HOST }}
           - name: daengle-user
             path: daengle-user-api
+            ssh_user: ${{ secrets.SSH_USER }}
+            ssh_host: ${{ secrets.SSH_USER_HOST }}
           - name: daengle-vet
             path: daengle-vet-api
+            ssh_user: ${{ secrets.SSH_USER }}
+            ssh_host: ${{ secrets.SSH_VET_HOST }}
           - name: daengle-groomer
             path: daengle-groomer-api
-
-    env:
-      SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_PAYMENT_HOST: ${{ secrets.SSH_PAYMENT_HOST }}
-      SSH_USER_HOST: ${{ secrets.SSH_USER_HOST }}
-      SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
-      SSH_GROOMER_HOST: ${{ secrets.SSH_GROOMER_HOST }}
+            ssh_user: ${{ secrets.SSH_USER }}
+            ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
 
     steps:
       # 1. Checkout Repository
@@ -76,14 +77,14 @@ jobs:
           # 태그 생성
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             PR_NUMBER=${{ github.event.pull_request.number }}
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)  # 태그 생성 시점 통일
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
             IMAGE_TAG=pr-$PR_NUMBER-$TIMESTAMP
           else
             TIMESTAMP=$(date +%Y%m%d%H%M%S)
             IMAGE_TAG=release-$TIMESTAMP
           fi
           
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV  # GitHub 환경 변수로 저장
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           
           echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
@@ -101,25 +102,24 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
-  
 
       # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ matrix.module.ssh_user }}@${{ matrix.module.ssh_host }} << 'EOF'
-          MODULE=${{ matrix.module.name }}
-          IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
+          ssh -i ~/.ssh/id_rsa ${{ matrix.module.ssh_user }}@${{ matrix.module.ssh_host }} << EOF
+            MODULE=${{ matrix.module.name }}
+            IMAGE_TAG=$IMAGE_TAG
           
-          echo "=== Pulling the latest Docker image ==="
-          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
+            echo "=== Pulling the latest Docker image ==="
+            docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
           
-          echo "=== Stopping and removing existing container ==="
-          docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
+            echo "=== Stopping and removing existing container ==="
+            docker ps --filter "name=$MODULE" | grep $MODULE && docker stop $MODULE && docker rm $MODULE || echo "No running container to stop."
           
-          echo "=== Running new container ==="
-          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+            echo "=== Running new container ==="
+            docker run -d --name $MODULE -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker run failed"; exit 1; }
           
-          echo "=== Deployment completed successfully ==="
+            echo "=== Deployment completed successfully ==="
           EOF
