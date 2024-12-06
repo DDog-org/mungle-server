@@ -121,6 +121,7 @@ jobs:
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           
           echo "=== Pulling the latest Docker image ==="
+          echo "DEBUG: docker pull ${{ secrets.ECR_REPOSITORY_URI }}:${IMAGE_TAG}"
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
           
           echo "=== Stopping and removing existing container ==="
