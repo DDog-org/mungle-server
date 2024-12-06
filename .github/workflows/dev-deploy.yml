@@ -1,9 +1,9 @@
 name: Deploy to Develop EC2
 on:
   pull_request:
-    branches: [ "develop" ] # PR 생성 시 임시 배포
+    branches: [ "develop" ]
   push:
-    branches: [ "develop" ] # 병합 후 정식 배포
+    branches: [ "develop" ]
 
 jobs:
   deploy:
@@ -14,23 +14,19 @@ jobs:
         module:
           - name: daengle-payment
             path: daengle-payment-api
-            ssh_host: ${{ env.SSH_PAYMENT_HOST }}
+            ssh_host: ${{ secrets.SSH_PAYMENT_HOST }}
           - name: daengle-user
             path: daengle-user-api
-            ssh_host: ${{ env.SSH_USER_HOST }}
+            ssh_host: ${{ secrets.SSH_USER_HOST }}
           - name: daengle-vet
             path: daengle-vet-api
-            ssh_host: ${{ env.SSH_VET_HOST }}
+            ssh_host: ${{ secrets.SSH_VET_HOST }}
           - name: daengle-groomer
             path: daengle-groomer-api
-            ssh_host: ${{ env.SSH_GROOMER_HOST }}
+            ssh_host: ${{ secrets.SSH_GROOMER_HOST }}
 
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_PAYMENT_HOST: ${{ secrets.SSH_PAYMENT_HOST }}
-      SSH_USER_HOST: ${{ secrets.SSH_USER_HOST }}
-      SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
-      SSH_GROOMER_HOST: ${{ secrets.SSH_GROOMER_HOST }}
 
     steps:
       # 1. Checkout Repository
@@ -105,7 +101,6 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
-  
 
       # 9. Deploy to EC2
       - name: Deploy to EC2
