@@ -123,7 +123,7 @@ jobs:
           
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
-          CONTAINER_NAME="${{matrix.module.name}-container"
+          CONTAINER_NAME="${{matrix.module.name}}-container"
           
           if [[ "${{ github.event_name }}" != "pull_request" ]]; then
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
