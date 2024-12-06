@@ -74,13 +74,13 @@ jobs:
         run: |
           set -e
           cd ${{ matrix.module.path }}
-
-          IMAGE_TAG=${{ matrix.module.name }}-latest
+          
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
           
           echo "Building Docker image..."
-          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }} .
-          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
-#          docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
       # 8. Set up SSH
