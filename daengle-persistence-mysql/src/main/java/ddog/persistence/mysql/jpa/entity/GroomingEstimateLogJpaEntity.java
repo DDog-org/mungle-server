@@ -1,7 +1,8 @@
-package ddog.persistence.mysql.jpa.entity;
+package ddog.persistence.jpa.entity;
 
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.domain.estimate.Proposal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,11 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "GroomingEstimates")
-public class GroomingEstimateJpaEntity {
+@Entity(name = "GroomingEstimateLogs")
+public class GroomingEstimateLogJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long estimateLogId;
     private Long estimateId;
     private Long groomerId;
     private Long userId;
@@ -41,26 +43,28 @@ public class GroomingEstimateJpaEntity {
     private String desiredStyle;
     private String overallOpinion;
 
-    public static GroomingEstimateJpaEntity from(GroomingEstimate estimate) {
-        return GroomingEstimateJpaEntity.builder()
-                .estimateId(estimate.getEstimateId())
-                .groomerId(estimate.getGroomerId())
-                .userId(estimate.getUserId())
-                .petId(estimate.getPetId())
-                .address(estimate.getAddress())
-                .reservedDate(estimate.getReservedDate())
-                .requirements(estimate.getRequirements())
-                .status(estimate.getStatus())
-                .proposal(estimate.getProposal())
-                .createdAt(estimate.getCreatedAt())
-                .updatedAt(estimate.getUpdatedAt())
-                .desiredStyle(estimate.getDesiredStyle())
-                .overallOpinion(estimate.getOverallOpinion())
+    public static GroomingEstimateLogJpaEntity from(GroomingEstimateLog estimateLog) {
+        return GroomingEstimateLogJpaEntity.builder()
+                .estimateLogId(estimateLog.getEstimateLogId())
+                .estimateId(estimateLog.getEstimateId())
+                .groomerId(estimateLog.getGroomerId())
+                .userId(estimateLog.getUserId())
+                .petId(estimateLog.getPetId())
+                .address(estimateLog.getAddress())
+                .reservedDate(estimateLog.getReservedDate())
+                .requirements(estimateLog.getRequirements())
+                .status(estimateLog.getStatus())
+                .proposal(estimateLog.getProposal())
+                .createdAt(estimateLog.getCreatedAt())
+                .updatedAt(estimateLog.getUpdatedAt())
+                .desiredStyle(estimateLog.getDesiredStyle())
+                .overallOpinion(estimateLog.getOverallOpinion())
                 .build();
     }
 
-    public GroomingEstimate toModel() {
-        return GroomingEstimate.builder()
+    public GroomingEstimateLog toModel() {
+        return GroomingEstimateLog.builder()
+                .estimateLogId(estimateLogId)
                 .estimateId(estimateId)
                 .groomerId(groomerId)
                 .userId(userId)

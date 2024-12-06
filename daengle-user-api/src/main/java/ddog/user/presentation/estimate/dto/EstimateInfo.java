@@ -1,6 +1,7 @@
 package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import ddog.domain.estimate.Proposal;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,6 +29,7 @@ public class EstimateInfo {
             private Long groomingEstimateId;
             private String name;
             private int daengleMeter;
+            private Proposal proposal;
             private String image;
             private String shopName;
 
@@ -41,6 +43,7 @@ public class EstimateInfo {
             private Long careEstimateId;
             private String name;
             private int daengleMeter;
+            private Proposal proposal;
             private String image;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

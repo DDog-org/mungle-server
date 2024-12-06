@@ -41,11 +41,13 @@ public class PetJpaEntity {
     @ElementCollection // 싫어하는 부위 리스트
     @CollectionTable(name = "dislike_parts", joinColumns = @JoinColumn(name = "pet_id"))
     @Column(name = "dislike_part")
+    @Enumerated(EnumType.STRING)
     private List<Part> dislikeParts;
 
     @ElementCollection // 특이사항 태그 리스트
     @CollectionTable(name = "significant_tags", joinColumns = @JoinColumn(name = "pet_id"))
     @Column(name = "significant_tag")
+    @Enumerated(EnumType.STRING)
     private List<SignificantTag> significantTags;
 
     public Pet toModel() {
