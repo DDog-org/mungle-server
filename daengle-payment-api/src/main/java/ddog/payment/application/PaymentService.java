@@ -38,6 +38,7 @@ public class PaymentService {
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
         Order order = orderPersist.findBy(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
         Payment payment = order.getPayment();
+        //TODO 견적 데이터 유효성 검사 로직
 
         try {
             com.siot.IamportRestClient.response.Payment iamportResp =

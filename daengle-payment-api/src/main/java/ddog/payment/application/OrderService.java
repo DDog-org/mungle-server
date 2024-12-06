@@ -36,6 +36,7 @@ public class OrderService {
                 .build();
     }
 
+    //TODO Estimate 도메인에게 책임 위임하기, 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
     private void validateEstimate(ServiceType serviceType, Long estimateId) {
 //        switch (serviceType) {
 //            case GROOMING:
