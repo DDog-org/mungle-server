@@ -25,5 +25,10 @@ public class CareReviewRepository implements CareReviewPersist {
         CareReviewJpaEntity careReviewJpaEntity = careReviewJpaRepository.save(CareReviewJpaEntity.from(careReview));
         return careReviewJpaEntity.toModel();
     }
+
+    @Override
+    public void delete(CareReview careReview) {
+        careReviewJpaRepository.delete(CareReviewJpaEntity.from(careReview));
+    }
 }
 

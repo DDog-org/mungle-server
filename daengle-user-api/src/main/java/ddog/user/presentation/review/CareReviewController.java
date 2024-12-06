@@ -4,8 +4,7 @@ import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.domain.review.dto.ModifyCareReviewInfo;
 import ddog.domain.review.dto.PostCareReviewInfo;
 import ddog.user.application.CareReviewService;
-import ddog.user.presentation.review.dto.ModifyReviewResp;
-import ddog.user.presentation.review.dto.PostReviewResp;
+import ddog.user.presentation.review.dto.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,17 @@ public class CareReviewController {
     private final CareReviewService careReviewService;
 
     @PostMapping
-    public CommonResponseEntity<PostReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
+    public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 
     @PatchMapping
-    public CommonResponseEntity<ModifyReviewResp> modifyReview(@RequestBody ModifyCareReviewInfo modifyCareReviewInfo) {
+    public CommonResponseEntity<ReviewResp> modifyReview(@RequestBody ModifyCareReviewInfo modifyCareReviewInfo) {
         return success(careReviewService.modifyReview(modifyCareReviewInfo));
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public CommonResponseEntity<ReviewResp> deleteReview(@PathVariable Long reviewId) {
+        return success(careReviewService.deleteReview(reviewId));
     }
 }

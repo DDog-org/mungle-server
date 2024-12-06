@@ -25,4 +25,9 @@ public class GroomingReviewRepository implements GroomingReviewPersist {
         GroomingReviewJpaEntity groomingEstimateJpaEntity = groomingReviewJpaRepository.save(GroomingReviewJpaEntity.from(groomingReview));
         return groomingEstimateJpaEntity.toModel();
     }
+
+    @Override
+    public void delete(GroomingReview groomingReview) {
+        groomingReviewJpaRepository.delete(GroomingReviewJpaEntity.from(groomingReview));
+    }
 }

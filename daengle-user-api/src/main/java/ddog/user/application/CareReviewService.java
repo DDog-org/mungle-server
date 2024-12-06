@@ -10,8 +10,7 @@ import ddog.user.application.exception.ReservationException;
 import ddog.user.application.exception.ReservationExceptionType;
 import ddog.user.application.exception.ReviewException;
 import ddog.user.application.exception.ReviewExceptionType;
-import ddog.user.presentation.review.dto.ModifyReviewResp;
-import ddog.user.presentation.review.dto.PostReviewResp;
+import ddog.user.presentation.review.dto.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class CareReviewService {
     private final CareReviewPersist careReviewPersist;
     private final ReservationPersist reservationPersist;
 
-    public PostReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
+    public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findBy(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
@@ -31,14 +30,14 @@ public class CareReviewService {
 
         //TODO 댕글미터 계산해서 영속
 
-        return PostReviewResp.builder()
+        return ReviewResp.builder()
                 .reviewId(savedCareReview.getCareReviewId())
                 .reviewerId(savedCareReview.getReviewerId())
                 .revieweeId(savedCareReview.getVetId())
                 .build();
     }
 
-    public ModifyReviewResp modifyReview(ModifyCareReviewInfo modifyCareReviewInfo) {
+    public ReviewResp modifyReview(ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findBy(modifyCareReviewInfo.getCareReviewId())
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
@@ -47,10 +46,23 @@ public class CareReviewService {
 
         //TODO 댕글미터 재계산해서 영속
 
-        return ModifyReviewResp.builder()
+        return ReviewResp.builder()
                 .reviewId(updatedCareReview.getCareReviewId())
                 .reviewerId(updatedCareReview.getReviewerId())
                 .revieweeId(updatedCareReview.getVetId())
+                .build();
+    }
+
+    public ReviewResp deleteReview(Long reviewId) {
+        CareReview savedCareReview = careReviewPersist.findBy(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        careReviewPersist.delete(savedCareReview);
+
+        return ReviewResp.builder()
+                .reviewId(savedCareReview.getCareReviewId())
+                .reviewerId(savedCareReview.getReviewerId())
+                .revieweeId(savedCareReview.getVetId())
                 .build();
     }
 }
