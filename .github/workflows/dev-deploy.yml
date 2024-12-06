@@ -76,27 +76,15 @@ jobs:
         run: |
           set -e
           cd ${{ matrix.module.path }}
-          
-          # 태그 생성
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            PR_NUMBER=${{ github.event.pull_request.number }}
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)  # 태그 생성 시점 통일
-            IMAGE_TAG=pr-$PR_NUMBER-$TIMESTAMP
-          else
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)
-            IMAGE_TAG=release-$TIMESTAMP
-          fi
+        
           
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV  # GitHub 환경 변수로 저장
           
           echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
-          
-          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
-            docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
-            docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
-          fi
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
       # 8. Set up SSH
       - name: Set up SSH
@@ -125,22 +113,13 @@ jobs:
           IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
           CONTAINER_NAME="${{matrix.module.name}}-container"
           
-          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
-          else
-          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
-          fi
     
           echo "=== Stopping and removing existing container ==="
           docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
           
           echo "=== Running new container ==="
-          # PR일 때는 PR-specific 태그 사용
-            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker run failed"; exit 1; }
-            else
-            # 실제 배포일 때는 latest 태그 사용
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
-            fi
+          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
                     
           echo "=== Deployment completed successfully ==="
+          EOF
