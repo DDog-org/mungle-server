@@ -1,4 +1,4 @@
-package ddog.persistence.jpa.repository;
+package ddog.persistence.mysql.jpa.repository;
 
 import ddog.persistence.jpa.entity.GroomingEstimateLogJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

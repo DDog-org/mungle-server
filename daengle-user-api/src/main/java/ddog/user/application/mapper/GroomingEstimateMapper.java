@@ -62,7 +62,7 @@ public class GroomingEstimateMapper {
 
     public static GroomingEstimateDetail getGroomingEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet) {
         return GroomingEstimateDetail.builder()
-                .groomingEstimateId(estimate.getGroomingEstimateId())
+                .groomingEstimateId(estimate.getEstimateId())
                 .groomerId(groomer.getGroomerId())
                 .image(groomer.getGroomerImage())
                 .name(groomer.getGroomerName())
