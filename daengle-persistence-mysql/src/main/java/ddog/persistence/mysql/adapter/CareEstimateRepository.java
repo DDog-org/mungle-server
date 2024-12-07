@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,8 +44,9 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public CareEstimate getByEstimateId(Long estimateId) {
-        return careEstimateJpaRepository.getCareEstimateJpaEntityByEstimateId(estimateId).toModel();
+    public Optional<CareEstimate> findByEstimateId(Long estimateId) {
+        return careEstimateJpaRepository.findByEstimateId(estimateId)
+                .map(CareEstimateJpaEntity::toModel);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpaEntity, Long> {
@@ -20,7 +21,7 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
             "WHERE c.proposal = 'DESIGNATION' AND (c.status = 'NEW' OR c.status = 'PENDING') AND c.vetId = :vetId")
     List<CareEstimateJpaEntity> findDesignationCareEstimatesByVetId(@Param("vetId") Long vetId);
 
-    CareEstimateJpaEntity getCareEstimateJpaEntityByEstimateId(Long estimateId);
+    Optional<CareEstimateJpaEntity> findByEstimateId(Long estimateId);
 
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.status = 'PENDING' AND c.petId = :petId")

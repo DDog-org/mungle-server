@@ -1,14 +1,13 @@
 package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
-import ddog.domain.estimate.CareEstimateLog;
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
 import ddog.persistence.mysql.port.*;
+import ddog.user.application.exception.*;
 import ddog.user.application.mapper.CareEstimateMapper;
 import ddog.user.application.mapper.GroomingEstimateMapper;
 import ddog.user.presentation.estimate.dto.*;
@@ -29,47 +28,48 @@ public class EstimateService {
     private final VetPersist vetPersist;
 
     private final GroomingEstimatePersist groomingEstimatePersist;
-    private final GroomingEstimateLogPersist groomingEstimateLogPersist;
     private final CareEstimatePersist careEstimatePersist;
-    private final CareEstimateLogPersist careEstimateLogPersist;
 
     @Transactional(readOnly = true)
-    public AccountInfo.Grooming getGroomerAndUserInfo(Long groomerId, Long userId) {
+    public UserInfo.Grooming getGroomerAndUserInfo(Long groomerId, Long userId) {
 
-        User user = userPersist.findByAccountId(userId);
+        User user = userPersist.findByAccountId(userId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         if (groomerId == null) {
-            return GroomingEstimateMapper.withoutGroomingInfo(user);
+            return GroomingEstimateMapper.mapToUserInfo(user);
         }
 
-        Groomer groomer = groomerPersist.getGroomerByAccountId(groomerId);
-        return GroomingEstimateMapper.withGroomingInfo(groomer, user);
+        Groomer groomer = groomerPersist.findByAccountId(groomerId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        return GroomingEstimateMapper.mapToUserInfoWithGroomer(groomer, user);
     }
 
     @Transactional(readOnly = true)
-    public AccountInfo.Care getVetAndUserInfo(Long vetId, Long userId) {
+    public UserInfo.Care getVetAndUserInfo(Long vetId, Long userId) {
 
-        User user = userPersist.findByAccountId(userId);
+        User user = userPersist.findByAccountId(userId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         if (vetId == null) {
-            return CareEstimateMapper.withoutCareInfo(user);
+            return CareEstimateMapper.mapToUserInfo(user);
         }
 
-        Vet vet = vetPersist.getVetByAccountId(vetId);
-        return CareEstimateMapper.withCareInfo(vet, user);
+        Vet vet = vetPersist.findByAccountId(vetId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        return CareEstimateMapper.mapToUserInfoWithVet(vet, user);
     }
 
     @Transactional
-    public EstimateResp createGroomingEstimate(GroomingEstimateReq request, Long accountId) {
+    public EstimateResp createGroomingEstimate(CreateGroomingEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
         GroomingEstimate.validateRequirements(request.getRequirements());
 
         if (request.getGroomerId() == null) {
             GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
-            GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
-
-            GroomingEstimateLog newEstimateLog = GroomingEstimateLog.from(savedEstimate);
-            groomingEstimateLogPersist.save(newEstimateLog);
+            groomingEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
                     .requestResult("(일반)신규 미용 견적서 등록 완료")
@@ -77,10 +77,7 @@ public class EstimateService {
         }
 
         GroomingEstimate newEstimate = GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId);
-        GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
-
-        GroomingEstimateLog newEstimateLog = GroomingEstimateLog.from(savedEstimate);
-        groomingEstimateLogPersist.save(newEstimateLog);
+        groomingEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
                 .requestResult("(지정)신규 미용 견적서 등록 완료")
@@ -88,17 +85,14 @@ public class EstimateService {
     }
 
     @Transactional
-    public EstimateResp createCareEstimate(CareEstimateReq request, Long accountId) {
+    public EstimateResp createCareEstimate(CreateCareEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
         CareEstimate.validateSymptoms(request.getSymptoms());
         CareEstimate.validateRequirements(request.getRequirements());
 
         if (request.getVetId() == null) {
             CareEstimate newEstimate = CareEstimateMapper.createGeneralCareEstimate(request, accountId);
-            CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
-
-            CareEstimateLog newEstimateLog = CareEstimateLog.from(savedEstimate);
-            careEstimateLogPersist.save(newEstimateLog);
+            careEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
                     .requestResult("(일반)신규 진료 견적서 등록 완료")
@@ -106,10 +100,7 @@ public class EstimateService {
         }
 
         CareEstimate newEstimate = CareEstimateMapper.createDesignationCareEstimate(request, accountId);
-        CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
-
-        CareEstimateLog newEstimateLog = CareEstimateLog.from(savedEstimate);
-        careEstimateLogPersist.save(newEstimateLog);
+        careEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
                 .requestResult("(지정)신규 진료 견적서 등록 완료")
@@ -117,8 +108,10 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimateInfo(Long accountId) {
-        User user = userPersist.findByAccountId(accountId);
+    public EstimateInfo findEstimates(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         List<Pet> pets = user.getPets();
 
         List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
@@ -128,16 +121,18 @@ public class EstimateService {
 
             List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
             for (GroomingEstimate estimate : groomingEstimates) {
-                Groomer groomer = groomerPersist.getGroomerByAccountId(estimate.getGroomerId());
 
-                groomingInfos.add(GroomingEstimateMapper.toGrooming(estimate, groomer));
+                Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
+                        .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+                groomingInfos.add(GroomingEstimateMapper.mapToGrooming(estimate, groomer));
             }
 
             List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
             for (CareEstimate estimate : careEstimates) {
-                Vet vet = vetPersist.getVetByAccountId(estimate.getVetId());
 
-                careInfos.add(CareEstimateMapper.toCare(estimate, vet));
+                Vet vet = vetPersist.findByAccountId(estimate.getVetId())
+                        .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+                careInfos.add(CareEstimateMapper.mapToCare(estimate, vet));
             }
 
             petInfos.add(EstimateInfo.PetInfo.builder()
@@ -148,6 +143,7 @@ public class EstimateService {
                     .careEstimates(careInfos)
                     .build());
         }
+
         return EstimateInfo.builder()
                 .petInfos(petInfos)
                 .build();
@@ -155,21 +151,29 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(groomingEstimateId);
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
-        Groomer groomer = groomerPersist.getGroomerByAccountId(groomingEstimate.getGroomerId());
-        Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
+        Groomer groomer = groomerPersist.findByAccountId(groomingEstimate.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-        return GroomingEstimateMapper.getGroomingEstimateDetail(groomingEstimate, groomer, pet);
+        Pet pet = petPersist.findByPetId(groomingEstimate.getPetId())
+                .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+        return GroomingEstimateMapper.mapToEstimateDetail(groomingEstimate, groomer, pet);
     }
 
     @Transactional(readOnly = true)
     public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
-        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(careEstimateId);
+        CareEstimate careEstimate = careEstimatePersist.findByEstimateId(careEstimateId)
+                .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
-        Vet vet = vetPersist.getVetByAccountId(careEstimate.getVetId());
-        Pet pet = petPersist.findByPetId(careEstimate.getPetId());
+        Vet vet = vetPersist.findByAccountId(careEstimate.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        return CareEstimateMapper.getCareEstimateDetail(careEstimate, vet, pet);
+        Pet pet = petPersist.findByPetId(careEstimate.getPetId())
+                .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+        return CareEstimateMapper.mapToEstimateDetail(careEstimate, vet, pet);
     }
 }

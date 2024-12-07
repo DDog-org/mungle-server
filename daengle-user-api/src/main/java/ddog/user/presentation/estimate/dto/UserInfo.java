@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class AccountInfo {
+public class UserInfo {
 
     @Getter
     @Builder

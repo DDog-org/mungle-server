@@ -1,7 +1,6 @@
 package ddog.vet.application;
 
 import ddog.domain.estimate.CareEstimate;
-import ddog.domain.estimate.CareEstimateLog;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
@@ -31,7 +30,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfo(Long accountId) {
-        Vet vet = vetPersist.getVetByAccountId(accountId);
+        Vet vet = vetPersist.findByAccountId(accountId);
 
         List<CareEstimate> generalEstimates = careEstimatePersist.findGeneralCareEstimates(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimatePersist.findDesignationCareEstimates(vet.getAccountId());
@@ -64,7 +63,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long careEstimateId) {
-        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(careEstimateId);
+        CareEstimate careEstimate = careEstimatePersist.findByEstimateId(careEstimateId);
 
         User user = userPersist.findByAccountId(careEstimate.getUserId());
         Pet pet = petPersist.findByPetId(careEstimate.getPetId());
@@ -78,8 +77,8 @@ public class EstimateService {
         CareEstimate.validateCause(request.getCause());
         CareEstimate.validateTreatment(request.getTreatment());
 
-        CareEstimate careEstimate = careEstimatePersist.getByEstimateId(request.getId());
-        Vet vet = vetPersist.getVetByAccountId(accountId);
+        CareEstimate careEstimate = careEstimatePersist.findByEstimateId(request.getId());
+        Vet vet = vetPersist.findByAccountId(accountId);
 
         CareEstimate newEstimate = CareEstimateMapper.updateEstimate(request, vet, careEstimate);
         CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);

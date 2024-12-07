@@ -21,10 +21,9 @@ public class UserRepository implements UserPersist {
     }
 
     @Override
-    public User findByAccountId(Long accountId) {
+    public Optional<User> findByAccountId(Long accountId) {
         return userJpaRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new RuntimeException("user not found"))
-                .toModel();
+                .map(UserJpaEntity::toModel);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEstimateJpaEntity, Long> {
 
@@ -19,7 +20,7 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
             "WHERE g.proposal = 'DESIGNATION' AND (g.status = 'NEW' OR g.status = 'PENDING') AND g.groomerId = :groomerId")
     List<GroomingEstimateJpaEntity> findDesignationGroomingEstimatesByGroomerId(@Param("groomerId") Long groomerId);
 
-    GroomingEstimateJpaEntity getGroomingEstimateJpaEntityByEstimateId(Long estimateId);
+    Optional<GroomingEstimateJpaEntity> findByEstimateId(Long estimateId);
 
     @Query("SELECT g FROM GroomingEstimates g " +
             "WHERE g.status = 'PENDING' AND g.petId = :petId")

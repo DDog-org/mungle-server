@@ -1,7 +1,6 @@
 package ddog.groomer.application;
 
 import ddog.domain.estimate.GroomingEstimate;
-import ddog.domain.estimate.GroomingEstimateLog;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
@@ -32,7 +31,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateInfo findEstimateInfo(Long accountId) {
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+        Groomer groomer = groomerPersist.findByAccountId(accountId);
 
         List<GroomingEstimate> generalEstimates = groomingEstimatePersist.findGeneralGroomingEstimates(groomer.getAddress());
         List<GroomingEstimate> designationEstimates = groomingEstimatePersist.findDesignationGroomingEstimates(groomer.getAccountId());
@@ -66,7 +65,7 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateDetail getEstimateDetail(Long groomingEstimateId) {
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(groomingEstimateId);
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId);
 
         User user = userPersist.findByAccountId(groomingEstimate.getUserId());
         Pet pet = petPersist.findByPetId(groomingEstimate.getPetId());
@@ -78,8 +77,8 @@ public class EstimateService {
     public EstimateResp createEstimate(EstimateReq request, Long accountId) {
         GroomingEstimate.validateOverallOpinion(request.getOverallOpinion());
 
-        GroomingEstimate groomingEstimate = groomingEstimatePersist.getByEstimateId(request.getId());
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+        GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(request.getId());
+        Groomer groomer = groomerPersist.findByAccountId(accountId);
 
         GroomingEstimate updatedEstimate = GroomingEstimateMapper.updateEstimate(request, groomer, groomingEstimate);
         GroomingEstimate savedEstimate = groomingEstimatePersist.save(updatedEstimate);

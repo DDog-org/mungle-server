@@ -9,5 +9,4 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
 
     Optional<VetJpaEntity> findByAccountId(Long accountId);
 
-    VetJpaEntity getByAccountId(Long accountId);
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,17 +44,19 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public GroomingEstimate getByEstimateId(Long estimateId) {
-        return groomingEstimateJpaRepository.getGroomingEstimateJpaEntityByEstimateId(estimateId)
-                .toModel();
+    public Optional<GroomingEstimate> findByEstimateId(Long estimateId) {
+        return groomingEstimateJpaRepository.findByEstimateId(estimateId)
+                .map(GroomingEstimateJpaEntity::toModel);
     }
 
     @Override
     public List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId) {
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
+
         for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesByPetId(petId)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
         }
+
         return groomingEstimates;
     }
 }
