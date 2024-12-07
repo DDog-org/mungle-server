@@ -1,12 +1,12 @@
-package ddog.user.application.exception;
+package ddog.user.application.exception.estimate;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum GroomerExceptionType {
+public enum CareEstimateExceptionType {
     INVALID_REQUEST_DATA_FORMAT(HttpStatus.BAD_REQUEST, 400, "데이터 형식 오류"),
-    GROOMER_NOT_FOUND(HttpStatus.NOT_FOUND, 2001, "미용사가 존재하지 않음.");
+    CARE_ESTIMATE_NOT_FOUND(HttpStatus.NOT_FOUND, 2001, "진료 견적서가 존재하지 않음.");
 
     private final HttpStatus httpStatus;
     private final Integer code;
