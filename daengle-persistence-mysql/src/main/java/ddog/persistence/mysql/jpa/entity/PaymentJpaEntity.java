@@ -48,5 +48,4 @@ public class PaymentJpaEntity {
                 .paymentUid(payment.getPaymentUid())
                 .build();
     }
-
 }
