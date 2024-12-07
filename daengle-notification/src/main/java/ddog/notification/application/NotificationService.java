@@ -2,8 +2,6 @@ package ddog.notification.application;
 
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
-import ddog.notification.application.adapter.SseEmitterManager;
-import ddog.notification.application.adapter.RedisUserStatusManager;
 import ddog.notification.application.exception.NotificationException;
 import ddog.notification.application.exception.NotificationExceptionType;
 import ddog.notification.application.port.EmitterConnectPersist;
@@ -21,7 +19,9 @@ public class NotificationService {
     private final UserStatusPersist userStatusPersist;
     private final NotificationPersist notificationPersist;
 
-    public NotificationService(SseEmitterManager emitterConnectPersist, RedisUserStatusManager userStatusPersist, NotificationPersist notificationPersist) {
+    public NotificationService(EmitterConnectPersist emitterConnectPersist,
+                               UserStatusPersist userStatusPersist,
+                               NotificationPersist notificationPersist) {
         this.emitterConnectPersist = emitterConnectPersist;
         this.userStatusPersist = userStatusPersist;
         this.notificationPersist = notificationPersist;
@@ -30,7 +30,7 @@ public class NotificationService {
     public void sendNotifiacationToUser(Long receiverId, NotifyType notifyType, String message) {
         try {
             if (receiverId == null || message == null || notifyType == null) {
-                throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "Invalid parameters provided");
+                throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "알림 전송 실패");
             }
 
             if (emitterConnectPersist.isUserEmitterConnected(receiverId)) {
@@ -54,7 +54,7 @@ public class NotificationService {
 
     public List<Notification> getAllNotificationsByUserId(Long userId) {
         if (userId == null) {
-            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "User ID cannot be null");
+            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "유저 정보 가져오지 못함");
         }
 
         return notificationPersist.findNotificationsByUserId(userId);
