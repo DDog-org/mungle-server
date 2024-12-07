@@ -1,6 +1,6 @@
 package ddog.user.presentation.notification;
 
-import ddog.notification.application.adapter.SseEmitterAdapter;
+import ddog.notification.application.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -10,10 +10,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/api/user/notify")
 public class NotificationController {
 
-    private final SseEmitterAdapter sseEmitterAdapter;
+    private final NotificationService notificationService;
 
     @GetMapping("/{userId}")
     public SseEmitter connectSseEmitter(@PathVariable("userId") Long userId) {
-        return sseEmitterAdapter.toConnectEmitter(userId);
+        return notificationService.connectClient(userId);
     }
 }
