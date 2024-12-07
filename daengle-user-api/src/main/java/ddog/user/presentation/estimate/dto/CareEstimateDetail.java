@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Builder
 public class CareEstimateDetail {
 
+    private Long careEstimateId;
+    private Long vetId;
     private String image;
     private String name;
     private int daengleMeter;

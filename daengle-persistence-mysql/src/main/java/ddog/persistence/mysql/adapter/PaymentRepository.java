@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
         @Override
         public Payment save(Payment payment) {
-            PaymentJpaEntity paymentJpaEntity = paymentJpaRepository.save(PaymentJpaEntity.fromModel(payment));
+            PaymentJpaEntity paymentJpaEntity = paymentJpaRepository.save(PaymentJpaEntity.from(payment));
             return paymentJpaEntity.toModel();
         }
 }

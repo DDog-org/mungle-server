@@ -7,6 +7,8 @@ import ddog.persistence.mysql.port.ReservationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ReservationRepository implements ReservationPersist {
@@ -17,5 +19,10 @@ public class ReservationRepository implements ReservationPersist {
     public Reservation save(Reservation reservation) {
         return reservationJpaRepository.save(ReservationJpaEntity.from(reservation))
                 .toModel();
+    }
+
+    @Override
+    public Optional<Reservation> findBy(Long reservationId) {
+        return reservationJpaRepository.findByReservationId(reservationId).map(ReservationJpaEntity::toModel);
     }
 }

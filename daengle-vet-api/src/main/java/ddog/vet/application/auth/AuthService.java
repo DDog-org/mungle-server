@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -35,7 +36,9 @@ public class AuthService {
         String email = kakaoSocialService.getKakaoEmail(kakaoAccessToken);
         Role role = Role.VET;
 
-        Account account = accountPersist.findAccountByEmailAndRole(email, role);
+        Account account = accountPersist.findAccountByEmailAndRole(email, role)
+                .orElse(null);
+
         if (account == null) {
             return LoginResult.builder()
                     .isOnboarding(true)
@@ -50,6 +53,7 @@ public class AuthService {
                     .isPending(true)
                     .build();
         }
+
         Authentication authentication = getAuthentication(email, role);
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
         return LoginResult.builder()
@@ -65,6 +69,7 @@ public class AuthService {
         authorities.add(new SimpleGrantedAuthority(role.toString()));
 
         Long accountId = accountPersist.findAccountByEmailAndRole(email, role)
+                .orElseThrow(() -> new RuntimeException("Account Not Found"))
                 .getAccountId();
 
         Authentication authentication

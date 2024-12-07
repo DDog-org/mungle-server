@@ -53,6 +53,7 @@ public class AuthService {
         authorities.add(new SimpleGrantedAuthority(role.toString()));
 
         Long accountId = accountPersist.findAccountByEmailAndRole(email, role)
+                .orElseThrow(() -> new RuntimeException("Account Not Found"))
                 .getAccountId();
 
         Authentication authentication

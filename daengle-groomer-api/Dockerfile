@@ -9,6 +9,9 @@ COPY ${JAR_FILE} app.jar
 
 ENV TZ=Asia/Seoul
 
+# 프로파일 기본값 설정
+ENV SPRING_PROFILES_ACTIVE=prod
+
 EXPOSE 8080
 
 ENTRYPOINT ["java","-Dfile.encoding=UTF-8", "-jar","/app.jar"]
