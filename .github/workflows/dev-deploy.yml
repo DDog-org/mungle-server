@@ -103,29 +103,30 @@ jobs:
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${EC2_HOST} "echo 'Connected to EC2 instance'"
           
           # EC2에서 AWS 인증 정보 설정
           export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_ROOT_KEY }}"
           export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_ACCESS_ROOT_SECRET }}"
           export AWS_REGION="${{ secrets.AWS_REGION }}"
           
+           # AWS ECR에 로그인
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+          
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
           
-          echo "=== Logging into AWS ECR ==="
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
-    
-          echo "=== Pulling Docker image ==="
-          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
-    
+          # Pull latest image
+          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+          
           echo "=== Verifying Docker images ==="
           docker images  
-    
-          echo "=== Stopping and removing old container ==="
-          docker stop ${CONTAINER_NAME} || true
-          docker rm ${CONTAINER_NAME} || true
-    
+          
+          echo "=== Stopping and removing existing container ==="
+          docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
+          
           echo "=== Running new container ==="
-          docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+          
+          echo "=== Deployment completed successfully ==="
