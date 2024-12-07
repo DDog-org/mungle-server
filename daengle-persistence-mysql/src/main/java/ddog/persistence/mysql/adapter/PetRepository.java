@@ -7,6 +7,8 @@ import ddog.persistence.mysql.port.PetPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class PetRepository implements PetPersist {
@@ -20,10 +22,9 @@ public class PetRepository implements PetPersist {
     }
 
     @Override
-    public Pet findByPetId(Long petId) {
-        return petJpaRepository.findPetByPetId(petId)
-                .orElseThrow(() -> new RuntimeException("pet not found"))
-                .toModel();
+    public Optional<Pet> findByPetId(Long petId) {
+        return petJpaRepository.findByPetId(petId)
+                .map(PetJpaEntity::toModel);
     }
 
     @Override

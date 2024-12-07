@@ -9,5 +9,4 @@ public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Lo
 
     Optional<GroomerJpaEntity> findByAccountId(Long accountId);
 
-    GroomerJpaEntity getByAccountId(Long accountId);
 }

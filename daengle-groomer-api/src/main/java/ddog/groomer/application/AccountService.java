@@ -72,7 +72,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+        Groomer groomer = groomerPersist.findByAccountId(accountId);
         return GroomerMapper.toModifyPage(groomer);
     }
 
@@ -80,7 +80,7 @@ public class AccountService {
     public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
         Groomer.validateIntroduction(request.getIntroduction());
 
-        Groomer groomer = groomerPersist.getGroomerByAccountId(accountId);
+        Groomer groomer = groomerPersist.findByAccountId(accountId);
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
         groomerPersist.save(updatedGroomer);
 
