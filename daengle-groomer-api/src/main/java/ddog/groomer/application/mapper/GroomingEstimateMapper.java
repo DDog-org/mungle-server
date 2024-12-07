@@ -15,7 +15,7 @@ public class GroomingEstimateMapper {
 
     public static EstimateInfo.Content estimateToContent(GroomingEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Content.builder()
-                .id(estimate.getGroomingEstimateId())
+                .id(estimate.getEstimateId())
                 .image(user.getUserImage())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
@@ -30,6 +30,7 @@ public class GroomingEstimateMapper {
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
                 .petImage(pet.getPetImage())
                 .petName(pet.getPetName())
@@ -38,25 +39,28 @@ public class GroomingEstimateMapper {
                 .significant(pet.getPetSignificant())
                 .desiredStyle(estimate.getDesiredStyle())
                 .requirements(estimate.getRequirements())
+                .overallOpinion(estimate.getOverallOpinion())
                 .build();
     }
 
-    public static GroomingEstimate createGroomingEstimate(
+    public static GroomingEstimate updateEstimate(
             EstimateReq request,
             Groomer groomer,
             GroomingEstimate estimate) {
         return GroomingEstimate.builder()
+                .estimateId(estimate.getEstimateId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
                 .groomerId(groomer.getAccountId())
                 .address(estimate.getAddress())
                 .reservedDate(request.getReservedDate())
-                .desiredStyle(estimate.getDesiredStyle())
                 .requirements(estimate.getRequirements())
-                .overallOpinion(request.getOverallOpinion())
-                .proposal(estimate.getProposal())
                 .status(EstimateStatus.PENDING)
-                .createdAt(LocalDateTime.now())
+                .proposal(estimate.getProposal())
+                .createdAt(estimate.getCreatedAt())
+                .updatedAt(LocalDateTime.now())
+                .desiredStyle(estimate.getDesiredStyle())
+                .overallOpinion(request.getOverallOpinion())
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package ddog.user.presentation.estimate.dto;
 
+import ddog.domain.estimate.Proposal;
 import ddog.domain.pet.Weight;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class GroomingEstimateDetail {
     private String name;
     private String shopName;
     private int daengleMeter;
+    private Proposal proposal;
     private String introduction;
     private String address;
     private LocalDateTime reservedDate;

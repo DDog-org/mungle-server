@@ -17,16 +17,19 @@ public class CareEstimateRepository implements CareEstimatePersist {
     private final CareEstimateJpaRepository careEstimateJpaRepository;
 
     @Override
-    public void save(CareEstimate careEstimate) {
-        careEstimateJpaRepository.save(CareEstimateJpaEntity.from(careEstimate));
+    public CareEstimate save(CareEstimate careEstimate) {
+        return careEstimateJpaRepository.save(CareEstimateJpaEntity.from(careEstimate))
+                .toModel();
     }
 
     @Override
     public List<CareEstimate> findGeneralCareEstimates(String address) {
         List<CareEstimate> careEstimates = new ArrayList<>();
+
         for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findGeneralCareEstimatesByAddress(address)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 
@@ -40,8 +43,8 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public CareEstimate getByCareEstimateId(Long careEstimateId) {
-        return careEstimateJpaRepository.getCareEstimateJpaEntityByCareEstimateId(careEstimateId).toModel();
+    public CareEstimate getByEstimateId(Long estimateId) {
+        return careEstimateJpaRepository.getCareEstimateJpaEntityByEstimateId(estimateId).toModel();
     }
 
     @Override
