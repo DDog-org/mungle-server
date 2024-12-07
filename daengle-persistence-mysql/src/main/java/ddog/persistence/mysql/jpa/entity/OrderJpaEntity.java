@@ -30,6 +30,7 @@ public class OrderJpaEntity {
     private String orderUid;
     private Long accountId;
     private String customerName;
+    private Long recipientId;
     private String recipientName;
     private String shopName;
     private LocalDateTime orderDate;
@@ -51,6 +52,7 @@ public class OrderJpaEntity {
                 .orderUid(this.orderUid)
                 .accountId(this.accountId)
                 .customerName(this.customerName)
+                .recipientId(this.recipientId)
                 .recipientName(this.recipientName)
                 .shopName(this.shopName)
                 .orderDate(this.orderDate)
@@ -73,6 +75,7 @@ public class OrderJpaEntity {
                 .orderUid(order.getOrderUid())
                 .accountId(order.getAccountId())
                 .customerName(order.getCustomerName())
+                .recipientId(order.getRecipientId())
                 .recipientName(order.getRecipientName())
                 .shopName(order.getShopName())
                 .orderDate(order.getOrderDate())
@@ -80,7 +83,7 @@ public class OrderJpaEntity {
                 .visitorName(order.getVisitorName())
                 .customerPhoneNumber(order.getCustomerPhoneNumber())
                 .visitorPhoneNumber(order.getVisitorPhoneNumber())
-                .payment(PaymentJpaEntity.fromModel(payment))
+                .payment(PaymentJpaEntity.from(payment))
                 .build();
     }
 }

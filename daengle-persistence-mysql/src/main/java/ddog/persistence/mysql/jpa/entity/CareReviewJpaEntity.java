@@ -20,9 +20,10 @@ public class CareReviewJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long careReviewId;
+    private Long vetId;
+    private Long reservationId;
     private Long reviewerId;
     private Long revieweeId;
-    private Long reviewCount;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
@@ -38,31 +39,33 @@ public class CareReviewJpaEntity {
     @Column(name = "keyword_list")
     private List<CareKeywordReview> careKeywordReviewList;
 
-    public static CareReviewJpaEntity from (CareReview careReview) {
-        return CareReviewJpaEntity.builder()
-                .careReviewId(careReview.getCareReviewId())
-                .reviewerId(careReview.getReviewerId())
-                .revieweeId(careReview.getRevieweeId())
-                .reviewCount(careReview.getReviewCount())
-                .starRating(careReview.getStarRating())
-                .content(careReview.getContent())
-                .createTime(careReview.getCreateTime())
-                .imageUrlList(careReview.getImageUrlList())
-                .careKeywordReviewList(careReview.getCareKeywordReviewList())
-                .build();
-    }
-
     public CareReview toModel() {
         return CareReview.builder()
                 .careReviewId(careReviewId)
+                .vetId(vetId)
+                .reservationId(reservationId)
                 .reviewerId(reviewerId)
-                .revieweeId(revieweeId)
-                .reviewCount(reviewCount)
+                .vetId(revieweeId)
                 .starRating(starRating)
                 .content(content)
                 .createTime(createTime)
                 .imageUrlList(imageUrlList)
                 .careKeywordReviewList(careKeywordReviewList)
+                .build();
+    }
+
+    public static CareReviewJpaEntity from (CareReview careReview) {
+        return CareReviewJpaEntity.builder()
+                .careReviewId(careReview.getCareReviewId())
+                .vetId(careReview.getVetId())
+                .reservationId(careReview.getReservationId())
+                .reviewerId(careReview.getReviewerId())
+                .revieweeId(careReview.getVetId())
+                .starRating(careReview.getStarRating())
+                .content(careReview.getContent())
+                .createTime(careReview.getCreateTime())
+                .imageUrlList(careReview.getImageUrlList())
+                .careKeywordReviewList(careReview.getCareKeywordReviewList())
                 .build();
     }
 }

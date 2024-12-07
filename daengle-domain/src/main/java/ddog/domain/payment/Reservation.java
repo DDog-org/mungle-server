@@ -18,6 +18,7 @@ public class Reservation {
     private Long estimateId;
     private ServiceType serviceType;
     private ReservationStatus reservationStatus;
+    private Long recipientId;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;

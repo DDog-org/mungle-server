@@ -14,11 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public abstract class Review {
     private Long reviewId;
+    private Long reservationId;
     private Long reviewerId;
-    private Long revieweeId;
-    private Long reviewCount;
+    private String revieweeName;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
+    private LocalDateTime modifiedTime;
     private List<String> imageUrlList;
 }

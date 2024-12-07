@@ -23,6 +23,7 @@ public class Order {
     private String orderUid;
     private Long accountId;
     private String customerName;
+    private Long recipientId;
     private String recipientName;
     private String shopName;
     private LocalDateTime orderDate;
@@ -41,6 +42,7 @@ public class Order {
                 .orderUid(String.valueOf(UUID.randomUUID()))
                 .accountId(accountId)
                 .customerName(postOrderInfo.getCustomerName())
+                .recipientId(postOrderInfo.getRecipientId())
                 .recipientName(postOrderInfo.getRecipientName())
                 .shopName(postOrderInfo.getShopName())
                 .orderDate(LocalDateTime.now())
