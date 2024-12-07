@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CreateCareEstimateReq {
+public class CreateNewCareEstimateReq {
     private Long vetId;
     private Long petId;
     private String address;

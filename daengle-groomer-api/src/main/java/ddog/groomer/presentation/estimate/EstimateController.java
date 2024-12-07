@@ -6,7 +6,7 @@ import ddog.groomer.application.EstimateService;
 import ddog.groomer.presentation.estimate.dto.EstimateResp;
 import ddog.groomer.presentation.estimate.dto.EstimateDetail;
 import ddog.groomer.presentation.estimate.dto.EstimateInfo;
-import ddog.groomer.presentation.estimate.dto.EstimateReq;
+import ddog.groomer.presentation.estimate.dto.CreatePendingEstimateReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +19,21 @@ public class EstimateController {
 
     private final EstimateService estimateService;
 
+    /* (신규) 미용 견적서들 목록 조회 */
     @GetMapping("/list")
-    public CommonResponseEntity<EstimateInfo> findEstimateInfo(PayloadDto payloadDto) {
-        return success(estimateService.findEstimateInfo(payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateInfo> findEstimates(PayloadDto payloadDto) {
+        return success(estimateService.findEstimates(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/{groomingEstimateId}/detail")
-    public CommonResponseEntity<EstimateDetail> getEstimateDetail(@PathVariable Long groomingEstimateId) {
-        return success(estimateService.getEstimateDetail(groomingEstimateId));
+    /* (신규) 미용 견적서 상세 조회 */
+    @GetMapping("/{estimateId}/detail")
+    public CommonResponseEntity<EstimateDetail> getEstimateDetail(@PathVariable Long estimateId) {
+        return success(estimateService.getEstimateDetail(estimateId));
     }
 
+    /* 미용사 -> 사용자 (대기) 미용 견적서 작 */
     @PostMapping
-    public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody EstimateReq request, PayloadDto payloadDto) {
-        return success(estimateService.createEstimate(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }
