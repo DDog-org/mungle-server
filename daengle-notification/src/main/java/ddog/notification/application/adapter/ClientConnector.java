@@ -1,6 +1,6 @@
 package ddog.notification.application.adapter;
 
-import ddog.notification.application.port.ClientConnectorPersist;
+import ddog.notification.application.port.ClientConnect;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class ClientConnector implements ClientConnectorPersist {
+public class ClientConnector implements ClientConnect {
 
     private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class UserStatusTemplate implements UserStatusPersist {
+public class UserStatusManager implements UserStatusPersist {
 
     private final RedisTemplate<String, String> redisTemplate;
 
