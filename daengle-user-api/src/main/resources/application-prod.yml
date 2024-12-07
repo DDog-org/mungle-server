@@ -1,0 +1,48 @@
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://daengle-db.cp0c2iw6i2ft.ap-northeast-2.rds.amazonaws.com/daengleDB
+    username: admin
+    password: ureca123
+    hikari:
+      register-mbeans: true
+
+  data:
+    redis:
+      host: coupong-cache-server.iq0pgl.ng.0001.apn2.cache.amazonaws.com
+      port: 6379
+
+
+jwt:
+  secret: ADGGC45345DFSFG78999RYUJHHH677866QWQEWER
+
+kakao:
+  apiKey: "NCSDJYCYJAK1T4VS"
+  apiSecretKey: "6FAYRKG03CA64HQGQHMF0GKCM8K1SDMQ"
+  domain: "https://api.solapi.com"
+  pfId: "KA01PF241129073131458D4gYBLxnEqS"
+  templateId: "KA01TP221025083117992xkz17KyvNbr"
+  setFrom: "01040576001"
+
+templateId:
+  ESTIMATED: "KA01TP241201073309284N1Q5NK8vURn"
+  RESERVED: "KA01TP2412010734247225hVQKouIZAU"
+  RESERVED_DAY: "KA01TP241201073513361VwVzCVAujmy"
+  COMMUNICATE: "KA01TP241201073622309cat1hgfwEXA"
+  COMPLETED: "KA01TP241202042034648gNTJkStbS6e"
+  CERTIFIED: "KA01TP241202042128733df2ZGGZpC9G"
+  VIDEO_CALL: "KA01TP241202042249051AJlrgLQGplH"
+  MATCHING: "KA01TP241202042328940mMf9OKfHQ0p"
+  REVIEWED: "KA01TP241202042405697wKjKj141wqb"
+  CANCELED: "KA01TP241202042441570IYl55dkCTF5"
+  CALL: "KA01TP241202042524276wg2lzkUriOR"
+  NEARBY_CALL: "KA01TP241202042603415gF5VrMaQYGv"
