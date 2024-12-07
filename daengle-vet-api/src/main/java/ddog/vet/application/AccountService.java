@@ -69,7 +69,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
-        Vet vet = vetPersist.getVetByAccountId(accountId);
+        Vet vet = vetPersist.findByAccountId(accountId);
         return VetMapper.toModifyPage(vet);
     }
 
@@ -77,7 +77,7 @@ public class AccountService {
     public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
         validateModifyInfoDataFormat(request);
 
-        Vet vet = vetPersist.getVetByAccountId(accountId);
+        Vet vet = vetPersist.findByAccountId(accountId);
         Vet updatedVet = VetMapper.withUpdate(vet, request);
         vetPersist.save(updatedVet);
 

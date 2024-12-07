@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PetJpaRepository extends JpaRepository<PetJpaEntity, Long> {
 
-    Optional<PetJpaEntity> findPetByPetId(Long petId);
+    Optional<PetJpaEntity> findByPetId(Long petId);
 
     void deleteByPetId(Long petId);
 

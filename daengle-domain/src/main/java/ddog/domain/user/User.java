@@ -26,6 +26,31 @@ public class User {
     private String email;
     private List<Pet> pets;
 
+    public static void validateUsername(String username) {
+        if (username == null || username.length() < 2 || username.length() > 10) {
+            throw new IllegalArgumentException("Invalid username: must be 2-10 characters.");
+        }
+    }
+
+    public static void validatePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || !phoneNumber.matches("^010-\\d{4}-\\d{4}$")) {
+            throw new IllegalArgumentException("Invalid phone number: must follow format 010-0000-0000.");
+        }
+    }
+
+    public static void validateNickname(String nickname) {
+        if (nickname == null || nickname.length() < 2 || nickname.length() > 10) {
+            throw new IllegalArgumentException("Invalid nickname: must be 2-10 characters.");
+        }
+    }
+
+    public static void validateAddress(String address) {
+        /* TODO 공공데이터 추가 후 재작업
+        if (address == null || !address.matches("^\\S+시 \\S+구 \\S+동$")) {
+            throw new IllegalArgumentException("Invalid address: must follow format '00시 00구 00동'.");
+        }*/
+    }
+
     public User withImageAndNickname(String userImage, String nickname) {
         return User.builder()
                 .userId(userId)
@@ -53,29 +78,5 @@ public class User {
                 .email(email)
                 .pets(pets)
                 .build();
-    }
-
-    public static void validateUsername(String username) {
-        if (username == null || username.length() < 2 || username.length() > 10) {
-            throw new IllegalArgumentException("Invalid username: must be 2-10 characters.");
-        }
-    }
-
-    public static void validatePhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || !phoneNumber.matches("^010-\\d{4}-\\d{4}$")) {
-            throw new IllegalArgumentException("Invalid phone number: must follow format 010-0000-0000.");
-        }
-    }
-
-    public static void validateNickname(String nickname) {
-        if (nickname == null || nickname.length() < 2 || nickname.length() > 10) {
-            throw new IllegalArgumentException("Invalid nickname: must be 2-10 characters.");
-        }
-    }
-
-    public static void validateAddress(String address) { //TODO 공공데이터 추가 후 재작업
-//        if (address == null || !address.matches("^\\S+시 \\S+구 \\S+동$")) {
-//            throw new IllegalArgumentException("Invalid address: must follow format '00시 00구 00동'.");
-//        }
     }
 }

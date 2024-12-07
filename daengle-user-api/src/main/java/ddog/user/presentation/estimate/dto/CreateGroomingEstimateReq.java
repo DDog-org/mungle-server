@@ -6,13 +6,14 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CareEstimateReq {
-    private Long vetId;
+public class CreateGroomingEstimateReq {
+    private Long groomerId;
     private Long petId;
     private String address;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
-    private String symptoms;
+
+    private String desiredStyle;
     private String requirements;
 }
