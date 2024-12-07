@@ -2,8 +2,8 @@ package ddog.notification.application;
 
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
-import ddog.notification.application.adapter.SseEmitterConnect;
-import ddog.notification.application.adapter.UserStatusByRedis;
+import ddog.notification.application.adapter.SseEmitterManager;
+import ddog.notification.application.adapter.RedisUserStatusManager;
 import ddog.notification.application.exception.NotificationException;
 import ddog.notification.application.exception.NotificationExceptionType;
 import ddog.notification.application.port.EmitterConnectPersist;
@@ -21,7 +21,7 @@ public class NotificationService {
     private final UserStatusPersist userStatusPersist;
     private final NotificationPersist notificationPersist;
 
-    public NotificationService(SseEmitterConnect emitterConnectPersist, UserStatusByRedis userStatusPersist, NotificationPersist notificationPersist) {
+    public NotificationService(SseEmitterManager emitterConnectPersist, RedisUserStatusManager userStatusPersist, NotificationPersist notificationPersist) {
         this.emitterConnectPersist = emitterConnectPersist;
         this.userStatusPersist = userStatusPersist;
         this.notificationPersist = notificationPersist;
