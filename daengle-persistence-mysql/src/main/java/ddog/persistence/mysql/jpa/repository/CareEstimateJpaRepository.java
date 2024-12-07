@@ -13,15 +13,15 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
 
     CareEstimateJpaEntity save(CareEstimateJpaEntity careEstimate);
 
+    Optional<CareEstimateJpaEntity> findByEstimateId(Long estimateId);
+
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.proposal = 'GENERAL' AND (c.status = 'NEW' OR c.status = 'PENDING') AND c.address = :address")
-    List<CareEstimateJpaEntity> findGeneralCareEstimatesByAddress(@Param("address") String address);
+    List<CareEstimateJpaEntity> findCareEstimatesByAddress(@Param("address") String address);
 
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.proposal = 'DESIGNATION' AND (c.status = 'NEW' OR c.status = 'PENDING') AND c.vetId = :vetId")
-    List<CareEstimateJpaEntity> findDesignationCareEstimatesByVetId(@Param("vetId") Long vetId);
-
-    Optional<CareEstimateJpaEntity> findByEstimateId(Long estimateId);
+    List<CareEstimateJpaEntity> findCareEstimatesByVetId(@Param("vetId") Long vetId);
 
     @Query("SELECT c FROM CareEstimates c " +
             "WHERE c.status = 'PENDING' AND c.petId = :petId")

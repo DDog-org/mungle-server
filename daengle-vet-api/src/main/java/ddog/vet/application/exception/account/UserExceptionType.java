@@ -1,12 +1,12 @@
-package ddog.groomer.application.exception.account;
+package ddog.vet.application.exception.account;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
-public enum VetExceptionType {
+public enum UserExceptionType {
     INVALID_REQUEST_DATA_FORMAT(HttpStatus.BAD_REQUEST, 400, "데이터 형식 오류"),
-    VET_NOT_FOUND(HttpStatus.NOT_FOUND, 2001, "병원이 존재하지 않음.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, 1001, "사용자가 존재하지 않음.");
 
     private final HttpStatus httpStatus;
     private final Integer code;

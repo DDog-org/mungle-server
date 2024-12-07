@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class EstimateReq {
+public class CreatePendingEstimateReq {
 
     private Long id;
 
