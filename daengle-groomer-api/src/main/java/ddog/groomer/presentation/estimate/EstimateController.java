@@ -3,10 +3,10 @@ package ddog.groomer.presentation.estimate;
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.EstimateService;
-import ddog.groomer.presentation.estimate.dto.EstimateResp;
+import ddog.groomer.presentation.estimate.dto.CreatePendingEstimateReq;
 import ddog.groomer.presentation.estimate.dto.EstimateDetail;
 import ddog.groomer.presentation.estimate.dto.EstimateInfo;
-import ddog.groomer.presentation.estimate.dto.CreatePendingEstimateReq;
+import ddog.groomer.presentation.estimate.dto.EstimateResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +31,7 @@ public class EstimateController {
         return success(estimateService.getEstimateDetail(estimateId));
     }
 
-    /* 미용사 -> 사용자 (대기) 미용 견적서 작 */
+    /* 미용사 -> 사용자 (대기) 미용 견적서 작성 */
     @PostMapping
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
