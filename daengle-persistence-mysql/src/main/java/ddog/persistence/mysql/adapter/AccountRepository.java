@@ -8,6 +8,8 @@ import ddog.persistence.mysql.port.AccountPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class AccountRepository implements AccountPersist {
@@ -33,9 +35,8 @@ public class AccountRepository implements AccountPersist {
     }
 
     @Override
-    public Account findAccountByEmailAndRole(String email, Role role) {
+    public Optional<Account> findAccountByEmailAndRole(String email, Role role) {
         return accountJpaRepository.findByEmailAndRole(email, role)
-                .orElseThrow(() -> new RuntimeException("account not found"))
-                .toModel();
+                .map(AccountJpaEntity::toModel);
     }
 }
