@@ -1,4 +1,4 @@
-package ddog.user.application.exception;
+package ddog.user.application.exception.account;
 
 import ddog.auth.exception.common.CustomRuntimeException;
 
