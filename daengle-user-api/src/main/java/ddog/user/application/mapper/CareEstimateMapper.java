@@ -8,7 +8,7 @@ import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
 import ddog.user.presentation.estimate.dto.UserInfo;
 import ddog.user.presentation.estimate.dto.CareEstimateDetail;
-import ddog.user.presentation.estimate.dto.CreateCareEstimateReq;
+import ddog.user.presentation.estimate.dto.CreateNewCareEstimateReq;
 import ddog.user.presentation.estimate.dto.EstimateInfo;
 
 import java.time.LocalDateTime;
@@ -49,7 +49,7 @@ public class CareEstimateMapper {
         return petInfos;
     }
 
-    public static CareEstimate createGeneralCareEstimate(CreateCareEstimateReq request, Long accountId) {
+    public static CareEstimate createNewGeneralCareEstimate(CreateNewCareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
                 .userId(accountId)
                 .petId(request.getPetId())
@@ -64,7 +64,7 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static CareEstimate createDesignationCareEstimate(CreateCareEstimateReq request, Long accountId) {
+    public static CareEstimate createNewDesignationCareEstimate(CreateNewCareEstimateReq request, Long accountId) {
         return CareEstimate.builder()
                 .userId(accountId)
                 .vetId(request.getVetId())

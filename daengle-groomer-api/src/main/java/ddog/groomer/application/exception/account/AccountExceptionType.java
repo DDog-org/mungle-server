@@ -1,4 +1,4 @@
-package ddog.groomer.application.exception;
+package ddog.groomer.application.exception.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

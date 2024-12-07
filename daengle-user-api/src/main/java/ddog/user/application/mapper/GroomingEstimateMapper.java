@@ -6,7 +6,7 @@ import ddog.domain.estimate.Proposal;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.user.presentation.estimate.dto.CreateGroomingEstimateReq;
+import ddog.user.presentation.estimate.dto.CreateNewGroomingEstimateReq;
 import ddog.user.presentation.estimate.dto.EstimateInfo;
 import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
 import ddog.user.presentation.estimate.dto.UserInfo;
@@ -50,7 +50,7 @@ public class GroomingEstimateMapper {
         return petInfos;
     }
 
-    public static GroomingEstimate createGeneralGroomingEstimate(CreateGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createNewGeneralGroomingEstimate(CreateNewGroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .userId(accountId)
                 .petId(estimateReq.getPetId())
@@ -65,7 +65,7 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static GroomingEstimate createDesignationGroomingEstimate(CreateGroomingEstimateReq estimateReq, Long accountId) {
+    public static GroomingEstimate createNewDesignationGroomingEstimate(CreateNewGroomingEstimateReq estimateReq, Long accountId) {
         return GroomingEstimate.builder()
                 .groomerId(estimateReq.getGroomerId())
                 .userId(accountId)

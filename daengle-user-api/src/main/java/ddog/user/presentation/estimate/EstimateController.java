@@ -30,14 +30,14 @@ public class EstimateController {
 
     /* 사용자 -> 미용사 (신규) 미용 견적서 등록 */
     @PostMapping("/grooming")
-    public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateGroomingEstimateReq request, PayloadDto payloadDto) {
-        return success(estimateService.createGroomingEstimate(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateNewGroomingEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createNewGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
     /* 사용자 -> 병원 (신규) 진료 견적서 등록 */
     @PostMapping("/care")
-    public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CreateCareEstimateReq request, PayloadDto payloadDto) {
-        return success(estimateService.createCareEstimate(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CreateNewCareEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 
     /* 미용/진료 (대기) 견적서 상세 조회 */
