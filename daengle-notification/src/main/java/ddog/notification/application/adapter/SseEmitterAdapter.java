@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class SseEmitterManager implements EmitterConnectPersist {
+public class SseEmitterAdapter implements EmitterConnectPersist {
 
     private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
 
