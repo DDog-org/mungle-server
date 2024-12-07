@@ -24,10 +24,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findGeneralCareEstimates(String address) {
+    public List<CareEstimate> findCareEstimatesByAddress(String address) {
         List<CareEstimate> careEstimates = new ArrayList<>();
 
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findGeneralCareEstimatesByAddress(address)) {
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByAddress(address)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
 
@@ -35,11 +35,13 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findDesignationCareEstimates(Long vetId) {
+    public List<CareEstimate> findCareEstimatesByVetId(Long vetId) {
         List<CareEstimate> careEstimates = new ArrayList<>();
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findDesignationCareEstimatesByVetId(vetId)) {
+
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByVetId(vetId)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 
@@ -52,9 +54,11 @@ public class CareEstimateRepository implements CareEstimatePersist {
     @Override
     public List<CareEstimate> findCareEstimatesByPetId(Long petId) {
         List<CareEstimate> careEstimates = new ArrayList<>();
+
         for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByPetId(petId)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 }

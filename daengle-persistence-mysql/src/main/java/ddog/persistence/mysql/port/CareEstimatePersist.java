@@ -12,7 +12,7 @@ public interface CareEstimatePersist {
 
     List<CareEstimate> findCareEstimatesByPetId(Long petId);
 
-    List<CareEstimate> findGeneralCareEstimates(String address);
+    List<CareEstimate> findCareEstimatesByAddress(String address);
 
-    List<CareEstimate> findDesignationCareEstimates(Long vetId);
+    List<CareEstimate> findCareEstimatesByVetId(Long vetId);
 }
