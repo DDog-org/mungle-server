@@ -7,7 +7,9 @@ import ddog.persistence.mysql.port.CareReviewPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,6 +31,13 @@ public class CareReviewRepository implements CareReviewPersist {
     @Override
     public void delete(CareReview careReview) {
         careReviewJpaRepository.delete(CareReviewJpaEntity.from(careReview));
+    }
+
+    @Override
+    public List<CareReview> findByReviewerId(Long reviewerId) {
+        return careReviewJpaRepository.findByReviewerId(reviewerId).stream()
+                .map(CareReviewJpaEntity::toModel)
+                .collect(Collectors.toList());
     }
 }
 

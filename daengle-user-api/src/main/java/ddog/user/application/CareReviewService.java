@@ -4,15 +4,17 @@ import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
 import ddog.domain.review.dto.ModifyCareReviewInfo;
 import ddog.domain.review.dto.PostCareReviewInfo;
+import ddog.domain.user.User;
 import ddog.persistence.mysql.port.CareReviewPersist;
 import ddog.persistence.mysql.port.ReservationPersist;
-import ddog.user.application.exception.ReservationException;
-import ddog.user.application.exception.ReservationExceptionType;
-import ddog.user.application.exception.ReviewException;
-import ddog.user.application.exception.ReviewExceptionType;
+import ddog.persistence.mysql.port.UserPersist;
+import ddog.user.application.exception.*;
 import ddog.user.presentation.review.dto.ReviewResp;
+import ddog.user.presentation.review.dto.ReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class CareReviewService {
 
     private final CareReviewPersist careReviewPersist;
     private final ReservationPersist reservationPersist;
+    private final UserPersist userPersist;
 
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findBy(postCareReviewInfo.getReservationId()).orElseThrow(()
@@ -64,5 +67,23 @@ public class CareReviewService {
                 .reviewerId(savedCareReview.getReviewerId())
                 .revieweeId(savedCareReview.getVetId())
                 .build();
+    }
+
+    public List<ReviewSummaryResp> findReviewList(Long accountId) {
+        User savedUser = userPersist.findBy(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<CareReview> careReviews = careReviewPersist.findByReviewerId(savedUser.getUserId());
+
+        return careReviews.stream().map(careReview ->
+                ReviewSummaryResp.builder()
+                        .careReviewId(careReview.getCareReviewId())
+                        .vetId(careReview.getVetId())
+                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                        .revieweeName(careReview.getRevieweeName())
+                        .starRating(careReview.getStarRating())
+                        .content(careReview.getContent())
+                        .build()
+        ).toList();
     }
 }
