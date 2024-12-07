@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CreateGroomingEstimateReq {
+public class CreateNewGroomingEstimateReq {
     private Long groomerId;
     private Long petId;
     private String address;

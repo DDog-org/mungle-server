@@ -24,10 +24,10 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findGeneralGroomingEstimates(String address) {
+    public List<GroomingEstimate> findGroomingEstimatesByAddress(String address) {
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
 
-        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGeneralGroomingEstimatesByAddress(address)) {
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesByAddress(address)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
 
         }
@@ -35,9 +35,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findDesignationGroomingEstimates(Long groomerId) {
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerId) {
         List<GroomingEstimate> groomingEstimates = new ArrayList<>();
-        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findDesignationGroomingEstimatesByGroomerId(groomerId)) {
+        for (GroomingEstimateJpaEntity groomingEstimateJpaEntity : groomingEstimateJpaRepository.findGroomingEstimatesByGroomerId(groomerId)) {
             groomingEstimates.add(groomingEstimateJpaEntity.toModel());
         }
         return groomingEstimates;

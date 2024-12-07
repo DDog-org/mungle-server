@@ -67,12 +67,12 @@ public class EstimateService {
     }
 
     @Transactional
-    public EstimateResp createGroomingEstimate(CreateGroomingEstimateReq request, Long accountId) {
+    public EstimateResp createNewGroomingEstimate(CreateNewGroomingEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
         GroomingEstimate.validateRequirements(request.getRequirements());
 
         if (request.getGroomerId() == null) {
-            GroomingEstimate newEstimate = GroomingEstimateMapper.createGeneralGroomingEstimate(request, accountId);
+            GroomingEstimate newEstimate = GroomingEstimateMapper.createNewGeneralGroomingEstimate(request, accountId);
             groomingEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
@@ -80,7 +80,7 @@ public class EstimateService {
                     .build();
         }
 
-        GroomingEstimate newEstimate = GroomingEstimateMapper.createDesignationGroomingEstimate(request, accountId);
+        GroomingEstimate newEstimate = GroomingEstimateMapper.createNewDesignationGroomingEstimate(request, accountId);
         groomingEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
@@ -89,13 +89,13 @@ public class EstimateService {
     }
 
     @Transactional
-    public EstimateResp createCareEstimate(CreateCareEstimateReq request, Long accountId) {
+    public EstimateResp createNewCareEstimate(CreateNewCareEstimateReq request, Long accountId) {
         User.validateAddress(request.getAddress());
         CareEstimate.validateSymptoms(request.getSymptoms());
         CareEstimate.validateRequirements(request.getRequirements());
 
         if (request.getVetId() == null) {
-            CareEstimate newEstimate = CareEstimateMapper.createGeneralCareEstimate(request, accountId);
+            CareEstimate newEstimate = CareEstimateMapper.createNewGeneralCareEstimate(request, accountId);
             careEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
@@ -103,7 +103,7 @@ public class EstimateService {
                     .build();
         }
 
-        CareEstimate newEstimate = CareEstimateMapper.createDesignationCareEstimate(request, accountId);
+        CareEstimate newEstimate = CareEstimateMapper.createNewDesignationCareEstimate(request, accountId);
         careEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
