@@ -1,8 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.GroomingEstimateLog;
-import ddog.persistence.jpa.entity.GroomingEstimateLogJpaEntity;
-import ddog.persistence.jpa.repository.GroomingEstimateLogJpaRepository;
+import ddog.persistence.mysql.jpa.repository.GroomingEstimateLogJpaRepository;
 import ddog.persistence.mysql.port.GroomingEstimateLogPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,6 @@ public class GroomingEstimateLogRepository implements GroomingEstimateLogPersist
 
     @Override
     public void save(GroomingEstimateLog newEstimateLog) {
-        estimateLogJpaRepository.save(GroomingEstimateLogJpaEntity.from(newEstimateLog));
+        estimateLogJpaRepository.save(ddog.persistence.jpa.entity.GroomingEstimateLogJpaEntity.from(newEstimateLog));
     }
 }

@@ -30,6 +30,7 @@ public class ReservationJpaEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
+    private Long recipientId;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;
@@ -46,6 +47,7 @@ public class ReservationJpaEntity {
                 .estimateId(reservation.getEstimateId())
                 .serviceType(reservation.getServiceType())
                 .reservationStatus(reservation.getReservationStatus())
+                .recipientId(reservation.getRecipientId())
                 .recipientName(reservation.getRecipientName())
                 .shopName(reservation.getShopName())
                 .schedule(reservation.getSchedule())
@@ -64,6 +66,7 @@ public class ReservationJpaEntity {
                 .estimateId(estimateId)
                 .serviceType(serviceType)
                 .reservationStatus(reservationStatus)
+                .recipientId(recipientId)
                 .recipientName(recipientName)
                 .shopName(shopName)
                 .schedule(schedule)
