@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Time;
 
 @Slf4j
 @Service
@@ -45,6 +46,8 @@ public class PaymentService implements PaymentUseCase {
         Payment payment = order.getPayment();
 
         try {
+            Thread.sleep(5000); //포트원 API 타임에러 상황 가정
+
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
 
@@ -56,6 +59,8 @@ public class PaymentService implements PaymentUseCase {
 
         } catch (IamportResponseException | IOException e) {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
