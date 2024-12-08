@@ -59,11 +59,15 @@ public class UserEstimateController {
     @Operation(summary = "진료 견적서 작성 (지정)", description = "수의사 지정 진료 견적서 작성")
     @PostMapping("/designation-care")
     public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody UserDesignationCareEstimateReq request, PayloadDto payloadDto) {
-        careEstimateService.createUserDesignationCareEstimate(request, payloadDto.getAccountId());
         Long designatedVetId = request.getVetId();
         Vet vetInfo = careEstimateService.getVetInfo(designatedVetId);
-        kakaoNotificationService.sendOneTalk(vetInfo.getVetName(), vetInfo.getPhoneNumber(), environment.getProperty("templateId.CALL"));
-        return success(DESIGNATION_CARE_REGISTRATION.getMessage());
+        boolean isNotificationSend = kakaoNotificationService.sendOneTalk(vetInfo.getVetName(), vetInfo.getPhoneNumber(), environment.getProperty("templateId.CALL"));
+        if (!isNotificationSend) {
+            throw new RuntimeException("알림톡 전송 실패로 인해 견적 지정 요청을 처리할 수 없습니다.");
+        } else {
+            careEstimateService.createUserDesignationCareEstimate(request, payloadDto.getAccountId());
+            return success(DESIGNATION_CARE_REGISTRATION.getMessage());
+        }
     }
 
     @Operation(summary = "미용/진료 대기 견적서 목록 조회")

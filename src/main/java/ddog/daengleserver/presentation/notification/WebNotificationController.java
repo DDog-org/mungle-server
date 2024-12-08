@@ -12,7 +12,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notification")
-public class NotificationController {
+public class WebNotificationController {
     private final SseEmitterUsecase sseEmitterUsecase;
     private static final String INIT = "{\"message\" : \"CONNECTED\"}";
 
