@@ -59,13 +59,7 @@ jobs:
 
       # 5. Verify Build Output
       - name: Verify Build Output
-        run: |
-          echo "=== Checking Build Output ==="
-          if [ ! -f "${{ matrix.module.path }}/build/libs/${{ matrix.module.name }}-0.0.1-SNAPSHOT.jar" ]; then
-            echo "JAR file not found! Build might have failed."
-            exit 1
-          fi
-          ls -l ${{ matrix.module.path }}/build/libs
+        run: ls -lh ${{ matrix.module.path }}/build/libs
 
       # 6. Log in to Amazon ECR
       - name: Log in to Amazon ECR
@@ -79,12 +73,18 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           set -e
+          pwd
+#          cd ${{ matrix.module.path }}
+          pwd 
+          
+          echo "=== Checking Docker Context ==="
+          ls -lh
+          ls -lh build/libs
+          
           IMAGE_TAG=${{ matrix.module.name }}
-          DOCKERFILE_PATH=${{ matrix.module.path }}/Dockerfile
-          JAR_FILE=${{ matrix.module.path }}/build/libs/${{ matrix.module.name }}-0.0.1-SNAPSHOT.jar
-
+          
           echo "Building Docker image..."
-          docker build --platform linux/amd64 --build-arg JAR_FILE=${JAR_FILE} -f ${DOCKERFILE_PATH} -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker build --platform linux/amd64 --build-arg JAR_FILE=${{ matrix.module.path }}/build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
@@ -111,19 +111,29 @@ jobs:
           echo "=== Logging into EC2 ==="
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${EC2_HOST} << 'EOF'
           
+          # EC2에서 AWS 인증 정보 설정
           export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
           export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           export AWS_REGION="${{ secrets.AWS_REGION }}"
           
+           # AWS ECR에 로그인
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
           
-          CONTAINER_NAME="${{ matrix.module.name }}-container"
+          MODULE=${{ matrix.module.name }}
+          IMAGE_TAG=${IMAGE_TAG}
+          CONTAINER_NAME="${{matrix.module.name}}-container"
           
-          echo "=== Pulling latest Docker image ==="
+          # Pull latest image
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
+          
+          echo "=== Verifying Docker images ==="
+          docker images  
 
-#          echo "=== Restarting container ==="
-#          docker ps --filter "name=$CONTAINER_NAME" -q | xargs -r docker stop | xargs -r docker rm
-#          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
+#          echo "=== Stopping and removing existing container ==="
+##          docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
+##          docker ps -a --filter "name=$CONTAINER_NAME" -q | xargs -r docker stop | xargs -r docker rm || echo "No running container to stop."
+#
+#          echo "=== Running new container ==="
+#          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
 #
 #          echo "=== Deployment completed successfully ==="
