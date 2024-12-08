@@ -70,7 +70,7 @@ public class KakaoNotificationService {
 
     private void simulateDelay() {
         try {
-            Thread.sleep(7000); // 10초 지연
+            Thread.sleep(3000); // 10초 지연
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

@@ -46,7 +46,7 @@ public class PaymentService implements PaymentUseCase {
         Payment payment = order.getPayment();
 
         try {
-            Thread.sleep(5000); //포트원 API 타임에러 상황 가정
+            Thread.sleep(3000); //포트원 API 타임에러 상황 가정
 
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
