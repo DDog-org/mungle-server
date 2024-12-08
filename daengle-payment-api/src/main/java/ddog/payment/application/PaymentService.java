@@ -72,7 +72,7 @@ public class PaymentService {
                     .estimateId(order.getEstimateId())
                     .serviceType(order.getServiceType())
                     .reservationStatus(ReservationStatus.DEPOSIT_PAID)
-                    .recipientId(order.getRecipientId())
+                    .recipientId(order.getRecipientId())  //수의사 or 병원 PK
                     .recipientName(order.getRecipientName())
                     .shopName(order.getShopName())
                     .schedule(order.getSchedule())

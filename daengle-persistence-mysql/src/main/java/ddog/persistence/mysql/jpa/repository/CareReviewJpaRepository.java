@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface CareReviewJpaRepository extends JpaRepository<CareReviewJpaEntity, Long> {
     Page<CareReviewJpaEntity> findByReviewerId(Long reviewerId, Pageable pageable);
+    Page<CareReviewJpaEntity> findByVetId(Long vetId, Pageable pageable);
 }

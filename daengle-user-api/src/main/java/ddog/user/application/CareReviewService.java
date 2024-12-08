@@ -81,7 +81,7 @@ public class CareReviewService {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<CareReview> careReviews = careReviewPersist.findByVetId(savedUser.getUserId(), pageable);
+        Page<CareReview> careReviews = careReviewPersist.findByReviewerId(savedUser.getUserId(), pageable);
 
         return careReviews.stream().map(careReview ->
                 CareReviewSummaryResp.builder()
@@ -100,7 +100,7 @@ public class CareReviewService {
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<CareReview> careReviews = careReviewPersist.findByVetId(vetId, pageable);
+        Page<CareReview> careReviews = careReviewPersist.findByVetId(savedVet.getVetId(), pageable);
 
         return careReviews.stream().map(careReview ->
                 CareReviewSummaryResp.builder()
