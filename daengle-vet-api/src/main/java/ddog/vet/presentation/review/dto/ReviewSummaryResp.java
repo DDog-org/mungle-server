@@ -1,4 +1,4 @@
-package ddog.user.presentation.review.dto;
+package ddog.vet.presentation.review.dto;
 
 import ddog.domain.review.enums.CareKeywordReview;
 import lombok.Builder;
@@ -6,8 +6,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Builder
 @Getter
+@Builder
 public class ReviewSummaryResp {
     private Long careReviewId;
     private Long vetId;

@@ -6,7 +6,7 @@ import ddog.domain.review.dto.ModifyCareReviewInfo;
 import ddog.domain.review.dto.PostCareReviewInfo;
 import ddog.user.application.CareReviewService;
 import ddog.user.presentation.review.dto.ReviewResp;
-import ddog.user.presentation.review.dto.ReviewSummaryResp;
+import ddog.user.presentation.review.dto.CareReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +16,30 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/review/care")
+@RequestMapping("/api/user/review")
 public class CareReviewController {
 
     private final CareReviewService careReviewService;
 
-    @PostMapping
+    @PostMapping("/care")
     public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 
-    @PatchMapping
+    @PatchMapping("/care")
     public CommonResponseEntity<ReviewResp> modifyReview(@RequestBody ModifyCareReviewInfo modifyCareReviewInfo) {
         return success(careReviewService.modifyReview(modifyCareReviewInfo));
     }
 
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/care/{reviewId}")
     public CommonResponseEntity<ReviewResp> deleteReview(@PathVariable Long reviewId) {
         return success(careReviewService.deleteReview(reviewId));
     }
 
-    @GetMapping("/list")
-    public CommonResponseEntity<List<ReviewSummaryResp>> findReviewList(PayloadDto payloadDto,
-                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "10") int size) {
-        return success(careReviewService.findReviewList(payloadDto.getAccountId(), page, size));
+    @GetMapping("/care/list")
+    public CommonResponseEntity<List<CareReviewSummaryResp>> findMyReviewList(PayloadDto payloadDto,
+                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "10") int size) {
+        return success(careReviewService.findMyReviewList(payloadDto.getAccountId(), page, size));
     }
 }

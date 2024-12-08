@@ -5,6 +5,8 @@ import ddog.persistence.mysql.jpa.entity.GroomingReviewJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomingReviewJpaRepository;
 import ddog.persistence.mysql.port.GroomingReviewPersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -29,5 +31,15 @@ public class GroomingReviewRepository implements GroomingReviewPersist {
     @Override
     public void delete(GroomingReview groomingReview) {
         groomingReviewJpaRepository.delete(GroomingReviewJpaEntity.from(groomingReview));
+    }
+
+    @Override
+    public Page<GroomingReview> findByReviewerId(Long reviewerId, Pageable pageable) {
+        return groomingReviewJpaRepository.findByReviewerId(reviewerId, pageable).map(GroomingReviewJpaEntity::toModel);
+    }
+
+    @Override
+    public Page<GroomingReview> findByGroomerId(Long groomerId, Pageable pageable) {
+        return groomingReviewJpaRepository.findByGroomerId(groomerId, pageable).map(GroomingReviewJpaEntity::toModel);
     }
 }

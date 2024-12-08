@@ -10,7 +10,7 @@ import ddog.persistence.mysql.port.ReservationPersist;
 import ddog.persistence.mysql.port.UserPersist;
 import ddog.user.application.exception.*;
 import ddog.user.presentation.review.dto.ReviewResp;
-import ddog.user.presentation.review.dto.ReviewSummaryResp;
+import ddog.user.presentation.review.dto.CareReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,16 +72,16 @@ public class CareReviewService {
                 .build();
     }
 
-    public List<ReviewSummaryResp> findReviewList(Long accountId, int page, int size) {
+    public List<CareReviewSummaryResp> findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findBy(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<CareReview> careReviews = careReviewPersist.findByReviewerId(savedUser.getUserId(), pageable);
+        Page<CareReview> careReviews = careReviewPersist.findByVetId(savedUser.getUserId(), pageable);
 
         return careReviews.stream().map(careReview ->
-                ReviewSummaryResp.builder()
+                CareReviewSummaryResp.builder()
                         .careReviewId(careReview.getCareReviewId())
                         .vetId(careReview.getVetId())
                         .careKeywordReviewList(careReview.getCareKeywordReviewList())

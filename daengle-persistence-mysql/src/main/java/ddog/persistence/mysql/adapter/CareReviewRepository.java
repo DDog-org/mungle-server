@@ -36,7 +36,7 @@ public class CareReviewRepository implements CareReviewPersist {
     }
 
     @Override
-    public Page<CareReview> findByReviewerId(Long reviewerId, Pageable pageable) {
+    public Page<CareReview> findByVetId(Long reviewerId, Pageable pageable) {
         return careReviewJpaRepository.findByReviewerId(reviewerId, pageable).map(CareReviewJpaEntity::toModel);
     }
 }
