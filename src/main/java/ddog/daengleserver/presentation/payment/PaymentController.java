@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation;
+package ddog.daengleserver.presentation.payment;
 
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.dto.request.PaymentCallbackReq;
@@ -14,12 +14,12 @@ import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/v1/payment")
 public class PaymentController {
 
     private final PaymentUseCase paymentUseCase;
 
-    @PostMapping("/payment")
+    @PostMapping("/validate")
     public CommonResponseEntity<PaymentCallbackResp> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
         return success(paymentUseCase.validationPayment(paymentCallbackReq));
     }
