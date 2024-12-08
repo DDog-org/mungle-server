@@ -16,31 +16,39 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user/review")
+@RequestMapping("/api/user")
 public class GroomingReviewController {
 
     private final GroomingReviewService groomingReviewService;
 
-    @PostMapping("/grooming")
+    @PostMapping("/grooming/review")
     public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostGroomingReviewInfo postGroomingReviewInfo) {
         return success(groomingReviewService.postReview(postGroomingReviewInfo));
     }
 
-    @PatchMapping("/grooming")
-    public CommonResponseEntity<ReviewResp> modifyReview(@RequestBody ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
-        return success(groomingReviewService.modifyReview(modifyGroomingReviewInfo));
+    @PatchMapping("/grooming/review/{reviewId}")
+    public CommonResponseEntity<ReviewResp> modifyReview(@PathVariable Long reviewId,
+                                                         @RequestBody ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
+        return success(groomingReviewService.modifyReview(reviewId, modifyGroomingReviewInfo));
     }
 
-    @DeleteMapping("/grooming/{reviewId}")
+    @DeleteMapping("/grooming/review/{reviewId}")
     public CommonResponseEntity<ReviewResp> deleteReview(@PathVariable Long reviewId) {
         return success(groomingReviewService.deleteReview(reviewId));
     }
 
-    @GetMapping("/grooming/list")
+    @GetMapping("/grooming/my-review/list")
     public CommonResponseEntity<List<GroomingReviewSummaryResp>> findMyReviewList(PayloadDto payloadDto,
                                                                                   @RequestParam(defaultValue = "0") int page,
                                                                                   @RequestParam(defaultValue = "10") int size) {
         return success(groomingReviewService.findMyReviewList(payloadDto.getAccountId(), page, size));
     }
 
+    @GetMapping("/groomer/{groomerId}/review/list")
+    public CommonResponseEntity<List<GroomingReviewSummaryResp>> findGroomerReviewList(
+            @PathVariable Long groomerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return success(groomingReviewService.findGroomerReviewList(groomerId, page, size));
+    }
 }

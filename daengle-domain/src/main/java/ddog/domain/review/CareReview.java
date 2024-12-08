@@ -25,13 +25,12 @@ public class CareReview extends Review {
         return CareReview.builder()
                 .reservationId(reservation.getReservationId())
                 .reviewerId(reservation.getCustomerId())
-                .vetId(reservation.getRecipientId())
                 .revieweeName(reservation.getRecipientName())
                 .starRating(postCareReviewInfo.getStarRating())
                 .content(postCareReviewInfo.getContent())
                 .createTime(LocalDateTime.now())
                 .imageUrlList(postCareReviewInfo.getImageUrlList())
-                .vetId(reservation.getReservationId())
+                .vetId(reservation.getRecipientId())
                 .careKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList())
                 .build();
     }
@@ -48,7 +47,6 @@ public class CareReview extends Review {
                 .createTime(careReview.getCreateTime())
                 .modifiedTime(LocalDateTime.now())
                 .imageUrlList(modifyCareReviewInfo.getImageUrlList())
-                .vetId(careReview.getReservationId())
                 .careKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList())
                 .build();
     }

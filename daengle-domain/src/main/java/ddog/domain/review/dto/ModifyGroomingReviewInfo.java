@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 @Getter
 public class ModifyGroomingReviewInfo {
-    private Long groomingReviewId;
     private Long starRating;
     private List<GroomingKeywordReview> groomingKeywordReviewList;
     private String content;

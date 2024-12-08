@@ -32,7 +32,6 @@ public class GroomingReview extends Review {
                 .content(postGroomingReviewInfo.getContent())
                 .createTime(LocalDateTime.now())
                 .imageUrlList(postGroomingReviewInfo.getImageUrlList())
-                .groomerId(reservation.getRecipientId())
                 .groomingKeywordReviewList(postGroomingReviewInfo.getGroomingKeywordReviewList())
                 .build();
     }
@@ -49,7 +48,6 @@ public class GroomingReview extends Review {
                 .createTime(groomingReview.getCreateTime())
                 .modifiedTime(LocalDateTime.now())
                 .imageUrlList(modifyGroomingReviewInfo.getImageUrlList())
-                .groomerId(groomingReview.getGroomerId())
                 .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
                 .build();
     }
