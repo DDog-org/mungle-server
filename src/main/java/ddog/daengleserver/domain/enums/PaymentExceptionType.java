@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 public enum PaymentExceptionType {
     PAYMENT_PG_INTEGRATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "결제 정보 조회 중 에러 발생"),
     PAYMENT_PG_INCOMPLETE(HttpStatus.INTERNAL_SERVER_ERROR, 5002, "미완료된 결제건"),
-    PAYMENT_PG_AMOUNT_MISMATCH(HttpStatus.INTERNAL_SERVER_ERROR, 5003, "결제 금액 불일치");
+    PAYMENT_PG_AMOUNT_MISMATCH(HttpStatus.INTERNAL_SERVER_ERROR, 5003, "결제 금액 불일치"),
+
+    PAYMENT_PG_SYSTEM_TIMEOUT(HttpStatus.INTERNAL_SERVER_ERROR, 5004, "포트원 API 응답 타임아웃");
 
     private final HttpStatus httpStatus;
     private final Integer code;

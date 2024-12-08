@@ -14,6 +14,7 @@ import ddog.daengleserver.domain.exception.PaymentException;
 import ddog.daengleserver.presentation.dto.request.PaymentCallbackReq;
 import ddog.daengleserver.presentation.dto.response.PaymentCallbackResp;
 import ddog.daengleserver.presentation.usecase.PaymentUseCase;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,44 +34,62 @@ public class PaymentService implements PaymentUseCase {
 
     @Override
     @Transactional
+    @CircuitBreaker(name = "paymentValidation", fallbackMethod = "fallbackValidationPayment")
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
-        Order order = orderRepository.findBy(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+        return executePaymentValidation(paymentCallbackReq);
+    }
+
+    private PaymentCallbackResp executePaymentValidation(PaymentCallbackReq paymentCallbackReq) {
+        Order order = orderRepository.findBy(paymentCallbackReq.getOrderUid())
+                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
         Payment payment = order.getPayment();
 
         try {
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
-            String paymentStatus = iamportResp.getStatus();
-            long paymentAmount = iamportResp.getAmount().longValue();
 
-            //결제 완료 검증
-            if(payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
-                paymentRepository.save(payment);
+            validatePaymentStatus(payment, iamportResp);
+            validatePaymentAmount(payment, iamportResp);
 
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
-            }
-
-            //결제 금액 검증
-            if(payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
-                paymentRepository.save(payment);
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
-
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
-            }
-
-            //결제 검증 절차 성공
             payment.validationSuccess(iamportResp.getImpUid());
-
-            return PaymentCallbackResp.builder()
-                    .userId(order.getAccountId())
-                    .paymentId(payment.getPaymentId())
-                    .price(payment.getPrice())
-                    .build();
+            return createSuccessResponse(order, payment);
 
         } catch (IamportResponseException | IOException e) {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
         }
+    }
+
+    private void fallbackValidationPayment(PaymentCallbackReq paymentCallbackReq, Throwable throwable) {
+        log.error("Circuit breaker activated for order {}: {}", paymentCallbackReq.getOrderUid(), throwable.getMessage());
+
+        throw new PaymentException(PaymentExceptionType.PAYMENT_PG_SYSTEM_TIMEOUT);
+    }
+
+    private void validatePaymentStatus(Payment payment, com.siot.IamportRestClient.response.Payment iamportResp) {
+        if (payment.checkIncompleteBy(iamportResp.getStatus())) {
+            payment.cancel();
+            paymentRepository.save(payment);
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
+        }
+    }
+
+    private void validatePaymentAmount(Payment payment, com.siot.IamportRestClient.response.Payment iamportResp) throws IamportResponseException, IOException {
+        long paymentAmount = iamportResp.getAmount().longValue();
+        if (payment.checkInValidationBy(paymentAmount)) {
+            payment.cancel();
+            paymentRepository.save(payment);
+            iamportClient.cancelPaymentByImpUid(
+                    new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount))
+            );
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
+        }
+    }
+
+    private PaymentCallbackResp createSuccessResponse(Order order, Payment payment) {
+        return PaymentCallbackResp.builder()
+                .userId(order.getAccountId())
+                .paymentId(payment.getPaymentId())
+                .price(payment.getPrice())
+                .build();
     }
 }
