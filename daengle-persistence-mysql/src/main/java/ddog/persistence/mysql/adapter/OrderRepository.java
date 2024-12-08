@@ -17,8 +17,8 @@ public class OrderRepository implements OrderPersist {
     private final OrderJpaRepository orderJpaRepository;
 
     @Override
-    public void save(Order order) {
-        orderJpaRepository.save(OrderJpaEntity.fromModel(order));
+    public Order save(Order order) {
+        return orderJpaRepository.save(OrderJpaEntity.fromModel(order)).toModel();
     }
 
     @Override
