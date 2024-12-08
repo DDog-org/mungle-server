@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/user")
-public class TestController {
+public class DeployCheckController {
     private String deploymentTime;
 
     // 애플리케이션 시작 시 배포 시간을 기록

@@ -1,4 +1,4 @@
-package ddog.vet.presentation;
+package ddog.groomer.presentation;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping("/api/vet")
-public class TestController {
+@RequestMapping("/api/groomer")
+public class DeployCheckController {
     private String deploymentTime;
 
     // 애플리케이션 시작 시 배포 시간을 기록
@@ -26,7 +26,7 @@ public class TestController {
 //        LocalDateTime now = LocalDateTime.now();
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        String formattedDate = now.format(formatter);
-        return "Hello Daengle World - MULTI MODULE !!!! VET API !" +
+        return "Hello Daengle World - MULTI MODULE !!!! GROOMER API !" +
                 " Made at: " + deploymentTime + "   CI/CD SUCCESS";
     }
 }

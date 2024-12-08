@@ -1,6 +1,6 @@
 name: Deploy to Develop EC2
 on:
-  pull_request:
+  push:
     branches: [ "develop" ]
 
 jobs:
@@ -75,14 +75,8 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           set -e
-          pwd
           cd ${{ matrix.module.path }}
-          pwd 
-          
-          echo "=== Checking Docker Context ==="
-          ls -lh
-          ls -lh build/libs
-          
+                    
           IMAGE_TAG="${{ matrix.module.name }}-$(date +%Y%m%d%H%M%S)"
           
           echo "Building Docker image..."
