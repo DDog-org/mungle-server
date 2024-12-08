@@ -37,7 +37,9 @@ public class CareReviewController {
     }
 
     @GetMapping("/list")
-    public CommonResponseEntity<List<ReviewSummaryResp>> findReviewList(PayloadDto payloadDto) {
-        return success(careReviewService.findReviewList(payloadDto.getAccountId()));
+    public CommonResponseEntity<List<ReviewSummaryResp>> findReviewList(PayloadDto payloadDto,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size) {
+        return success(careReviewService.findReviewList(payloadDto.getAccountId(), page, size));
     }
 }

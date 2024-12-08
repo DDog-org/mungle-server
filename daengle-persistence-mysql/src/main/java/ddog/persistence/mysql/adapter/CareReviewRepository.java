@@ -5,6 +5,8 @@ import ddog.persistence.mysql.jpa.entity.CareReviewJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareReviewJpaRepository;
 import ddog.persistence.mysql.port.CareReviewPersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,10 +36,8 @@ public class CareReviewRepository implements CareReviewPersist {
     }
 
     @Override
-    public List<CareReview> findByReviewerId(Long reviewerId) {
-        return careReviewJpaRepository.findByReviewerId(reviewerId).stream()
-                .map(CareReviewJpaEntity::toModel)
-                .collect(Collectors.toList());
+    public Page<CareReview> findByReviewerId(Long reviewerId, Pageable pageable) {
+        return careReviewJpaRepository.findByReviewerId(reviewerId, pageable).map(CareReviewJpaEntity::toModel);
     }
 }
 
