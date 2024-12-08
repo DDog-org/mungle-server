@@ -4,6 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
+import ddog.groomer.application.exception.account.GroomerException;
+import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
 import ddog.persistence.mysql.port.AccountPersist;
@@ -72,7 +74,9 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
-        Groomer groomer = groomerPersist.findByAccountId(accountId);
+        Groomer groomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
         return GroomerMapper.toModifyPage(groomer);
     }
 
@@ -80,7 +84,9 @@ public class AccountService {
     public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
         Groomer.validateIntroduction(request.getIntroduction());
 
-        Groomer groomer = groomerPersist.findByAccountId(accountId);
+        Groomer groomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
         Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
         groomerPersist.save(updatedGroomer);
 
