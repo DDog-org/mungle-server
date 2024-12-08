@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation;
+package ddog.daengleserver.presentation.notification;
 
 import ddog.daengleserver.presentation.notify.dto.NotificationReq;
 import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;

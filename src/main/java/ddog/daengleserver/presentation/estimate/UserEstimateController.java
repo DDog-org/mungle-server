@@ -2,7 +2,9 @@ package ddog.daengleserver.presentation.estimate;
 
 import ddog.daengleserver.application.CareEstimateService;
 import ddog.daengleserver.application.GroomingEstimateService;
+import ddog.daengleserver.application.KakaoNotificationService;
 import ddog.daengleserver.application.UserService;
+import ddog.daengleserver.domain.account.Vet;
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
 import ddog.daengleserver.presentation.estimate.dto.request.UserDesignationCareEstimateReq;
@@ -15,6 +17,7 @@ import ddog.daengleserver.presentation.estimate.dto.response.GroomingEstimateDet
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.daengleserver.global.common.CommonResponseEntity.success;
@@ -23,12 +26,14 @@ import static ddog.daengleserver.presentation.estimate.enums.UserEstimateControl
 @Tag(name = "사용자 견적서 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle/estimate")
+@RequestMapping("/api/v1/daengle/estimate")
 public class UserEstimateController {
 
     private final UserService userService;
     private final CareEstimateService careEstimateService;
     private final GroomingEstimateService groomingEstimateService;
+    private final KakaoNotificationService kakaoNotificationService;
+    private final Environment environment;
 
     @Operation(summary = "미용 견적서 작성 (일반)", description = "일반 미용 견적서 작성")
     @PostMapping("/general-grooming")
@@ -55,6 +60,9 @@ public class UserEstimateController {
     @PostMapping("/designation-care")
     public CommonResponseEntity<String> createDesignationCareEstimate(@RequestBody UserDesignationCareEstimateReq request, PayloadDto payloadDto) {
         careEstimateService.createUserDesignationCareEstimate(request, payloadDto.getAccountId());
+        Long designatedVetId = request.getVetId();
+        Vet vetInfo = careEstimateService.getVetInfo(designatedVetId);
+        kakaoNotificationService.sendOneTalk(vetInfo.getVetName(), vetInfo.getPhoneNumber(), environment.getProperty("templateId.CALL"));
         return success(DESIGNATION_CARE_REGISTRATION.getMessage());
     }
 

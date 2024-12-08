@@ -25,4 +25,9 @@ public class VetRepositoryImpl implements VetRepository {
         return vetJpaRepository.getByAccountId(accountId)
                 .toModel();
     }
+
+    @Override
+    public Vet getVetByVetId(Long vetId) {
+        return vetJpaRepository.findByVetId(vetId).get().toModel();
+    }
 }

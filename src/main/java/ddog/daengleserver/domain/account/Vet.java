@@ -18,4 +18,5 @@ public class Vet {
     private String vetImage;
     private String address;
     private String vetIntroduction;
+    private String phoneNumber;
 }

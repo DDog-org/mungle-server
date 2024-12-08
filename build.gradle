@@ -74,6 +74,9 @@ dependencies {
 
     // webflux
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // solapi-kakao
+    implementation 'net.nurigo:sdk:4.3.2'
 }
 
 test {
