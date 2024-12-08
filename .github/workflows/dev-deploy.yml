@@ -35,19 +35,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Create application.yml
-      - name: Create application.yml
+      # 2. Create application.yml and .env files
+      - name: Create application.yml and .env file
         run: |
           mkdir -p ${{ matrix.module.path }}/src/main/resources
           echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
-
-      # 3. Create .env file
-      - name: Create .env file
-        run: |
           echo "${{ secrets.ENV_FILE_CONTENT }}" > ${{ matrix.module.path }}/.env
 
-      # 4. Set up JDK and Build JAR
-      - name: Set up JDK 17
+      # 3. Set up JDK and Build JAR
+      - name: Set up JDK 17 and Build JAR
         uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -55,13 +51,14 @@ jobs:
 
       - name: Build JAR with Gradle
         run: |
+          cd ${{ matrix.module.path }}
           ./gradlew --no-daemon clean :${{ matrix.module.name }}:build -x test
 
-      # 5. Verify Build Output
+      # 4. Verify Build Output
       - name: Verify Build Output
         run: ls -lh ${{ matrix.module.path }}/build/libs
 
-      # 6. Log in to Amazon ECR
+      # 5. Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         env:
@@ -69,17 +66,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_ROOT_SECRET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
-      # 7. Build and Push Docker Image
+      # 6. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           set -e
-          pwd
           cd ${{ matrix.module.path }}
-          pwd 
-          
-          echo "=== Checking Docker Context ==="
-          ls -lh
-          ls -lh build/libs
           
           IMAGE_TAG="${{ matrix.module.name }}-$(date +%Y%m%d%H%M%S)"
           
@@ -89,7 +80,7 @@ jobs:
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
-      # 8. Set up SSH
+      # 7. Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -97,14 +88,14 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # 9. Set up EC2 Host from Secrets
+      # 8. Set up EC2 Host from Secrets
       - name: Set up EC2 Host
         run: |
           EC2_HOST=${{ secrets[ matrix.module.ssh_host_var ] }}
           echo "Resolved EC2_HOST: $EC2_HOST"
           echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
 
-      # 10. Deploy to EC2
+      # 9. Deploy to EC2
       - name: Deploy to EC2
         run: |
           set -e
@@ -116,12 +107,12 @@ jobs:
           export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
           export AWS_REGION="${{ secrets.AWS_REGION }}"
           
-           # AWS ECR에 로그인
+          # AWS ECR에 로그인
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
           
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}
-          CONTAINER_NAME="${{matrix.module.name}}-container"
+          CONTAINER_NAME="${{ matrix.module.name }}-container"
           
           # Pull latest image
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
