@@ -20,6 +20,8 @@ public class EstimateInfo {
         private Long petId;
         private String name;
         private String image;
+        private Long groomingParentId;
+        private Long careParentId;
         List<Grooming> groomingEstimates;
         List<Care> careEstimates;
 

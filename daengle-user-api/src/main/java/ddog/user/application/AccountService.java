@@ -9,6 +9,8 @@ import ddog.domain.user.User;
 import ddog.persistence.mysql.port.AccountPersist;
 import ddog.persistence.mysql.port.PetPersist;
 import ddog.persistence.mysql.port.UserPersist;
+import ddog.user.application.exception.account.UserException;
+import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -126,7 +128,8 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getUserProfileInfo(Long accountId) {
-        User user = userPersist.findByAccountId(accountId);
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         return UserMapper.toUserProfileInfo(user);
     }
@@ -135,7 +138,9 @@ public class AccountService {
     public AccountResp modifyUserInfo(UserInfoModifyReq request, Long accountId) {
         User.validateUsername(request.getNickname());
 
-        User user = userPersist.findByAccountId(accountId);
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         User modifiedUser = user.withImageAndNickname(request.getImage(), request.getNickname());
 
         userPersist.save(modifiedUser);
@@ -149,7 +154,8 @@ public class AccountService {
     public AccountResp addPet(AddPetInfo request, Long accountId) {
         validateAddPetInfoDataFormat(request);
 
-        User user = userPersist.findByAccountId(accountId);
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pet newPet = PetMapper.create(accountId, request);
         Pet savedPet = petPersist.save(newPet);
@@ -173,7 +179,8 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public PetInfo getPetInfo(Long accountId) {
-        User user = userPersist.findByAccountId(accountId);
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         return UserMapper.toPetInfo(user);
     }

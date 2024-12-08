@@ -123,17 +123,19 @@ public class EstimateService {
             List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findGroomingEstimatesByPetId(pet.getPetId());
             List<CareEstimate> careEstimates = careEstimatePersist.findCareEstimatesByPetId(pet.getPetId());
 
+            Long groomingParentId = null;
             List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
             for (GroomingEstimate estimate : groomingEstimates) {
-
+                groomingParentId = estimate.getParentId();
                 Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
                         .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
                 groomingInfos.add(GroomingEstimateMapper.mapToGrooming(estimate, groomer));
             }
 
+            Long careParentId = null;
             List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
             for (CareEstimate estimate : careEstimates) {
-
+                careParentId = estimate.getParentId();
                 Vet vet = vetPersist.findByAccountId(estimate.getVetId())
                         .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
                 careInfos.add(CareEstimateMapper.mapToCare(estimate, vet));
@@ -143,6 +145,8 @@ public class EstimateService {
                     .petId(pet.getPetId())
                     .name(pet.getPetName())
                     .image(pet.getPetImage())
+                    .groomingParentId(groomingParentId)
+                    .careParentId(careParentId)
                     .groomingEstimates(groomingInfos)
                     .careEstimates(careInfos)
                     .build());

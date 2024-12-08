@@ -6,6 +6,8 @@ import ddog.domain.account.Role;
 import ddog.domain.vet.Vet;
 import ddog.persistence.mysql.port.AccountPersist;
 import ddog.persistence.mysql.port.VetPersist;
+import ddog.vet.application.exception.account.VetException;
+import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.application.mapper.VetMapper;
 import ddog.vet.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -69,7 +71,9 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
-        Vet vet = vetPersist.findByAccountId(accountId);
+        Vet vet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
         return VetMapper.toModifyPage(vet);
     }
 
@@ -77,7 +81,9 @@ public class AccountService {
     public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
         validateModifyInfoDataFormat(request);
 
-        Vet vet = vetPersist.findByAccountId(accountId);
+        Vet vet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
         Vet updatedVet = VetMapper.withUpdate(vet, request);
         vetPersist.save(updatedVet);
 
