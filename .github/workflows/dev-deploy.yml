@@ -1,7 +1,5 @@
 name: Deploy to Develop EC2
 on:
-  pull_request:
-    branches: [ "develop" ]
   push:
     branches: [ "develop" ]
 
@@ -24,6 +22,8 @@ jobs:
           - name: daengle-groomer
             path: daengle-groomer-api
             ssh_host_var: SSH_GROOMER_HOST
+      max-parallel: 1  # 병렬 실행 수를 1로 제한하여 순차적으로 실행
+
 
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
@@ -41,7 +41,7 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p ${{ matrix.module.path }}/src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
 
       # 3. Create .env file
       - name: Create .env file
@@ -57,18 +57,18 @@ jobs:
 
       - name: Build JAR with Gradle
         run: |
-          ./gradlew :${{ matrix.module.name }}:build -x test
+          ./gradlew clean :${{ matrix.module.name }}:build -x test
 
       # 5. Verify Build Output
       - name: Verify Build Output
-        run: ls -l ${{ matrix.module.path }}/build/libs
+        run: ls -lh ${{ matrix.module.path }}/build/libs
 
       # 6. Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_ROOT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_ROOT_SECRET }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
 
       # 7. Build and Push Docker Image
@@ -76,27 +76,14 @@ jobs:
         run: |
           set -e
           cd ${{ matrix.module.path }}
-          
-          # 태그 생성
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            PR_NUMBER=${{ github.event.pull_request.number }}
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)  # 태그 생성 시점 통일
-            IMAGE_TAG=pr-$PR_NUMBER-$TIMESTAMP
-          else
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)
-            IMAGE_TAG=release-$TIMESTAMP
-          fi
-          
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV  # GitHub 환경 변수로 저장
+                    
+          IMAGE_TAG="${{ matrix.module.name }}-$(date +%Y%m%d%H%M%S)"
           
           echo "Building Docker image..."
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
-          
-          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
-            docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
-            docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
-          fi
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
 
       # 8. Set up SSH
       - name: Set up SSH
@@ -109,7 +96,6 @@ jobs:
       # 9. Set up EC2 Host from Secrets
       - name: Set up EC2 Host
         run: |
-          # Dynamically resolve EC2 Host from the correct secret
           EC2_HOST=${{ secrets[ matrix.module.ssh_host_var ] }}
           echo "Resolved EC2_HOST: $EC2_HOST"
           echo "EC2_HOST=$EC2_HOST" >> $GITHUB_ENV
@@ -119,28 +105,31 @@ jobs:
         run: |
           set -e
           echo "=== Logging into EC2 ==="
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST "echo 'Connected to EC2 instance'"
+          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${EC2_HOST} << 'EOF'
+          
+          # EC2에서 AWS 인증 정보 설정
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          export AWS_REGION="${{ secrets.AWS_REGION }}"
+          
+           # AWS ECR에 로그인
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
           
           MODULE=${{ matrix.module.name }}
-          IMAGE_TAG=${IMAGE_TAG}  # GitHub 환경 변수 사용
+          IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
           
-          if [[ "${{ github.event_name }}" != "pull_request" ]]; then
+          # Pull latest image
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
-          else
-          docker pull ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker pull failed"; exit 1; }
-          fi
-    
+          
+          echo "=== Verifying Docker images ==="
+          docker images  
+
           echo "=== Stopping and removing existing container ==="
           docker ps --filter "name=$CONTAINER_NAME" | grep $CONTAINER_NAME && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No running container to stop."
-          
+          docker ps -a --filter "name=$CONTAINER_NAME" -q | xargs -r docker stop | xargs -r docker rm || echo "No running container to stop."
+
           echo "=== Running new container ==="
-          # PR일 때는 PR-specific 태그 사용
-            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG || { echo "Docker run failed"; exit 1; }
-            else
-            # 실제 배포일 때는 latest 태그 사용
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
-            fi
-                    
+          docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker run failed"; exit 1; }
+
           echo "=== Deployment completed successfully ==="
