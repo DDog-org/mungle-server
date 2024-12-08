@@ -8,4 +8,6 @@ public interface VetRepository {
 
     Vet getVetByAccountId(Long accountId);
 
+    Vet getVetByVetId(Long vetId);
+
 }

@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class NotificationControllerTest {
+public class WebNotificationControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;

@@ -23,6 +23,7 @@ public class VetJpaEntity {
     private String vetImage;
     private String address;
     private String vetIntroduction;
+    private String phoneNumber;
 
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
@@ -33,6 +34,7 @@ public class VetJpaEntity {
                 .vetImage(vet.getVetImage())
                 .address(vet.getAddress())
                 .vetIntroduction(vet.getVetIntroduction())
+                .phoneNumber(vet.getPhoneNumber())
                 .build();
     }
 
@@ -45,6 +47,7 @@ public class VetJpaEntity {
                 .vetImage(vetImage)
                 .address(address)
                 .vetIntroduction(vetIntroduction)
+                .phoneNumber(phoneNumber)
                 .build();
     }
 }

@@ -81,10 +81,12 @@ dependencies {
     //prometheus
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
+    // solapi-kakao
+    implementation 'net.nurigo:sdk:4.3.2'
+
     // Resilience4j
     implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.0.2'
     implementation 'io.github.resilience4j:resilience4j-timelimiter'
-
 }
 
 test {

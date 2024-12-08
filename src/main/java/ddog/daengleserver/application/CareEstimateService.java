@@ -46,6 +46,12 @@ public class CareEstimateService {
         return careEstimate.toUserCareEstimateDetail();
     }
 
+    @Transactional(readOnly = true)
+    public Vet getVetInfo(Long vetId){
+        Vet findVet = vetRepository.getVetByVetId(vetId);
+        return findVet;
+    }
+
     @Transactional
     public void createVetCareEstimate(VetCareEstimateReq request, Long accountId) {
         CareEstimate careEstimate = careEstimateRepository.getByCareEstimateId(request.getId());

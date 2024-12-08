@@ -1,41 +1,31 @@
 package ddog.daengleserver.presentation;
 
-import ddog.daengleserver.presentation.notify.dto.NotificationReq;
-import ddog.daengleserver.presentation.usecase.SseEmitterUsecase;
+import ddog.daengleserver.application.CareEstimateService;
+import ddog.daengleserver.application.KakaoNotificationService;
+import ddog.daengleserver.domain.account.Vet;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
+import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/notification")
+@RequestMapping("/api/v1/notification")
 public class NotificationController {
-    private final SseEmitterUsecase sseEmitterUsecase;
-    private static final String INIT = "{\"message\" : \"CONNECTED\"}";
+    private final KakaoNotificationService kakaoNotificationService;
+    private final Environment environment;
+    private final CareEstimateService careEstimateService;
 
-    @GetMapping(value = "/connection", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter connectNotificationStream(@RequestParam(value = "userId", required = true) Long userId) {
-        SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-        sseEmitterUsecase.addEmitter(userId, sseEmitter);
-
-        try {
-            sseEmitter.send(INIT);
-        } catch (IOException e) {
-            sseEmitterUsecase.removeEmitter(userId);
-        }
-        return sseEmitter;
-    }
-
-    @PostMapping("/send")
-    public void sendNotification(@RequestBody NotificationReq notificationReq) {
-        if (sseEmitterUsecase.isUserConnected(notificationReq.getUserId())) {
-            sseEmitterUsecase.sendMessageToUser(notificationReq.getUserId(), notificationReq.getMessage());
-        }
-        else {
-            sseEmitterUsecase.saveNotificationToDb(notificationReq);
+    @PostMapping
+    public void sendToUserNotification() {
+        Vet vetInfo = careEstimateService.getVetInfo(3L);
+        boolean isNotificationSend = kakaoNotificationService.sendOneTalk(vetInfo.getVetName(), vetInfo.getPhoneNumber(), environment.getProperty("templateId.CALL"));
+        if (!isNotificationSend) {
+            throw new RuntimeException("알림톡 전송 실패");
+        } else {
+            success("알림톡 전송 성공");
         }
     }
 }
