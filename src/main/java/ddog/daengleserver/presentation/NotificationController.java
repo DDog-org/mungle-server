@@ -20,7 +20,7 @@ public class NotificationController {
 
     @PostMapping
     public void sendToUserNotification() {
-        Vet vetInfo = careEstimateService.getVetInfo(1L);
+        Vet vetInfo = careEstimateService.getVetInfo(3L);
         boolean isNotificationSend = kakaoNotificationService.sendOneTalk(vetInfo.getVetName(), vetInfo.getPhoneNumber(), environment.getProperty("templateId.CALL"));
         if (!isNotificationSend) {
             throw new RuntimeException("알림톡 전송 실패");
