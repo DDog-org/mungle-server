@@ -22,6 +22,8 @@ jobs:
           - name: daengle-groomer
             path: daengle-groomer-api
             ssh_host_var: SSH_GROOMER_HOST
+      max-parallel: 1  # 병렬 실행 수를 1로 제한하여 순차적으로 실행
+
 
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
@@ -55,7 +57,7 @@ jobs:
 
       - name: Build JAR with Gradle
         run: |
-          ./gradlew --no-daemon clean :${{ matrix.module.name }}:build -x test
+          ./gradlew clean :${{ matrix.module.name }}:build -x test
 
       # 5. Verify Build Output
       - name: Verify Build Output
