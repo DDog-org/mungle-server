@@ -74,7 +74,7 @@ jobs:
         run: |
           set -e
           pwd
-#          cd ${{ matrix.module.path }}
+          cd ${{ matrix.module.path }}
           pwd 
           
           echo "=== Checking Docker Context ==="
