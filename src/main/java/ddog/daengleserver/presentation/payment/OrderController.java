@@ -1,4 +1,4 @@
-package ddog.daengleserver.presentation;
+package ddog.daengleserver.presentation.payment;
 
 import ddog.daengleserver.global.auth.dto.PayloadDto;
 import ddog.daengleserver.global.common.CommonResponseEntity;
@@ -12,7 +12,7 @@ import static ddog.daengleserver.global.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/v1/payment")
 public class OrderController {
 
     private final OrderUseCase orderUseCase;
