@@ -66,7 +66,7 @@ public class AuthService {
 
     private Authentication getAuthentication(String email, Role role) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.toString()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_VET"));
 
         Long accountId = accountPersist.findAccountByEmailAndRole(email, role)
                 .orElseThrow(() -> new RuntimeException("Account Not Found"))
