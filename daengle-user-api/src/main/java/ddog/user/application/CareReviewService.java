@@ -38,6 +38,8 @@ public class CareReviewService {
         Reservation reservation = reservationPersist.findBy(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        validatePostCareReviewInfo(postCareReviewInfo);
+
         CareReview careReviewToSave = CareReview.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
@@ -116,5 +118,12 @@ public class CareReviewService {
                         .content(careReview.getContent())
                         .build()
         ).toList();
+    }
+
+    private void validatePostCareReviewInfo(PostCareReviewInfo postCareReviewInfo) {
+        CareReview.validateStarRating(postCareReviewInfo.getStarRating());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateContent(postCareReviewInfo.getContent());
+        CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 }
