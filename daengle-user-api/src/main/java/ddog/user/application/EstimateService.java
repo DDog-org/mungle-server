@@ -157,12 +157,8 @@ public class EstimateService {
                 .build();
     }
 
-    public UserEstimate.Grooming getGroomingEstimate(Long groomingEstimateId) {
-        if (groomingEstimateId == null) {
-            throw new GroomingEstimateException(GroomingEstimateExceptionType.INVALID_REQUEST_DATA_FORMAT);
-        }
-
-        GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)
+    public UserEstimate.Grooming getGroomingEstimate(Long estimateId) {
+        GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
         Pet pet = petPersist.findByPetId(estimate.getPetId())
@@ -171,12 +167,8 @@ public class EstimateService {
         return GroomingEstimateMapper.mapToUserGroomingEstimate(estimate, pet);
     }
 
-    public UserEstimate.Care getCareEstimate(Long careEstimateId) {
-        if (careEstimateId == null) {
-            throw new CareEstimateException(CareEstimateExceptionType.INVALID_REQUEST_DATA_FORMAT);
-        }
-
-        CareEstimate estimate = careEstimatePersist.findByEstimateId(careEstimateId)
+    public UserEstimate.Care getCareEstimate(Long estimateId) {
+        CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
         Pet pet = petPersist.findByPetId(estimate.getPetId())

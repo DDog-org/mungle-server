@@ -47,15 +47,15 @@ public class EstimateController {
     }
 
     /* 사용자가 작성한 미용 견적서 조회 */
-    @GetMapping("/request/{groomingEstimateId}")
-    public CommonResponseEntity<UserEstimate.Grooming> getGroomingEstimate(@PathVariable Long groomingEstimateId) {
-        return success(estimateService.getGroomingEstimate(groomingEstimateId));
+    @GetMapping("/request/grooming/{estimateId}")
+    public CommonResponseEntity<UserEstimate.Grooming> getGroomingEstimate(@PathVariable Long estimateId) {
+        return success(estimateService.getGroomingEstimate(estimateId));
     }
 
     /* 사용자가 작성한 진료 견적서 조회 */
-    @GetMapping("/request/{careEstimateId}")
-    public CommonResponseEntity<UserEstimate.Care> getCareEstimate(@PathVariable Long careEstimateId) {
-        return success(estimateService.getCareEstimate(careEstimateId));
+    @GetMapping("/request/care/{estimateId}")
+    public CommonResponseEntity<UserEstimate.Care> getCareEstimate(@PathVariable Long estimateId) {
+        return success(estimateService.getCareEstimate(estimateId));
     }
 
     /* (대기) 미용 견적서 상세 조회 */
