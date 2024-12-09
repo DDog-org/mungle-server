@@ -4,6 +4,7 @@ import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
@@ -72,11 +73,19 @@ public class PaymentService {
                 GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(order.getEstimateId())
                         .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
+                groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
 
+                estimate.updateStatus(EstimateStatus.ON_RESERVATION);
+                groomingEstimatePersist.save(estimate);
 
             } else if (order.getServiceType().equals(ServiceType.CARE)) {
                 CareEstimate estimate = careEstimatePersist.findByEstimateId(order.getEstimateId())
                         .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+
+                careEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
+
+                estimate.updateStatus(EstimateStatus.ON_RESERVATION);
+                careEstimatePersist.save(estimate);
 
             } else {
                 throw new IllegalArgumentException("서비스 타입이 올바르지 않습니다.");

@@ -9,6 +9,8 @@ import ddog.domain.user.User;
 import ddog.persistence.mysql.port.GroomerPersist;
 import ddog.persistence.mysql.port.GroomingReviewPersist;
 import ddog.persistence.mysql.port.ReservationPersist;
+import ddog.user.application.exception.account.UserException;
+import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
 import ddog.user.application.exception.ReviewException;

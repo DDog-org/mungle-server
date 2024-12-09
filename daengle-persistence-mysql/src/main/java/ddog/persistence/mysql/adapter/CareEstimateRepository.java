@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
 import ddog.persistence.mysql.port.CareEstimatePersist;
@@ -43,6 +44,12 @@ public class CareEstimateRepository implements CareEstimatePersist {
         }
 
         return careEstimates;
+    }
+
+    @Override
+    public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
+        careEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
+        careEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
     }
 
     @Override

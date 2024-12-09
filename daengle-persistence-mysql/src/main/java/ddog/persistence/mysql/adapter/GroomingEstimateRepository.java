@@ -1,5 +1,6 @@
 package ddog.persistence.mysql.adapter;
 
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.persistence.mysql.jpa.entity.GroomingEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomingEstimateJpaRepository;
@@ -58,5 +59,11 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
         }
 
         return groomingEstimates;
+    }
+
+    @Override
+    public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
+        groomingEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
+        groomingEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
     }
 }

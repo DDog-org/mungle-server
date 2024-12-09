@@ -1,5 +1,6 @@
 package ddog.persistence.mysql.port;
 
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface GroomingEstimatePersist {
     List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerId);
 
     List<GroomingEstimate> findGroomingEstimatesByPetId(Long petId);
+
+    void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId);
 }
