@@ -13,11 +13,19 @@ public class ClientConnector implements ClientConnect {
     private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
 
     public SseEmitter toConnectClient(Long userId) {
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(36000000L);
         ssemitters.put(userId, emitter);
 
+        try {
+            emitter.send("SSE 연결 완료");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         emitter.onTimeout(() -> {
+            System.out.println("타임아웃 발생, 자동 재연결");
             ssemitters.remove(userId);
+            toConnectClient(userId); 
         });
 
         emitter.onCompletion(() -> {

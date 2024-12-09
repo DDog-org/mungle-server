@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,12 +18,11 @@ public class NotificationRepository implements NotificationPersist {
 
     @Override
     public List<Notification> findNotificationsByUserId(Long userId) {
-        return Optional.ofNullable(notificationJpaRepository.findByUserId(userId))
-                .filter(list -> list.isEmpty())
-                .orElseThrow(() -> new RuntimeException("No Notification Message"))
-                .stream()
+        List<NotificationJpaEntity> notifications = notificationJpaRepository.findByUserId(userId);
+
+        return notifications.stream()
                 .map(NotificationJpaEntity::toModel)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -34,8 +33,8 @@ public class NotificationRepository implements NotificationPersist {
     @Override
     public Notification findNotificationById(Long notificationId) {
         return notificationJpaRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("No Notification Id"))
-                .toModel();
+                .map(NotificationJpaEntity::toModel)
+                .orElse(null);
     }
 
     @Override

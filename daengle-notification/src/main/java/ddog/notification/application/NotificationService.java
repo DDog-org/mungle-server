@@ -14,7 +14,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NotificationService {
@@ -38,7 +40,7 @@ public class NotificationService {
     public void sendNotificationToUser(Long receiverId, NotifyType notifyType, String message) {
         try {
             if (receiverId == null || message == null || notifyType == null) {
-                throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "알림 전송 오류");
+                throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT);
             }
 
             if (clientConnect.isUserConnected(receiverId)) {
@@ -56,13 +58,13 @@ public class NotificationService {
                 notificationPersist.saveNotificationWithLogoutUser(notification);
             }
         } catch (IOException e) {
-            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, e.getMessage());
+            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT);
         }
     }
 
     public List<NotificationResp> getAllNotificationsByUserId(Long userId) {
         if (userId == null) {
-            throw new NotificationException(NotificationExceptionType.USER_NOT_FOUND, "유저 정보 오류");
+            throw new NotificationException(NotificationExceptionType.USER_NOT_FOUND);
         }
         try {
             List<NotificationResp> res = new ArrayList<>();
@@ -75,25 +77,27 @@ public class NotificationService {
             }
             return res;
         } catch (Exception e) {
-            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND, "알림 조회 오류 : " + e.getMessage());
+            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND);
         }
     }
 
-    public boolean checkNotificationById(Long notificationId) {
-        if (notificationId == null) {
-            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND, "알림 조회 오류");
-        }
-        try {
-            notificationPersist.deleteNotificationById(notificationId);
+    public Map<String, Object> checkNotificationById(Long notificationId) {
 
-            if (notificationPersist.findNotificationById(notificationId) != null) {
-                throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND, "알림 삭제 실패");
-            }
-            return true;
-        } catch (NotificationException e) {
-            throw e; // 이미 정의된 예외를 다시 던짐
-        } catch (Exception e) {
-            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT, "알림 삭제 오류 : " + e.getMessage());
+        Notification notification = notificationPersist.findNotificationById(notificationId);
+
+        if (notification == null) {
+            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND);
+        }
+
+        notificationPersist.deleteNotificationById(notificationId);
+        Notification deletedNotification = notificationPersist.findNotificationById(notificationId);
+
+        if (deletedNotification == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("delete", true);
+            return response;
+        } else {
+            throw new NotificationException(NotificationExceptionType.NOTIFICATION_CAN_NOT_DELETE);
         }
     }
 }
