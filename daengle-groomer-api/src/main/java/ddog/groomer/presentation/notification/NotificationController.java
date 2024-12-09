@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
+import java.util.Map;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
@@ -30,7 +31,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/check")
-    public CommonResponseEntity<Boolean> checkOneNotification(@RequestParam Long notificationId, PayloadDto payloadDto) {
+    public CommonResponseEntity<Map<String,Object>> checkOneNotification(@RequestParam Long notificationId, PayloadDto payloadDto) {
         return success(notificationService.checkNotificationById(notificationId));
     }
 }
