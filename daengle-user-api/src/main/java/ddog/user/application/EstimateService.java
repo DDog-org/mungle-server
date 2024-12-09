@@ -168,7 +168,21 @@ public class EstimateService {
         Pet pet = petPersist.findByPetId(estimate.getPetId())
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-         return GroomingEstimateMapper.mapToUserGroomingEstimate(estimate, pet);
+        return GroomingEstimateMapper.mapToUserGroomingEstimate(estimate, pet);
+    }
+
+    public UserEstimate.Care getCareEstimate(Long careEstimateId) {
+        if (careEstimateId == null) {
+            throw new CareEstimateException(CareEstimateExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        }
+
+        CareEstimate estimate = careEstimatePersist.findByEstimateId(careEstimateId)
+                .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+
+        Pet pet = petPersist.findByPetId(estimate.getPetId())
+                .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+        return CareEstimateMapper.mapToUserCareEstimate(estimate, pet);
     }
 
     @Transactional(readOnly = true)

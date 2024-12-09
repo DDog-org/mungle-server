@@ -53,6 +53,10 @@ public class EstimateController {
     }
 
     /* 사용자가 작성한 진료 견적서 조회 */
+    @GetMapping("/request/{careEstimateId}")
+    public CommonResponseEntity<UserEstimate.Care> getCareEstimate(@PathVariable Long careEstimateId) {
+        return success(estimateService.getCareEstimate(careEstimateId));
+    }
 
     /* (대기) 미용 견적서 상세 조회 */
     @GetMapping("/{groomingEstimateId}/grooming-detail")

@@ -90,6 +90,19 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
+    public static UserEstimate.Grooming mapToUserGroomingEstimate(GroomingEstimate estimate, Pet pet) {
+        return UserEstimate.Grooming.builder()
+                .id(estimate.getEstimateId())
+                .address(estimate.getAddress())
+                .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
+                .petImage(pet.getPetImage())
+                .petName(pet.getPetName())
+                .desiredStyle(estimate.getDesiredStyle())
+                .requirements(estimate.getRequirements())
+                .build();
+    }
+
     public static GroomingEstimateDetail mapToEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet) {
         return GroomingEstimateDetail.builder()
                 .groomingEstimateId(estimate.getEstimateId())
@@ -105,19 +118,6 @@ public class GroomingEstimateMapper {
                 .weight(pet.getPetWeight())
                 .desiredStyle(estimate.getDesiredStyle())
                 .overallOpinion(estimate.getOverallOpinion())
-                .build();
-    }
-
-    public static UserEstimate.Grooming mapToUserGroomingEstimate(GroomingEstimate estimate, Pet pet) {
-        return UserEstimate.Grooming.builder()
-                .id(estimate.getEstimateId())
-                .address(estimate.getAddress())
-                .reservedDate(estimate.getReservedDate())
-                .proposal(estimate.getProposal())
-                .petImage(pet.getPetImage())
-                .petName(pet.getPetName())
-                .desiredStyle(estimate.getDesiredStyle())
-                .requirements(estimate.getRequirements())
                 .build();
     }
 }

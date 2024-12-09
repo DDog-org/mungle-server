@@ -6,10 +6,7 @@ import ddog.domain.estimate.Proposal;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
-import ddog.user.presentation.estimate.dto.UserInfo;
-import ddog.user.presentation.estimate.dto.CareEstimateDetail;
-import ddog.user.presentation.estimate.dto.CreateNewCareEstimateReq;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
+import ddog.user.presentation.estimate.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -88,6 +85,19 @@ public class CareEstimateMapper {
                 .proposal(estimate.getProposal())
                 .image(vet.getVetImage())
                 .reservedDate(estimate.getReservedDate())
+                .build();
+    }
+
+    public static UserEstimate.Care mapToUserCareEstimate(CareEstimate estimate, Pet pet) {
+        return UserEstimate.Care.builder()
+                .id(estimate.getEstimateId())
+                .address(estimate.getAddress())
+                .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
+                .petImage(pet.getPetImage())
+                .petName(pet.getPetName())
+                .symptoms(estimate.getSymptoms())
+                .requirements(estimate.getRequirements())
                 .build();
     }
 
