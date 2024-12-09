@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 public enum VetExceptionType {
-    INVALID_REQUEST_DATA_FORMAT(HttpStatus.BAD_REQUEST, 400, "데이터 형식 오류");
+    INVALID_REQUEST_DATA_FORMAT(HttpStatus.BAD_REQUEST, 400, "데이터 형식 오류"),
+    VET_NOT_FOUND(HttpStatus.BAD_REQUEST, 404, "존재하지 않는 동물병원");
 
     private final HttpStatus httpStatus;
     private final Integer code;

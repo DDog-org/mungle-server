@@ -35,7 +35,6 @@ public class Order {
 
     public static Order createBy(Long accountId, PostOrderInfo postOrderInfo, Payment payment) {
         return Order.builder()
-                .orderId(null)
                 .serviceType(postOrderInfo.getServiceType())
                 .price(postOrderInfo.getPrice())
                 .estimateId(postOrderInfo.getEstimateId())

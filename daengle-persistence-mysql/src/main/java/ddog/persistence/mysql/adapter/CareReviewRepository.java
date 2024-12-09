@@ -5,9 +5,13 @@ import ddog.persistence.mysql.jpa.entity.CareReviewJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareReviewJpaRepository;
 import ddog.persistence.mysql.port.CareReviewPersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,6 +33,16 @@ public class CareReviewRepository implements CareReviewPersist {
     @Override
     public void delete(CareReview careReview) {
         careReviewJpaRepository.delete(CareReviewJpaEntity.from(careReview));
+    }
+
+    @Override
+    public Page<CareReview> findByReviewerId(Long reviewerId, Pageable pageable) {
+        return careReviewJpaRepository.findByReviewerId(reviewerId, pageable).map(CareReviewJpaEntity::toModel);
+    }
+
+    @Override
+    public Page<CareReview> findByVetId(Long vetId, Pageable pageable) {
+        return careReviewJpaRepository.findByVetId(vetId, pageable).map(CareReviewJpaEntity::toModel);
     }
 }
 
