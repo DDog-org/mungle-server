@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class DeployCheckController {
     private String deploymentTime;
 
-    // 애플리케이션 시작 시 배포 시간을 기록
+    // 애플리케이션 시작 시 배포 시간 기록
     @PostConstruct
     public void init() {
         LocalDateTime now = LocalDateTime.now();
@@ -23,9 +23,6 @@ public class DeployCheckController {
 
     @GetMapping("/test")
     public String test() {
-//        LocalDateTime now = LocalDateTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        String formattedDate = now.format(formatter);
         return "Hello Daengle World - MULTI MODULE !!!! PAYMENT API !" +
                 " Made at: " + deploymentTime + "   CI/CD SUCCESS";
     }

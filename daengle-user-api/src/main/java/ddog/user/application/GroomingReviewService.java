@@ -40,6 +40,8 @@ public class GroomingReviewService {
         Reservation reservation = reservationPersist.findBy(postGroomingReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
+
         GroomingReview groomingReviewToSave = GroomingReview.createBy(reservation, postGroomingReviewInfo);
         GroomingReview SavedGroomingReview = groomingReviewPersist.save(groomingReviewToSave);
 
@@ -55,6 +57,8 @@ public class GroomingReviewService {
     public ReviewResp modifyReview(Long reviewId, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
         GroomingReview savedGroomingReview = groomingReviewPersist.findBy(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        validateModifyGroomingReviewInfoDataFormat(modifyGroomingReviewInfo);
 
         GroomingReview modifiedReview = GroomingReview.modifyBy(savedGroomingReview, modifyGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
@@ -120,5 +124,19 @@ public class GroomingReviewService {
                         .content(groomingReview.getContent())
                         .build()
         ).toList();
+    }
+
+    private void validatePostGroomingReviewInfoDataFormat(PostGroomingReviewInfo postGroomingReviewInfo) {
+        GroomingReview.validateStarRating(postGroomingReviewInfo.getStarRating());
+        GroomingReview.validateGroomingKeywordReviewList(postGroomingReviewInfo.getGroomingKeywordReviewList());
+        GroomingReview.validateContent(postGroomingReviewInfo.getContent());
+        GroomingReview.validateImageUrlList(postGroomingReviewInfo.getImageUrlList());
+    }
+
+    private void validateModifyGroomingReviewInfoDataFormat(ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
+        GroomingReview.validateStarRating(modifyGroomingReviewInfo.getStarRating());
+        GroomingReview.validateGroomingKeywordReviewList(modifyGroomingReviewInfo.getGroomingKeywordReviewList());
+        GroomingReview.validateContent(modifyGroomingReviewInfo.getContent());
+        GroomingReview.validateImageUrlList(modifyGroomingReviewInfo.getImageUrlList());
     }
 }
