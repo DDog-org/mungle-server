@@ -40,7 +40,8 @@ public class PaymentService {
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
         Order order = orderPersist.findBy(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
         Payment payment = order.getPayment();
-        //TODO 견적 데이터 유효성 검사 로직
+
+        validateEstimate(order);
 
         try {
             com.siot.IamportRestClient.response.Payment iamportResp =
@@ -69,28 +70,6 @@ public class PaymentService {
             payment.validationSuccess(iamportResp.getImpUid());
             paymentPersist.save(payment);
 
-            if (order.getServiceType().equals(ServiceType.GROOMING)) {
-                GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(order.getEstimateId())
-                        .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
-
-                groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
-
-                estimate.updateStatus(EstimateStatus.ON_RESERVATION);
-                groomingEstimatePersist.save(estimate);
-
-            } else if (order.getServiceType().equals(ServiceType.CARE)) {
-                CareEstimate estimate = careEstimatePersist.findByEstimateId(order.getEstimateId())
-                        .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
-
-                careEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
-
-                estimate.updateStatus(EstimateStatus.ON_RESERVATION);
-                careEstimatePersist.save(estimate);
-
-            } else {
-                throw new IllegalArgumentException("서비스 타입이 올바르지 않습니다.");
-            }
-
             //예약 정보 생성
             Reservation reservation = Reservation.builder()
                     .estimateId(order.getEstimateId())
@@ -118,6 +97,31 @@ public class PaymentService {
 
         } catch (IamportResponseException | IOException e) {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        }
+    }
+
+    //TODO Estimate 도메인 객체에게 역할 위임하기 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
+    private void validateEstimate(Order order) {
+        if (order.getServiceType().equals(ServiceType.GROOMING)) {
+            GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(order.getEstimateId())
+                    .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+            groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
+
+            estimate.updateStatus(EstimateStatus.ON_RESERVATION);
+            groomingEstimatePersist.save(estimate);
+
+        } else if (order.getServiceType().equals(ServiceType.CARE)) {
+            CareEstimate estimate = careEstimatePersist.findByEstimateId(order.getEstimateId())
+                    .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+
+            careEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
+
+            estimate.updateStatus(EstimateStatus.ON_RESERVATION);
+            careEstimatePersist.save(estimate);
+
+        } else {
+            throw new IllegalArgumentException("서비스 타입이 올바르지 않습니다.");
         }
     }
 }
