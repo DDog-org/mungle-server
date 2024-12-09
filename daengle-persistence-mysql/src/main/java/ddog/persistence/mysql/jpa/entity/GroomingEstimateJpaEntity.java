@@ -21,6 +21,7 @@ public class GroomingEstimateJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long estimateId;
+    private Long parentId;
     private Long groomerId;
     private Long userId;
     private Long petId;
@@ -44,6 +45,7 @@ public class GroomingEstimateJpaEntity {
     public static GroomingEstimateJpaEntity from(GroomingEstimate estimate) {
         return GroomingEstimateJpaEntity.builder()
                 .estimateId(estimate.getEstimateId())
+                .parentId(estimate.getParentId())
                 .groomerId(estimate.getGroomerId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
@@ -62,6 +64,7 @@ public class GroomingEstimateJpaEntity {
     public GroomingEstimate toModel() {
         return GroomingEstimate.builder()
                 .estimateId(estimateId)
+                .parentId(parentId)
                 .groomerId(groomerId)
                 .userId(userId)
                 .petId(petId)

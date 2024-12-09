@@ -14,7 +14,7 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/daengle")
+@RequestMapping("/api/payment")
 public class OrderController {
 
     private final OrderService orderService;

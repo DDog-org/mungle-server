@@ -7,6 +7,8 @@ import ddog.persistence.mysql.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class GroomerRepository implements GroomerPersist {
@@ -14,9 +16,14 @@ public class GroomerRepository implements GroomerPersist {
     private final GroomerJpaRepository groomerJpaRepository;
 
     @Override
-    public Groomer getGroomerByAccountId(Long accountId) {
-        return groomerJpaRepository.getByAccountId(accountId)
-                .toModel();
+    public Optional<Groomer> findByAccountId(Long accountId) {
+        return groomerJpaRepository.findByAccountId(accountId)
+                .map(GroomerJpaEntity::toModel);
+    }
+
+    @Override
+    public Optional<Groomer> findBy(Long accountId) {
+        return groomerJpaRepository.findByAccountId(accountId).map(GroomerJpaEntity::toModel);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
 import ddog.persistence.mysql.port.CareEstimatePersist;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,10 +25,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findGeneralCareEstimates(String address) {
+    public List<CareEstimate> findCareEstimatesByAddress(String address) {
         List<CareEstimate> careEstimates = new ArrayList<>();
 
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findGeneralCareEstimatesByAddress(address)) {
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByAddress(address)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
 
@@ -34,25 +36,36 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findDesignationCareEstimates(Long vetId) {
+    public List<CareEstimate> findCareEstimatesByVetId(Long vetId) {
         List<CareEstimate> careEstimates = new ArrayList<>();
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findDesignationCareEstimatesByVetId(vetId)) {
+
+        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByVetId(vetId)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 
     @Override
-    public CareEstimate getByEstimateId(Long estimateId) {
-        return careEstimateJpaRepository.getCareEstimateJpaEntityByEstimateId(estimateId).toModel();
+    public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
+        careEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
+        careEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
+    }
+
+    @Override
+    public Optional<CareEstimate> findByEstimateId(Long estimateId) {
+        return careEstimateJpaRepository.findByEstimateId(estimateId)
+                .map(CareEstimateJpaEntity::toModel);
     }
 
     @Override
     public List<CareEstimate> findCareEstimatesByPetId(Long petId) {
         List<CareEstimate> careEstimates = new ArrayList<>();
+
         for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByPetId(petId)) {
             careEstimates.add(careEstimateJpaEntity.toModel());
         }
+
         return careEstimates;
     }
 }

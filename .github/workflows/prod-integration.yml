@@ -3,6 +3,7 @@ name: Java CI with Gradle (Prod Integration)
 on:
   pull_request:
     branches: [ "main" ]
+#    branches: [ "non-existent-branch" ]
 
 jobs:
   build:

@@ -7,6 +7,8 @@ import ddog.persistence.mysql.port.UserPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserRepository implements UserPersist {
@@ -19,10 +21,14 @@ public class UserRepository implements UserPersist {
     }
 
     @Override
-    public User findByAccountId(Long accountId) {
+    public Optional<User> findByAccountId(Long accountId) {
         return userJpaRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new RuntimeException("user not found"))
-                .toModel();
+                .map(UserJpaEntity::toModel);
+    }
+
+    @Override
+    public Optional<User> findBy(Long accountId ) {
+        return userJpaRepository.findByAccountId(accountId).map(UserJpaEntity::toModel);
     }
 
     @Override

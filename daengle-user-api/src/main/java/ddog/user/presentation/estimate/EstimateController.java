@@ -16,36 +16,55 @@ public class EstimateController {
 
     private final EstimateService estimateService;
 
+    /* 미용사, 사용자 및 반려견 정보 제공 */
     @PostMapping("/groomer-user-info")
-    public CommonResponseEntity<AccountInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<UserInfo.Grooming> getGroomerAndUserInfo(@RequestBody GroomerInfoReq request, PayloadDto payloadDto) {
         return success(estimateService.getGroomerAndUserInfo(request.getGroomerId(), payloadDto.getAccountId()));
     }
 
+    /* 병원, 사용자 및 반려견 정보 제공 */
     @PostMapping("/vet-user-info")
-    public CommonResponseEntity<AccountInfo.Care> getVetAndUserInfo(@RequestBody VetInfoReq request, PayloadDto payloadDto) {
+    public CommonResponseEntity<UserInfo.Care> getVetAndUserInfo(@RequestBody VetInfoReq request, PayloadDto payloadDto) {
         return success(estimateService.getVetAndUserInfo(request.getVetId(), payloadDto.getAccountId()));
     }
 
+    /* 사용자 -> 미용사 (신규) 미용 견적서 등록 */
     @PostMapping("/grooming")
-    public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody GroomingEstimateReq request, PayloadDto payloadDto) {
-        return success(estimateService.createGroomingEstimate(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateNewGroomingEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createNewGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
+    /* 사용자 -> 병원 (신규) 진료 견적서 등록 */
     @PostMapping("/care")
-    public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CareEstimateReq request, PayloadDto payloadDto) {
-        return success(estimateService.createCareEstimate(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CreateNewCareEstimateReq request, PayloadDto payloadDto) {
+        return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 
+    /* 미용/진료 (대기) 견적서 상세 조회 */
     @GetMapping("/list")
-    public CommonResponseEntity<EstimateInfo> findEstimateInfo(PayloadDto payloadDto) {
-        return success(estimateService.findEstimateInfo(payloadDto.getAccountId()));
+    public CommonResponseEntity<EstimateInfo> findEstimates(PayloadDto payloadDto) {
+        return success(estimateService.findEstimates(payloadDto.getAccountId()));
     }
 
+    /* 사용자가 작성한 미용 견적서 조회 */
+    @GetMapping("/request/grooming/{estimateId}")
+    public CommonResponseEntity<UserEstimate.Grooming> getGroomingEstimate(@PathVariable Long estimateId) {
+        return success(estimateService.getGroomingEstimate(estimateId));
+    }
+
+    /* 사용자가 작성한 진료 견적서 조회 */
+    @GetMapping("/request/care/{estimateId}")
+    public CommonResponseEntity<UserEstimate.Care> getCareEstimate(@PathVariable Long estimateId) {
+        return success(estimateService.getCareEstimate(estimateId));
+    }
+
+    /* (대기) 미용 견적서 상세 조회 */
     @GetMapping("/{groomingEstimateId}/grooming-detail")
     public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
         return success(estimateService.getGroomingEstimateDetail(groomingEstimateId));
     }
 
+    /* (대기) 진료 견적서 상세 조회 */
     @GetMapping("/{careEstimateId}/care-detail")
     public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
         return success(estimateService.getCareEstimateDetail(careEstimateId));
