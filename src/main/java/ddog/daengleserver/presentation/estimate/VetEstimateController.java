@@ -16,7 +16,7 @@ import static ddog.daengleserver.presentation.estimate.enums.VetEstimateControll
 
 @Tag(name = "수의사 진료 견적서 관련 API")
 @RestController
-@RequestMapping("/api/vet/estimate")
+@RequestMapping("/api/v1/vet/estimate")
 @RequiredArgsConstructor
 public class VetEstimateController {
 
