@@ -38,6 +38,8 @@ public class CareReviewService {
         Reservation reservation = reservationPersist.findBy(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        validatePostCareReviewInfoDataFormat(postCareReviewInfo);
+
         CareReview careReviewToSave = CareReview.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
@@ -53,6 +55,8 @@ public class CareReviewService {
     public ReviewResp modifyReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findBy(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        validateModifyCareReviewInfoDataFormat(modifyCareReviewInfo);
 
         CareReview modifiedReview = CareReview.modifyBy(savedCareReview, modifyCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);
@@ -116,5 +120,19 @@ public class CareReviewService {
                         .content(careReview.getContent())
                         .build()
         ).toList();
+    }
+
+    private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
+        CareReview.validateStarRating(postCareReviewInfo.getStarRating());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateContent(postCareReviewInfo.getContent());
+        CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
+    }
+
+    private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
+        CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
+        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateContent(modifyCareReviewInfo.getContent());
+        CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
     }
 }
