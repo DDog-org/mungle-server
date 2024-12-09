@@ -157,6 +157,20 @@ public class EstimateService {
                 .build();
     }
 
+    public UserEstimate.Grooming getGroomingEstimate(Long groomingEstimateId) {
+        if (groomingEstimateId == null) {
+            throw new GroomingEstimateException(GroomingEstimateExceptionType.INVALID_REQUEST_DATA_FORMAT);
+        }
+
+        GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        Pet pet = petPersist.findByPetId(estimate.getPetId())
+                .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+         return GroomingEstimateMapper.mapToUserGroomingEstimate(estimate, pet);
+    }
+
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)

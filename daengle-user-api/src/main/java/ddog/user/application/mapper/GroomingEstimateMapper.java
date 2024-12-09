@@ -6,10 +6,7 @@ import ddog.domain.estimate.Proposal;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
-import ddog.user.presentation.estimate.dto.CreateNewGroomingEstimateReq;
-import ddog.user.presentation.estimate.dto.EstimateInfo;
-import ddog.user.presentation.estimate.dto.GroomingEstimateDetail;
-import ddog.user.presentation.estimate.dto.UserInfo;
+import ddog.user.presentation.estimate.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -108,6 +105,19 @@ public class GroomingEstimateMapper {
                 .weight(pet.getPetWeight())
                 .desiredStyle(estimate.getDesiredStyle())
                 .overallOpinion(estimate.getOverallOpinion())
+                .build();
+    }
+
+    public static UserEstimate.Grooming mapToUserGroomingEstimate(GroomingEstimate estimate, Pet pet) {
+        return UserEstimate.Grooming.builder()
+                .id(estimate.getEstimateId())
+                .address(estimate.getAddress())
+                .reservedDate(estimate.getReservedDate())
+                .proposal(estimate.getProposal())
+                .petImage(pet.getPetImage())
+                .petName(pet.getPetName())
+                .desiredStyle(estimate.getDesiredStyle())
+                .requirements(estimate.getRequirements())
                 .build();
     }
 }

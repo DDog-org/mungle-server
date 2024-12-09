@@ -46,6 +46,14 @@ public class EstimateController {
         return success(estimateService.findEstimates(payloadDto.getAccountId()));
     }
 
+    /* 사용자가 작성한 미용 견적서 조회 */
+    @GetMapping("/request/{groomingEstimateId}")
+    public CommonResponseEntity<UserEstimate.Grooming> getGroomingEstimate(@PathVariable Long groomingEstimateId) {
+        return success(estimateService.getGroomingEstimate(groomingEstimateId));
+    }
+
+    /* 사용자가 작성한 진료 견적서 조회 */
+
     /* (대기) 미용 견적서 상세 조회 */
     @GetMapping("/{groomingEstimateId}/grooming-detail")
     public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
