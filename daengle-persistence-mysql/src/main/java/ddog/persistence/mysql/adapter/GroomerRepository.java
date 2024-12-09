@@ -16,9 +16,9 @@ public class GroomerRepository implements GroomerPersist {
     private final GroomerJpaRepository groomerJpaRepository;
 
     @Override
-    public Groomer getGroomerByAccountId(Long accountId) {
-        return groomerJpaRepository.getByAccountId(accountId)
-                .toModel();
+    public Optional<Groomer> findByAccountId(Long accountId) {
+        return groomerJpaRepository.findByAccountId(accountId)
+                .map(GroomerJpaEntity::toModel);
     }
 
     @Override

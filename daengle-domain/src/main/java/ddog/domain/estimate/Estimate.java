@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public abstract class Estimate {
 
     private Long estimateId;
+    private Long parentId;
     private Long userId;
     private Long petId;
     private String address;
@@ -34,4 +35,7 @@ public abstract class Estimate {
         }
     }
 
+    public void updateStatus(EstimateStatus status) {
+        this.status = status;
+    }
 }

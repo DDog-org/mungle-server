@@ -7,13 +7,13 @@ import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
 import ddog.vet.presentation.estimate.dto.EstimateDetail;
 import ddog.vet.presentation.estimate.dto.EstimateInfo;
-import ddog.vet.presentation.estimate.dto.EstimateReq;
+import ddog.vet.presentation.estimate.dto.CreatePendingEstimateReq;
 
 import java.time.LocalDateTime;
 
 public class CareEstimateMapper {
 
-    public static EstimateInfo.Content estimateToContent(CareEstimate estimate, User user, Pet pet) {
+    public static EstimateInfo.Content mapToContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Content.builder()
                 .id(estimate.getEstimateId())
                 .image(user.getUserImage())
@@ -24,7 +24,7 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static EstimateDetail toUserCareEstimateDetail(CareEstimate estimate, User user, Pet pet) {
+    public static EstimateDetail mapToEstimateDetail(CareEstimate estimate, User user, Pet pet) {
         return EstimateDetail.builder()
                 .userImage(user.getUserImage())
                 .nickname(user.getNickname())
@@ -45,9 +45,9 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static CareEstimate updateEstimate(EstimateReq request, Vet vet, CareEstimate estimate) {
+    public static CareEstimate createPendingEstimate(CreatePendingEstimateReq request, Vet vet, CareEstimate estimate) {
         return CareEstimate.builder()
-                .estimateId(estimate.getEstimateId())
+                .parentId(estimate.getEstimateId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
                 .vetId(vet.getAccountId())
@@ -57,7 +57,7 @@ public class CareEstimateMapper {
                 .requirements(estimate.getRequirements())
                 .status(EstimateStatus.PENDING)
                 .proposal(estimate.getProposal())
-                .createdAt(estimate.getCreatedAt())
+                .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .diagnosis(request.getDiagnosis())
                 .cause(request.getCause())

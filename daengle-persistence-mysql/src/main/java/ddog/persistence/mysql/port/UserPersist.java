@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface UserPersist {
     void save(User user);
 
-    User findByAccountId(Long accountId);
+    Optional<User> findByAccountId(Long accountId);
 
     Optional<User> findBy(Long id);
 

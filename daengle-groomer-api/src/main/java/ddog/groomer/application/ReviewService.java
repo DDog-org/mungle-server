@@ -2,8 +2,8 @@ package ddog.groomer.application;
 
 import ddog.domain.groomer.Groomer;
 import ddog.domain.review.GroomingReview;
-import ddog.groomer.application.exception.GroomerException;
-import ddog.groomer.application.exception.GroomerExceptionType;
+import ddog.groomer.application.exception.account.GroomerException;
+import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.presentation.review.dto.ReviewSummaryResp;
 import ddog.persistence.mysql.port.GroomerPersist;
 import ddog.persistence.mysql.port.GroomingReviewPersist;

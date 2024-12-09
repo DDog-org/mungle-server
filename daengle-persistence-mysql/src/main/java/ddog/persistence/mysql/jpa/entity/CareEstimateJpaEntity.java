@@ -21,6 +21,7 @@ public class CareEstimateJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long estimateId;
+    private Long parentId;
     private Long userId;
     private Long petId;
     private Long vetId;
@@ -46,6 +47,7 @@ public class CareEstimateJpaEntity {
     public static CareEstimateJpaEntity from(CareEstimate estimate) {
         return CareEstimateJpaEntity.builder()
                 .estimateId(estimate.getEstimateId())
+                .parentId(estimate.getParentId())
                 .userId(estimate.getUserId())
                 .petId(estimate.getPetId())
                 .vetId(estimate.getVetId())
@@ -66,6 +68,7 @@ public class CareEstimateJpaEntity {
     public CareEstimate toModel() {
         return CareEstimate.builder()
                 .estimateId(estimateId)
+                .parentId(parentId)
                 .userId(userId)
                 .petId(petId)
                 .vetId(vetId)

@@ -1,5 +1,6 @@
 package ddog.user.presentation.estimate.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.estimate.Proposal;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class CareEstimateDetail {
     private Proposal proposal;
     private String introduction;
     private String address;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime reservedDate;
     private String diagnosis;
     private String cause;
