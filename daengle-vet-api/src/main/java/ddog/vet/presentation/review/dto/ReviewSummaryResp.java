@@ -15,4 +15,5 @@ public class ReviewSummaryResp {
     private String revieweeName;
     private double starRating;
     private String content;
+    private List<String> imageUrlList;
 }

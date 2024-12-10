@@ -1,4 +1,4 @@
-package ddog.groomer.presentation.review.dto;
+package ddog.user.presentation.review.dto.request;
 
 import ddog.domain.review.enums.GroomingKeywordReview;
 import lombok.Builder;
@@ -6,14 +6,12 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 @Builder
-public class ReviewSummaryResp {
-    private Long groomingReviewId;
-    private Long groomerId;
+@Getter
+public class PostGroomingReviewInfo {
+    private Long reservationId;
+    private Long starRating;
     private List<GroomingKeywordReview> groomingKeywordReviewList;
-    private String revieweeName;
-    private double starRating;
     private String content;
     private List<String> imageUrlList;
 }

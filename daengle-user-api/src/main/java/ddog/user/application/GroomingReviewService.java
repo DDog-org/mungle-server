@@ -3,8 +3,8 @@ package ddog.user.application;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
-import ddog.user.presentation.review.dto.ModifyGroomingReviewInfo;
-import ddog.user.presentation.review.dto.PostGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.review.port.GroomingReviewPersist;
@@ -17,9 +17,10 @@ import ddog.user.application.exception.ReviewException;
 import ddog.user.application.exception.ReviewExceptionType;
 import ddog.domain.user.port.UserPersist;
 import ddog.user.application.mapper.GroomingReviewMapper;
-import ddog.user.presentation.review.dto.GroomingReviewDetailResp;
-import ddog.user.presentation.review.dto.GroomingReviewSummaryResp;
-import ddog.user.presentation.review.dto.ReviewResp;
+import ddog.user.presentation.review.dto.response.GroomingReviewDetailResp;
+import ddog.user.presentation.review.dto.response.GroomingReviewListResp;
+import ddog.user.presentation.review.dto.response.GroomingReviewSummaryResp;
+import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,8 +56,8 @@ public class GroomingReviewService {
                 .build();
     }
 
-    public ReviewResp modifyReview(Long reviewId, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
+    public ReviewResp updateReview(Long reviewId, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         validateModifyGroomingReviewInfoDataFormat(modifyGroomingReviewInfo);
@@ -74,7 +75,7 @@ public class GroomingReviewService {
     }
 
     public GroomingReviewDetailResp findReview(Long reviewId) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         return GroomingReviewDetailResp.builder()
@@ -90,7 +91,7 @@ public class GroomingReviewService {
     }
 
     public ReviewResp deleteReview(Long reviewId) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         groomingReviewPersist.delete(savedGroomingReview);
@@ -104,43 +105,24 @@ public class GroomingReviewService {
                 .build();
     }
 
-    public List<GroomingReviewSummaryResp> findMyReviewList(Long accountId, int page, int size) {
+    public GroomingReviewListResp findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
+        Page<GroomingReview> groomingReviews = groomingReviewPersist.findByReviewerId(savedUser.getAccountId(), pageable);
 
-        Page<GroomingReview> groomingReviews = groomingReviewPersist.findByReviewerId(savedUser.getUserId(), pageable);
-
-        return groomingReviews.stream().map(groomingReview ->
-                GroomingReviewSummaryResp.builder()
-                        .groomingReviewId(groomingReview.getGroomingReviewId())
-                        .groomerId(groomingReview.getGroomerId())
-                        .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
-                        .revieweeName(groomingReview.getRevieweeName())
-                        .starRating(groomingReview.getStarRating())
-                        .content(groomingReview.getContent())
-                        .build()
-        ).toList();
+        return mappingToGroomingReviewListResp(groomingReviews);
     }
 
-    public List<GroomingReviewSummaryResp> findGroomerReviewList(Long groomerId, int page, int size) {
+    public GroomingReviewListResp findGroomerReviewList(Long groomerId, int page, int size) {
         Groomer savedGroomer = groomerPersist.findByAccountId(groomerId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);
         Page<GroomingReview> groomingReviews = groomingReviewPersist.findByGroomerId(savedGroomer.getGroomerId(), pageable);
 
-        return groomingReviews.stream().map(groomingReview ->
-                GroomingReviewSummaryResp.builder()
-                        .groomingReviewId(groomingReview.getGroomingReviewId())
-                        .groomerId(groomingReview.getGroomerId())
-                        .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
-                        .revieweeName(groomingReview.getRevieweeName())
-                        .starRating(groomingReview.getStarRating())
-                        .content(groomingReview.getContent())
-                        .build()
-        ).toList();
+        return mappingToGroomingReviewListResp(groomingReviews);
     }
 
     private void validatePostGroomingReviewInfoDataFormat(PostGroomingReviewInfo postGroomingReviewInfo) {
@@ -155,5 +137,24 @@ public class GroomingReviewService {
         GroomingReview.validateGroomingKeywordReviewList(modifyGroomingReviewInfo.getGroomingKeywordReviewList());
         GroomingReview.validateContent(modifyGroomingReviewInfo.getContent());
         GroomingReview.validateImageUrlList(modifyGroomingReviewInfo.getImageUrlList());
+    }
+
+    private GroomingReviewListResp mappingToGroomingReviewListResp(Page<GroomingReview> groomingReviews) {
+        List<GroomingReviewSummaryResp> groomingReviewList = groomingReviews.stream().map(groomingReview ->
+                GroomingReviewSummaryResp.builder()
+                        .groomingReviewId(groomingReview.getGroomingReviewId())
+                        .groomerId(groomingReview.getGroomerId())
+                        .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
+                        .revieweeName(groomingReview.getRevieweeName())
+                        .starRating(groomingReview.getStarRating())
+                        .content(groomingReview.getContent())
+                        .imageUrlList(groomingReview.getImageUrlList())
+                        .build()
+        ).toList();
+
+        return GroomingReviewListResp.builder()
+                .reviewCount(groomingReviews.getTotalElements())
+                .reviewList(groomingReviewList)
+                .build();
     }
 }

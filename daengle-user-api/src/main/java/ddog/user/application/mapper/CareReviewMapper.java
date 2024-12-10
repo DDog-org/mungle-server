@@ -2,8 +2,8 @@ package ddog.user.application.mapper;
 
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
-import ddog.user.presentation.review.dto.ModifyCareReviewInfo;
-import ddog.user.presentation.review.dto.PostCareReviewInfo;
+import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 
 import java.time.LocalDateTime;
 
