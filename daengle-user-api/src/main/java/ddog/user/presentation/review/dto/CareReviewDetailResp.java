@@ -8,11 +8,12 @@ import java.util.List;
 
 @Builder
 @Getter
-public class CareReviewDetaliResp {
+public class CareReviewDetailResp {
     private Long careReviewId;
     private Long vetId;
     private List<CareKeywordReview> careKeywordReviewList;
     private String revieweeName;
+    private String shopName;
     private double starRating;
     private String content;
     private List<String> imageUrlList;

@@ -5,7 +5,7 @@ import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.domain.review.dto.ModifyCareReviewInfo;
 import ddog.domain.review.dto.PostCareReviewInfo;
 import ddog.user.application.CareReviewService;
-import ddog.user.presentation.review.dto.CareReviewDetaliResp;
+import ddog.user.presentation.review.dto.CareReviewDetailResp;
 import ddog.user.presentation.review.dto.ReviewResp;
 import ddog.user.presentation.review.dto.CareReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,8 @@ public class CareReviewController {
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 
-    @GetMapping("/review/care/{reviewId}")
-    public CommonResponseEntity<CareReviewDetaliResp> getReview(@PathVariable Long reviewId) {
+    @GetMapping("/care/review/{reviewId}")
+    public CommonResponseEntity<CareReviewDetailResp> getReview(@PathVariable Long reviewId) {
         return success(careReviewService.getReview(reviewId));
     }
 

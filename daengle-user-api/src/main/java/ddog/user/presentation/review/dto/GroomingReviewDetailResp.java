@@ -13,6 +13,7 @@ public class GroomingReviewDetailResp {
     private Long groomerId;
     private List<GroomingKeywordReview> groomingKeywordReviewList;
     private String revieweeName;
+    private String shopName;
     private double starRating;
     private String content;
     private List<String> imageUrlList;
