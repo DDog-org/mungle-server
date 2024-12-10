@@ -17,7 +17,7 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public ReservationSummary getReservationSummary(Long reservationId) {
-        Reservation reservation = reservationPersist.findBy(reservationId).orElseThrow(()
+        Reservation reservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
         return ReservationSummary.builder()

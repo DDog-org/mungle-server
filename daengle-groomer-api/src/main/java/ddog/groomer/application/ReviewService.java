@@ -24,7 +24,7 @@ public class ReviewService {
     private final GroomerPersist groomerPersist;
 
     public List<ReviewSummaryResp> findReviewList(Long accountId, int page, int size) {
-        Groomer savedGroomer = groomerPersist.findBy(accountId)
+        Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);

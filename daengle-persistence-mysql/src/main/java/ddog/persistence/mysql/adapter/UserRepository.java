@@ -27,11 +27,6 @@ public class UserRepository implements UserPersist {
     }
 
     @Override
-    public Optional<User> findBy(Long accountId ) {
-        return userJpaRepository.findByAccountId(accountId).map(UserJpaEntity::toModel);
-    }
-
-    @Override
     public Boolean hasNickname(String nickname) {
         return userJpaRepository.existsByNickname(nickname);
     }

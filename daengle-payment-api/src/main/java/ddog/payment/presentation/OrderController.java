@@ -2,7 +2,7 @@ package ddog.payment.presentation;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.payment.dto.PostOrderInfo;
+import ddog.payment.presentation.dto.PostOrderInfo;
 import ddog.payment.application.OrderService;
 import ddog.payment.application.dto.response.PostOrderResp;
 

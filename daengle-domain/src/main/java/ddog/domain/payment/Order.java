@@ -1,6 +1,5 @@
 package ddog.domain.payment;
 
-import ddog.domain.payment.dto.PostOrderInfo;
 import ddog.domain.payment.enums.ServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,25 +61,5 @@ public class Order {
         if (price == null || price <= 0) {
             throw new IllegalArgumentException("Price must be a positive number.");
         }
-    }
-
-    public static Order createBy(Long accountId, PostOrderInfo postOrderInfo, Payment payment) {
-        return Order.builder()
-                .serviceType(postOrderInfo.getServiceType())
-                .price(postOrderInfo.getPrice())
-                .estimateId(postOrderInfo.getEstimateId())
-                .orderUid(String.valueOf(UUID.randomUUID()))
-                .accountId(accountId)
-                .customerName(postOrderInfo.getCustomerName())
-                .recipientId(postOrderInfo.getRecipientId())
-                .recipientName(postOrderInfo.getRecipientName())
-                .shopName(postOrderInfo.getShopName())
-                .orderDate(LocalDateTime.now())
-                .schedule(postOrderInfo.getSchedule())
-                .visitorName(postOrderInfo.getVisitorName())
-                .customerPhoneNumber(postOrderInfo.getCustomerPhoneNumber())
-                .visitorPhoneNumber(postOrderInfo.getVisitorPhoneNumber())
-                .payment(payment)
-                .build();
     }
 }

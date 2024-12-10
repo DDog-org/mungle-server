@@ -3,8 +3,8 @@ package ddog.user.application;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
-import ddog.domain.review.dto.ModifyGroomingReviewInfo;
-import ddog.domain.review.dto.PostGroomingReviewInfo;
+import ddog.user.presentation.review.dto.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.PostGroomingReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.review.port.GroomingReviewPersist;
@@ -16,6 +16,7 @@ import ddog.user.application.exception.estimate.ReservationExceptionType;
 import ddog.user.application.exception.ReviewException;
 import ddog.user.application.exception.ReviewExceptionType;
 import ddog.domain.user.port.UserPersist;
+import ddog.user.application.mapper.GroomingReviewMapper;
 import ddog.user.presentation.review.dto.GroomingReviewDetailResp;
 import ddog.user.presentation.review.dto.GroomingReviewSummaryResp;
 import ddog.user.presentation.review.dto.ReviewResp;
@@ -37,12 +38,12 @@ public class GroomingReviewService {
     private final UserPersist userPersist;
 
     public ReviewResp postReview(PostGroomingReviewInfo postGroomingReviewInfo) {
-        Reservation reservation = reservationPersist.findBy(postGroomingReviewInfo.getReservationId()).orElseThrow(()
+        Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 
-        GroomingReview groomingReviewToSave = GroomingReview.createBy(reservation, postGroomingReviewInfo);
+        GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
         GroomingReview SavedGroomingReview = groomingReviewPersist.save(groomingReviewToSave);
 
         //TODO 댕글미터 계산해서 영속
@@ -55,12 +56,12 @@ public class GroomingReviewService {
     }
 
     public ReviewResp modifyReview(Long reviewId, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findBy(reviewId)
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         validateModifyGroomingReviewInfoDataFormat(modifyGroomingReviewInfo);
 
-        GroomingReview modifiedReview = GroomingReview.modifyBy(savedGroomingReview, modifyGroomingReviewInfo);
+        GroomingReview modifiedReview = GroomingReviewMapper.modifyBy(savedGroomingReview, modifyGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
@@ -72,8 +73,8 @@ public class GroomingReviewService {
                 .build();
     }
 
-    public GroomingReviewDetailResp getReview(Long reviewId) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findBy(reviewId)
+    public GroomingReviewDetailResp findReview(Long reviewId) {
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         return GroomingReviewDetailResp.builder()
@@ -89,7 +90,7 @@ public class GroomingReviewService {
     }
 
     public ReviewResp deleteReview(Long reviewId) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findBy(reviewId)
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByGroomingId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         groomingReviewPersist.delete(savedGroomingReview);
@@ -104,7 +105,7 @@ public class GroomingReviewService {
     }
 
     public List<GroomingReviewSummaryResp> findMyReviewList(Long accountId, int page, int size) {
-        User savedUser = userPersist.findBy(accountId)
+        User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
@@ -124,7 +125,7 @@ public class GroomingReviewService {
     }
 
     public List<GroomingReviewSummaryResp> findGroomerReviewList(Long groomerId, int page, int size) {
-        Groomer savedGroomer = groomerPersist.findBy(groomerId)
+        Groomer savedGroomer = groomerPersist.findByAccountId(groomerId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);

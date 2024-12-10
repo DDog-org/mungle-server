@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface GroomingReviewPersist {
-    Optional<GroomingReview> findBy(Long groomingId);
+    Optional<GroomingReview> findByGroomingId(Long groomingId);
     GroomingReview save(GroomingReview groomingReview);
     void delete(GroomingReview groomingReview);
     Page<GroomingReview> findByReviewerId(Long userId, Pageable pageable);
