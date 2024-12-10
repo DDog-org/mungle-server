@@ -24,6 +24,8 @@ public class CareReviewJpaEntity {
     private Long reservationId;
     private Long reviewerId;
     private Long revieweeId;
+    private String revieweeName;
+    private String shopName;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;
@@ -39,21 +41,6 @@ public class CareReviewJpaEntity {
     @Column(name = "keyword_list")
     private List<CareKeywordReview> careKeywordReviewList;
 
-    public CareReview toModel() {
-        return CareReview.builder()
-                .careReviewId(careReviewId)
-                .vetId(vetId)
-                .reservationId(reservationId)
-                .reviewerId(reviewerId)
-                .vetId(revieweeId)
-                .starRating(starRating)
-                .content(content)
-                .createTime(createTime)
-                .imageUrlList(imageUrlList)
-                .careKeywordReviewList(careKeywordReviewList)
-                .build();
-    }
-
     public static CareReviewJpaEntity from (CareReview careReview) {
         return CareReviewJpaEntity.builder()
                 .careReviewId(careReview.getCareReviewId())
@@ -61,11 +48,29 @@ public class CareReviewJpaEntity {
                 .reservationId(careReview.getReservationId())
                 .reviewerId(careReview.getReviewerId())
                 .revieweeId(careReview.getVetId())
+                .revieweeName(careReview.getRevieweeName())
+                .shopName(careReview.getShopName())
                 .starRating(careReview.getStarRating())
                 .content(careReview.getContent())
                 .createTime(careReview.getCreateTime())
                 .imageUrlList(careReview.getImageUrlList())
                 .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                .build();
+    }
+
+    public CareReview toModel() {
+        return CareReview.builder()
+                .careReviewId(careReviewId)
+                .vetId(vetId)
+                .reservationId(reservationId)
+                .reviewerId(reviewerId)
+                .revieweeName(revieweeName)
+                .shopName(shopName)
+                .starRating(starRating)
+                .content(content)
+                .createTime(createTime)
+                .imageUrlList(imageUrlList)
+                .careKeywordReviewList(careKeywordReviewList)
                 .build();
     }
 }

@@ -15,7 +15,7 @@ import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
-import ddog.user.presentation.review.dto.CareReviewDetaliResp;
+import ddog.user.presentation.review.dto.CareReviewDetailResp;
 import ddog.user.presentation.review.dto.ReviewResp;
 import ddog.user.presentation.review.dto.CareReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
@@ -71,15 +71,16 @@ public class CareReviewService {
                 .build();
     }
 
-    public CareReviewDetaliResp getReview(Long reviewId) {
+    public CareReviewDetailResp getReview(Long reviewId) {
         CareReview savedCareReview = careReviewPersist.findBy(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
-        return CareReviewDetaliResp.builder()
+        return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
                 .vetId(savedCareReview.getVetId())
                 .careKeywordReviewList(savedCareReview.getCareKeywordReviewList())
                 .revieweeName(savedCareReview.getRevieweeName())
+                .shopName(savedCareReview.getShopName())
                 .starRating(savedCareReview.getStarRating())
                 .content(savedCareReview.getContent())
                 .imageUrlList(savedCareReview.getImageUrlList())

@@ -17,6 +17,7 @@ public abstract class Review {
     private Long reservationId;
     private Long reviewerId;
     private String revieweeName;
+    private String shopName;
     private Long starRating;
     private String content;
     private LocalDateTime createTime;

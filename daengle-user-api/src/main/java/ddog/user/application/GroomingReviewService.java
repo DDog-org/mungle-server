@@ -73,17 +73,18 @@ public class GroomingReviewService {
     }
 
     public GroomingReviewDetailResp getReview(Long reviewId) {
-        GroomingReview savedCareReview = groomingReviewPersist.findBy(reviewId)
+        GroomingReview savedGroomingReview = groomingReviewPersist.findBy(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         return GroomingReviewDetailResp.builder()
-                .groomingReviewId(savedCareReview.getGroomingReviewId())
-                .groomerId(savedCareReview.getGroomerId())
-                .groomingKeywordReviewList(savedCareReview.getGroomingKeywordReviewList())
-                .revieweeName(savedCareReview.getRevieweeName())
-                .starRating(savedCareReview.getStarRating())
-                .content(savedCareReview.getContent())
-                .imageUrlList(savedCareReview.getImageUrlList())
+                .groomingReviewId(savedGroomingReview.getGroomingReviewId())
+                .groomerId(savedGroomingReview.getGroomerId())
+                .groomingKeywordReviewList(savedGroomingReview.getGroomingKeywordReviewList())
+                .revieweeName(savedGroomingReview.getRevieweeName())
+                .shopName(savedGroomingReview.getShopName())
+                .starRating(savedGroomingReview.getStarRating())
+                .content(savedGroomingReview.getContent())
+                .imageUrlList(savedGroomingReview.getImageUrlList())
                 .build();
     }
 
