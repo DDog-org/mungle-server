@@ -27,7 +27,7 @@ public class GroomingReviewController {
         return success(groomingReviewService.postReview(postGroomingReviewInfo));
     }
 
-    @GetMapping("/review/grooming/{reviewId}")
+    @GetMapping("/grooming/review/{reviewId}")
     public CommonResponseEntity<GroomingReviewDetailResp> getReview(@PathVariable Long reviewId) {
         return success(groomingReviewService.getReview(reviewId));
     }

@@ -27,7 +27,7 @@ public class CareReviewController {
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 
-    @GetMapping("/review/care/{reviewId}")
+    @GetMapping("/care/review/{reviewId}")
     public CommonResponseEntity<CareReviewDetailResp> getReview(@PathVariable Long reviewId) {
         return success(careReviewService.getReview(reviewId));
     }
