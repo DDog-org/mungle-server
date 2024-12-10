@@ -1,7 +1,7 @@
 package ddog.user.application;
 
 import ddog.domain.payment.Reservation;
-import ddog.persistence.mysql.port.ReservationPersist;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
 import ddog.user.presentation.reservation.dto.ReservationSummary;

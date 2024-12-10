@@ -4,7 +4,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.payment.Payment;
 import ddog.persistence.mysql.jpa.entity.PaymentJpaEntity;
 import ddog.persistence.mysql.jpa.repository.PaymentJpaRepository;
-import ddog.persistence.mysql.port.PaymentPersist;
+import ddog.domain.payment.port.PaymentPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

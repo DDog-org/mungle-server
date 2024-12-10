@@ -3,7 +3,7 @@ package ddog.auth.config.jwt;
 import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.auth.exception.AuthException;
 import ddog.auth.exception.AuthExceptionType;
-import ddog.persistence.mysql.port.AccountPersist;
+import ddog.domain.account.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;

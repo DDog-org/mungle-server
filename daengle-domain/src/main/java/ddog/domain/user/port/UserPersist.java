@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.user.port;
 
 import ddog.domain.user.User;
 

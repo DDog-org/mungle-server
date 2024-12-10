@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.notification.Notification;
 import ddog.persistence.mysql.jpa.entity.NotificationJpaEntity;
 import ddog.persistence.mysql.jpa.repository.NotificationJpaRepository;
-import ddog.persistence.mysql.port.NotificationPersist;
+import ddog.domain.notification.port.NotificationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

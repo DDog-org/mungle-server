@@ -4,7 +4,7 @@ import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.persistence.mysql.jpa.entity.GroomingEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomingEstimateJpaRepository;
-import ddog.persistence.mysql.port.GroomingEstimatePersist;
+import ddog.domain.estimate.port.GroomingEstimatePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

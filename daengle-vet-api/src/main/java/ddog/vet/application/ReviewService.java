@@ -2,8 +2,8 @@ package ddog.vet.application;
 
 import ddog.domain.review.CareReview;
 import ddog.domain.vet.Vet;
-import ddog.persistence.mysql.port.CareReviewPersist;
-import ddog.persistence.mysql.port.VetPersist;
+import ddog.domain.review.port.CareReviewPersist;
+import ddog.domain.vet.port.VetPersist;
 import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.presentation.review.dto.ReviewSummaryResp;

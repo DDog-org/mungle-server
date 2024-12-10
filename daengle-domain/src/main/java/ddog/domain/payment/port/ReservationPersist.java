@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.payment.port;
 
 import ddog.domain.payment.Reservation;
 

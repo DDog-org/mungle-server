@@ -2,7 +2,7 @@ package ddog.chat.application;
 
 import ddog.domain.chat.ChatMessage;
 import ddog.persistence.dynamo.port.ChatMessagePersist;
-import ddog.persistence.mysql.port.ChatRoomPersist;
+import ddog.domain.chat.port.ChatRoomPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.groomer.Groomer;
 import ddog.persistence.mysql.jpa.entity.GroomerJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomerJpaRepository;
-import ddog.persistence.mysql.port.GroomerPersist;
+import ddog.domain.groomer.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

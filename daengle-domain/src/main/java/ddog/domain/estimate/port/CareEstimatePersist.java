@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.estimate.port;
 
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;

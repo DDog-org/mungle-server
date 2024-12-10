@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.notification.port;
 
 
 import ddog.domain.notification.Notification;

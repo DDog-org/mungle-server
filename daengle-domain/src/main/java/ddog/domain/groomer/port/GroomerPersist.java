@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.groomer.port;
 
 import ddog.domain.groomer.Groomer;
 

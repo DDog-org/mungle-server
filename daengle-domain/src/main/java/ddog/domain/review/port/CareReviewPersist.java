@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.review.port;
 
 import ddog.domain.review.CareReview;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.account.port;
 
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
