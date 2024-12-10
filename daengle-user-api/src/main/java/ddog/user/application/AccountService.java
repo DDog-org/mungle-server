@@ -41,6 +41,8 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public ValidResponse.Nickname hasNickname(String nickname) {
+        User.validateNickname(nickname);
+
         return ValidResponse.Nickname.builder()
                 .isAvailable(!userPersist.hasNickname(nickname))
                 .build();

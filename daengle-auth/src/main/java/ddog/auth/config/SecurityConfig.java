@@ -37,7 +37,10 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+                        config.setAllowedOrigins(Arrays.asList(
+                                "http://localhost:3000", "https://dev-user.daengle.com", "https://dev-groomer.daengle.com", "https://dev-vet.daengle.com",
+                                "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com"
+                        ));
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Authorization-refresh", "X-Api-Key"));
