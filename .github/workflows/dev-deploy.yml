@@ -22,8 +22,7 @@ jobs:
           - name: daengle-groomer
             path: daengle-groomer-api
             ssh_host_var: SSH_GROOMER_HOST
-      max-parallel: 1  # 병렬 실행 수를 1로 제한하여 순차적으로 실행
-
+      max-parallel: 1
 
     env:
       SSH_USER: ${{ secrets.SSH_USER }}
@@ -118,6 +117,16 @@ jobs:
           MODULE=${{ matrix.module.name }}
           IMAGE_TAG=${IMAGE_TAG}
           CONTAINER_NAME="${{matrix.module.name}}-container"
+    
+          echo "=== Cleaning up old Docker images ==="
+          # 최신 6개 이미지를 제외한 나머지 삭제
+          IMAGE_COUNT=$(docker images -q | wc -l)
+          if [ "$IMAGE_COUNT" -gt 6 ]; then
+          echo "Deleting old images, keeping the latest 6..."
+          docker images -q | tail -n +7 | xargs -r docker rmi -f
+          else
+          echo "No old images to delete. Current image count: $IMAGE_COUNT"
+          fi
           
           # Pull latest image
           docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest || { echo "Docker pull failed"; exit 1; }
