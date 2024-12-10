@@ -3,15 +3,13 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.review.CareReview;
 import ddog.persistence.mysql.jpa.entity.CareReviewJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareReviewJpaRepository;
-import ddog.persistence.mysql.port.CareReviewPersist;
+import ddog.domain.review.port.CareReviewPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

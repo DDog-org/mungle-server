@@ -11,12 +11,10 @@ repositories {
 
 }
 
-
 dependencies {
     implementation(project(':daengle-domain'))
+    //implementation(project(':daengle-persistence-dynamodb')) TODO 이 의존성 걷어내야 함
     implementation(project(':daengle-auth'))
-    implementation(project(':daengle-persistence-mysql'))
-    implementation(project(':daengle-persistence-dynamodb'))
     implementation(project(':daengle-notification'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -29,7 +27,6 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.20.56')
     implementation 'software.amazon.awssdk:dynamodb'
     implementation 'software.amazon.awssdk:dynamodb-enhanced'
-
 }
 
 test {

@@ -1,6 +1,5 @@
-package ddog.persistence.mysql.port;
+package ddog.domain.review.port;
 
-import ddog.domain.review.CareReview;
 import ddog.domain.review.GroomingReview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

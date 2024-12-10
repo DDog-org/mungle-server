@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.pet.Pet;
 import ddog.persistence.mysql.jpa.entity.PetJpaEntity;
 import ddog.persistence.mysql.jpa.repository.PetJpaRepository;
-import ddog.persistence.mysql.port.PetPersist;
+import ddog.domain.pet.port.PetPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

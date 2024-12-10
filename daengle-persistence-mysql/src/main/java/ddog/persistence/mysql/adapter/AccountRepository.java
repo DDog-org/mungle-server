@@ -4,7 +4,7 @@ import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.persistence.mysql.jpa.entity.AccountJpaEntity;
 import ddog.persistence.mysql.jpa.repository.AccountJpaRepository;
-import ddog.persistence.mysql.port.AccountPersist;
+import ddog.domain.account.port.AccountPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
