@@ -8,5 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface GroomingReviewJpaRepository extends JpaRepository<GroomingReviewJpaEntity, Long> {
     Page<GroomingReviewJpaEntity> findByReviewerId(Long reviewerId, Pageable pageable);
     Page<GroomingReviewJpaEntity> findByGroomerId(Long groomerId, Pageable pageable);
-
 }

@@ -2,8 +2,8 @@ package ddog.user.application.mapper;
 
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
-import ddog.user.presentation.review.dto.ModifyGroomingReviewInfo;
-import ddog.user.presentation.review.dto.PostGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 
 import java.time.LocalDateTime;
 

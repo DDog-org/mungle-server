@@ -1,4 +1,4 @@
-package ddog.user.presentation.review.dto;
+package ddog.user.presentation.review.dto.request;
 
 import ddog.domain.review.enums.CareKeywordReview;
 import lombok.Builder;
@@ -8,8 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class PostCareReviewInfo {
-    private Long reservationId;
+public class ModifyCareReviewInfo {
     private Long starRating;
     private List<CareKeywordReview> careKeywordReviewList;
     private String content;

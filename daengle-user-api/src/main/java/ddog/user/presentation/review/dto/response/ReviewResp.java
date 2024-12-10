@@ -1,4 +1,4 @@
-package ddog.user.presentation.review.dto;
+package ddog.user.presentation.review.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package ddog.user.presentation.review.dto;
+package ddog.user.presentation.review.dto.response;
 
 import ddog.domain.review.enums.GroomingKeywordReview;
 import lombok.Builder;
@@ -15,4 +15,5 @@ public class GroomingReviewSummaryResp {
     private String revieweeName;
     private double starRating;
     private String content;
+    private List<String> imageUrlList;
 }

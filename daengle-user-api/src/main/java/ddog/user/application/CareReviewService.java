@@ -3,8 +3,9 @@ package ddog.user.application;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
 import ddog.user.application.mapper.CareReviewMapper;
-import ddog.user.presentation.review.dto.ModifyCareReviewInfo;
-import ddog.user.presentation.review.dto.PostCareReviewInfo;
+import ddog.user.presentation.review.dto.response.CareReviewListResp;
+import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
 import ddog.domain.review.port.CareReviewPersist;
@@ -16,10 +17,11 @@ import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
-import ddog.user.presentation.review.dto.CareReviewDetailResp;
-import ddog.user.presentation.review.dto.ReviewResp;
-import ddog.user.presentation.review.dto.CareReviewSummaryResp;
+import ddog.user.presentation.review.dto.response.CareReviewDetailResp;
+import ddog.user.presentation.review.dto.response.ReviewResp;
+import ddog.user.presentation.review.dto.response.CareReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CareReviewService {
@@ -54,7 +57,7 @@ public class CareReviewService {
                 .build();
     }
 
-    public ReviewResp modifyReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
+    public ReviewResp updateReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
@@ -101,43 +104,24 @@ public class CareReviewService {
                 .build();
     }
 
-    public List<CareReviewSummaryResp> findMyReviewList(Long accountId, int page, int size) {
+    public CareReviewListResp findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
+        Page<CareReview> careReviews = careReviewPersist.findByReviewerId(savedUser.getAccountId(), pageable);
 
-        Page<CareReview> careReviews = careReviewPersist.findByReviewerId(savedUser.getUserId(), pageable);
-
-        return careReviews.stream().map(careReview ->
-                CareReviewSummaryResp.builder()
-                        .careReviewId(careReview.getCareReviewId())
-                        .vetId(careReview.getVetId())
-                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
-                        .revieweeName(careReview.getRevieweeName())
-                        .starRating(careReview.getStarRating())
-                        .content(careReview.getContent())
-                        .build()
-        ).toList();
+        return mappingToCareReviewListResp(careReviews);
     }
 
-    public List<CareReviewSummaryResp> findVetReviewList(Long vetId, int page, int size) {
-        Vet savedVet = vetPersist.findByAccountId(vetId)
+    public CareReviewListResp findVetReviewList(Long vetId, int page, int size) {
+        Vet savedVet = vetPersist.findByVetId(vetId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);
         Page<CareReview> careReviews = careReviewPersist.findByVetId(savedVet.getVetId(), pageable);
 
-        return careReviews.stream().map(careReview ->
-                CareReviewSummaryResp.builder()
-                        .careReviewId(careReview.getCareReviewId())
-                        .vetId(careReview.getVetId())
-                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
-                        .revieweeName(careReview.getRevieweeName())
-                        .starRating(careReview.getStarRating())
-                        .content(careReview.getContent())
-                        .build()
-        ).toList();
+        return mappingToCareReviewListResp(careReviews);
     }
 
     private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
@@ -152,5 +136,24 @@ public class CareReviewService {
         CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
         CareReview.validateContent(modifyCareReviewInfo.getContent());
         CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
+    }
+
+    private CareReviewListResp mappingToCareReviewListResp(Page<CareReview> careReviews) {
+        List<CareReviewSummaryResp> careReviewList = careReviews.stream().map(careReview ->
+                CareReviewSummaryResp.builder()
+                        .careReviewId(careReview.getCareReviewId())
+                        .vetId(careReview.getVetId())
+                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                        .revieweeName(careReview.getRevieweeName())
+                        .starRating(careReview.getStarRating())
+                        .content(careReview.getContent())
+                        .imageUrlList(careReview.getImageUrlList())
+                        .build()
+        ).toList();
+
+        return CareReviewListResp.builder()
+                .reviewCount(careReviews.getTotalElements())
+                .reviewList(careReviewList)
+                .build();
     }
 }
