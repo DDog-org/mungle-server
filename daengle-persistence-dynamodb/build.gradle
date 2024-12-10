@@ -9,9 +9,6 @@ jar {
 dependencies {
     implementation(project(':daengle-domain'))
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
     // dynamo
     implementation platform('software.amazon.awssdk:bom:2.20.85')
     implementation("software.amazon.awssdk:dynamodb")
