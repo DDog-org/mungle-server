@@ -16,14 +16,10 @@ repositories {
 dependencies {
     implementation(project(':daengle-domain'))
     implementation(project(':daengle-auth'))
-    implementation(project(':daengle-persistence-mysql'))
     implementation(project(':daengle-notification'))
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    implementation 'org.springframework:spring-tx'   //TODO 과연 아래 data jpa 로 의존해서 사용하는 @Transaction 과 작동 결과가 똑같은가?
-    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    implementation 'org.springframework:spring-tx'
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
     // IamPort //
