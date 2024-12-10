@@ -36,7 +36,7 @@ public class ClientConnector implements ClientConnect {
     }
 
     public void sendNotificationToUser(Long receiverId, String message) throws IOException {
-        if (ssemitters.containsKey(receiverId))  {
+        if (isUserConnected(receiverId))  {
             SseEmitter emitter = ssemitters.get(receiverId);
             emitter.send(message);
         }

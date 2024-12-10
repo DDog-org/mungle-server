@@ -2,7 +2,6 @@ package ddog.vet.presentation.notification;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.notification.Notification;
 import ddog.notification.application.NotificationService;
 import ddog.notification.application.dto.NotificationResp;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class NotificationController {
 
     @GetMapping("/all")
     public CommonResponseEntity<List<NotificationResp>> getAllNotifications(PayloadDto payloadDto) {
-        return success(notificationService.getAllNotificationsByUserId(payloadDto.getAccountId()));
+        return success(notificationService.findAllNotificationsBy(payloadDto.getAccountId()));
     }
 
     @DeleteMapping("/check")

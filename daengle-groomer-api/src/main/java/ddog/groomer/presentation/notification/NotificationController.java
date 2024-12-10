@@ -27,7 +27,7 @@ public class NotificationController {
 
     @GetMapping("/all")
     public CommonResponseEntity<List<NotificationResp>> getAllNotifications(PayloadDto payloadDto) {
-        return success(notificationService.getAllNotificationsByUserId(payloadDto.getAccountId()));
+        return success(notificationService.findAllNotificationsBy(payloadDto.getAccountId()));
     }
 
     @DeleteMapping("/check")
