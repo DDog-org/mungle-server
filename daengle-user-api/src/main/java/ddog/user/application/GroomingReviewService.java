@@ -16,7 +16,7 @@ import ddog.user.application.exception.estimate.ReservationExceptionType;
 import ddog.user.application.exception.ReviewException;
 import ddog.user.application.exception.ReviewExceptionType;
 import ddog.persistence.mysql.port.UserPersist;
-import ddog.user.application.exception.*;
+import ddog.user.presentation.review.dto.GroomingReviewDetailResp;
 import ddog.user.presentation.review.dto.GroomingReviewSummaryResp;
 import ddog.user.presentation.review.dto.ReviewResp;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +69,21 @@ public class GroomingReviewService {
                 .reviewId(updatedGroomingReview.getGroomingReviewId())
                 .reviewerId(updatedGroomingReview.getReviewerId())
                 .revieweeId(updatedGroomingReview.getGroomerId())
+                .build();
+    }
+
+    public GroomingReviewDetailResp getReview(Long reviewId) {
+        GroomingReview savedCareReview = groomingReviewPersist.findBy(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        return GroomingReviewDetailResp.builder()
+                .groomingReviewId(savedCareReview.getGroomingReviewId())
+                .groomerId(savedCareReview.getGroomerId())
+                .groomingKeywordReviewList(savedCareReview.getGroomingKeywordReviewList())
+                .revieweeName(savedCareReview.getRevieweeName())
+                .starRating(savedCareReview.getStarRating())
+                .content(savedCareReview.getContent())
+                .imageUrlList(savedCareReview.getImageUrlList())
                 .build();
     }
 
