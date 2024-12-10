@@ -1,6 +1,5 @@
 package ddog.domain.payment;
 
-import ddog.domain.payment.dto.PostOrderInfo;
 import ddog.domain.payment.enums.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,17 +24,6 @@ public class Payment {
     private String paymentUid;
 
     public static final String PAYMENT_SUCCESS_STATUS = "paid";
-
-    public static Payment createTemporaryHistoryBy(Long accountId, PostOrderInfo postOrderInfo) {
-        return Payment.builder()
-                .paymentId(null)
-                .payerId(accountId)
-                .price(postOrderInfo.getPrice())
-                .status(PaymentStatus.READY)
-                .paymentDate(LocalDateTime.now())
-                .paymentUid(null)
-                .build();
-    }
 
     //결제 완료 확인
     public boolean checkIncompleteBy(String paymentStatus) {

@@ -22,7 +22,7 @@ public class OrderRepository implements OrderPersist {
     }
 
     @Override
-    public Optional<Order> findBy(String orderUid) {
+    public Optional<Order> findByOrderUid(String orderUid) {
         return orderJpaRepository.findByOrderUid(orderUid).map(OrderJpaEntity::toModel);
     }
 

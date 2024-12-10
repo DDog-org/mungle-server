@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ReservationPersist {
     Reservation save(Reservation reservation);
-    Optional<Reservation> findBy(Long reservationId);
+    Optional<Reservation> findByReservationId(Long reservationId);
 }

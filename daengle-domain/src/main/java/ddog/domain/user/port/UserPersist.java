@@ -9,7 +9,5 @@ public interface UserPersist {
 
     Optional<User> findByAccountId(Long accountId);
 
-    Optional<User> findBy(Long id);
-
     Boolean hasNickname(String nickname);
 }

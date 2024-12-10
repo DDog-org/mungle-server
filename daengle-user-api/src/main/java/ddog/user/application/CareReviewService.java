@@ -2,8 +2,9 @@ package ddog.user.application;
 
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
-import ddog.domain.review.dto.ModifyCareReviewInfo;
-import ddog.domain.review.dto.PostCareReviewInfo;
+import ddog.user.application.mapper.CareReviewMapper;
+import ddog.user.presentation.review.dto.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.PostCareReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
 import ddog.domain.review.port.CareReviewPersist;
@@ -36,12 +37,12 @@ public class CareReviewService {
     private final UserPersist userPersist;
 
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
-        Reservation reservation = reservationPersist.findBy(postCareReviewInfo.getReservationId()).orElseThrow(()
+        Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
-        CareReview careReviewToSave = CareReview.createBy(reservation, postCareReviewInfo);
+        CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
         //TODO 댕글미터 계산해서 영속
@@ -54,12 +55,12 @@ public class CareReviewService {
     }
 
     public ReviewResp modifyReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
-        CareReview savedCareReview = careReviewPersist.findBy(reviewId)
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         validateModifyCareReviewInfoDataFormat(modifyCareReviewInfo);
 
-        CareReview modifiedReview = CareReview.modifyBy(savedCareReview, modifyCareReviewInfo);
+        CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, modifyCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
@@ -71,8 +72,8 @@ public class CareReviewService {
                 .build();
     }
 
-    public CareReviewDetailResp getReview(Long reviewId) {
-        CareReview savedCareReview = careReviewPersist.findBy(reviewId)
+    public CareReviewDetailResp findReview(Long reviewId) {
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         return CareReviewDetailResp.builder()
@@ -88,7 +89,7 @@ public class CareReviewService {
     }
 
     public ReviewResp deleteReview(Long reviewId) {
-        CareReview savedCareReview = careReviewPersist.findBy(reviewId)
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
         careReviewPersist.delete(savedCareReview);
@@ -101,7 +102,7 @@ public class CareReviewService {
     }
 
     public List<CareReviewSummaryResp> findMyReviewList(Long accountId, int page, int size) {
-        User savedUser = userPersist.findBy(accountId)
+        User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
@@ -121,7 +122,7 @@ public class CareReviewService {
     }
 
     public List<CareReviewSummaryResp> findVetReviewList(Long vetId, int page, int size) {
-        Vet savedVet = vetPersist.findBy(vetId)
+        Vet savedVet = vetPersist.findByAccountId(vetId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);

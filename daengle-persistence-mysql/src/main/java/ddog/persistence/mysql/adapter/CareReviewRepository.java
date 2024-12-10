@@ -18,7 +18,7 @@ public class CareReviewRepository implements CareReviewPersist {
     private final CareReviewJpaRepository careReviewJpaRepository;
 
     @Override
-    public Optional<CareReview> findBy(Long careReviewId) {
+    public Optional<CareReview> findByReviewId(Long careReviewId) {
         return careReviewJpaRepository.findById(careReviewId).map(CareReviewJpaEntity::toModel);
     }
 

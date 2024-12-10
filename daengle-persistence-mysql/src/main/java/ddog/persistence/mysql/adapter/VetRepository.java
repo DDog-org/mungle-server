@@ -25,9 +25,4 @@ public class VetRepository implements VetPersist {
     public void save(Vet vet) {
         vetJpaRepository.save(VetJpaEntity.from(vet));
     }
-
-    @Override
-    public Optional<Vet> findBy(Long accountId) {
-        return vetJpaRepository.findByAccountId(accountId).map(VetJpaEntity::toModel);
-    }
 }

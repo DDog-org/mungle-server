@@ -6,7 +6,9 @@ import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
-import ddog.domain.payment.dto.PostOrderInfo;
+import ddog.payment.application.mapper.OrderMapper;
+import ddog.payment.application.mapper.PaymentMapper;
+import ddog.payment.presentation.dto.PostOrderInfo;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
@@ -35,10 +37,10 @@ public class OrderService {
         validateEstimate(postOrderInfo.getServiceType(), postOrderInfo.getEstimateId());
         validatePostOrderInfoDataFormat(postOrderInfo);
 
-        Payment paymentToSave = Payment.createTemporaryHistoryBy(accountId, postOrderInfo);
+        Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(accountId, postOrderInfo);
         Payment SavedPayment = paymentPersist.save(paymentToSave);
 
-        Order orderToSave = Order.createBy(accountId, postOrderInfo, SavedPayment);
+        Order orderToSave = OrderMapper.createBy(accountId, postOrderInfo, SavedPayment);
         Order savedOrder = orderPersist.save(orderToSave);
 
         return PostOrderResp.builder()

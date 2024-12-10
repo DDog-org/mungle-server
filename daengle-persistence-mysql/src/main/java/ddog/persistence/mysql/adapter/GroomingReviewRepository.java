@@ -18,7 +18,7 @@ public class GroomingReviewRepository implements GroomingReviewPersist {
     private final GroomingReviewJpaRepository groomingReviewJpaRepository;
 
     @Override
-    public Optional<GroomingReview> findBy(Long groomingId) {
+    public Optional<GroomingReview> findByGroomingId(Long groomingId) {
         return groomingReviewJpaRepository.findById(groomingId).map(GroomingReviewJpaEntity::toModel);
     }
 

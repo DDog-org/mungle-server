@@ -23,7 +23,7 @@ public class ReviewService {
     private final VetPersist vetPersist;
 
     public List<ReviewSummaryResp> findReviewList(Long accountId, int page, int size) {
-        Vet savedVet = vetPersist.findBy(accountId)
+        Vet savedVet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);

@@ -1,4 +1,4 @@
-package ddog.domain.review.dto;
+package ddog.user.presentation.review.dto;
 
 import ddog.domain.review.enums.CareKeywordReview;
 import lombok.Builder;

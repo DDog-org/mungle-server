@@ -22,7 +22,7 @@ public class ReservationRepository implements ReservationPersist {
     }
 
     @Override
-    public Optional<Reservation> findBy(Long reservationId) {
+    public Optional<Reservation> findByReservationId(Long reservationId) {
         return reservationJpaRepository.findByReservationId(reservationId).map(ReservationJpaEntity::toModel);
     }
 }

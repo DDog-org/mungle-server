@@ -8,5 +8,4 @@ public interface VetPersist {
     Optional<Vet> findByAccountId(Long accountId);
 
     void save(Vet vet);
-    Optional<Vet> findBy(Long id);
 }

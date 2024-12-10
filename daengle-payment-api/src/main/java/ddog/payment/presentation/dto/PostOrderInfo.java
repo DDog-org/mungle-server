@@ -1,4 +1,4 @@
-package ddog.domain.payment.dto;
+package ddog.payment.presentation.dto;
 
 import ddog.domain.payment.enums.ServiceType;
 import lombok.Builder;
