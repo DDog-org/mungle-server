@@ -26,11 +26,12 @@ public class ReviewBanWordFilteringPerformanceTest {
         }
         long endTime = System.nanoTime();
 
-        long duration = endTime - startTime;
+        long totalDurationNs = endTime - startTime;
+        double averageDurationMs = (totalDurationNs / 1_000_000.0) / iterations;
 
         // Assert
-        System.out.println("Max length input performance: " + (duration / iterations) + " ns per iteration");
-        Assertions.assertTrue(duration / iterations < 2_000_000, "400자 리뷰는 평균 1ms 이내에 처리되어야 함");
+        System.out.printf("Max length input performance: %.3f ms per iteration%n", averageDurationMs);
+        Assertions.assertTrue(averageDurationMs < 2, "최대 글자 리뷰 필터링 속도도 평균 2ms 이내에 처리되어야 함");
     }
 
     private boolean isContainBanWord(String content) {
