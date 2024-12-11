@@ -1,5 +1,6 @@
 package ddog.user.application;
 
+import com.vane.badwordfiltering.BadWordFiltering;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
@@ -22,6 +23,7 @@ import ddog.user.presentation.review.dto.response.GroomingReviewListResp;
 import ddog.user.presentation.review.dto.response.GroomingReviewSummaryResp;
 import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroomingReviewService {
@@ -38,10 +41,13 @@ public class GroomingReviewService {
     private final GroomerPersist groomerPersist;
     private final UserPersist userPersist;
 
+    private final BadWordFiltering badWordFiltering;
+
     public ReviewResp postReview(PostGroomingReviewInfo postGroomingReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        if(isContainBanWord(postGroomingReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 
         GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
@@ -60,6 +66,7 @@ public class GroomingReviewService {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        if(isContainBanWord(modifyGroomingReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
         validateModifyGroomingReviewInfoDataFormat(modifyGroomingReviewInfo);
 
         GroomingReview modifiedReview = GroomingReviewMapper.modifyBy(savedGroomingReview, modifyGroomingReviewInfo);
@@ -156,5 +163,10 @@ public class GroomingReviewService {
                 .reviewCount(groomingReviews.getTotalElements())
                 .reviewList(groomingReviewList)
                 .build();
+    }
+
+    private boolean isContainBanWord(String content) {
+        String filteredContent = badWordFiltering.change(content, new String[] {"_",",",".","!","?","@","1","2","3","4","5","6","7","8","9","0"," "});
+        return !content.equals(filteredContent);
     }
 }
