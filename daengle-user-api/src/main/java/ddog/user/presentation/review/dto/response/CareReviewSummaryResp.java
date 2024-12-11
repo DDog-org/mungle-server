@@ -11,6 +11,8 @@ import java.util.List;
 public class CareReviewSummaryResp {
     private Long careReviewId;
     private Long vetId;
+    private String reviewerName;
+    private String reviewerImageUrl;
     private List<CareKeywordReview> careKeywordReviewList;
     private String revieweeName;
     private double starRating;

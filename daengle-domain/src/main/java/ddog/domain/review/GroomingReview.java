@@ -19,7 +19,7 @@ public class GroomingReview extends Review {
     private List<GroomingKeywordReview> groomingKeywordReviewList;
 
     public static void validateGroomingKeywordReviewList(List<GroomingKeywordReview> groomingKeywordReviewList) {
-        if (groomingKeywordReviewList == null || groomingKeywordReviewList.isEmpty() || groomingKeywordReviewList.size() > 3) {
+        if (groomingKeywordReviewList == null || groomingKeywordReviewList.isEmpty() || groomingKeywordReviewList.size() > 5) {
             throw new IllegalArgumentException("Grooming keyword review list must contain 1 to 3 items.");
         }
     }
