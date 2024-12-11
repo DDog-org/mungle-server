@@ -2,7 +2,6 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.notification.enums.NotifyType;
 import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.presentation.estimate.dto.*;
@@ -34,7 +33,6 @@ public class EstimateController {
     /* 사용자 -> 미용사 (신규) 미용 견적서 등록 */
     @PostMapping("/grooming")
     public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateNewGroomingEstimateReq request, PayloadDto payloadDto) {
-        notificationService.sendNotificationToUser(payloadDto.getAccountId(), NotifyType.RESERVED, "예약완료~");
         return success(estimateService.createNewGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
