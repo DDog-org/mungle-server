@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@ExtendWith(SpringExtension.class)
 public class ReviewBanWordFilteringTest {
 
     private static BadWordFiltering badWordFiltering;
