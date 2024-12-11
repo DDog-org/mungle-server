@@ -3,12 +3,12 @@ package ddog.notification.application;
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
 
+import ddog.domain.notification.port.NotificationPersist;
 import ddog.notification.application.dto.NotificationResp;
 import ddog.notification.application.exception.NotificationException;
 import ddog.notification.application.exception.NotificationExceptionType;
 import ddog.notification.application.port.ClientConnect;
 import ddog.notification.application.port.UserStatusPersist;
-import ddog.persistence.mysql.port.NotificationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;

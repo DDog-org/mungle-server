@@ -8,7 +8,7 @@ import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.Status;
-import ddog.persistence.mysql.port.AccountPersist;
+import ddog.domain.account.port.AccountPersist;
 import ddog.vet.presentation.auth.dto.LoginResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountException;
 import java.util.ArrayList;
 import java.util.Collection;
 

@@ -6,7 +6,7 @@ import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.auth.exception.AuthException;
 import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Role;
-import ddog.persistence.mysql.port.AccountPersist;
+import ddog.domain.account.port.AccountPersist;
 import ddog.user.presentation.auth.dto.LoginResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

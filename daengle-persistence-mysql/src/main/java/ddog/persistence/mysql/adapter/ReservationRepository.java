@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.payment.Reservation;
 import ddog.persistence.mysql.jpa.entity.ReservationJpaEntity;
 import ddog.persistence.mysql.jpa.repository.ReservationJpaRepository;
-import ddog.persistence.mysql.port.ReservationPersist;
+import ddog.domain.payment.port.ReservationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +22,7 @@ public class ReservationRepository implements ReservationPersist {
     }
 
     @Override
-    public Optional<Reservation> findBy(Long reservationId) {
+    public Optional<Reservation> findByReservationId(Long reservationId) {
         return reservationJpaRepository.findByReservationId(reservationId).map(ReservationJpaEntity::toModel);
     }
 }

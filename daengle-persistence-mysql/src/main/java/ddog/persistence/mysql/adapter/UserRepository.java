@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.user.User;
 import ddog.persistence.mysql.jpa.entity.UserJpaEntity;
 import ddog.persistence.mysql.jpa.repository.UserJpaRepository;
-import ddog.persistence.mysql.port.UserPersist;
+import ddog.domain.user.port.UserPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +24,6 @@ public class UserRepository implements UserPersist {
     public Optional<User> findByAccountId(Long accountId) {
         return userJpaRepository.findByAccountId(accountId)
                 .map(UserJpaEntity::toModel);
-    }
-
-    @Override
-    public Optional<User> findBy(Long accountId ) {
-        return userJpaRepository.findByAccountId(accountId).map(UserJpaEntity::toModel);
     }
 
     @Override

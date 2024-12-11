@@ -2,16 +2,14 @@ package ddog.user.presentation.review;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.review.dto.ModifyCareReviewInfo;
-import ddog.domain.review.dto.PostCareReviewInfo;
+import ddog.user.presentation.review.dto.response.CareReviewListResp;
+import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 import ddog.user.application.CareReviewService;
-import ddog.user.presentation.review.dto.CareReviewDetailResp;
-import ddog.user.presentation.review.dto.ReviewResp;
-import ddog.user.presentation.review.dto.CareReviewSummaryResp;
+import ddog.user.presentation.review.dto.response.CareReviewDetailResp;
+import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
@@ -28,14 +26,14 @@ public class CareReviewController {
     }
 
     @GetMapping("/care/review/{reviewId}")
-    public CommonResponseEntity<CareReviewDetailResp> getReview(@PathVariable Long reviewId) {
-        return success(careReviewService.getReview(reviewId));
+    public CommonResponseEntity<CareReviewDetailResp> findReview(@PathVariable Long reviewId) {
+        return success(careReviewService.findReview(reviewId));
     }
 
     @PatchMapping("care/review/{reviewId}")
-    public CommonResponseEntity<ReviewResp> modifyReview(@PathVariable Long reviewId,
+    public CommonResponseEntity<ReviewResp> updateReview(@PathVariable Long reviewId,
                                                          @RequestBody ModifyCareReviewInfo modifyCareReviewInfo) {
-        return success(careReviewService.modifyReview(reviewId, modifyCareReviewInfo));
+        return success(careReviewService.updateReview(reviewId, modifyCareReviewInfo));
     }
 
     @DeleteMapping("/care/review/{reviewId}")
@@ -44,14 +42,14 @@ public class CareReviewController {
     }
 
     @GetMapping("care/my-review/list")
-    public CommonResponseEntity<List<CareReviewSummaryResp>> findMyReviewList(PayloadDto payloadDto,
-                                                                              @RequestParam(defaultValue = "0") int page,
-                                                                              @RequestParam(defaultValue = "10") int size) {
+    public CommonResponseEntity<CareReviewListResp> findMyReviewList(PayloadDto payloadDto,
+                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "10") int size) {
         return success(careReviewService.findMyReviewList(payloadDto.getAccountId(), page, size));
     }
 
     @GetMapping("/vet/{vetId}/review/list")
-    public CommonResponseEntity<List<CareReviewSummaryResp>> findVetReviewList(
+    public CommonResponseEntity<CareReviewListResp> findVetReviewList(
             @PathVariable Long vetId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

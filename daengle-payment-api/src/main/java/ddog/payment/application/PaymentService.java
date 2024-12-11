@@ -6,15 +6,20 @@ import com.siot.IamportRestClient.request.CancelData;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.port.CareEstimatePersist;
+import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.enums.ServiceType;
+import ddog.domain.payment.port.OrderPersist;
+import ddog.domain.payment.port.PaymentPersist;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.PaymentCallbackResp;
 import ddog.payment.application.exception.*;
-import ddog.persistence.mysql.port.*;
+import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +43,7 @@ public class PaymentService {
 
     @Transactional
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
-        Order order = orderPersist.findBy(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+        Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
         Payment payment = order.getPayment();
 
         validateEstimate(order);
@@ -71,26 +76,12 @@ public class PaymentService {
             paymentPersist.save(payment);
 
             //예약 정보 생성
-            Reservation reservation = Reservation.builder()
-                    .estimateId(order.getEstimateId())
-                    .serviceType(order.getServiceType())
-                    .reservationStatus(ReservationStatus.DEPOSIT_PAID)
-                    .recipientId(order.getRecipientId())  //수의사 or 병원 PK
-                    .recipientName(order.getRecipientName())
-                    .shopName(order.getShopName())
-                    .schedule(order.getSchedule())
-                    .deposit(order.getPrice())
-                    .customerId(order.getAccountId())
-                    .customerPhoneNumber(order.getCustomerPhoneNumber())
-                    .visitorName(order.getVisitorName())
-                    .visitorPhoneNumber(order.getVisitorPhoneNumber())
-                    .paymentId(payment.getPaymentId())
-                    .build();
-            reservation = reservationPersist.save(reservation);
+            Reservation reservationToSave = ReservationMapper.createBy(order, payment);
+            Reservation savedReservation = reservationPersist.save(reservationToSave);
 
             return PaymentCallbackResp.builder()
                     .customerId(order.getAccountId())
-                    .reservationId(reservation.getReservationId())
+                    .reservationId(savedReservation.getReservationId())
                     .paymentId(payment.getPaymentId())
                     .price(payment.getPrice())
                     .build();

@@ -4,7 +4,7 @@ import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
-import ddog.persistence.mysql.port.CareEstimatePersist;
+import ddog.domain.estimate.port.CareEstimatePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

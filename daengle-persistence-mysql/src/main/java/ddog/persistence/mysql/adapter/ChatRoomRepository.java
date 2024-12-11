@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.chat.ChatRoom;
 import ddog.persistence.mysql.jpa.entity.ChatRoomJpaEntity;
 import ddog.persistence.mysql.jpa.repository.ChatRoomJpaRepository;
-import ddog.persistence.mysql.port.ChatRoomPersist;
+import ddog.domain.chat.port.ChatRoomPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

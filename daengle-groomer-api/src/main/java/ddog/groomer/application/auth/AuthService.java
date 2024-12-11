@@ -9,7 +9,7 @@ import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.Status;
 import ddog.groomer.presentation.auth.dto.LoginResult;
-import ddog.persistence.mysql.port.AccountPersist;
+import ddog.domain.account.port.AccountPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

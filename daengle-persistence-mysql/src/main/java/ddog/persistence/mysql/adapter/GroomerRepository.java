@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.groomer.Groomer;
 import ddog.persistence.mysql.jpa.entity.GroomerJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomerJpaRepository;
-import ddog.persistence.mysql.port.GroomerPersist;
+import ddog.domain.groomer.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +19,6 @@ public class GroomerRepository implements GroomerPersist {
     public Optional<Groomer> findByAccountId(Long accountId) {
         return groomerJpaRepository.findByAccountId(accountId)
                 .map(GroomerJpaEntity::toModel);
-    }
-
-    @Override
-    public Optional<Groomer> findBy(Long accountId) {
-        return groomerJpaRepository.findByAccountId(accountId).map(GroomerJpaEntity::toModel);
     }
 
     @Override

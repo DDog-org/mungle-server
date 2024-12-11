@@ -3,7 +3,7 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.payment.Order;
 import ddog.persistence.mysql.jpa.entity.OrderJpaEntity;
 import ddog.persistence.mysql.jpa.repository.OrderJpaRepository;
-import ddog.persistence.mysql.port.OrderPersist;
+import ddog.domain.payment.port.OrderPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +22,7 @@ public class OrderRepository implements OrderPersist {
     }
 
     @Override
-    public Optional<Order> findBy(String orderUid) {
+    public Optional<Order> findByOrderUid(String orderUid) {
         return orderJpaRepository.findByOrderUid(orderUid).map(OrderJpaEntity::toModel);
     }
 

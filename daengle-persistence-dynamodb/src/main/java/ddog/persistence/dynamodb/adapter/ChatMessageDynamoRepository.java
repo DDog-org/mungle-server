@@ -1,13 +1,14 @@
-package ddog.persistence.dynamo.adapter;
+package ddog.persistence.dynamodb.adapter;
 
 import ddog.domain.chat.ChatMessage;
-import ddog.persistence.dynamo.entity.ChatMessageDynamoEntity;
-import ddog.persistence.dynamo.port.ChatMessagePersist;
+
+import ddog.domain.chat.port.ChatMessagePersist;
+import ddog.persistence.dynamodb.entity.ChatMessageDynamoEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Collectors;
