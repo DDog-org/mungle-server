@@ -20,7 +20,7 @@ public class CareReview extends Review {
     private List<CareKeywordReview> careKeywordReviewList;
 
     public static void validateCareKeywordReviewList(List<CareKeywordReview> careKeywordReviewList) {
-        if (careKeywordReviewList == null || careKeywordReviewList.isEmpty() || careKeywordReviewList.size() > 3) {
+        if (careKeywordReviewList == null || careKeywordReviewList.isEmpty() || careKeywordReviewList.size() > 5) {
             throw new IllegalArgumentException("Care keyword review list must contain 1 to 3 items.");
         }
     }
