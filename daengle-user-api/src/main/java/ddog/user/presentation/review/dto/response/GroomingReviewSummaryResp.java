@@ -11,6 +11,8 @@ import java.util.List;
 public class GroomingReviewSummaryResp {
     private Long groomingReviewId;
     private Long groomerId;
+    private String reviewerName;
+    private String reviewerImageUrl;
     private List<GroomingKeywordReview> groomingKeywordReviewList;
     private String revieweeName;
     private double starRating;
