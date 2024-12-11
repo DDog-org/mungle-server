@@ -17,7 +17,7 @@ public class AccountRepository implements AccountPersist {
     private final AccountJpaRepository accountJpaRepository;
 
     @Override
-    public boolean checkExistsAccountBy(String email, Role role) {
+    public boolean hasAccountByEmailAndRole(String email, Role role) {
         return accountJpaRepository.existsByEmailAndRole(email, role);
     }
 

@@ -6,7 +6,7 @@ import ddog.domain.account.Role;
 import java.util.Optional;
 
 public interface AccountPersist {
-    boolean checkExistsAccountBy(String email, Role role);
+    boolean hasAccountByEmailAndRole(String email, Role role);
 
     Account save(Account account);
 
