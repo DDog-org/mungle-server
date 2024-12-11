@@ -15,6 +15,12 @@ dependencies {
     implementation 'org.springframework.data:spring-data-commons'
     implementation 'org.springframework:spring-tx'
 
+    //Test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.assertj:assertj-core'
+
     //금칙어 필터링 시스템
     implementation 'io.github.vaneproject:badwordfiltering:1.0.0'
 }
