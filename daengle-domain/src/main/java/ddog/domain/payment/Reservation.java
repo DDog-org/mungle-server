@@ -19,6 +19,7 @@ public class Reservation {
     private ServiceType serviceType;
     private ReservationStatus reservationStatus;
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;

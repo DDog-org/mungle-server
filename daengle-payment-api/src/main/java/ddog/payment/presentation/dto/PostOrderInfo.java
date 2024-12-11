@@ -12,6 +12,7 @@ public class PostOrderInfo {
     private Long estimateId;
     private ServiceType serviceType;
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;

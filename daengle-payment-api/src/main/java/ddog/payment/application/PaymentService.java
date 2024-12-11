@@ -15,17 +15,26 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.PaymentCallbackResp;
+import ddog.payment.application.dto.response.PaymentHistoryListResp;
+import ddog.payment.application.dto.response.PaymentHistorySummaryResp;
 import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,6 +42,7 @@ import java.math.BigDecimal;
 public class PaymentService {
 
     private final IamportClient iamportClient;
+    private final UserPersist userPersist;
     private final OrderPersist orderPersist;
     private final PaymentPersist paymentPersist;
     private final ReservationPersist reservationPersist;
@@ -113,5 +123,30 @@ public class PaymentService {
         } else {
             throw new IllegalArgumentException("서비스 타입이 올바르지 않습니다.");
         }
+    }
+
+    public PaymentHistoryListResp findGroomingPaymentHistory(Long accountId, int page, int size) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = reservationPersist.findGroomingPaymentHistory(savedUser.getAccountId(), pageable);
+
+        return mappingToPaymentHistoryListResp(reservations);
+    }
+
+    private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {
+        List<PaymentHistorySummaryResp> paymentHistoryList = reservations.stream().map(reservation -> PaymentHistorySummaryResp.builder()
+                .reservationId(reservation.getReservationId())
+                .recipientImageUrl(reservation.getRecipientImageUrl())
+                .recipientName(reservation.getRecipientName())
+                .shopName(reservation.getShopName())
+                .paymentDate(reservation.getSchedule())
+                .status(reservation.getReservationStatus().name())
+                .build()).collect(Collectors.toList());
+
+        return PaymentHistoryListResp.builder()
+                .paymentHistoryList(paymentHistoryList)
+                .build();
     }
 }

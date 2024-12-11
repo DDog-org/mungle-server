@@ -31,6 +31,7 @@ public class ReservationJpaEntity {
     private ReservationStatus reservationStatus;
 
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;
@@ -48,6 +49,7 @@ public class ReservationJpaEntity {
                 .serviceType(reservation.getServiceType())
                 .reservationStatus(reservation.getReservationStatus())
                 .recipientId(reservation.getRecipientId())
+                .recipientImageUrl(reservation.getRecipientImageUrl())
                 .recipientName(reservation.getRecipientName())
                 .shopName(reservation.getShopName())
                 .schedule(reservation.getSchedule())
@@ -67,6 +69,7 @@ public class ReservationJpaEntity {
                 .serviceType(serviceType)
                 .reservationStatus(reservationStatus)
                 .recipientId(recipientId)
+                .recipientImageUrl(recipientImageUrl)
                 .recipientName(recipientName)
                 .shopName(shopName)
                 .schedule(schedule)

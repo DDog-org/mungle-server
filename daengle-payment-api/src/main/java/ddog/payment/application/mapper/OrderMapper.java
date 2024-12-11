@@ -18,6 +18,7 @@ public class OrderMapper {
                 .accountId(accountId)
                 .customerName(postOrderInfo.getCustomerName())
                 .recipientId(postOrderInfo.getRecipientId())
+                .recipientImageUrl(postOrderInfo.getRecipientImageUrl())
                 .recipientName(postOrderInfo.getRecipientName())
                 .shopName(postOrderInfo.getShopName())
                 .orderDate(LocalDateTime.now())

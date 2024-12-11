@@ -13,6 +13,7 @@ public class ReservationMapper {
                 .serviceType(order.getServiceType())
                 .reservationStatus(ReservationStatus.DEPOSIT_PAID)
                 .recipientId(order.getRecipientId())  //수의사 or 병원 PK
+                .recipientImageUrl(order.getRecipientImageUrl())
                 .recipientName(order.getRecipientName())
                 .shopName(order.getShopName())
                 .schedule(order.getSchedule())

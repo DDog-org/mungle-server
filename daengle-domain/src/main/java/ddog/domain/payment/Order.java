@@ -23,6 +23,7 @@ public class Order {
     private Long accountId;
     private String customerName;
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime orderDate;

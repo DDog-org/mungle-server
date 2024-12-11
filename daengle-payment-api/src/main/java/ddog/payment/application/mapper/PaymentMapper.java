@@ -13,7 +13,7 @@ public class PaymentMapper {
                 .paymentId(null)
                 .payerId(accountId)
                 .price(postOrderInfo.getPrice())
-                .status(PaymentStatus.READY)
+                .status(PaymentStatus.PAYMENT_READY)
                 .paymentDate(LocalDateTime.now())
                 .paymentUid(null)
                 .build();

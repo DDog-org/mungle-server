@@ -1,6 +1,7 @@
 package ddog.domain.payment.enums;
 
 public enum PaymentStatus {
+    PAYMENT_READY("결제 대기"),
     PAYMENT_COMPLETED("결제 완료"),
     PAYMENT_CANCELED("결제 취소"),
     PAYMENT_INVALIDATION("유효하지 않은 결제"),
