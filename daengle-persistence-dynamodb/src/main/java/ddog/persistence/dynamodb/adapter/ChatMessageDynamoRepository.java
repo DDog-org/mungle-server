@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 public class ChatMessageDynamoRepository implements ChatMessagePersist {
 
     private final DynamoDbEnhancedClient dynamoDbEnhancedClient;
-    private final DynamoDbClient dynamoDbClient;
-    private DynamoDbTable<ChatMessageDynamoEntity> chatmessageTable;
 
     private static final String TABLE_NAME = "chat_message";
 
@@ -32,7 +30,6 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
         ChatMessageDynamoEntity entity = ChatMessageDynamoEntity.from(message);
 
         try {
-            // DynamoDB에 저장
             getTable().putItem(entity);
             System.out.println("SAVE SUCCESS");
 
