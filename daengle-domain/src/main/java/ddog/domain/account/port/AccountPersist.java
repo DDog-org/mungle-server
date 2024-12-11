@@ -7,7 +7,10 @@ import java.util.Optional;
 
 public interface AccountPersist {
     boolean checkExistsAccountBy(String email, Role role);
+
     Account save(Account account);
+
     Account findById(Long accountId);
+
     Optional<Account> findAccountByEmailAndRole(String email, Role role);
 }

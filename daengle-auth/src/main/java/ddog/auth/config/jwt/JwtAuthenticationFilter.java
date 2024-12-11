@@ -24,18 +24,20 @@ import java.util.List;
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
+
     /* 필터 제외 URL 리스트 */
     private final List<String> excludeUrls = List.of(
-            "/api/oauth/kakao", "/api/oauth/refresh-token", "/test"
+            "/api/user/test", "/api/groomer/test", "/api/vet/test", "/api/payment/test",
+            "/api/user/kakao", "/api/groomer/kakao", "/api/vet/kakao", "/api/user/refresh-token", "/api/groomer/refresh-token", "/api/vet/refresh-token",
+            "/api/user/available-nickname", "/api/user/breed/list", "/api/user/join-with-pet", "/api/user/join-without-pet",
+            "/api/groomer/join", "/api/vet/join"
     );
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-        /* TODO 당분간 토큰 검증을 빼기 위해 임시로 넣어놓음. 나중에 꼭 빼야됨 !! */
-/*        if (true) {
-        /* 당분간 토큰 검증을 빼기 위해 임시로 넣어놓음. 나중에 꼭 빼야됨 !! */
+        /* TODO 나중에 꼭 빼기 */
         if (true) {
             chain.doFilter(request, response);
             return;
@@ -64,11 +66,20 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     }
 
     private String resolveToken(HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+
+        if (token == null) {
+            throw new AuthException(AuthExceptionType.MISSING_TOKEN);
+        }
+        if (token.isEmpty()) {
+            throw new AuthException(AuthExceptionType.EMPTY_TOKEN);
+        }
+
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
 }
