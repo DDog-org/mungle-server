@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@SpringBootTest(classes = UserApplication.class)
 @ExtendWith(SpringExtension.class)
 public class ReviewBanWordFilteringTest {
 
