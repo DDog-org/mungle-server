@@ -11,7 +11,10 @@ public enum AuthExceptionType {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 1003, "토큰이 만료되었습니다."),
     UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, 1004, "지원하지 않는 토큰 형식입니다."),
     UNKNOWN_TOKEN(HttpStatus.UNAUTHORIZED, 1005, "알 수 없는 토큰입니다."),
-    MISSING_AUTH_CLAIM(HttpStatus.FORBIDDEN, 1006, "토큰에 권한 정보가 없습니다."),
+    MISSING_TOKEN(HttpStatus.UNAUTHORIZED, 1006, "Authorization 헤더가 누락되었습니다."),
+    EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, 1007, "토큰 값이 비어 있습니다."),
+    MISSING_AUTH_CLAIM(HttpStatus.FORBIDDEN, 1008, "토큰에 권한 정보가 없습니다."),
+
 
     /* 권한 관련 오류 */
     UNAVAILABLE_ROLE(HttpStatus.FORBIDDEN, 1101, "접근할 권한이 없습니다."),

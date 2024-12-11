@@ -3,7 +3,6 @@ package ddog.auth.config.jwt;
 import ddog.auth.dto.TokenAccountInfoDto;
 import ddog.auth.exception.AuthException;
 import ddog.auth.exception.AuthExceptionType;
-import ddog.domain.account.port.AccountPersist;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,24 +27,22 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Key key;
-    private final AccountPersist accountPersist;
     /* accessToken 만료 시간 */
-    private final int ACCESSTOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
+    private final int ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 3;    // 3일
     /* refreshToken 만료 시간*/
-    private final int REFRESHTOKEN_EXPIRATION_TIME = 1000;   // 14일
+    private final int REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 14;   // 14일
 
     @Autowired
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret, AccountPersist accountPersist) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.accountPersist = accountPersist;
     }
 
     public String generateToken(Authentication authentication, HttpServletResponse response) {
-        String accessToken = createToken(authentication, ACCESSTOKEN_EXPIRATION_TIME);
-        String refreshToken = createToken(authentication, REFRESHTOKEN_EXPIRATION_TIME);
+        String accessToken = createToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
+        String refreshToken = createToken(authentication, REFRESH_TOKEN_EXPIRATION_TIME);
         response.setHeader("Set-Cookie", ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .maxAge(REFRESHTOKEN_EXPIRATION_TIME)
+                .maxAge(REFRESH_TOKEN_EXPIRATION_TIME)
                 .path("/")
                 .sameSite("None")
                 .build().toString());
@@ -55,7 +52,6 @@ public class JwtTokenProvider {
 
     private String createToken(Authentication authentication, int expirationTime) {
         Date tokenExpiration = new Date(getNowTime() + expirationTime);
-
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", getAuthorities(authentication))
