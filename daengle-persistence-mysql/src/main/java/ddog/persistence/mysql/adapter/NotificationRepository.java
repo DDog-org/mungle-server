@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,29 +18,27 @@ public class NotificationRepository implements NotificationPersist {
     private final NotificationJpaRepository notificationJpaRepository;
 
     @Override
-    public List<Notification> findByUserId(Long userId) {
-        return Optional.ofNullable(notificationJpaRepository.findByUserId(userId))
-                .filter(list -> list.isEmpty())
-                .orElseThrow(() -> new RuntimeException("No Notification Message"))
-                .stream()
+    public List<Notification> findNotificationsByUserId(Long userId) {
+        List<NotificationJpaEntity> notifications = notificationJpaRepository.findByUserId(userId);
+
+        return notifications.stream()
                 .map(NotificationJpaEntity::toModel)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void save(Notification notification) {
+    public void saveNotificationWithLogoutUser(Notification notification) {
         notificationJpaRepository.save(NotificationJpaEntity.from(notification));
     }
 
     @Override
-    public Notification findById(Long notificationId) {
+    public Optional<Notification> findNotificationById(Long notificationId) {
         return notificationJpaRepository.findById(notificationId)
-                .orElseThrow(() -> new RuntimeException("No Notification Id"))
-                .toModel();
+                .map(NotificationJpaEntity::toModel);
     }
 
     @Override
-    public void delete(Long notificationId) {
+    public void deleteNotificationById(Long notificationId) {
         notificationJpaRepository.deleteById(notificationId);
     }
 }

@@ -2,76 +2,74 @@ package ddog.notification.application;
 
 import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
+
 import ddog.domain.notification.port.NotificationPersist;
+import ddog.domain.user.port.UserPersist;
+import ddog.notification.application.dto.NotificationResp;
+import ddog.notification.application.exception.NotificationException;
+import ddog.notification.application.exception.NotificationExceptionType;
+import ddog.notification.application.port.ClientConnect;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
 
-    // 연결된 SseEmitter 목록
-    private final ConcurrentHashMap<Long, SseEmitter> ssemitters = new ConcurrentHashMap<>();
-
-    private final RedisService redisService;
-
+    private final ClientConnect clientConnect;
     private final NotificationPersist notificationPersist;
+    private final UserPersist userPersist;
 
-    public NotificationService(RedisService redisService, NotificationPersist notificationPersist) {
-        this.redisService = redisService;
-        this.notificationPersist = notificationPersist;
+    public SseEmitter connectClient(Long userId) {
+        return clientConnect.toConnectClient(userId);
     }
 
-    // SSE 연결
-    public SseEmitter connect(Long userId) {
-        SseEmitter emitter = new SseEmitter();
-        ssemitters.put(userId, emitter);
+    public void sendNotificationToUser(Long receiverId, NotifyType notifyType, String message) {
+        try {
+            if (clientConnect.isUserConnected(receiverId)) {
+                clientConnect.sendNotificationToUser(receiverId, message);
+            } else {
+                Notification notification = Notification.builder()
+                        .userId(receiverId)
+                        .message(message)
+                        .notifyType(notifyType)
+                        .build();
 
-        redisService.loginUser(userId);
-
-        emitter.onTimeout(() -> {
-            ssemitters.remove(userId);
-            redisService.logoutUser(userId);
-
-        });
-        emitter.onCompletion(() -> {
-            ssemitters.remove(userId);
-            redisService.logoutUser(userId);
-        });
-
-        return emitter;
-    }
-
-    // 알림 전송
-    public void sendNotification(Long receiverId, NotifyType notifyType, String message) throws IOException {
-        if (ssemitters.containsKey(receiverId)) {
-            SseEmitter emitter = ssemitters.get(receiverId);
-            emitter.send(message);
-        }
-
-        else if (redisService.isUserLoggedIn(receiverId)) {
-            SseEmitter emitter = ssemitters.get(receiverId);
-            if (emitter != null) {
-                emitter.send(message);
+                notificationPersist.saveNotificationWithLogoutUser(notification);
             }
-        }
-
-        else {
-            Notification notification = Notification.builder()
-                    .userId(receiverId)
-                    .message(message)
-                    .notifyType(notifyType)
-                    .build();
-
-            notificationPersist.save(notification);
+        } catch (IOException e) {
+            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT);
         }
     }
 
-    // 로그인 시, 알림 목록 불러오기
-    public List<Notification> getAllNotifications(Long userId) {
-        return notificationPersist.findByUserId(userId);
+    public List<NotificationResp> findAllNotificationsBy(Long userId) {
+        userPersist.findByAccountId(userId)
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.USER_NOT_FOUND));
+
+        return Optional.ofNullable(notificationPersist.findNotificationsByUserId(userId))
+                .filter(notifications -> !notifications.isEmpty())
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND))
+                .stream()
+                .map(notification -> NotificationResp.builder()
+                        .id(notification.getId())
+                        .message(notification.getMessage())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> checkNotificationById(Long notificationId) {
+        notificationPersist.findNotificationById(notificationId)
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
+
+        notificationPersist.deleteNotificationById(notificationId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("delete", true);
+        return response;
     }
 }

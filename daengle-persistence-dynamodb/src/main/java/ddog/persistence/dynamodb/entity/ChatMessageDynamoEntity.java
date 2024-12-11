@@ -17,8 +17,8 @@ import java.time.ZoneId;
 @DynamoDbBean
 @Data
 public class ChatMessageDynamoEntity {
-    private Long messageId; // 파티션 키
-    private Long chatRoomId;    // 정렬 키
+    private Long messageId;
+    private Long chatRoomId;
     private ChatType messageType;
     private Long senderId;
     private Long recipientId;
