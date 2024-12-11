@@ -38,7 +38,7 @@ public class ReviewService {
                 .map(careReview -> ReviewSummaryResp.builder()
                         .careReviewId(careReview.getCareReviewId())
                         .vetId(careReview.getVetId())
-                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                        .careKeywordList(careReview.getCareKeywordList())
                         .revieweeName(careReview.getRevieweeName())
                         .starRating(careReview.getStarRating())
                         .content(careReview.getContent())

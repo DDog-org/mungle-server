@@ -1,6 +1,6 @@
 package ddog.user.presentation.review.dto.response;
 
-import ddog.domain.review.enums.CareKeywordReview;
+import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,9 +11,9 @@ import java.util.List;
 public class CareReviewSummaryResp {
     private Long careReviewId;
     private Long vetId;
+    private List<CareKeyword> careKeywordList;
     private String reviewerName;
     private String reviewerImageUrl;
-    private List<CareKeywordReview> careKeywordReviewList;
     private String revieweeName;
     private double starRating;
     private String content;

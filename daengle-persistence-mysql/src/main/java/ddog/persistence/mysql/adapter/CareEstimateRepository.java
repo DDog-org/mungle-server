@@ -6,6 +6,8 @@ import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -50,6 +52,12 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
         careEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
         careEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
+    }
+
+    @Override
+    public Page<CareEstimate> findByPetIdAndPageable(Long petId, Pageable pageable) {
+        return careEstimateJpaRepository.findByPetId(petId, pageable)
+                .map(CareEstimateJpaEntity::toModel);
     }
 
     @Override

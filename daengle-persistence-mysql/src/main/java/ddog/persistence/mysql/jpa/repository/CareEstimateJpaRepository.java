@@ -2,6 +2,8 @@ package ddog.persistence.mysql.jpa.repository;
 
 import ddog.domain.estimate.EstimateStatus;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +41,6 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     @Transactional
     @Query("UPDATE CareEstimates c SET c.status = :status WHERE c.parentId = :parentId")
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
+
+    Page<CareEstimateJpaEntity> findByPetId(Long petId, Pageable pageable);
 }

@@ -42,10 +42,24 @@ public class EstimateController {
         return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 
-    /* 미용/진료 (대기) 견적서 상세 조회 */
-    @GetMapping("/list")
-    public CommonResponseEntity<EstimateInfo> findEstimates(PayloadDto payloadDto) {
-        return success(estimateService.findEstimates(payloadDto.getAccountId()));
+    /* (일반) 대기 미용 견적서 리스트 조회 */
+    @GetMapping("/general/grooming/{petId}")
+    public CommonResponseEntity<EstimateInfo.Grooming> findGeneralGroomingEstimates(
+            @PathVariable Long petId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return success(estimateService.findGeneralGroomingEstimates(petId, page, size));
+    }
+
+    /* (일반) 대기 진료 견적서 리스트 조회 */
+    @GetMapping("/general/care/{petId}")
+    public CommonResponseEntity<EstimateInfo.Care> findGeneralCareEstimates(
+            @PathVariable Long petId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return success(estimateService.findGeneralCareEstimates(petId, page, size));
     }
 
     /* 사용자가 작성한 미용 견적서 조회 */

@@ -21,11 +21,15 @@ import ddog.user.application.mapper.CareEstimateMapper;
 import ddog.user.application.mapper.GroomingEstimateMapper;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -117,48 +121,40 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimates(Long accountId) {
-        User user = userPersist.findByAccountId(accountId)
-                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+    public EstimateInfo.Grooming findGeneralGroomingEstimates(Long petId, int page, int size) {
 
-        List<Pet> pets = user.getPets();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndPageable(petId, pageable);
 
-        List<EstimateInfo.PetInfo> petInfos = new ArrayList<>();
-        for (Pet pet : pets) {
-            List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findGroomingEstimatesByPetId(pet.getPetId());
-            List<CareEstimate> careEstimates = careEstimatePersist.findCareEstimatesByPetId(pet.getPetId());
+        List<EstimateInfo.Grooming.Content> contents = new ArrayList<>();
+        for (GroomingEstimate estimate : estimates) {
+            Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
+                    .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-            Long groomingParentId = null;
-            List<EstimateInfo.PetInfo.Grooming> groomingInfos = new ArrayList<>();
-            for (GroomingEstimate estimate : groomingEstimates) {
-                groomingParentId = estimate.getParentId();
-                Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
-                        .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-                groomingInfos.add(GroomingEstimateMapper.mapToGrooming(estimate, groomer));
-            }
-
-            Long careParentId = null;
-            List<EstimateInfo.PetInfo.Care> careInfos = new ArrayList<>();
-            for (CareEstimate estimate : careEstimates) {
-                careParentId = estimate.getParentId();
-                Vet vet = vetPersist.findByAccountId(estimate.getVetId())
-                        .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
-                careInfos.add(CareEstimateMapper.mapToCare(estimate, vet));
-            }
-
-            petInfos.add(EstimateInfo.PetInfo.builder()
-                    .petId(pet.getPetId())
-                    .name(pet.getPetName())
-                    .image(pet.getPetImage())
-                    .groomingParentId(groomingParentId)
-                    .careParentId(careParentId)
-                    .groomingEstimates(groomingInfos)
-                    .careEstimates(careInfos)
-                    .build());
+            contents.add(GroomingEstimateMapper.mapToEstimateInfo(estimate, groomer));
         }
 
-        return EstimateInfo.builder()
-                .petInfos(petInfos)
+        return EstimateInfo.Grooming.builder()
+                .estimates(contents)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Care findGeneralCareEstimates(Long petId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndPageable(petId, pageable);
+
+        List<EstimateInfo.Care.Content> contents = new ArrayList<>();
+        for (CareEstimate estimate : estimates) {
+            Vet vet = vetPersist.findByAccountId(estimate.getVetId())
+                    .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+            contents.add(CareEstimateMapper.mapToEstimateInfo(estimate, vet));
+        }
+
+        return EstimateInfo.Care.builder()
+                .estimates(contents)
                 .build();
     }
 

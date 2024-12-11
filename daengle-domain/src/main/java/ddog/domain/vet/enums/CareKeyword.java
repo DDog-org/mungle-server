@@ -1,11 +1,11 @@
-package ddog.domain.review.enums;
+package ddog.domain.vet.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CareKeywordReview {
+public enum CareKeyword {
     KIND("친절해요"),
     PROFESSIONAL("전문적이에요"),
     GOOD_AT_EXPLAINING("설명을 잘해줘요"),

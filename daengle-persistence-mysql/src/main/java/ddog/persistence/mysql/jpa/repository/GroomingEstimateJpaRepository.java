@@ -2,6 +2,8 @@ package ddog.persistence.mysql.jpa.repository;
 
 import ddog.domain.estimate.EstimateStatus;
 import ddog.persistence.mysql.jpa.entity.GroomingEstimateJpaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +40,6 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
     @Transactional
     @Query("UPDATE GroomingEstimates g SET g.status = :status WHERE g.parentId = :parentId")
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
+
+    Page<GroomingEstimateJpaEntity> findByPetId(Long petId, Pageable pageable);
 }

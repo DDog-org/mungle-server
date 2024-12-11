@@ -1,11 +1,11 @@
-package ddog.domain.review.enums;
+package ddog.domain.groomer.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum GroomingKeywordReview {
+public enum GroomingKeyword {
     HYGIENIC("위생적이에요"),
     EXCELLENT_CONSULTATION("상담을 잘해 줘요"),
     STYLE_IS_GREAT("스타일이 멋져요"),
