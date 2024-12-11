@@ -74,4 +74,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
         return groomingEstimateJpaRepository.findByPetId(petId, pageable)
                 .map(GroomingEstimateJpaEntity::toModel);
     }
+
+    @Override
+    public boolean hasGeneralEstimateByPetId(Long petId) {
+        return groomingEstimateJpaRepository.existsNewProposalByPetId(petId);
+    }
 }

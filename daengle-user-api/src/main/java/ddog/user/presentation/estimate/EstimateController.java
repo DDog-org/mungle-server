@@ -42,6 +42,18 @@ public class EstimateController {
         return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 
+    /* (일반) 대기 미용 견적서 페이지 반려동물 정보 반환 */
+    @GetMapping("/general/grooming")
+    public CommonResponseEntity<EstimateInfo.Pet> findGeneralGroomingPets(PayloadDto payloadDto) {
+        return success(estimateService.findGeneralGroomingPets(payloadDto.getAccountId()));
+    }
+
+    /* (일반) 대기 진료 견적서 페이지 반려동물 정보 반환 */
+    @GetMapping("/general/care")
+    public CommonResponseEntity<EstimateInfo.Pet> findGeneralCarePets(PayloadDto payloadDto) {
+        return success(estimateService.findGeneralCarePets(payloadDto.getAccountId()));
+    }
+
     /* (일반) 대기 미용 견적서 리스트 조회 */
     @GetMapping("/general/grooming/{petId}")
     public CommonResponseEntity<EstimateInfo.Grooming> findGeneralGroomingEstimates(
@@ -61,6 +73,14 @@ public class EstimateController {
     ) {
         return success(estimateService.findGeneralCareEstimates(petId, page, size));
     }
+
+    /* (지정) 대기 미용 견적서 페이지 반려동물 정보 반환 */
+
+    /* (지정) 대기 진료 견적서 페이지 반려동물 정보 반환 */
+
+    /* (지정) 대기 미용 견적서 리스트 조회 */
+
+    /* (지정) 대기 진료 견적서 리스트 조회 */
 
     /* 사용자가 작성한 미용 견적서 조회 */
     @GetMapping("/request/grooming/{estimateId}")

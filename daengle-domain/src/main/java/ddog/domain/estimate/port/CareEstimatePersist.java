@@ -22,4 +22,6 @@ public interface CareEstimatePersist {
     void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId);
 
     Page<CareEstimate> findByPetIdAndPageable(Long petId, Pageable pageable);
+
+    boolean hasGeneralEstimateByPetId(Long petId);
 }

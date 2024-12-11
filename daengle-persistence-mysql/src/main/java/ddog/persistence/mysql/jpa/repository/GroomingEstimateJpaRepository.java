@@ -42,4 +42,8 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
 
     Page<GroomingEstimateJpaEntity> findByPetId(Long petId, Pageable pageable);
+
+    @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM GroomingEstimates g WHERE g.proposal = 'NEW' AND g.petId = :petId")
+    boolean existsNewProposalByPetId(@Param("petId") Long petId);
 }

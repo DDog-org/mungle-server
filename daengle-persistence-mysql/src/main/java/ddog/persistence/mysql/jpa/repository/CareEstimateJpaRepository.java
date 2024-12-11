@@ -43,4 +43,8 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
 
     Page<CareEstimateJpaEntity> findByPetId(Long petId, Pageable pageable);
+
+    @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM CareEstimates g WHERE g.proposal = 'NEW' AND g.petId = :petId")
+    boolean existsNewProposalByPetId(@Param("petId") Long petId);
 }

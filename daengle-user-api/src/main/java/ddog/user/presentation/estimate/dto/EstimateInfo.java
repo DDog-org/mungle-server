@@ -1,7 +1,6 @@
 package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.domain.estimate.Proposal;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
@@ -13,6 +12,21 @@ import java.util.List;
 @Getter
 @Builder
 public class EstimateInfo {
+
+    @Getter
+    @Builder
+    public static class Pet {
+
+        private List<Content> pets;
+
+        @Getter
+        @Builder
+        public static class Content {
+            private Long id;
+            private String imageURL;
+            private String name;
+        }
+    }
 
     @Getter
     @Builder

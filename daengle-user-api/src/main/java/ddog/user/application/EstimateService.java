@@ -121,6 +121,47 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
+    public EstimateInfo.Pet findGeneralGroomingPets(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<Pet> pets = user.getPets();
+        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
+        for (Pet pet : pets) {
+            if (groomingEstimatePersist.hasGeneralEstimateByPetId(pet.getPetId())) {
+                contents.add(EstimateInfo.Pet.Content.builder()
+                        .id(pet.getPetId())
+                        .imageURL(pet.getPetImage())
+                        .name(pet.getPetName())
+                        .build());
+            }
+        }
+        return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    public EstimateInfo.Pet findGeneralCarePets(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<Pet> pets = user.getPets();
+        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
+        for (Pet pet : pets) {
+            if (careEstimatePersist.hasGeneralEstimateByPetId(pet.getPetId())) {
+                contents.add(EstimateInfo.Pet.Content.builder()
+                        .id(pet.getPetId())
+                        .imageURL(pet.getPetImage())
+                        .name(pet.getPetName())
+                        .build());
+            }
+        }
+        return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
     public EstimateInfo.Grooming findGeneralGroomingEstimates(Long petId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);

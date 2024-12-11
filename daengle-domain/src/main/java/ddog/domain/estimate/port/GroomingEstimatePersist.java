@@ -22,4 +22,6 @@ public interface GroomingEstimatePersist {
     void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId);
 
     Page<GroomingEstimate> findByPetIdAndPageable(Long petId, Pageable pageable);
+
+    boolean hasGeneralEstimateByPetId(Long petId);
 }
