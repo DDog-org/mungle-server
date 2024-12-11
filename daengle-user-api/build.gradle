@@ -20,6 +20,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.assertj:assertj-core'
+    runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //금칙어 필터링 시스템
     implementation 'io.github.vaneproject:badwordfiltering:1.0.0'
