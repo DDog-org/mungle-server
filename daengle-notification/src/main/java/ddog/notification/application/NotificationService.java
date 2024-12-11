@@ -9,7 +9,6 @@ import ddog.notification.application.dto.NotificationResp;
 import ddog.notification.application.exception.NotificationException;
 import ddog.notification.application.exception.NotificationExceptionType;
 import ddog.notification.application.port.ClientConnect;
-import ddog.notification.application.port.UserStatusPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     private final ClientConnect clientConnect;
-    private final UserStatusPersist userStatusPersist;
     private final NotificationPersist notificationPersist;
     private final UserPersist userPersist;
 
@@ -34,9 +32,6 @@ public class NotificationService {
     public void sendNotificationToUser(Long receiverId, NotifyType notifyType, String message) {
         try {
             if (clientConnect.isUserConnected(receiverId)) {
-                clientConnect.sendNotificationToUser(receiverId, message);
-            } else if (userStatusPersist.isUserLoggedIn(receiverId)) {
-                clientConnect.toConnectClient(receiverId);
                 clientConnect.sendNotificationToUser(receiverId, message);
             } else {
                 Notification notification = Notification.builder()
@@ -68,22 +63,13 @@ public class NotificationService {
     }
 
     public Map<String, Object> checkNotificationById(Long notificationId) {
-
-        Notification notification = notificationPersist.findNotificationById(notificationId);
-
-        if (notification == null) {
-            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND);
-        }
+        notificationPersist.findNotificationById(notificationId)
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND));
 
         notificationPersist.deleteNotificationById(notificationId);
-        Notification deletedNotification = notificationPersist.findNotificationById(notificationId);
 
-        if (deletedNotification == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("delete", true);
-            return response;
-        } else {
-            throw new NotificationException(NotificationExceptionType.NOTIFICATION_CAN_NOT_DELETE);
-        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("delete", true);
+        return response;
     }
 }

@@ -4,6 +4,7 @@ package ddog.domain.notification.port;
 import ddog.domain.notification.Notification;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NotificationPersist {
 
@@ -11,7 +12,7 @@ public interface NotificationPersist {
 
     void saveNotificationWithLogoutUser(Notification notification);
 
-    Notification findNotificationById(Long notificationId);
+    Optional<Notification> findNotificationById(Long notificationId);
 
     void deleteNotificationById(Long notificationId);
 

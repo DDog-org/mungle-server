@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -31,10 +32,9 @@ public class NotificationRepository implements NotificationPersist {
     }
 
     @Override
-    public Notification findNotificationById(Long notificationId) {
+    public Optional<Notification> findNotificationById(Long notificationId) {
         return notificationJpaRepository.findById(notificationId)
-                .map(NotificationJpaEntity::toModel)
-                .orElse(null);
+                .map(NotificationJpaEntity::toModel);
     }
 
     @Override
