@@ -11,7 +11,6 @@ import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
-import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
@@ -56,7 +55,7 @@ public class PaymentService {
 
             //결제 완료 검증
             if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
+                payment.invalidate();
                 paymentPersist.save(payment);
 
                 throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
@@ -64,10 +63,10 @@ public class PaymentService {
 
             //결제 금액 검증
             if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
+                payment.invalidate();
                 paymentPersist.save(payment);
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
 
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
                 throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
             }
 
