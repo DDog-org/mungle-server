@@ -4,6 +4,7 @@ import ddog.domain.notification.Notification;
 import ddog.domain.notification.enums.NotifyType;
 
 import ddog.domain.notification.port.NotificationPersist;
+import ddog.domain.user.port.UserPersist;
 import ddog.notification.application.dto.NotificationResp;
 import ddog.notification.application.exception.NotificationException;
 import ddog.notification.application.exception.NotificationExceptionType;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class NotificationService {
     private final ClientConnect clientConnect;
     private final UserStatusPersist userStatusPersist;
     private final NotificationPersist notificationPersist;
+    private final UserPersist userPersist;
 
     public SseEmitter connectClient(Long userId) {
         return clientConnect.toConnectClient(userId);
@@ -30,8 +33,6 @@ public class NotificationService {
 
     public void sendNotificationToUser(Long receiverId, NotifyType notifyType, String message) {
         try {
-            validateNotification(receiverId, notifyType, message);
-
             if (clientConnect.isUserConnected(receiverId)) {
                 clientConnect.sendNotificationToUser(receiverId, message);
             } else if (userStatusPersist.isUserLoggedIn(receiverId)) {
@@ -52,22 +53,18 @@ public class NotificationService {
     }
 
     public List<NotificationResp> findAllNotificationsBy(Long userId) {
-        if (userId == null) {
-            throw new NotificationException(NotificationExceptionType.USER_NOT_FOUND);
-        }
-        try {
-            List<NotificationResp> res = new ArrayList<>();
-            List<Notification> findNotification = notificationPersist.findNotificationsByUserId(userId);
-            for (Notification notification : findNotification) {
-                res.add(NotificationResp.builder()
+        userPersist.findByAccountId(userId)
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.USER_NOT_FOUND));
+
+        return Optional.ofNullable(notificationPersist.findNotificationsByUserId(userId))
+                .filter(notifications -> !notifications.isEmpty())
+                .orElseThrow(() -> new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND))
+                .stream()
+                .map(notification -> NotificationResp.builder()
                         .id(notification.getId())
                         .message(notification.getMessage())
-                        .build());
-            }
-            return res;
-        } catch (Exception e) {
-            throw new NotificationException(NotificationExceptionType.NOTIFICATION_NOT_FOUND);
-        }
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public Map<String, Object> checkNotificationById(Long notificationId) {
@@ -87,12 +84,6 @@ public class NotificationService {
             return response;
         } else {
             throw new NotificationException(NotificationExceptionType.NOTIFICATION_CAN_NOT_DELETE);
-        }
-    }
-
-    private void validateNotification(Long receiverId, NotifyType notifyType, String message) {
-        if (receiverId == null || message == null || notifyType == null) {
-            throw new NotificationException(NotificationExceptionType.ALERT_CAN_NOT);
         }
     }
 }
