@@ -20,11 +20,11 @@ public class ShopController {
 
     @GetMapping("/shops")
     public CommonResponseEntity<ShopResp> getBeautyShopsList(@RequestParam(required = false) String address, PayloadDto payloadDto) {
-        return success(shopService.findBeautyShops(payloadDto.getAccountId(),address));
+        return success(shopService.findBeautyShops(payloadDto.getAccountId(), address));
     }
 
     @GetMapping("/vets")
     public CommonResponseEntity<ShopResp> getVetsList(@RequestParam(required = false) String address, PayloadDto payloadDto) {
-        return success(shopService.findVets(payloadDto.getAccountId(),address));
+        return success(shopService.findVets(payloadDto.getAccountId(), address));
     }
 }

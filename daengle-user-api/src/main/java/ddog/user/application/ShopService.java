@@ -20,15 +20,27 @@ public class ShopService {
     private final UserPersist userPersist;
     private final VetPersist vetPersist;
 
-    public List<ShopResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
-        if(address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+    private String extractDistrict(String address) {
+        if (address == null) return null;
+        String[] parts = address.split(" ");
+        if (parts.length >= 3) {
+            return String.join(" ", parts[0], parts[1], parts[2]);
+        }
+        return address;
+    }
 
-        List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(address);
+    public List<ShopResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
+        if (address == null) {
+            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
+                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
+            ).getAddress();
+        }
+        String districtAddress = extractDistrict(address);
+        List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(districtAddress);
 
         return findBeautyShops.stream()
                 .map(ShopMapper::mapToBeautyShop)
                 .collect(Collectors.toList());
-
     }
 
     public ShopResp findBeautyShops(Long accountId, String address) {
@@ -39,14 +51,17 @@ public class ShopService {
     }
 
     public List<ShopResp.VetInfo> convertToVetList(String address, Long accountId) {
-        if(address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
-
-        List<Vet> findVets = vetPersist.findByAddressPrefix(address);
+        if (address == null) {
+            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
+                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
+            ).getAddress();
+        }
+        String districtAddress = extractDistrict(address);
+        List<Vet> findVets = vetPersist.findByAddressPrefix(districtAddress);
 
         return findVets.stream()
                 .map(ShopMapper::mapToVet)
                 .collect(Collectors.toList());
-
     }
 
     public ShopResp findVets(Long accountId, String address) {
@@ -55,6 +70,4 @@ public class ShopService {
                 .allVets(vetInfos)
                 .build();
     }
-
-
 }

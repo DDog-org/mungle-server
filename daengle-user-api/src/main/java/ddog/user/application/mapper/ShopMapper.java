@@ -21,9 +21,9 @@ public class ShopMapper {
     public static ShopResp.VetInfo mapToVet(Vet vet){
         return ShopResp.VetInfo.builder()
                 .vetId(vet.getVetId())
-                .vetName(vet.getVetName())
+                .vetName(vet.getName())
                 .vetAddress(vet.getAddress())
-                .vetImage(vet.getVetImage())
+                .vetImage(vet.getImageUrl())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
                 .build();
