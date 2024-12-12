@@ -7,6 +7,8 @@ import ddog.auth.exception.AuthException;
 import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Role;
 import ddog.domain.account.port.AccountPersist;
+import ddog.user.application.exception.account.AccountException;
+import ddog.user.application.exception.account.AccountExceptionType;
 import ddog.user.presentation.auth.dto.LoginResult;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class AuthService {
         String email = kakaoSocialService.getKakaoEmail(kakaoAccessToken);
         Role role = Role.DAENGLE;
 
-        if (!accountPersist.checkExistsAccountBy(email, role)) {
+        if (!accountPersist.hasAccountByEmailAndRole(email, role)) {
             return LoginResult.builder()
                     .isOnboarding(true)
                     .email(email)
@@ -53,7 +55,7 @@ public class AuthService {
         authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
 
         Long accountId = accountPersist.findAccountByEmailAndRole(email, role)
-                .orElseThrow(() -> new RuntimeException("Account Not Found"))
+                .orElseThrow(() -> new AccountException(AccountExceptionType.ACCOUNT_NOT_FOUND))
                 .getAccountId();
 
         Authentication authentication
@@ -63,6 +65,13 @@ public class AuthService {
     }
 
     public AccessTokenInfo reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
+
+        if (refreshToken == null) {
+            throw new AuthException(AuthExceptionType.MISSING_TOKEN);
+        }
+        if (refreshToken.isEmpty()) {
+            throw new AuthException(AuthExceptionType.EMPTY_TOKEN);
+        }
         if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
