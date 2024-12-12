@@ -26,8 +26,4 @@ public class ShopController {
         return success(shopService.findVets(payloadDto.getAccountId(), address));
     }
 
-//    @GetMapping("/shop/{shopId}")
-//    public CommonResponseEntity<ShopResp.ShopInfo> getBeautyShopDetail(@PathVariable("shopId") Long shopId, PayloadDto payloadDto) {
-//        return success(shopService.findBeautyShops())
-//    }
 }
