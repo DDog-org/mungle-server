@@ -64,7 +64,7 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
     public List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetId) {
         List<CareEstimate> estimate = new ArrayList<>();
-        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndEstimateStatus(vetId, EstimateStatus.ON_RESERVATION);
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndStatus(vetId, EstimateStatus.ON_RESERVATION);
 
         for (CareEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());
@@ -74,9 +74,9 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findCareEstimaesByVetIdAndProposal(Long vetId) {
+    public List<CareEstimate> findCareEstimatesByVetIdAndProposal(Long vetId) {
         List<CareEstimate> estimate = new ArrayList<>();
-        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimaesByVetIdAndProposal(vetId, Proposal.DESIGNATION);
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndProposal(vetId, Proposal.DESIGNATION);
 
         for (CareEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());

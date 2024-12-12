@@ -38,9 +38,9 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
 
     Page<CareEstimateJpaEntity> findByStatusAndProposalAndVetId(EstimateStatus status, Proposal proposal, Long vetId, Pageable pageable);
 
-    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndEstimateStatus(Long vetId, EstimateStatus status);
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndStatus(Long vetId, EstimateStatus status);
 
-    List<CareEstimateJpaEntity> findCareEstimaesByVetIdAndProposal(Long vetId, Proposal proposal);
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndProposal(Long vetId, Proposal proposal);
 
     List<CareEstimateJpaEntity> findByVetId(Long vetId);
 

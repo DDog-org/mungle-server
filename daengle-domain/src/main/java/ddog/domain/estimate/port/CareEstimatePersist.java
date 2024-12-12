@@ -23,7 +23,10 @@ public interface CareEstimatePersist {
     Page<CareEstimate> findByStatusAndProposalAndAddress(EstimateStatus estimateStatus, Proposal proposal, String address, Pageable pageable);
 
     Page<CareEstimate> findByStatusAndProposalAndVetId(EstimateStatus estimateStatus, Proposal proposal, Long accountId, Pageable pageable);
+
     List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetId);
-    List<CareEstimate> findCareEstimaesByVetIdAndProposal(Long vetId);
+
+    List<CareEstimate> findCareEstimatesByVetIdAndProposal(Long vetId);
+
     List<CareEstimate> findCareEstimatesByVetId(Long vetId);
 }

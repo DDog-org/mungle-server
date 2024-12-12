@@ -25,4 +25,10 @@ public class GroomerRepository implements GroomerPersist {
     public void save(Groomer newGroomer) {
         groomerJpaRepository.save(GroomerJpaEntity.from(newGroomer));
     }
+
+    @Override
+    public Optional<Groomer> findByGroomerId(Long groomerId) {
+        return groomerJpaRepository.findByGroomerId(groomerId)
+                .map(GroomerJpaEntity::toModel);
+    }
 }
