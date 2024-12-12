@@ -66,8 +66,7 @@ public class ReviewService {
                     .content(careReview.getContent())
                     .imageUrlList(careReview.getImageUrlList())
                     .build();
-
-        }).toList();
+        }).toList();    //careReviewList
 
         return ReviewListResp.builder()
                 .reviewCount(careReviews.getTotalElements())
