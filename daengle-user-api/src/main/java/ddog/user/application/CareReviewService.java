@@ -54,7 +54,7 @@ public class CareReviewService {
         return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
                 .vetId(savedCareReview.getVetId())
-                .careKeywordReviewList(savedCareReview.getCareKeywordReviewList())
+                .careKeywordList(savedCareReview.getCareKeywordList())
                 .revieweeName(savedCareReview.getRevieweeName())
                 .shopName(savedCareReview.getShopName())
                 .starRating(savedCareReview.getStarRating())
@@ -141,14 +141,14 @@ public class CareReviewService {
 
     private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
         CareReview.validateStarRating(postCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(postCareReviewInfo.getContent());
         CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 
     private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(modifyCareReviewInfo.getContent());
         CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
     }
@@ -159,13 +159,17 @@ public class CareReviewService {
             User reviewer = userPersist.findByAccountId(careReview.getReviewerId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
+            Reservation savedReservation = reservationPersist.findByReservationId(careReview.getReservationId())
+                    .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
             return CareReviewSummaryResp.builder()
                     .careReviewId(careReview.getCareReviewId())
                     .reviewerName(reviewer.getUsername())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .vetId(careReview.getVetId())
-                    .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                    .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
+                    .schedule(savedReservation.getSchedule())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())
                     .imageUrlList(careReview.getImageUrlList())

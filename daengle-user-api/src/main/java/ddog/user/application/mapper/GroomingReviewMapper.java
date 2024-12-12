@@ -20,7 +20,7 @@ public class GroomingReviewMapper {
                 .content(postGroomingReviewInfo.getContent())
                 .createTime(LocalDateTime.now())
                 .imageUrlList(postGroomingReviewInfo.getImageUrlList())
-                .groomingKeywordReviewList(postGroomingReviewInfo.getGroomingKeywordReviewList())
+                .groomingKeywordList(postGroomingReviewInfo.getGroomingKeywordList())
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class GroomingReviewMapper {
                 .createTime(groomingReview.getCreateTime())
                 .modifiedTime(LocalDateTime.now())
                 .imageUrlList(updateGroomingReviewInfo.getImageUrlList())
-                .groomingKeywordReviewList(updateGroomingReviewInfo.getGroomingKeywordReviewList())
+                .groomingKeywordList(updateGroomingReviewInfo.getGroomingKeywordList())
                 .build();
     }
 }
