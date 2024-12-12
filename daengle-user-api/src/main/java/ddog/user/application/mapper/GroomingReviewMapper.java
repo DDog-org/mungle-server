@@ -18,7 +18,7 @@ public class GroomingReviewMapper {
                 .shopName(reservation.getShopName())
                 .starRating(postGroomingReviewInfo.getStarRating())
                 .content(postGroomingReviewInfo.getContent())
-                .createTime(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .imageUrlList(postGroomingReviewInfo.getImageUrlList())
                 .groomingKeywordList(postGroomingReviewInfo.getGroomingKeywordList())
                 .build();
@@ -34,7 +34,7 @@ public class GroomingReviewMapper {
                 .shopName(groomingReview.getShopName())
                 .starRating(updateGroomingReviewInfo.getStarRating())
                 .content(updateGroomingReviewInfo.getContent())
-                .createTime(groomingReview.getCreateTime())
+                .createdAt(groomingReview.getCreatedAt())
                 .modifiedTime(LocalDateTime.now())
                 .imageUrlList(updateGroomingReviewInfo.getImageUrlList())
                 .groomingKeywordList(updateGroomingReviewInfo.getGroomingKeywordList())

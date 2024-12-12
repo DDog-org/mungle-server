@@ -50,7 +50,7 @@ public class ReviewService {
                     .groomerId(groomingReview.getGroomerId())
                     .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())
-                    .schedule(savedReservation.getSchedule())
+                    .createdAt(savedReservation.getSchedule())
                     .starRating(groomingReview.getStarRating())
                     .content(groomingReview.getContent())
                     .imageUrlList(groomingReview.getImageUrlList())

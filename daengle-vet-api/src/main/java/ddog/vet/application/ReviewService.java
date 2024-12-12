@@ -51,7 +51,7 @@ public class ReviewService {
             User reviewer = userPersist.findByAccountId(careReview.getReviewerId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
-            Reservation savedReservation = reservationPersist.findByReservationId(careReview.getReservationId())
+            reservationPersist.findByReservationId(careReview.getReservationId())
                     .orElseThrow(() -> new CareReviewException(CareReviewExceptionType.CARE_REVIEW_RESERVATION_NOT_FOUND));
 
             return ReviewSummaryResp.builder()
@@ -61,7 +61,7 @@ public class ReviewService {
                     .vetId(careReview.getVetId())
                     .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
-                    .schedule(savedReservation.getSchedule())
+                    .createdAt(careReview.getCreatedAt())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())
                     .imageUrlList(careReview.getImageUrlList())

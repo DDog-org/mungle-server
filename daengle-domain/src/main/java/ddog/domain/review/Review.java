@@ -20,7 +20,7 @@ public abstract class Review {
     private String shopName;
     private Long starRating;
     private String content;
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
     private LocalDateTime modifiedTime;
     private List<String> imageUrlList;
 

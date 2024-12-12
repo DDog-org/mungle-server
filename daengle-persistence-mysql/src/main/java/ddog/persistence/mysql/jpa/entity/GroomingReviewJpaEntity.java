@@ -28,7 +28,7 @@ public class GroomingReviewJpaEntity {
     private String shopName;
     private Long starRating;
     private String content;
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
 
     @ElementCollection // 이미지 URL 리스트
     @CollectionTable(name = "grooming_review_image_url_list", joinColumns = @JoinColumn(name = "grooming_review_id"))
@@ -52,7 +52,7 @@ public class GroomingReviewJpaEntity {
                 .shopName(groomingReview.getShopName())
                 .starRating(groomingReview.getStarRating())
                 .content(groomingReview.getContent())
-                .createTime(groomingReview.getCreateTime())
+                .createdAt(groomingReview.getCreatedAt())
                 .imageUrlList(groomingReview.getImageUrlList())
                 .groomingKeywordList(groomingReview.getGroomingKeywordList())
                 .build();
@@ -68,7 +68,7 @@ public class GroomingReviewJpaEntity {
                 .shopName(shopName)
                 .starRating(starRating)
                 .content(content)
-                .createTime(createTime)
+                .createdAt(createdAt)
                 .imageUrlList(imageUrlList)
                 .groomingKeywordList(groomingKeywordList)
                 .build();

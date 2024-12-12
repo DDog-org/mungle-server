@@ -16,7 +16,7 @@ public class ReviewSummaryResp {
     private String reviewerName;
     private String reviewerImageUrl;
     private String revieweeName;
-    private LocalDateTime schedule;
+    private LocalDateTime createdAt;
     private double starRating;
     private String content;
     private List<String> imageUrlList;
