@@ -19,7 +19,7 @@ public class Groomer {
     private int daengleMeter;
     private String name;
     private String phoneNumber;
-    private String imageURL;
+    private String imageUrl;
     private String email;
     private String address;
     private String detailAddress;

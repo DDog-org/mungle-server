@@ -24,7 +24,7 @@ public class GroomerJpaEntity {
     private int daengleMeter;
     private String name;
     private String phoneNumber;
-    private String imageURL;
+    private String imageUrl;
     private String email;
     private String address;
     private String detailAddress;
@@ -53,7 +53,7 @@ public class GroomerJpaEntity {
                 .daengleMeter(groomer.getDaengleMeter())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
-                .imageURL(groomer.getImageURL())
+                .imageUrl(groomer.getImageUrl())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
                 .detailAddress(groomer.getDetailAddress())
@@ -72,7 +72,7 @@ public class GroomerJpaEntity {
                 .daengleMeter(daengleMeter)
                 .name(name)
                 .phoneNumber(phoneNumber)
-                .imageURL(imageURL)
+                .imageUrl(imageUrl)
                 .email(email)
                 .address(address)
                 .detailAddress(detailAddress)

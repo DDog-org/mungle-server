@@ -165,7 +165,7 @@ public class CareReviewService {
             return CareReviewSummaryResp.builder()
                     .careReviewId(careReview.getCareReviewId())
                     .reviewerName(reviewer.getUsername())
-                    .reviewerImageUrl(reviewer.getImageURL())
+                    .reviewerImageUrl(reviewer.getImageUrl())
                     .vetId(careReview.getVetId())
                     .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())

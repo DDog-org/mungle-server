@@ -24,7 +24,7 @@ public class EstimateInfo {
         public static class Content {
             private Long estimateId;
             private Long petId;
-            private String imageURL;
+            private String imageUrl;
             private String name;
         }
     }
@@ -41,7 +41,7 @@ public class EstimateInfo {
             private Long id;
             private String name;
             private int daengleMeter;
-            private String imageURL;
+            private String imageUrl;
             private String shopName;
             private List<GroomingKeyword> keywords;
 
@@ -62,7 +62,7 @@ public class EstimateInfo {
             private Long id;
             private String name;
             private int daengleMeter;
-            private String imageURL;
+            private String imageUrl;
             private List<CareKeyword> keywords;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")

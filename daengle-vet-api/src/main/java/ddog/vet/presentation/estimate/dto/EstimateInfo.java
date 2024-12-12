@@ -22,7 +22,7 @@ public class EstimateInfo {
         @Builder
         public static class Content {
             private Long id;
-            private String imageURL;
+            private String imageUrl;
             private String nickname;
             private Proposal proposal;
             private String significant;
@@ -42,7 +42,7 @@ public class EstimateInfo {
         @Builder
         public static class Content {
             private Long id;
-            private String imageURL;
+            private String imageUrl;
             private String nickname;
             private Proposal proposal;
             private String significant;

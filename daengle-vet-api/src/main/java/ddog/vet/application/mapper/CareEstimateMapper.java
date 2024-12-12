@@ -16,7 +16,7 @@ public class CareEstimateMapper {
     public static EstimateInfo.General.Content mapToGeneralContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.General.Content.builder()
                 .id(estimate.getEstimateId())
-                .imageURL(user.getImageURL())
+                .imageUrl(user.getImageUrl())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
                 .significant(pet.getSignificant())
@@ -27,7 +27,7 @@ public class CareEstimateMapper {
     public static EstimateInfo.Designation.Content mapToDesignationContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Designation.Content.builder()
                 .id(estimate.getEstimateId())
-                .imageURL(user.getImageURL())
+                .imageUrl(user.getImageUrl())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
                 .significant(pet.getSignificant())
@@ -37,13 +37,13 @@ public class CareEstimateMapper {
 
     public static EstimateDetail mapToEstimateDetail(CareEstimate estimate, User user, Pet pet) {
         return EstimateDetail.builder()
-                .userImageURL(user.getImageURL())
+                .userImageUrl(user.getImageUrl())
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
-                .petImageURL(pet.getImageURL())
+                .petImageUrl(pet.getImageUrl())
                 .petName(pet.getName())
                 .age(pet.getAge())
                 .weight(pet.getWeight())

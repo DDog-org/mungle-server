@@ -24,7 +24,7 @@ public class GroomerMapper {
 
     public static ProfileInfo.UpdatePage toModifyPage(Groomer groomer) {
         return ProfileInfo.UpdatePage.builder()
-                .image(groomer.getImageURL())
+                .image(groomer.getImageUrl())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
                 .email(groomer.getEmail())
@@ -41,7 +41,7 @@ public class GroomerMapper {
                 .daengleMeter(groomer.getDaengleMeter())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
-                .imageURL(request.getImage())
+                .imageUrl(request.getImage())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
                 .shopName(groomer.getShopName())

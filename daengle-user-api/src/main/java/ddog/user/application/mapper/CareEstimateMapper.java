@@ -27,7 +27,7 @@ public class CareEstimateMapper {
         List<UserInfo.PetInfo> petInfos = toPetInfos(user);
 
         return UserInfo.Care.builder()
-                .vetImageURL(vet.getImageURL())
+                .vetImageUrl(vet.getImageUrl())
                 .vetName(vet.getName())
                 .address(user.getAddress())
                 .petInfos(petInfos)
@@ -39,7 +39,7 @@ public class CareEstimateMapper {
         for (Pet pet : user.getPets()) {
             petInfos.add(UserInfo.PetInfo.builder()
                     .petId(pet.getPetId())
-                    .imageURL(pet.getImageURL())
+                    .imageUrl(pet.getImageUrl())
                     .name(pet.getName())
                     .build());
         }
@@ -82,7 +82,7 @@ public class CareEstimateMapper {
                 .id(estimate.getEstimateId())
                 .name(vet.getName())
                 .daengleMeter(vet.getDaengleMeter())
-                .imageURL(vet.getImageURL())
+                .imageUrl(vet.getImageUrl())
                 .keywords(vet.getKeywords())
                 .reservedDate(estimate.getReservedDate())
                 .build();
@@ -94,7 +94,7 @@ public class CareEstimateMapper {
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
-                .petImageURL(pet.getImageURL())
+                .petImageUrl(pet.getImageUrl())
                 .petName(pet.getName())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
@@ -105,7 +105,7 @@ public class CareEstimateMapper {
         return CareEstimateDetail.builder()
                 .careEstimateId(estimate.getEstimateId())
                 .vetId(vet.getVetId())
-                .imageURL(vet.getImageURL())
+                .imageUrl(vet.getImageUrl())
                 .name(vet.getName())
                 .daengleMeter(vet.getDaengleMeter())
                 .proposal(estimate.getProposal())

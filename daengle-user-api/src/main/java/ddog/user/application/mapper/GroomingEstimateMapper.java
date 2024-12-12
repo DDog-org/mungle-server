@@ -27,7 +27,7 @@ public class GroomingEstimateMapper {
         List<UserInfo.PetInfo> petInfos = toPetInfos(user);
 
         return UserInfo.Grooming.builder()
-                .groomerImageURL(groomer.getImageURL())
+                .groomerImageUrl(groomer.getImageUrl())
                 .groomerName(groomer.getName())
                 .shopName(groomer.getShopName())
                 .address(user.getAddress())
@@ -40,7 +40,7 @@ public class GroomingEstimateMapper {
         for (Pet pet : user.getPets()) {
             petInfos.add(UserInfo.PetInfo.builder()
                     .petId(pet.getPetId())
-                    .imageURL(pet.getImageURL())
+                    .imageUrl(pet.getImageUrl())
                     .name(pet.getName())
                     .build());
         }
@@ -83,7 +83,7 @@ public class GroomingEstimateMapper {
                 .id(estimate.getEstimateId())
                 .name(groomer.getName())
                 .daengleMeter(groomer.getDaengleMeter())
-                .imageURL(groomer.getImageURL())
+                .imageUrl(groomer.getImageUrl())
                 .shopName(groomer.getShopName())
                 .keywords(groomer.getKeywords())
                 .reservedDate(estimate.getReservedDate())
@@ -96,7 +96,7 @@ public class GroomingEstimateMapper {
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
-                .petImageURL(pet.getImageURL())
+                .petImageUrl(pet.getImageUrl())
                 .petName(pet.getName())
                 .desiredStyle(estimate.getDesiredStyle())
                 .requirements(estimate.getRequirements())
@@ -107,7 +107,7 @@ public class GroomingEstimateMapper {
         return GroomingEstimateDetail.builder()
                 .groomingEstimateId(estimate.getEstimateId())
                 .groomerId(groomer.getGroomerId())
-                .imageURL(groomer.getImageURL())
+                .imageUrl(groomer.getImageUrl())
                 .name(groomer.getName())
                 .shopName(groomer.getShopName())
                 .daengleMeter(groomer.getDaengleMeter())

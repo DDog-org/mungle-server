@@ -26,7 +26,7 @@ public class VetJpaEntity {
     private String email;
     private int daengleMeter;
     private String name;
-    private String imageURL;
+    private String imageUrl;
     private String address;
     private String detailAddress;
     private String phoneNumber;
@@ -56,7 +56,7 @@ public class VetJpaEntity {
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
                 .name(vet.getName())
-                .imageURL(vet.getImageURL())
+                .imageUrl(vet.getImageUrl())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(vet.getPhoneNumber())
@@ -76,7 +76,7 @@ public class VetJpaEntity {
                 .email(email)
                 .daengleMeter(daengleMeter)
                 .name(name)
-                .imageURL(imageURL)
+                .imageUrl(imageUrl)
                 .address(address)
                 .detailAddress(detailAddress)
                 .phoneNumber(phoneNumber)

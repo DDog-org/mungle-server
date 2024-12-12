@@ -26,7 +26,7 @@ public class PetJpaEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String name;
-    private String imageURL;
+    private String imageUrl;
     private String significant;
     private int birth;
 
@@ -56,7 +56,7 @@ public class PetJpaEntity {
                 .accountId(accountId)
                 .gender(gender)
                 .name(name)
-                .imageURL(imageURL)
+                .imageUrl(imageUrl)
                 .significant(significant)
                 .birth(birth)
                 .weight(weight)
@@ -75,7 +75,7 @@ public class PetJpaEntity {
                 .accountId(pet.getAccountId())
                 .gender(pet.getGender())
                 .name(pet.getName())
-                .imageURL(pet.getImageURL())
+                .imageUrl(pet.getImageUrl())
                 .significant(pet.getSignificant())
                 .birth(pet.getBirth())
                 .weight(pet.getWeight())

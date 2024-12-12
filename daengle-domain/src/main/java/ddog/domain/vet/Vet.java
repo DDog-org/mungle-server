@@ -22,7 +22,7 @@ public class Vet {
     private String email;
     private int daengleMeter;
     private String name;
-    private String imageURL;
+    private String imageUrl;
     private String address;
     private String detailAddress;
     private String phoneNumber;

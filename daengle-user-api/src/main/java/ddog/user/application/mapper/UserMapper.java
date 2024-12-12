@@ -42,7 +42,7 @@ public class UserMapper {
 
     public static ProfileInfo.UpdatePage toUserProfileInfo(User user) {
         return ProfileInfo.UpdatePage.builder()
-                .image(user.getImageURL())
+                .image(user.getImageUrl())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
@@ -72,7 +72,7 @@ public class UserMapper {
 
             petDetails.add(PetInfo.Detail.builder()
                     .id(pet.getPetId())
-                    .image(pet.getImageURL())
+                    .image(pet.getImageUrl())
                     .name(pet.getName())
                     .birth(pet.getBirth())
                     .gender(pet.getGender())

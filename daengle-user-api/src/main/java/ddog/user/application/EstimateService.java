@@ -137,7 +137,7 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getImageURL())
+                            .imageUrl(pet.getImageUrl())
                             .name(pet.getName())
                             .build()));
         }
@@ -157,7 +157,7 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getImageURL())
+                            .imageUrl(pet.getImageUrl())
                             .name(pet.getName())
                             .build()));
         }
@@ -196,7 +196,7 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getImageURL())
+                            .imageUrl(pet.getImageUrl())
                             .name(pet.getName())
                             .build()));
         }
@@ -217,7 +217,7 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getImageURL())
+                            .imageUrl(pet.getImageUrl())
                             .name(pet.getName())
                             .build()));
         }

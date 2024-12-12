@@ -20,7 +20,7 @@ public class UserEstimate {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         public LocalDateTime reservedDate;
         public Proposal proposal;
-        public String petImageURL;
+        public String petImageUrl;
         public String petName;
         public String desiredStyle;
         public String requirements;
@@ -35,7 +35,7 @@ public class UserEstimate {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
         public LocalDateTime reservedDate;
         public Proposal proposal;
-        public String petImageURL;
+        public String petImageUrl;
         public String petName;
         public String symptoms;
         public String requirements;

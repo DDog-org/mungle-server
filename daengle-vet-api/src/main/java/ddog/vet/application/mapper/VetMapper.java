@@ -26,7 +26,7 @@ public class VetMapper {
 
     public static ProfileInfo.ModifyPage toModifyPage(Vet vet) {
         return ProfileInfo.ModifyPage.builder()
-                .image(vet.getImageURL())
+                .image(vet.getImageUrl())
                 .name(vet.getName())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
@@ -45,7 +45,7 @@ public class VetMapper {
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
                 .name(vet.getName())
-                .imageURL(request.getImage())
+                .imageUrl(request.getImage())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())
