@@ -1,6 +1,6 @@
-package ddog.domain.beauty.port;
+package ddog.domain.shop.port;
 
-import ddog.domain.beauty.BeautyShop;
+import ddog.domain.shop.BeautyShop;
 
 import java.util.List;
 

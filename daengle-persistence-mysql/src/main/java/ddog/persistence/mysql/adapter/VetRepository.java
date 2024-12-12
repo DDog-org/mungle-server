@@ -7,7 +7,9 @@ import ddog.domain.vet.port.VetPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,5 +32,22 @@ public class VetRepository implements VetPersist {
     @Override
     public void save(Vet vet) {
         vetJpaRepository.save(VetJpaEntity.from(vet));
+    }
+
+    @Override
+    public List<Vet> findByAddress(String address) {
+        List<VetJpaEntity> vets = vetJpaRepository.findVetsByAddress(address);
+
+        return vets.stream().map(VetJpaEntity::toModel)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Vet> findByAddressPrefix(String addressPrefix) {
+        List<VetJpaEntity> vets = vetJpaRepository.findVetsByAddressPrefix(addressPrefix);
+
+        return vets.stream()
+                .map(VetJpaEntity::toModel)
+                .collect(Collectors.toList());
     }
 }

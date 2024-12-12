@@ -1,4 +1,4 @@
-package ddog.domain.beauty;
+package ddog.domain.shop;
 
 import ddog.domain.groomer.Groomer;
 import lombok.AllArgsConstructor;

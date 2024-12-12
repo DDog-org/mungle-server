@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.jpa.entity;
 
-import ddog.domain.beauty.BeautyShop;
+import ddog.domain.shop.BeautyShop;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

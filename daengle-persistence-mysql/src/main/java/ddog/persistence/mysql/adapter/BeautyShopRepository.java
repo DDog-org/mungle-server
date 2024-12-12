@@ -1,7 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
-import ddog.domain.beauty.BeautyShop;
-import ddog.domain.beauty.port.BeautyShopPersist;
+import ddog.domain.shop.BeautyShop;
+import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.persistence.mysql.jpa.entity.BeautyShopJpaEntity;
 import ddog.persistence.mysql.jpa.repository.BeautyShopJpaRepository;
 import lombok.RequiredArgsConstructor;
