@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -60,4 +62,32 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.findByEstimateId(estimateId)
                 .map(CareEstimateJpaEntity::toModel);
     }
+    public List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetId) {
+        List<CareEstimate> estimate = new ArrayList<>();
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndEstimateStatus(vetId, EstimateStatus.ON_RESERVATION);
+
+        for (CareEstimateJpaEntity findEstimate : findEstimates) {
+            estimate.add(findEstimate.toModel());
+        }
+
+        return estimate;
+    }
+
+    @Override
+    public List<CareEstimate> findCareEstimaesByVetIdAndProposal(Long vetId) {
+        List<CareEstimate> estimate = new ArrayList<>();
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimaesByVetIdAndProposal(vetId, Proposal.DESIGNATION);
+
+        for (CareEstimateJpaEntity findEstimate : findEstimates) {
+            estimate.add(findEstimate.toModel());
+        }
+
+        return estimate;
+    }
+
+    @Override
+    public List<CareEstimate> findCareEstimatesByVetId(Long vetId) {
+        return careEstimateJpaRepository.findByVetId(vetId).stream().map(CareEstimateJpaEntity::toModel).toList();
+    }
 }
+

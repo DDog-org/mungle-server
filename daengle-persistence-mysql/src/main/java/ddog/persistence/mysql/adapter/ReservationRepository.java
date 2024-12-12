@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,5 +37,17 @@ public class ReservationRepository implements ReservationPersist {
         return reservationJpaRepository.findByCustomerIdAndServiceTypeAndReservationStatus(
                         accountId, serviceType, ReservationStatus.DEPOSIT_PAID, pageable)
                 .map(ReservationJpaEntity::toModel);
+    }
+
+    @Override
+    public List<Reservation> findTodayCareReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId) {
+        return reservationJpaRepository.findTodayReservationByVetId(dateTime.toLocalDate(), ServiceType.CARE, recipientId)
+                .stream().map(ReservationJpaEntity::toModel).toList();
+    }
+
+    @Override
+    public List<Reservation> findTodayGroomingReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId) {
+        return reservationJpaRepository.findTodayReservationByVetId(dateTime.toLocalDate(), ServiceType.GROOMING, recipientId)
+                .stream().map(ReservationJpaEntity::toModel).toList();
     }
 }

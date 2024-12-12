@@ -6,7 +6,10 @@ import ddog.persistence.mysql.jpa.entity.ReservationJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEntity, Long> {
@@ -15,4 +18,7 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     Page<ReservationJpaEntity> findByCustomerIdAndServiceTypeAndReservationStatus(
             Long customerId, ServiceType serviceType, ReservationStatus reservationStatus, Pageable pageable);
+
+    @Query("SELECT r FROM Reservations r WHERE DATE(r.schedule) = :today AND r.serviceType = :serviceType AND r.recipientId = :recipientId")
+    List<ReservationJpaEntity> findTodayReservationByVetId(LocalDate today, ServiceType serviceType, Long recipientId);
 }
