@@ -37,10 +37,10 @@ public class Payment {
 
     public void validationSuccess(String impUid) {
         this.paymentUid = impUid;
-        this.status = PaymentStatus.COMPLETED;
+        this.status = PaymentStatus.PAYMENT_COMPLETED;
     }
 
-    public void cancel() {
-        this.status = PaymentStatus.CANCEL;
+    public void invalidate() {
+        this.status = PaymentStatus.PAYMENT_INVALIDATION;
     }
 }

@@ -11,22 +11,31 @@ import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
-import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.PaymentCallbackResp;
+import ddog.payment.application.dto.response.PaymentHistoryDetail;
+import ddog.payment.application.dto.response.PaymentHistoryListResp;
+import ddog.payment.application.dto.response.PaymentHistorySummaryResp;
 import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +43,7 @@ import java.math.BigDecimal;
 public class PaymentService {
 
     private final IamportClient iamportClient;
+    private final UserPersist userPersist;
     private final OrderPersist orderPersist;
     private final PaymentPersist paymentPersist;
     private final ReservationPersist reservationPersist;
@@ -56,7 +66,7 @@ public class PaymentService {
 
             //결제 완료 검증
             if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
+                payment.invalidate();
                 paymentPersist.save(payment);
 
                 throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
@@ -64,10 +74,10 @@ public class PaymentService {
 
             //결제 금액 검증
             if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.cancel();
+                payment.invalidate();
                 paymentPersist.save(payment);
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
 
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
                 throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
             }
 
@@ -114,5 +124,48 @@ public class PaymentService {
         } else {
             throw new IllegalArgumentException("서비스 타입이 올바르지 않습니다.");
         }
+    }
+
+    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
+
+        return mappingToPaymentHistoryListResp(reservations);
+    }
+
+    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
+
+        return PaymentHistoryDetail.builder()
+                .reservationId(savedReservation.getReservationId())
+                .reservationStatus(savedReservation.getReservationStatus())
+                .recipientName(savedReservation.getRecipientName())
+                .shopName(savedReservation.getShopName())
+                .schedule(savedReservation.getSchedule())
+                .deposit(savedReservation.getDeposit())
+                .customerName(savedReservation.getCustomerName())
+                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
+                .visitorName(savedReservation.getVisitorName())
+                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
+                .build();
+    }
+
+    private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {
+        List<PaymentHistorySummaryResp> paymentHistoryList = reservations.stream().map(reservation -> PaymentHistorySummaryResp.builder()
+                .reservationId(reservation.getReservationId())
+                .recipientImageUrl(reservation.getRecipientImageUrl())
+                .recipientName(reservation.getRecipientName())
+                .shopName(reservation.getShopName())
+                .paymentDate(reservation.getSchedule())
+                .status(reservation.getReservationStatus().name())
+                .build()).collect(Collectors.toList());
+
+        return PaymentHistoryListResp.builder()
+                .paymentHistoryList(paymentHistoryList)
+                .build();
     }
 }

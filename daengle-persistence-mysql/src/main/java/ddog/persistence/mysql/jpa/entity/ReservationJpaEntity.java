@@ -31,11 +31,13 @@ public class ReservationJpaEntity {
     private ReservationStatus reservationStatus;
 
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;
     private Long deposit;
     private Long customerId;
+    private String customerName;
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;
@@ -48,11 +50,13 @@ public class ReservationJpaEntity {
                 .serviceType(reservation.getServiceType())
                 .reservationStatus(reservation.getReservationStatus())
                 .recipientId(reservation.getRecipientId())
+                .recipientImageUrl(reservation.getRecipientImageUrl())
                 .recipientName(reservation.getRecipientName())
                 .shopName(reservation.getShopName())
                 .schedule(reservation.getSchedule())
                 .deposit(reservation.getDeposit())
                 .customerId(reservation.getCustomerId())
+                .customerName(reservation.getCustomerName())
                 .customerPhoneNumber(reservation.getCustomerPhoneNumber())
                 .visitorName(reservation.getVisitorName())
                 .visitorPhoneNumber(reservation.getVisitorPhoneNumber())
@@ -67,11 +71,13 @@ public class ReservationJpaEntity {
                 .serviceType(serviceType)
                 .reservationStatus(reservationStatus)
                 .recipientId(recipientId)
+                .recipientImageUrl(recipientImageUrl)
                 .recipientName(recipientName)
                 .shopName(shopName)
                 .schedule(schedule)
                 .deposit(deposit)
                 .customerId(customerId)
+                .customerName(customerName)
                 .customerPhoneNumber(customerPhoneNumber)
                 .visitorName(visitorName)
                 .visitorPhoneNumber(visitorPhoneNumber)
