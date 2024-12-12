@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class CareReviewService {
 
     private final BadWordFiltering badWordFiltering;
 
+    @Transactional
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
@@ -61,6 +63,7 @@ public class CareReviewService {
                 .build();
     }
 
+    @Transactional
     public ReviewResp updateReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
@@ -80,6 +83,21 @@ public class CareReviewService {
                 .build();
     }
 
+    @Transactional
+    public ReviewResp deleteReview(Long reviewId) {
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        careReviewPersist.delete(savedCareReview);
+
+        return ReviewResp.builder()
+                .reviewId(savedCareReview.getCareReviewId())
+                .reviewerId(savedCareReview.getReviewerId())
+                .revieweeId(savedCareReview.getVetId())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
     public CareReviewDetailResp findReview(Long reviewId) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
@@ -96,19 +114,7 @@ public class CareReviewService {
                 .build();
     }
 
-    public ReviewResp deleteReview(Long reviewId) {
-        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
-                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
-
-        careReviewPersist.delete(savedCareReview);
-
-        return ReviewResp.builder()
-                .reviewId(savedCareReview.getCareReviewId())
-                .reviewerId(savedCareReview.getReviewerId())
-                .revieweeId(savedCareReview.getVetId())
-                .build();
-    }
-
+    @Transactional(readOnly = true)
     public CareReviewListResp findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -144,17 +150,23 @@ public class CareReviewService {
     }
 
     private CareReviewListResp mappingToCareReviewListResp(Page<CareReview> careReviews) {
-        List<CareReviewSummaryResp> careReviewList = careReviews.stream().map(careReview ->
-                CareReviewSummaryResp.builder()
-                        .careReviewId(careReview.getCareReviewId())
-                        .vetId(careReview.getVetId())
-                        .careKeywordReviewList(careReview.getCareKeywordReviewList())
-                        .revieweeName(careReview.getRevieweeName())
-                        .starRating(careReview.getStarRating())
-                        .content(careReview.getContent())
-                        .imageUrlList(careReview.getImageUrlList())
-                        .build()
-        ).toList();
+        List<CareReviewSummaryResp> careReviewList = careReviews.stream().map(careReview -> {
+
+            User reviewer = userPersist.findByAccountId(careReview.getReviewerId())
+                    .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+            return CareReviewSummaryResp.builder()
+                    .careReviewId(careReview.getCareReviewId())
+                    .reviewerName(reviewer.getUsername())
+                    .reviewerImageUrl(reviewer.getUserImage())
+                    .vetId(careReview.getVetId())
+                    .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                    .revieweeName(careReview.getRevieweeName())
+                    .starRating(careReview.getStarRating())
+                    .content(careReview.getContent())
+                    .imageUrlList(careReview.getImageUrlList())
+                    .build();
+        }).toList(); // careReviewList
 
         return CareReviewListResp.builder()
                 .reviewCount(careReviews.getTotalElements())

@@ -2,6 +2,7 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 public class EstimateController {
 
     private final EstimateService estimateService;
+    private final NotificationService notificationService;
 
     /* 미용사, 사용자 및 반려견 정보 제공 */
     @PostMapping("/groomer-user-info")
