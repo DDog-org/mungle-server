@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -42,16 +41,11 @@ public class EstimateService {
         List<CareEstimate> generalEstimates = careEstimatePersist.findCareEstimatesByAddress(vet.getAddress());
         List<CareEstimate> designationEstimates = careEstimatePersist.findCareEstimatesByVetId(vet.getAccountId());
 
-        List<EstimateInfo.Content> allContents = convertEstimatesToContents(generalEstimates);
+        List<EstimateInfo.Content> generalContents = convertEstimatesToContents(generalEstimates);
         List<EstimateInfo.Content> designationContents = convertEstimatesToContents(designationEstimates);
 
-        allContents.addAll(designationContents);
-
-        // estimateId 기준으로 오름차순 정렬
-        allContents.sort(Comparator.comparing(EstimateInfo.Content::getId));
-
         return EstimateInfo.builder()
-                .allEstimates(allContents)
+                .generalEstimates(generalContents)
                 .designationEstimates(designationContents)
                 .build();
     }

@@ -1,12 +1,11 @@
 package ddog.domain.review;
 
-import ddog.domain.review.enums.GroomingKeywordReview;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -16,10 +15,10 @@ import java.util.List;
 public class GroomingReview extends Review {
     private Long groomingReviewId;
     private Long groomerId;
-    private List<GroomingKeywordReview> groomingKeywordReviewList;
+    private List<GroomingKeyword> groomingKeywordList;
 
-    public static void validateGroomingKeywordReviewList(List<GroomingKeywordReview> groomingKeywordReviewList) {
-        if (groomingKeywordReviewList == null || groomingKeywordReviewList.isEmpty() || groomingKeywordReviewList.size() > 5) {
+    public static void validateGroomingKeywordReviewList(List<GroomingKeyword> groomingKeywordList) {
+        if (groomingKeywordList == null || groomingKeywordList.isEmpty() || groomingKeywordList.size() > 5) {
             throw new IllegalArgumentException("Grooming keyword review list must contain 1 to 3 items.");
         }
     }

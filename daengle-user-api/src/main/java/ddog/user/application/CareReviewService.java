@@ -1,5 +1,6 @@
 package ddog.user.application;
 
+import com.vane.badwordfiltering.BadWordFiltering;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
 import ddog.user.application.mapper.CareReviewMapper;
@@ -40,11 +41,14 @@ public class CareReviewService {
     private final VetPersist vetPersist;
     private final UserPersist userPersist;
 
+    private final BadWordFiltering badWordFiltering;
+
     @Transactional
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        if(isContainBanWord(postCareReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
@@ -64,6 +68,7 @@ public class CareReviewService {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        if(isContainBanWord(modifyCareReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
         validateModifyCareReviewInfoDataFormat(modifyCareReviewInfo);
 
         CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, modifyCareReviewInfo);
@@ -100,7 +105,7 @@ public class CareReviewService {
         return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
                 .vetId(savedCareReview.getVetId())
-                .careKeywordReviewList(savedCareReview.getCareKeywordReviewList())
+                .careKeywordList(savedCareReview.getCareKeywordList())
                 .revieweeName(savedCareReview.getRevieweeName())
                 .shopName(savedCareReview.getShopName())
                 .starRating(savedCareReview.getStarRating())
@@ -132,14 +137,14 @@ public class CareReviewService {
 
     private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
         CareReview.validateStarRating(postCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(postCareReviewInfo.getContent());
         CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 
     private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(modifyCareReviewInfo.getContent());
         CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
     }
@@ -155,7 +160,7 @@ public class CareReviewService {
                     .reviewerName(reviewer.getUsername())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .vetId(careReview.getVetId())
-                    .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                    .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())
@@ -167,5 +172,10 @@ public class CareReviewService {
                 .reviewCount(careReviews.getTotalElements())
                 .reviewList(careReviewList)
                 .build();
+    }
+
+    private boolean isContainBanWord(String content) {
+        String filteredContent = badWordFiltering.change(content, new String[] {"_",",",".","!","?","@","1","2","3","4","5","6","7","8","9","0"," "});
+        return !content.equals(filteredContent);
     }
 }

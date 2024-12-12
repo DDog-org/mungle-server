@@ -1,7 +1,7 @@
 package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.review.CareReview;
-import ddog.domain.review.enums.CareKeywordReview;
+import ddog.domain.vet.enums.CareKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,7 +39,7 @@ public class CareReviewJpaEntity {
     @CollectionTable(name = "care_review_keyword_list", joinColumns = @JoinColumn(name = "care_review_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "keyword_list")
-    private List<CareKeywordReview> careKeywordReviewList;
+    private List<CareKeyword> careKeywordList;
 
     public static CareReviewJpaEntity from (CareReview careReview) {
         return CareReviewJpaEntity.builder()
@@ -54,7 +54,7 @@ public class CareReviewJpaEntity {
                 .content(careReview.getContent())
                 .createTime(careReview.getCreateTime())
                 .imageUrlList(careReview.getImageUrlList())
-                .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                .careKeywordList(careReview.getCareKeywordList())
                 .build();
     }
 
@@ -70,7 +70,7 @@ public class CareReviewJpaEntity {
                 .content(content)
                 .createTime(createTime)
                 .imageUrlList(imageUrlList)
-                .careKeywordReviewList(careKeywordReviewList)
+                .careKeywordList(careKeywordList)
                 .build();
     }
 }

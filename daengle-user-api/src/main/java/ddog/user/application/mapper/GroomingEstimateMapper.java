@@ -7,6 +7,7 @@ import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.user.presentation.estimate.dto.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,14 +79,14 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static EstimateInfo.PetInfo.Grooming mapToGrooming(GroomingEstimate estimate, Groomer groomer) {
-        return EstimateInfo.PetInfo.Grooming.builder()
-                .groomingEstimateId(estimate.getEstimateId())
+    public static EstimateInfo.Grooming.Content mapToEstimateInfo(GroomingEstimate estimate, Groomer groomer) {
+        return EstimateInfo.Grooming.Content.builder()
+                .id(estimate.getEstimateId())
                 .name(groomer.getGroomerName())
                 .daengleMeter(groomer.getDaengleMeter())
-                .proposal(estimate.getProposal())
-                .image(groomer.getGroomerImage())
+                .imageURL(groomer.getGroomerImage())
                 .shopName(groomer.getShopName())
+                .keywords(groomer.getKeywords())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }

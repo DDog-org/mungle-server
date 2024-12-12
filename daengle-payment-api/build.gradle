@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework:spring-tx'
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+    implementation 'org.springframework.data:spring-data-commons'
 
     // IamPort //
     implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'

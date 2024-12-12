@@ -1,7 +1,8 @@
 package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.domain.estimate.Proposal;
+import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,41 +13,57 @@ import java.util.List;
 @Builder
 public class EstimateInfo {
 
-    List<PetInfo> petInfos;
-
     @Getter
     @Builder
-    public static class PetInfo {
-        private Long petId;
-        private String name;
-        private String image;
-        private Long groomingParentId;
-        private Long careParentId;
-        List<Grooming> groomingEstimates;
-        List<Care> careEstimates;
+    public static class Pet {
+
+        private List<Content> pets;
 
         @Getter
         @Builder
-        public static class Grooming {
-            private Long groomingEstimateId;
+        public static class Content {
+            private Long estimateId;
+            private Long petId;
+            private String imageURL;
+            private String name;
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class Grooming {
+
+        private List<Content> estimates;
+
+        @Getter
+        @Builder
+        public static class Content {
+            private Long id;
             private String name;
             private int daengleMeter;
-            private Proposal proposal;
-            private String image;
+            private String imageURL;
             private String shopName;
+            private List<GroomingKeyword> keywords;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
             private LocalDateTime reservedDate;
         }
+    }
+
+    @Getter
+    @Builder
+    public static class Care {
+
+        private List<Content> estimates;
 
         @Getter
         @Builder
-        public static class Care {
-            private Long careEstimateId;
+        public static class Content {
+            private Long id;
             private String name;
             private int daengleMeter;
-            private Proposal proposal;
-            private String image;
+            private String imageURL;
+            private List<CareKeyword> keywords;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
             private LocalDateTime reservedDate;

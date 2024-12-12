@@ -19,11 +19,13 @@ public class Reservation {
     private ServiceType serviceType;
     private ReservationStatus reservationStatus;
     private Long recipientId;
+    private String recipientImageUrl;
     private String recipientName;
     private String shopName;
     private LocalDateTime schedule;
     private Long deposit;
     private Long customerId;
+    private String customerName;
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;

@@ -2,6 +2,7 @@ package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.vet.Day;
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,11 @@ public class VetJpaEntity {
     @Column(name = "license_url")
     private List<String> licenses;
 
+    @ElementCollection // 해시태그 리스트
+    @CollectionTable(name = "care_keywords", joinColumns = @JoinColumn(name = "vet_id"))
+    @Column(name = "care_keyword")
+    private List<CareKeyword> keywords;
+
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
                 .vetId(vet.getVetId())
@@ -59,6 +65,7 @@ public class VetJpaEntity {
                 .endTime(vet.getEndTime())
                 .closedDays(vet.getClosedDays())
                 .licenses(vet.getLicenses())
+                .keywords(vet.getKeywords())
                 .build();
     }
 
@@ -78,6 +85,7 @@ public class VetJpaEntity {
                 .endTime(endTime)
                 .closedDays(closedDays)
                 .licenses(licenses)
+                .keywords(keywords)
                 .build();
     }
 }
