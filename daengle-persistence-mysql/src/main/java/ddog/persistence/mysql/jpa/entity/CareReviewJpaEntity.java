@@ -28,7 +28,7 @@ public class CareReviewJpaEntity {
     private String shopName;
     private Long starRating;
     private String content;
-    private LocalDateTime createTime;
+    private LocalDateTime createdAt;
 
     @ElementCollection // 이미지 URL 리스트
     @CollectionTable(name = "care_review_image_url_list", joinColumns = @JoinColumn(name = "care_review_id"))
@@ -52,7 +52,7 @@ public class CareReviewJpaEntity {
                 .shopName(careReview.getShopName())
                 .starRating(careReview.getStarRating())
                 .content(careReview.getContent())
-                .createTime(careReview.getCreateTime())
+                .createdAt(careReview.getCreatedAt())
                 .imageUrlList(careReview.getImageUrlList())
                 .careKeywordList(careReview.getCareKeywordList())
                 .build();
@@ -68,7 +68,7 @@ public class CareReviewJpaEntity {
                 .shopName(shopName)
                 .starRating(starRating)
                 .content(content)
-                .createTime(createTime)
+                .createdAt(createdAt)
                 .imageUrlList(imageUrlList)
                 .careKeywordList(careKeywordList)
                 .build();

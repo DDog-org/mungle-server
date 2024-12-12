@@ -4,6 +4,7 @@ import ddog.domain.groomer.enums.GroomingKeyword;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -12,7 +13,10 @@ public class ReviewSummaryResp {
     private Long groomingReviewId;
     private Long groomerId;
     private List<GroomingKeyword> groomingKeywordList;
+    private String reviewerName;
+    private String reviewerImageUrl;
     private String revieweeName;
+    private LocalDateTime createdAt;
     private double starRating;
     private String content;
     private List<String> imageUrlList;
