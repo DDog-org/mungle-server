@@ -20,7 +20,7 @@ public class EstimateController {
     private final EstimateService estimateService;
 
     /* (신규) 일반 견적서들 리스트 조회 */
-    @GetMapping("/general")
+    @GetMapping("/general/list")
     public CommonResponseEntity<EstimateInfo.General> findGeneralEstimates(
             PayloadDto payloadDto,
             @RequestParam(defaultValue = "0") int page,
@@ -30,7 +30,7 @@ public class EstimateController {
     }
 
     /* (신규) 지정 견적서들 리스트 조회 */
-    @GetMapping("/designation")
+    @GetMapping("/designation/list")
     public CommonResponseEntity<EstimateInfo.Designation> findDesignationEstimates(
             PayloadDto payloadDto,
             @RequestParam(defaultValue = "0") int page,

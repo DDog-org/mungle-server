@@ -69,7 +69,7 @@ public class EstimateService {
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByStatusAndProposalAndGroomerId(EstimateStatus.NEW, Proposal.DESIGNATION, groomer.getGroomerId(), pageable);
+        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByStatusAndProposalAndGroomerId(EstimateStatus.NEW, Proposal.DESIGNATION, groomer.getAccountId(), pageable);
 
         List<EstimateInfo.Designation.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
