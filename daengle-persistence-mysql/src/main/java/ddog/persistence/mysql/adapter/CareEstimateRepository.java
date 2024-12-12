@@ -72,6 +72,12 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
+    public Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId) {
+        return careEstimateJpaRepository.findTopByStatusAndProposalAndPetId(estimateStatus, proposal, petId)
+                .map(CareEstimateJpaEntity::toModel);
+    }
+
+    @Override
     public Optional<CareEstimate> findByEstimateId(Long estimateId) {
         return careEstimateJpaRepository.findByEstimateId(estimateId)
                 .map(CareEstimateJpaEntity::toModel);

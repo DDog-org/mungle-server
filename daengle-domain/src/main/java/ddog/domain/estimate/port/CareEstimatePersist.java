@@ -27,4 +27,6 @@ public interface CareEstimatePersist {
     boolean hasGeneralEstimateByPetId(Long petId);
 
     boolean hasDesignationEstimateByPetId(Long petId);
+
+    Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId);
 }

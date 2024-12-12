@@ -22,7 +22,8 @@ public class EstimateInfo {
         @Getter
         @Builder
         public static class Content {
-            private Long id;
+            private Long estimateId;
+            private Long petId;
             private String imageURL;
             private String name;
         }

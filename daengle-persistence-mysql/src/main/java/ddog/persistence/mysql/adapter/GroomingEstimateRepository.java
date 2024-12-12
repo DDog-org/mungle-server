@@ -84,4 +84,10 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     public boolean hasDesignationEstimateByPetId(Long petId) {
         return groomingEstimateJpaRepository.existsNewAndDesignationByPetId(petId);
     }
+
+    @Override
+    public Optional<GroomingEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId) {
+        return groomingEstimateJpaRepository.findTopByStatusAndProposalAndPetId(estimateStatus, proposal, petId)
+                .map(GroomingEstimateJpaEntity::toModel);
+    }
 }

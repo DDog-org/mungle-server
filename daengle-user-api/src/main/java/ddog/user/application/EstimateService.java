@@ -129,13 +129,13 @@ public class EstimateService {
         List<Pet> pets = user.getPets();
         List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
         for (Pet pet : pets) {
-            if (groomingEstimatePersist.hasGeneralEstimateByPetId(pet.getPetId())) {
-                contents.add(EstimateInfo.Pet.Content.builder()
-                        .id(pet.getPetId())
-                        .imageURL(pet.getPetImage())
-                        .name(pet.getPetName())
-                        .build());
-            }
+            groomingEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.GENERAL, pet.getPetId())
+                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
+                            .estimateId(estimate.getEstimateId())
+                            .petId(pet.getPetId())
+                            .imageURL(pet.getPetImage())
+                            .name(pet.getPetName())
+                            .build()));
         }
         return EstimateInfo.Pet.builder()
                 .pets(contents)
@@ -149,13 +149,13 @@ public class EstimateService {
         List<Pet> pets = user.getPets();
         List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
         for (Pet pet : pets) {
-            if (careEstimatePersist.hasGeneralEstimateByPetId(pet.getPetId())) {
-                contents.add(EstimateInfo.Pet.Content.builder()
-                        .id(pet.getPetId())
-                        .imageURL(pet.getPetImage())
-                        .name(pet.getPetName())
-                        .build());
-            }
+            careEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.GENERAL, pet.getPetId())
+                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
+                            .estimateId(estimate.getEstimateId())
+                            .petId(pet.getPetId())
+                            .imageURL(pet.getPetImage())
+                            .name(pet.getPetName())
+                            .build()));
         }
         return EstimateInfo.Pet.builder()
                 .pets(contents)
@@ -188,13 +188,13 @@ public class EstimateService {
         List<Pet> pets = user.getPets();
         List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
         for (Pet pet : pets) {
-            if (groomingEstimatePersist.hasDesignationEstimateByPetId(pet.getPetId())) {
-                contents.add(EstimateInfo.Pet.Content.builder()
-                        .id(pet.getPetId())
-                        .imageURL(pet.getPetImage())
-                        .name(pet.getPetName())
-                        .build());
-            }
+            groomingEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.DESIGNATION, pet.getPetId())
+                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
+                            .estimateId(estimate.getEstimateId())
+                            .petId(pet.getPetId())
+                            .imageURL(pet.getPetImage())
+                            .name(pet.getPetName())
+                            .build()));
         }
         return EstimateInfo.Pet.builder()
                 .pets(contents)
@@ -209,13 +209,13 @@ public class EstimateService {
         List<Pet> pets = user.getPets();
         List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
         for (Pet pet : pets) {
-            if (careEstimatePersist.hasDesignationEstimateByPetId(pet.getPetId())) {
-                contents.add(EstimateInfo.Pet.Content.builder()
-                        .id(pet.getPetId())
-                        .imageURL(pet.getPetImage())
-                        .name(pet.getPetName())
-                        .build());
-            }
+            careEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.DESIGNATION, pet.getPetId())
+                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
+                            .estimateId(estimate.getEstimateId())
+                            .petId(pet.getPetId())
+                            .imageURL(pet.getPetImage())
+                            .name(pet.getPetName())
+                            .build()));
         }
         return EstimateInfo.Pet.builder()
                 .pets(contents)

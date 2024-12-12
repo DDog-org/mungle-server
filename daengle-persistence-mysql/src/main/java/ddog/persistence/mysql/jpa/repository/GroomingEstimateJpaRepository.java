@@ -48,6 +48,8 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
             "FROM GroomingEstimates g WHERE g.status = 'NEW' AND g.proposal = 'GENERAL' AND g.petId = :petId")
     boolean existsNewAndGeneralByPetId(@Param("petId") Long petId);
 
+    Optional<GroomingEstimateJpaEntity> findTopByStatusAndProposalAndPetId(EstimateStatus status, Proposal proposal, Long petId);
+
     @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
             "FROM GroomingEstimates g WHERE g.status = 'NEW' AND g.proposal = 'DESIGNATION' AND g.petId = :petId")
     boolean existsNewAndDesignationByPetId(@Param("petId") Long petId);

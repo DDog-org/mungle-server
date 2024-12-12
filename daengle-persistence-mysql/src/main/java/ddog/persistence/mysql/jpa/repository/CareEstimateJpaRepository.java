@@ -52,4 +52,6 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
             "FROM CareEstimates g WHERE g.status = 'NEW' AND g.proposal = 'DESIGNATION' AND g.petId = :petId")
     boolean existsNewAndDesignationByPetId(@Param("petId") Long petId);
+
+    Optional<CareEstimateJpaEntity> findTopByStatusAndProposalAndPetId(EstimateStatus status, Proposal proposal, Long petId);
 }

@@ -27,4 +27,6 @@ public interface GroomingEstimatePersist {
     boolean hasGeneralEstimateByPetId(Long petId);
 
     boolean hasDesignationEstimateByPetId(Long petId);
+
+    Optional<GroomingEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId);
 }
