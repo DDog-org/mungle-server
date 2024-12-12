@@ -230,6 +230,14 @@ public class EstimateService {
         return groomingEstimatesToContents(estimates);
     }
 
+    @Transactional(readOnly = true)
+    public EstimateInfo.Care findDesignationCareEstimates(Long petId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
+
+        return careEstimatesToContents(estimates);
+    }
+
     private EstimateInfo.Grooming groomingEstimatesToContents(Page<GroomingEstimate> estimates) {
         List<EstimateInfo.Grooming.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
@@ -242,14 +250,6 @@ public class EstimateService {
         return EstimateInfo.Grooming.builder()
                 .estimates(contents)
                 .build();
-    }
-
-    @Transactional(readOnly = true)
-    public EstimateInfo.Care findDesignationCareEstimates(Long petId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
-
-        return careEstimatesToContents(estimates);
     }
 
     private EstimateInfo.Care careEstimatesToContents(Page<CareEstimate> estimates) {
