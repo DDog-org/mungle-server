@@ -19,6 +19,7 @@ import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.PaymentCallbackResp;
+import ddog.payment.application.dto.response.PaymentHistoryDetail;
 import ddog.payment.application.dto.response.PaymentHistoryListResp;
 import ddog.payment.application.dto.response.PaymentHistorySummaryResp;
 import ddog.payment.application.exception.*;
@@ -125,14 +126,32 @@ public class PaymentService {
         }
     }
 
-    public PaymentHistoryListResp findGroomingPaymentHistory(Long accountId, int page, int size) {
+    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Reservation> reservations = reservationPersist.findGroomingPaymentHistory(savedUser.getAccountId(), pageable);
+        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
 
         return mappingToPaymentHistoryListResp(reservations);
+    }
+
+    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
+
+        return PaymentHistoryDetail.builder()
+                .reservationId(savedReservation.getReservationId())
+                .reservationStatus(savedReservation.getReservationStatus())
+                .recipientName(savedReservation.getRecipientName())
+                .shopName(savedReservation.getShopName())
+                .schedule(savedReservation.getSchedule())
+                .deposit(savedReservation.getDeposit())
+                .customerName(savedReservation.getCustomerName())
+                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
+                .visitorName(savedReservation.getVisitorName())
+                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
+                .build();
     }
 
     private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {

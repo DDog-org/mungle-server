@@ -37,6 +37,7 @@ public class ReservationJpaEntity {
     private LocalDateTime schedule;
     private Long deposit;
     private Long customerId;
+    private String customerName;
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;
@@ -55,6 +56,7 @@ public class ReservationJpaEntity {
                 .schedule(reservation.getSchedule())
                 .deposit(reservation.getDeposit())
                 .customerId(reservation.getCustomerId())
+                .customerName(reservation.getCustomerName())
                 .customerPhoneNumber(reservation.getCustomerPhoneNumber())
                 .visitorName(reservation.getVisitorName())
                 .visitorPhoneNumber(reservation.getVisitorPhoneNumber())
@@ -75,6 +77,7 @@ public class ReservationJpaEntity {
                 .schedule(schedule)
                 .deposit(deposit)
                 .customerId(customerId)
+                .customerName(customerName)
                 .customerPhoneNumber(customerPhoneNumber)
                 .visitorName(visitorName)
                 .visitorPhoneNumber(visitorPhoneNumber)

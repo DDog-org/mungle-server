@@ -31,10 +31,9 @@ public class ReservationRepository implements ReservationPersist {
     }
 
     @Override
-    public Page<Reservation> findGroomingPaymentHistory(Long accountId, Pageable pageable) {
-        System.out.println(accountId);
+    public Page<Reservation> findPaymentHistoryList(Long accountId, ServiceType serviceType, Pageable pageable) {
         return reservationJpaRepository.findByCustomerIdAndServiceTypeAndReservationStatus(
-                        accountId, ServiceType.GROOMING, ReservationStatus.DEPOSIT_PAID, pageable)
+                        accountId, serviceType, ReservationStatus.DEPOSIT_PAID, pageable)
                 .map(ReservationJpaEntity::toModel);
     }
 }

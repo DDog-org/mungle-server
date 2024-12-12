@@ -25,6 +25,7 @@ public class Reservation {
     private LocalDateTime schedule;
     private Long deposit;
     private Long customerId;
+    private String customerName;
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;

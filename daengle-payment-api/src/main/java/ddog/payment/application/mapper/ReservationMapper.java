@@ -19,6 +19,7 @@ public class ReservationMapper {
                 .schedule(order.getSchedule())
                 .deposit(order.getPrice())
                 .customerId(order.getAccountId())
+                .customerName(order.getCustomerName())
                 .customerPhoneNumber(order.getCustomerPhoneNumber())
                 .visitorName(order.getVisitorName())
                 .visitorPhoneNumber(order.getVisitorPhoneNumber())
