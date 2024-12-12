@@ -1,5 +1,6 @@
 package ddog.domain.groomer;
 
+import ddog.domain.groomer.enums.GroomingKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Groomer {
     private String groomerIntroduction;
     private List<String> businessLicenses;
     private List<String> licenses;
+    private List<GroomingKeyword> keywords;
 
     public static void validateShopName(String shopName) {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {

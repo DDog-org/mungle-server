@@ -2,10 +2,13 @@ package ddog.persistence.mysql.adapter;
 
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
+import ddog.domain.estimate.Proposal;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -50,6 +53,28 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
         careEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
         careEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
+    }
+
+    @Override
+    public Page<CareEstimate> findByPetIdAndStatusAndProposal(Long petId, EstimateStatus status, Proposal proposal, Pageable pageable) {
+        return careEstimateJpaRepository.findByPetIdAndStatusAndProposal(petId, status, proposal, pageable)
+                .map(CareEstimateJpaEntity::toModel);
+    }
+
+    @Override
+    public boolean hasGeneralEstimateByPetId(Long petId) {
+        return careEstimateJpaRepository.existsNewAndGeneralByPetId(petId);
+    }
+
+    @Override
+    public boolean hasDesignationEstimateByPetId(Long petId) {
+        return careEstimateJpaRepository.existsNewAndDesignationByPetId(petId);
+    }
+
+    @Override
+    public Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId) {
+        return careEstimateJpaRepository.findTopByStatusAndProposalAndPetId(estimateStatus, proposal, petId)
+                .map(CareEstimateJpaEntity::toModel);
     }
 
     @Override

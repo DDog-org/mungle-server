@@ -12,6 +12,7 @@ public class PetMapper {
                 .accountId(accountId)
                 .petName(request.getPetName())
                 .petGender(request.getPetGender())
+                .petImage("")
                 .petWeight(request.getPetWeight())
                 .petBirth(request.getPetBirth())
                 .isNeutered(request.getIsNeutered())

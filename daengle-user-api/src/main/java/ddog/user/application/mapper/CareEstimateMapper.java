@@ -77,13 +77,13 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static EstimateInfo.PetInfo.Care mapToCare(CareEstimate estimate, Vet vet) {
-        return EstimateInfo.PetInfo.Care.builder()
-                .careEstimateId(estimate.getEstimateId())
+    public static EstimateInfo.Care.Content mapToEstimateInfo(CareEstimate estimate, Vet vet) {
+        return EstimateInfo.Care.Content.builder()
+                .id(estimate.getEstimateId())
                 .name(vet.getVetName())
                 .daengleMeter(vet.getDaengleMeter())
-                .proposal(estimate.getProposal())
-                .image(vet.getVetImage())
+                .imageURL(vet.getVetImage())
+                .keywords(vet.getKeywords())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }

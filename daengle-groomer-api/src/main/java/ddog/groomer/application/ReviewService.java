@@ -39,7 +39,7 @@ public class ReviewService {
                 .map(groomingReview -> ReviewSummaryResp.builder()
                         .groomingReviewId(groomingReview.getGroomingReviewId())
                         .groomerId(groomingReview.getGroomerId())
-                        .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
+                        .groomingKeywordList(groomingReview.getGroomingKeywordList())
                         .revieweeName(groomingReview.getRevieweeName())
                         .starRating(groomingReview.getStarRating())
                         .content(groomingReview.getContent())

@@ -105,7 +105,7 @@ public class CareReviewService {
         return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
                 .vetId(savedCareReview.getVetId())
-                .careKeywordReviewList(savedCareReview.getCareKeywordReviewList())
+                .careKeywordList(savedCareReview.getCareKeywordList())
                 .revieweeName(savedCareReview.getRevieweeName())
                 .shopName(savedCareReview.getShopName())
                 .starRating(savedCareReview.getStarRating())
@@ -137,14 +137,14 @@ public class CareReviewService {
 
     private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
         CareReview.validateStarRating(postCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(postCareReviewInfo.getContent());
         CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 
     private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
+        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordList());
         CareReview.validateContent(modifyCareReviewInfo.getContent());
         CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
     }
@@ -160,7 +160,7 @@ public class CareReviewService {
                     .reviewerName(reviewer.getUsername())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .vetId(careReview.getVetId())
-                    .careKeywordReviewList(careReview.getCareKeywordReviewList())
+                    .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 public class EstimateInfo {
 
-    List<Content> allEstimates;
+    List<Content> generalEstimates;
     List<Content> designationEstimates;
 
     @Getter

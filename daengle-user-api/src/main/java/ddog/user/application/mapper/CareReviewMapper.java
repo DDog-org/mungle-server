@@ -20,7 +20,7 @@ public class CareReviewMapper {
                 .createTime(LocalDateTime.now())
                 .imageUrlList(postCareReviewInfo.getImageUrlList())
                 .vetId(reservation.getRecipientId())
-                .careKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList())
+                .careKeywordList(postCareReviewInfo.getCareKeywordList())
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class CareReviewMapper {
                 .createTime(careReview.getCreateTime())
                 .modifiedTime(LocalDateTime.now())
                 .imageUrlList(modifyCareReviewInfo.getImageUrlList())
-                .careKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList())
+                .careKeywordList(modifyCareReviewInfo.getCareKeywordList())
                 .build();
     }
 }

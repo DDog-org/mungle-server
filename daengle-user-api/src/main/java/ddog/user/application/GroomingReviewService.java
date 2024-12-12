@@ -108,7 +108,7 @@ public class GroomingReviewService {
         return GroomingReviewDetailResp.builder()
                 .groomingReviewId(savedGroomingReview.getGroomingReviewId())
                 .groomerId(savedGroomingReview.getGroomerId())
-                .groomingKeywordReviewList(savedGroomingReview.getGroomingKeywordReviewList())
+                .groomingKeywordList(savedGroomingReview.getGroomingKeywordList())
                 .revieweeName(savedGroomingReview.getRevieweeName())
                 .shopName(savedGroomingReview.getShopName())
                 .starRating(savedGroomingReview.getStarRating())
@@ -141,14 +141,14 @@ public class GroomingReviewService {
 
     private void validatePostGroomingReviewInfoDataFormat(PostGroomingReviewInfo postGroomingReviewInfo) {
         GroomingReview.validateStarRating(postGroomingReviewInfo.getStarRating());
-        GroomingReview.validateGroomingKeywordReviewList(postGroomingReviewInfo.getGroomingKeywordReviewList());
+        GroomingReview.validateGroomingKeywordReviewList(postGroomingReviewInfo.getGroomingKeywordList());
         GroomingReview.validateContent(postGroomingReviewInfo.getContent());
         GroomingReview.validateImageUrlList(postGroomingReviewInfo.getImageUrlList());
     }
 
     private void validateModifyGroomingReviewInfoDataFormat(ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
         GroomingReview.validateStarRating(modifyGroomingReviewInfo.getStarRating());
-        GroomingReview.validateGroomingKeywordReviewList(modifyGroomingReviewInfo.getGroomingKeywordReviewList());
+        GroomingReview.validateGroomingKeywordReviewList(modifyGroomingReviewInfo.getGroomingKeywordList());
         GroomingReview.validateContent(modifyGroomingReviewInfo.getContent());
         GroomingReview.validateImageUrlList(modifyGroomingReviewInfo.getImageUrlList());
     }
@@ -164,7 +164,7 @@ public class GroomingReviewService {
                     .reviewerName(reviewer.getUsername())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .groomerId(groomingReview.getGroomerId())
-                    .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
+                    .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())
                     .starRating(groomingReview.getStarRating())
                     .content(groomingReview.getContent())

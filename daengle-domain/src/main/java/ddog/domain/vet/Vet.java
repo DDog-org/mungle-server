@@ -1,6 +1,7 @@
 package ddog.domain.vet;
 
 import ddog.domain.vet.enums.AreaCode;
+import ddog.domain.vet.enums.CareKeyword;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Vet {
     private LocalTime endTime;
     private List<Day> closedDays;
     private List<String> licenses;
+    private List<CareKeyword> keywords;
 
     public static void validateName(String name) {
         if (name == null || name.length() < 2 || name.length() > 10 || !name.matches("^[가-힣\\s]+$")) {

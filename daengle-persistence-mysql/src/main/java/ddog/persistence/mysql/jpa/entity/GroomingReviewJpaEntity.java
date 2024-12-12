@@ -1,7 +1,7 @@
 package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.review.GroomingReview;
-import ddog.domain.review.enums.GroomingKeywordReview;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,7 +39,7 @@ public class GroomingReviewJpaEntity {
     @CollectionTable(name = "grooming_review_keyword_list", joinColumns = @JoinColumn(name = "grooming_review_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "keyword_list")
-    private List<GroomingKeywordReview> groomingKeywordReviewList;
+    private List<GroomingKeyword> groomingKeywordList;
 
     public static GroomingReviewJpaEntity from(GroomingReview groomingReview) {
         return GroomingReviewJpaEntity.builder()
@@ -54,7 +54,7 @@ public class GroomingReviewJpaEntity {
                 .content(groomingReview.getContent())
                 .createTime(groomingReview.getCreateTime())
                 .imageUrlList(groomingReview.getImageUrlList())
-                .groomingKeywordReviewList(groomingReview.getGroomingKeywordReviewList())
+                .groomingKeywordList(groomingReview.getGroomingKeywordList())
                 .build();
     }
 
@@ -70,7 +70,7 @@ public class GroomingReviewJpaEntity {
                 .content(content)
                 .createTime(createTime)
                 .imageUrlList(imageUrlList)
-                .groomingKeywordReviewList(groomingKeywordReviewList)
+                .groomingKeywordList(groomingKeywordList)
                 .build();
     }
 }
