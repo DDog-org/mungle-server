@@ -13,10 +13,21 @@ import java.time.LocalDateTime;
 
 public class CareEstimateMapper {
 
-    public static EstimateInfo.Content mapToContent(CareEstimate estimate, User user, Pet pet) {
-        return EstimateInfo.Content.builder()
+    public static EstimateInfo.General.Content mapToGeneralContent(CareEstimate estimate, User user, Pet pet) {
+        return EstimateInfo.General.Content.builder()
                 .id(estimate.getEstimateId())
-                .image(user.getUserImage())
+                .imageURL(user.getUserImage())
+                .nickname(user.getNickname())
+                .proposal(estimate.getProposal())
+                .significant(pet.getPetSignificant())
+                .reservedDate(estimate.getReservedDate())
+                .build();
+    }
+
+    public static EstimateInfo.Designation.Content mapToDesignationContent(CareEstimate estimate, User user, Pet pet) {
+        return EstimateInfo.Designation.Content.builder()
+                .id(estimate.getEstimateId())
+                .imageURL(user.getUserImage())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
                 .significant(pet.getPetSignificant())
