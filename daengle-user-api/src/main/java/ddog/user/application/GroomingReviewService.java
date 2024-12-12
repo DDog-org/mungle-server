@@ -164,7 +164,7 @@ public class GroomingReviewService {
             User reviewer = userPersist.findByAccountId(groomingReview.getReviewerId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
-            Reservation savedReservation = reservationPersist.findByReservationId(groomingReview.getReservationId())
+            reservationPersist.findByReservationId(groomingReview.getReservationId())
                     .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
             return GroomingReviewSummaryResp.builder()
@@ -174,7 +174,7 @@ public class GroomingReviewService {
                     .groomerId(groomingReview.getGroomerId())
                     .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())
-                    .schedule(savedReservation.getSchedule())
+                    .createdAt(groomingReview.getCreatedAt())
                     .starRating(groomingReview.getStarRating())
                     .content(groomingReview.getContent())
                     .imageUrlList(groomingReview.getImageUrlList())
