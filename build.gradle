@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.25' // Kotlin
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
 }
 
 bootJar {
@@ -21,6 +23,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
 
     java {
         toolchain {
@@ -50,6 +54,8 @@ subprojects {
 
         //OAuth
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     }
 
     test {

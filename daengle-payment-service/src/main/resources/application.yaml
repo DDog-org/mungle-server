@@ -1,0 +1,18 @@
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/payment-service
+    username: root
+    password: 5588
+
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+    thymeleaf:
+      cache: false
+
+PSP:
+  toss:
+    secreteKey: test_sk_kYG57Eba3GbG6o0bgGwE8pWDOxmA
+    url: https://api.tosspayments.com/v1/payments/confirm
+
