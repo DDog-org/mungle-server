@@ -1,6 +1,8 @@
 package ddog.vet.application;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
+import ddog.domain.estimate.Proposal;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
@@ -17,6 +19,9 @@ import ddog.vet.presentation.estimate.dto.EstimateDetail;
 import ddog.vet.presentation.estimate.dto.EstimateInfo;
 import ddog.vet.presentation.estimate.dto.EstimateResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,25 +39,15 @@ public class EstimateService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional(readOnly = true)
-    public EstimateInfo findEstimates(Long accountId) {
+    public EstimateInfo.General findGeneralEstimates(Long accountId, int page, int size) {
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        List<CareEstimate> generalEstimates = careEstimatePersist.findCareEstimatesByAddress(vet.getAddress());
-        List<CareEstimate> designationEstimates = careEstimatePersist.findCareEstimatesByVetId(vet.getAccountId());
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<EstimateInfo.Content> generalContents = convertEstimatesToContents(generalEstimates);
-        List<EstimateInfo.Content> designationContents = convertEstimatesToContents(designationEstimates);
+        Page<CareEstimate> estimates = careEstimatePersist.findByStatusAndProposalAndAddress(EstimateStatus.NEW, Proposal.GENERAL, vet.getAddress(), pageable);
 
-        return EstimateInfo.builder()
-                .generalEstimates(generalContents)
-                .designationEstimates(designationContents)
-                .build();
-    }
-
-    private List<EstimateInfo.Content> convertEstimatesToContents(List<CareEstimate> estimates) {
-        List<EstimateInfo.Content> contents = new ArrayList<>();
-
+        List<EstimateInfo.General.Content> contents = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
             User user = userPersist.findByAccountId(estimate.getUserId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -60,9 +55,35 @@ public class EstimateService {
             Pet pet = petPersist.findByPetId(estimate.getPetId())
                     .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-            contents.add(CareEstimateMapper.mapToContent(estimate, user, pet));
+            contents.add(CareEstimateMapper.mapToGeneralContent(estimate, user, pet));
         }
-        return contents;
+        return EstimateInfo.General.builder()
+                .estimates(contents)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Designation findDesignationEstimates(Long accountId, int page, int size) {
+        Vet vet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<CareEstimate> estimates = careEstimatePersist.findByStatusAndProposalAndVetId(EstimateStatus.NEW, Proposal.GENERAL, vet.getAccountId(), pageable);
+
+        List<EstimateInfo.Designation.Content> contents = new ArrayList<>();
+        for (CareEstimate estimate : estimates) {
+            User user = userPersist.findByAccountId(estimate.getUserId())
+                    .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+            Pet pet = petPersist.findByPetId(estimate.getPetId())
+                    .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+            contents.add(CareEstimateMapper.mapToDesignationContent(estimate, user, pet));
+        }
+        return EstimateInfo.Designation.builder()
+                .estimates(contents)
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -92,9 +113,10 @@ public class EstimateService {
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         CareEstimate pendingEstimate = CareEstimateMapper.createPendingEstimate(request, vet, careEstimate);
-        careEstimatePersist.save(pendingEstimate);
+        CareEstimate savedEstimate = careEstimatePersist.save(pendingEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("대기 진료 견적서 등록 완료")
                 .build();
     }

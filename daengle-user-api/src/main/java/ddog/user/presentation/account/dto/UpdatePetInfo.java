@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class ModifyPetInfo {
+public class UpdatePetInfo {
 
     private Long id;
     private String image;

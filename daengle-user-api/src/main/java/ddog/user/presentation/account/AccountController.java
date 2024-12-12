@@ -38,13 +38,13 @@ public class AccountController {
     }
 
     @GetMapping("/info")
-    public CommonResponseEntity<ProfileInfo.ModifyPage> getUserProfileInfo(PayloadDto payloadDto) {
+    public CommonResponseEntity<ProfileInfo.UpdatePage> getUserProfileInfo(PayloadDto payloadDto) {
         return success(accountService.getUserProfileInfo(payloadDto.getAccountId()));
     }
 
     @PatchMapping("/info")
-    public CommonResponseEntity<AccountResp> modifyUserInfo(@RequestBody UserInfoModifyReq request, PayloadDto payloadDto) {
-        return success(accountService.modifyUserInfo(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<AccountResp> updateUserInfo(@RequestBody UpdateUserInfoReq request, PayloadDto payloadDto) {
+        return success(accountService.updateUserInfo(request, payloadDto.getAccountId()));
     }
 
     @PostMapping("/pet")
@@ -58,8 +58,8 @@ public class AccountController {
     }
 
     @PatchMapping("/pet-info")
-    public CommonResponseEntity<AccountResp> modifyPetInfo(@RequestBody ModifyPetInfo request, PayloadDto payloadDto) {
-        return success(accountService.modifyPetInfo(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<AccountResp> updatePetInfo(@RequestBody UpdatePetInfo request, PayloadDto payloadDto) {
+        return success(accountService.updatePetInfo(request, payloadDto.getAccountId()));
     }
 
     @DeleteMapping("/pet")

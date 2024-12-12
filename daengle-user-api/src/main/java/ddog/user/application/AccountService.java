@@ -3,11 +3,11 @@ package ddog.user.application;
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
+import ddog.domain.account.port.AccountPersist;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
-import ddog.domain.user.User;
-import ddog.domain.account.port.AccountPersist;
 import ddog.domain.pet.port.PetPersist;
+import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
@@ -50,13 +50,16 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public BreedList getBreedInfos() {
+
         List<BreedList.Detail> details = new ArrayList<>();
+
         for (Breed breed : Breed.values()) {
             details.add(BreedList.Detail.builder()
                     .breed(breed.toString())
                     .breedName(breed.getName())
                     .build());
         }
+
         return BreedList.builder()
                 .breedList(details)
                 .build();
@@ -68,8 +71,11 @@ public class AccountService {
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
+
         Pet pet = PetMapper.toJoinPetInfo(savedAccount.getAccountId(), request);
+
         User user = UserMapper.createWithPet(savedAccount.getAccountId(), request, pet);
+
         petPersist.save(pet);
         userPersist.save(user);
 
@@ -100,6 +106,7 @@ public class AccountService {
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
+
         User user = UserMapper.createWithoutPet(savedAccount.getAccountId(), request);
         userPersist.save(user);
 
@@ -129,7 +136,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ProfileInfo.ModifyPage getUserProfileInfo(Long accountId) {
+    public ProfileInfo.UpdatePage getUserProfileInfo(Long accountId) {
         User user = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
@@ -137,7 +144,7 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResp modifyUserInfo(UserInfoModifyReq request, Long accountId) {
+    public AccountResp updateUserInfo(UpdateUserInfoReq request, Long accountId) {
         User.validateUsername(request.getNickname());
 
         User user = userPersist.findByAccountId(accountId)
@@ -188,7 +195,7 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResp modifyPetInfo(ModifyPetInfo request, Long accountId) {
+    public AccountResp updatePetInfo(UpdatePetInfo request, Long accountId) {
         this.validateModifyPetInfoDataFormat(request);
 
         /* TODO 수정할 반려견이 해당 사용자의 반려견인지 유효성 검증 추가해야할듯 */
@@ -200,7 +207,7 @@ public class AccountService {
                 .build();
     }
 
-    private void validateModifyPetInfoDataFormat(ModifyPetInfo request) {
+    private void validateModifyPetInfoDataFormat(UpdatePetInfo request) {
         Pet.validatePetName(request.getName());
         Pet.validatePetBirth(request.getBirth());
         Pet.validatePetGender(request.getGender());

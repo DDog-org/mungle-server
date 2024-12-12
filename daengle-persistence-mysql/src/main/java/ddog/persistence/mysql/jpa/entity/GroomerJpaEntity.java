@@ -22,14 +22,14 @@ public class GroomerJpaEntity {
     private Long groomerId;
     private Long accountId;
     private int daengleMeter;
-    private String groomerName;
+    private String name;
     private String phoneNumber;
-    private String groomerImage;
+    private String imageUrl;
     private String email;
     private String address;
     private String detailAddress;
     private String shopName;
-    private String groomerIntroduction;
+    private String introduction;
 
     @ElementCollection // 사업자 등록증 URL 리스트
     @CollectionTable(name = "groomer_business_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
@@ -51,14 +51,14 @@ public class GroomerJpaEntity {
                 .groomerId(groomer.getGroomerId())
                 .accountId(groomer.getAccountId())
                 .daengleMeter(groomer.getDaengleMeter())
-                .groomerName(groomer.getGroomerName())
+                .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
-                .groomerImage(groomer.getGroomerImage())
+                .imageUrl(groomer.getImageUrl())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
                 .detailAddress(groomer.getDetailAddress())
                 .shopName(groomer.getShopName())
-                .groomerIntroduction(groomer.getGroomerIntroduction())
+                .introduction(groomer.getIntroduction())
                 .businessLicenses(groomer.getBusinessLicenses())
                 .licenses(groomer.getLicenses())
                 .keywords(groomer.getKeywords())
@@ -70,14 +70,14 @@ public class GroomerJpaEntity {
                 .groomerId(groomerId)
                 .accountId(accountId)
                 .daengleMeter(daengleMeter)
-                .groomerName(groomerName)
+                .name(name)
                 .phoneNumber(phoneNumber)
-                .groomerImage(groomerImage)
+                .imageUrl(imageUrl)
                 .email(email)
                 .address(address)
                 .detailAddress(detailAddress)
                 .shopName(shopName)
-                .groomerIntroduction(groomerIntroduction)
+                .introduction(introduction)
                 .businessLicenses(businessLicenses)
                 .licenses(licenses)
                 .keywords(keywords)
