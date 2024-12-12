@@ -4,7 +4,7 @@ import com.vane.badwordfiltering.BadWordFiltering;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
-import ddog.user.presentation.review.dto.request.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.groomer.port.GroomerPersist;
@@ -44,6 +44,27 @@ public class GroomingReviewService {
 
     private final BadWordFiltering badWordFiltering;
 
+    @Transactional(readOnly = true)
+    public GroomingReviewDetailResp findReview(Long reviewId) {
+        GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        Reservation savedReservation = reservationPersist.findByReservationId(savedGroomingReview.getReservationId())
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        return GroomingReviewDetailResp.builder()
+                .groomingReviewId(savedGroomingReview.getGroomingReviewId())
+                .groomerId(savedGroomingReview.getGroomerId())
+                .groomingKeywordList(savedGroomingReview.getGroomingKeywordList())
+                .revieweeName(savedGroomingReview.getRevieweeName())
+                .shopName(savedGroomingReview.getShopName())
+                .starRating(savedGroomingReview.getStarRating())
+                .schedule(savedReservation.getSchedule())
+                .content(savedGroomingReview.getContent())
+                .imageUrlList(savedGroomingReview.getImageUrlList())
+                .build();
+    }
+
     @Transactional
     public ReviewResp postReview(PostGroomingReviewInfo postGroomingReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId()).orElseThrow(()
@@ -65,14 +86,15 @@ public class GroomingReviewService {
     }
 
     @Transactional
-    public ReviewResp updateReview(Long reviewId, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
+    public ReviewResp updateReview(Long reviewId, UpdateGroomingReviewInfo updateGroomingReviewInfo) {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
-        if(isContainBanWord(modifyGroomingReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
-        validateModifyGroomingReviewInfoDataFormat(modifyGroomingReviewInfo);
+        if(isContainBanWord(updateGroomingReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
 
-        GroomingReview modifiedReview = GroomingReviewMapper.modifyBy(savedGroomingReview, modifyGroomingReviewInfo);
+        validateModifyGroomingReviewInfoDataFormat(updateGroomingReviewInfo);
+
+        GroomingReview modifiedReview = GroomingReviewMapper.updateBy(savedGroomingReview, updateGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
@@ -97,23 +119,6 @@ public class GroomingReviewService {
                 .reviewId(savedGroomingReview.getGroomingReviewId())
                 .reviewerId(savedGroomingReview.getReviewerId())
                 .revieweeId(savedGroomingReview.getGroomerId())
-                .build();
-    }
-
-    @Transactional(readOnly = true)
-    public GroomingReviewDetailResp findReview(Long reviewId) {
-        GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
-                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
-
-        return GroomingReviewDetailResp.builder()
-                .groomingReviewId(savedGroomingReview.getGroomingReviewId())
-                .groomerId(savedGroomingReview.getGroomerId())
-                .groomingKeywordList(savedGroomingReview.getGroomingKeywordList())
-                .revieweeName(savedGroomingReview.getRevieweeName())
-                .shopName(savedGroomingReview.getShopName())
-                .starRating(savedGroomingReview.getStarRating())
-                .content(savedGroomingReview.getContent())
-                .imageUrlList(savedGroomingReview.getImageUrlList())
                 .build();
     }
 
@@ -146,11 +151,11 @@ public class GroomingReviewService {
         GroomingReview.validateImageUrlList(postGroomingReviewInfo.getImageUrlList());
     }
 
-    private void validateModifyGroomingReviewInfoDataFormat(ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
-        GroomingReview.validateStarRating(modifyGroomingReviewInfo.getStarRating());
-        GroomingReview.validateGroomingKeywordReviewList(modifyGroomingReviewInfo.getGroomingKeywordList());
-        GroomingReview.validateContent(modifyGroomingReviewInfo.getContent());
-        GroomingReview.validateImageUrlList(modifyGroomingReviewInfo.getImageUrlList());
+    private void validateModifyGroomingReviewInfoDataFormat(UpdateGroomingReviewInfo updateGroomingReviewInfo) {
+        GroomingReview.validateStarRating(updateGroomingReviewInfo.getStarRating());
+        GroomingReview.validateGroomingKeywordReviewList(updateGroomingReviewInfo.getGroomingKeywordList());
+        GroomingReview.validateContent(updateGroomingReviewInfo.getContent());
+        GroomingReview.validateImageUrlList(updateGroomingReviewInfo.getImageUrlList());
     }
 
     private GroomingReviewListResp mappingToGroomingReviewListResp(Page<GroomingReview> groomingReviews) {
@@ -159,13 +164,17 @@ public class GroomingReviewService {
             User reviewer = userPersist.findByAccountId(groomingReview.getReviewerId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
+            Reservation savedReservation = reservationPersist.findByReservationId(groomingReview.getReservationId())
+                    .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
             return GroomingReviewSummaryResp.builder()
                     .groomingReviewId(groomingReview.getGroomingReviewId())
-                    .reviewerName(reviewer.getUsername())
+                    .reviewerName(reviewer.getNickname())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .groomerId(groomingReview.getGroomerId())
                     .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())
+                    .schedule(savedReservation.getSchedule())
                     .starRating(groomingReview.getStarRating())
                     .content(groomingReview.getContent())
                     .imageUrlList(groomingReview.getImageUrlList())

@@ -2,7 +2,7 @@ package ddog.user.application.mapper;
 
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;
-import ddog.user.presentation.review.dto.request.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public class GroomingReviewMapper {
                 .build();
     }
 
-    public static GroomingReview modifyBy(GroomingReview groomingReview, ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
+    public static GroomingReview updateBy(GroomingReview groomingReview, UpdateGroomingReviewInfo updateGroomingReviewInfo) {
         return GroomingReview.builder()
                 .groomingReviewId(groomingReview.getGroomingReviewId())
                 .reservationId(groomingReview.getReservationId())
@@ -32,12 +32,12 @@ public class GroomingReviewMapper {
                 .groomerId(groomingReview.getGroomerId())
                 .revieweeName(groomingReview.getRevieweeName())
                 .shopName(groomingReview.getShopName())
-                .starRating(modifyGroomingReviewInfo.getStarRating())
-                .content(modifyGroomingReviewInfo.getContent())
+                .starRating(updateGroomingReviewInfo.getStarRating())
+                .content(updateGroomingReviewInfo.getContent())
                 .createTime(groomingReview.getCreateTime())
                 .modifiedTime(LocalDateTime.now())
-                .imageUrlList(modifyGroomingReviewInfo.getImageUrlList())
-                .groomingKeywordList(groomingReview.getGroomingKeywordList())
+                .imageUrlList(updateGroomingReviewInfo.getImageUrlList())
+                .groomingKeywordList(updateGroomingReviewInfo.getGroomingKeywordList())
                 .build();
     }
 }

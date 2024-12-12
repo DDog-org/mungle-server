@@ -43,6 +43,27 @@ public class CareReviewService {
 
     private final BadWordFiltering badWordFiltering;
 
+    @Transactional(readOnly = true)
+    public CareReviewDetailResp findReview(Long reviewId) {
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        Reservation savedReservation = reservationPersist.findByReservationId(savedCareReview.getReservationId())
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        return CareReviewDetailResp.builder()
+                .careReviewId(savedCareReview.getCareReviewId())
+                .vetId(savedCareReview.getVetId())
+                .careKeywordList(savedCareReview.getCareKeywordList())
+                .revieweeName(savedCareReview.getRevieweeName())
+                .shopName(savedCareReview.getShopName())
+                .starRating(savedCareReview.getStarRating())
+                .schedule(savedReservation.getSchedule())
+                .content(savedCareReview.getContent())
+                .imageUrlList(savedCareReview.getImageUrlList())
+                .build();
+    }
+
     @Transactional
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
@@ -98,23 +119,6 @@ public class CareReviewService {
     }
 
     @Transactional(readOnly = true)
-    public CareReviewDetailResp findReview(Long reviewId) {
-        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
-                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
-
-        return CareReviewDetailResp.builder()
-                .careReviewId(savedCareReview.getCareReviewId())
-                .vetId(savedCareReview.getVetId())
-                .careKeywordList(savedCareReview.getCareKeywordList())
-                .revieweeName(savedCareReview.getRevieweeName())
-                .shopName(savedCareReview.getShopName())
-                .starRating(savedCareReview.getStarRating())
-                .content(savedCareReview.getContent())
-                .imageUrlList(savedCareReview.getImageUrlList())
-                .build();
-    }
-
-    @Transactional(readOnly = true)
     public CareReviewListResp findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -155,6 +159,9 @@ public class CareReviewService {
             User reviewer = userPersist.findByAccountId(careReview.getReviewerId())
                     .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
+            Reservation savedReservation = reservationPersist.findByReservationId(careReview.getReservationId())
+                    .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
             return CareReviewSummaryResp.builder()
                     .careReviewId(careReview.getCareReviewId())
                     .reviewerName(reviewer.getUsername())
@@ -162,6 +169,7 @@ public class CareReviewService {
                     .vetId(careReview.getVetId())
                     .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
+                    .schedule(savedReservation.getSchedule())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())
                     .imageUrlList(careReview.getImageUrlList())

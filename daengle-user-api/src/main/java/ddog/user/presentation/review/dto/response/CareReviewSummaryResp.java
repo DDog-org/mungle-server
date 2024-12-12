@@ -4,6 +4,7 @@ import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -15,6 +16,7 @@ public class CareReviewSummaryResp {
     private String reviewerName;
     private String reviewerImageUrl;
     private String revieweeName;
+    private LocalDateTime schedule;
     private double starRating;
     private String content;
     private List<String> imageUrlList;
