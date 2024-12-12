@@ -6,7 +6,6 @@ import ddog.domain.chat.port.ChatMessagePersist;
 import ddog.persistence.dynamodb.entity.ChatMessageDynamoEntity;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.enhanced.dynamodb.*;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import org.springframework.stereotype.Repository;
 

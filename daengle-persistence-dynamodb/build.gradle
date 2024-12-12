@@ -13,4 +13,6 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.20.85')
     implementation("software.amazon.awssdk:dynamodb")
     implementation 'software.amazon.awssdk:dynamodb-enhanced'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }

@@ -14,5 +14,5 @@ spring:
 PSP:
   toss:
     secreteKey: test_sk_kYG57Eba3GbG6o0bgGwE8pWDOxmA
-    url: https://api.tosspayments.com/v1/payments/confirm
+    url: https://api.tosspayments.com
 
