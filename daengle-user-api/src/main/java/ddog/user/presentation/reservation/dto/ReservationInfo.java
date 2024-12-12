@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class EstimateInfo {
+public class ReservationInfo {
 
     @Getter
     @Builder

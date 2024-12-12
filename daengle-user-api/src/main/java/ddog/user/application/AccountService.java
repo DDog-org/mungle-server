@@ -9,6 +9,8 @@ import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
+import ddog.user.application.exception.account.PetException;
+import ddog.user.application.exception.account.PetExceptionType;
 import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.mapper.PetMapper;
@@ -219,6 +221,9 @@ public class AccountService {
 
     @Transactional
     public AccountResp deletePet(Long petId) {
+        petPersist.findByPetId(petId)
+                .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+
         petPersist.deletePetById(petId);
 
         return AccountResp.builder()
