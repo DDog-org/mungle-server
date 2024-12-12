@@ -12,6 +12,4 @@ public interface GroomerPersist {
 
     Optional<Groomer> findByGroomerId(Long groomerId);
 
-
-
 }
