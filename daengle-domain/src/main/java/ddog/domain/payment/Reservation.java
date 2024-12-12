@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Reservation {
     private Long reservationId;
     private Long estimateId;
+    private Long petId;
     private ServiceType serviceType;
     private ReservationStatus reservationStatus;
     private Long recipientId;

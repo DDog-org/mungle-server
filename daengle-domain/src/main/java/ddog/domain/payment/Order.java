@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class Order {
 
     private Long orderId;
+    private Long petId;
     private ServiceType serviceType;
     private Long price;
     private Long estimateId;

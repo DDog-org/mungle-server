@@ -23,6 +23,7 @@ public class ReservationJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
     private Long estimateId;
+    private Long petId;
 
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
@@ -48,6 +49,7 @@ public class ReservationJpaEntity {
         return ReservationJpaEntity.builder()
                 .reservationId(reservation.getReservationId())
                 .estimateId(reservation.getEstimateId())
+                .petId(reservation.getPetId())
                 .serviceType(reservation.getServiceType())
                 .reservationStatus(reservation.getReservationStatus())
                 .recipientId(reservation.getRecipientId())
@@ -70,6 +72,7 @@ public class ReservationJpaEntity {
         return Reservation.builder()
                 .reservationId(reservationId)
                 .estimateId(estimateId)
+                .petId(petId)
                 .serviceType(serviceType)
                 .reservationStatus(reservationStatus)
                 .recipientId(recipientId)

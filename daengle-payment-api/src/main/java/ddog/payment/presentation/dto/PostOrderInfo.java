@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostOrderInfo {
     private Long estimateId;
+    private Long petId;
     private ServiceType serviceType;
     private Long recipientId;
     private String recipientImageUrl;

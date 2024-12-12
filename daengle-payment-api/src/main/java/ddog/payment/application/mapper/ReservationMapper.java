@@ -10,6 +10,7 @@ public class ReservationMapper {
     public static Reservation createBy(Order order, Payment payment) {
         return Reservation.builder()
                 .estimateId(order.getEstimateId())
+                .petId(order.getPetId())
                 .serviceType(order.getServiceType())
                 .reservationStatus(ReservationStatus.DEPOSIT_PAID)
                 .recipientId(order.getRecipientId())  //수의사 or 병원 PK
