@@ -111,9 +111,10 @@ public class EstimateService {
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         GroomingEstimate pendingEstimate = GroomingEstimateMapper.createPendingEstimate(request, groomer, groomingEstimate);
-        groomingEstimatePersist.save(pendingEstimate);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.save(pendingEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("대기 미용 견적서 등록 완료")
                 .build();
     }

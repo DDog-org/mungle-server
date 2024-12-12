@@ -113,9 +113,10 @@ public class EstimateService {
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         CareEstimate pendingEstimate = CareEstimateMapper.createPendingEstimate(request, vet, careEstimate);
-        careEstimatePersist.save(pendingEstimate);
+        CareEstimate savedEstimate = careEstimatePersist.save(pendingEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("대기 진료 견적서 등록 완료")
                 .build();
     }

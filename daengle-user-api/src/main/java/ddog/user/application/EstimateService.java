@@ -83,17 +83,19 @@ public class EstimateService {
 
         if (request.getGroomerId() == null) {
             GroomingEstimate newEstimate = GroomingEstimateMapper.createNewGeneralGroomingEstimate(request, accountId);
-            groomingEstimatePersist.save(newEstimate);
+            GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
+                    .estimateId(savedEstimate.getEstimateId())
                     .requestResult("(일반)신규 미용 견적서 등록 완료")
                     .build();
         }
 
         GroomingEstimate newEstimate = GroomingEstimateMapper.createNewDesignationGroomingEstimate(request, accountId);
-        groomingEstimatePersist.save(newEstimate);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("(지정)신규 미용 견적서 등록 완료")
                 .build();
     }
@@ -106,17 +108,19 @@ public class EstimateService {
 
         if (request.getVetId() == null) {
             CareEstimate newEstimate = CareEstimateMapper.createNewGeneralCareEstimate(request, accountId);
-            careEstimatePersist.save(newEstimate);
+            CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
+                    .estimateId(savedEstimate.getEstimateId())
                     .requestResult("(일반)신규 진료 견적서 등록 완료")
                     .build();
         }
 
         CareEstimate newEstimate = CareEstimateMapper.createNewDesignationCareEstimate(request, accountId);
-        careEstimatePersist.save(newEstimate);
+        CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("(지정)신규 진료 견적서 등록 완료")
                 .build();
     }
