@@ -3,16 +3,14 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
-import ddog.domain.estimate.port.CareEstimatePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,28 +26,6 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findCareEstimatesByAddress(String address) {
-        List<CareEstimate> careEstimates = new ArrayList<>();
-
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByAddress(address)) {
-            careEstimates.add(careEstimateJpaEntity.toModel());
-        }
-
-        return careEstimates;
-    }
-
-    @Override
-    public List<CareEstimate> findCareEstimatesByVetId(Long vetId) {
-        List<CareEstimate> careEstimates = new ArrayList<>();
-
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByVetId(vetId)) {
-            careEstimates.add(careEstimateJpaEntity.toModel());
-        }
-
-        return careEstimates;
-    }
-
-    @Override
     public void updateStatusWithParentId(EstimateStatus estimateStatus, Long parentId) {
         careEstimateJpaRepository.updateParentEstimateByParentId(estimateStatus, parentId);
         careEstimateJpaRepository.updateStatusByParentId(estimateStatus, parentId);
@@ -62,18 +38,20 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public boolean hasGeneralEstimateByPetId(Long petId) {
-        return careEstimateJpaRepository.existsNewAndGeneralByPetId(petId);
-    }
-
-    @Override
-    public boolean hasDesignationEstimateByPetId(Long petId) {
-        return careEstimateJpaRepository.existsNewAndDesignationByPetId(petId);
-    }
-
-    @Override
     public Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId) {
         return careEstimateJpaRepository.findTopByStatusAndProposalAndPetId(estimateStatus, proposal, petId)
+                .map(CareEstimateJpaEntity::toModel);
+    }
+
+    @Override
+    public Page<CareEstimate> findByStatusAndProposalAndAddress(EstimateStatus status, Proposal proposal, String address, Pageable pageable) {
+        return careEstimateJpaRepository.findByStatusAndProposalAndAddress(status, proposal, address, pageable)
+                .map(CareEstimateJpaEntity::toModel);
+    }
+
+    @Override
+    public Page<CareEstimate> findByStatusAndProposalAndVetId(EstimateStatus status, Proposal proposal, Long accountId, Pageable pageable) {
+        return careEstimateJpaRepository.findByStatusAndProposalAndVetId(status, proposal, accountId, pageable)
                 .map(CareEstimateJpaEntity::toModel);
     }
 
@@ -81,16 +59,5 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public Optional<CareEstimate> findByEstimateId(Long estimateId) {
         return careEstimateJpaRepository.findByEstimateId(estimateId)
                 .map(CareEstimateJpaEntity::toModel);
-    }
-
-    @Override
-    public List<CareEstimate> findCareEstimatesByPetId(Long petId) {
-        List<CareEstimate> careEstimates = new ArrayList<>();
-
-        for (CareEstimateJpaEntity careEstimateJpaEntity : careEstimateJpaRepository.findCareEstimatesByPetId(petId)) {
-            careEstimates.add(careEstimateJpaEntity.toModel());
-        }
-
-        return careEstimates;
     }
 }

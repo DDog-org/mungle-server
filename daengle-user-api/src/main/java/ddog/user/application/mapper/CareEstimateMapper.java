@@ -27,8 +27,8 @@ public class CareEstimateMapper {
         List<UserInfo.PetInfo> petInfos = toPetInfos(user);
 
         return UserInfo.Care.builder()
-                .vetImage(vet.getVetImage())
-                .vetName(vet.getVetName())
+                .vetImageUrl(vet.getImageUrl())
+                .vetName(vet.getName())
                 .address(user.getAddress())
                 .petInfos(petInfos)
                 .build();
@@ -39,8 +39,8 @@ public class CareEstimateMapper {
         for (Pet pet : user.getPets()) {
             petInfos.add(UserInfo.PetInfo.builder()
                     .petId(pet.getPetId())
-                    .image(pet.getPetImage())
-                    .name(pet.getPetName())
+                    .imageUrl(pet.getImageUrl())
+                    .name(pet.getName())
                     .build());
         }
         return petInfos;
@@ -80,9 +80,9 @@ public class CareEstimateMapper {
     public static EstimateInfo.Care.Content mapToEstimateInfo(CareEstimate estimate, Vet vet) {
         return EstimateInfo.Care.Content.builder()
                 .id(estimate.getEstimateId())
-                .name(vet.getVetName())
+                .name(vet.getName())
                 .daengleMeter(vet.getDaengleMeter())
-                .imageURL(vet.getVetImage())
+                .imageUrl(vet.getImageUrl())
                 .keywords(vet.getKeywords())
                 .reservedDate(estimate.getReservedDate())
                 .build();
@@ -94,8 +94,8 @@ public class CareEstimateMapper {
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
-                .petImage(pet.getPetImage())
-                .petName(pet.getPetName())
+                .petImageUrl(pet.getImageUrl())
+                .petName(pet.getName())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
                 .build();
@@ -105,11 +105,11 @@ public class CareEstimateMapper {
         return CareEstimateDetail.builder()
                 .careEstimateId(estimate.getEstimateId())
                 .vetId(vet.getVetId())
-                .image(vet.getVetImage())
-                .name(vet.getVetName())
+                .imageUrl(vet.getImageUrl())
+                .name(vet.getName())
                 .daengleMeter(vet.getDaengleMeter())
                 .proposal(estimate.getProposal())
-                .introduction(vet.getVetIntroduction())
+                .introduction(vet.getIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .diagnosis(estimate.getDiagnosis())

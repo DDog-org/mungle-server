@@ -46,7 +46,7 @@ public class ReviewService {
             return ReviewSummaryResp.builder()
                     .groomingReviewId(groomingReview.getGroomingReviewId())
                     .reviewerName(reviewer.getNickname())
-                    .reviewerImageUrl(reviewer.getUserImage())
+                    .reviewerImageUrl(reviewer.getImageUrl())
                     .groomerId(groomingReview.getGroomerId())
                     .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())

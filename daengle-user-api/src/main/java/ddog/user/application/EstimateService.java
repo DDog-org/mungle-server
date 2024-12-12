@@ -83,17 +83,19 @@ public class EstimateService {
 
         if (request.getGroomerId() == null) {
             GroomingEstimate newEstimate = GroomingEstimateMapper.createNewGeneralGroomingEstimate(request, accountId);
-            groomingEstimatePersist.save(newEstimate);
+            GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
+                    .estimateId(savedEstimate.getEstimateId())
                     .requestResult("(일반)신규 미용 견적서 등록 완료")
                     .build();
         }
 
         GroomingEstimate newEstimate = GroomingEstimateMapper.createNewDesignationGroomingEstimate(request, accountId);
-        groomingEstimatePersist.save(newEstimate);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("(지정)신규 미용 견적서 등록 완료")
                 .build();
     }
@@ -106,17 +108,19 @@ public class EstimateService {
 
         if (request.getVetId() == null) {
             CareEstimate newEstimate = CareEstimateMapper.createNewGeneralCareEstimate(request, accountId);
-            careEstimatePersist.save(newEstimate);
+            CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
 
             return EstimateResp.builder()
+                    .estimateId(savedEstimate.getEstimateId())
                     .requestResult("(일반)신규 진료 견적서 등록 완료")
                     .build();
         }
 
         CareEstimate newEstimate = CareEstimateMapper.createNewDesignationCareEstimate(request, accountId);
-        careEstimatePersist.save(newEstimate);
+        CareEstimate savedEstimate = careEstimatePersist.save(newEstimate);
 
         return EstimateResp.builder()
+                .estimateId(savedEstimate.getEstimateId())
                 .requestResult("(지정)신규 진료 견적서 등록 완료")
                 .build();
     }
@@ -133,8 +137,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageUrl(pet.getImageUrl())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -153,8 +157,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageUrl(pet.getImageUrl())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -192,8 +196,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageUrl(pet.getImageUrl())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -213,8 +217,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageUrl(pet.getImageUrl())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -284,6 +288,28 @@ public class EstimateService {
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
         return CareEstimateMapper.mapToUserCareEstimate(estimate, pet);
+    }
+
+    public EstimateResp cancelGroomingEstimate(Long estimateId) {
+        GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getEstimateId());
+
+        return EstimateResp.builder()
+                .requestResult("미용 견적서가 성공적으로 취소되었습니다.")
+                .build();
+    }
+
+    public EstimateResp cancelCareEstimate(Long estimateId) {
+        CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        careEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getEstimateId());
+
+        return EstimateResp.builder()
+                .requestResult("진료 견적서가 성공적으로 취소되었습니다.")
+                .build();
     }
 
     @Transactional(readOnly = true)

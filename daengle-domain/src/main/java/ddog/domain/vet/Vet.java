@@ -21,12 +21,12 @@ public class Vet {
     private Long accountId;
     private String email;
     private int daengleMeter;
-    private String vetName;
-    private String vetImage;
+    private String name;
+    private String imageUrl;
     private String address;
     private String detailAddress;
     private String phoneNumber;
-    private String vetIntroduction;
+    private String introduction;
     private LocalTime startTime;
     private LocalTime endTime;
     private List<Day> closedDays;

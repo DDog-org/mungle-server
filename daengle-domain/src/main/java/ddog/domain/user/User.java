@@ -21,7 +21,7 @@ public class User {
     private String username;
     private String phoneNumber;
     private String nickname;
-    private String userImage;
+    private String imageUrl;
     private String address;
     private String email;
     private List<Pet> pets;
@@ -51,14 +51,14 @@ public class User {
         }*/
     }
 
-    public User withImageAndNickname(String userImage, String nickname) {
+    public User withImageAndNickname(String imageUrl, String nickname) {
         return User.builder()
                 .userId(userId)
                 .accountId(accountId)
                 .username(username)
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)
-                .userImage(userImage)
+                .imageUrl(imageUrl)
                 .address(address)
                 .email(email)
                 .pets(pets)
@@ -73,7 +73,7 @@ public class User {
                 .username(username)
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)
-                .userImage(userImage)
+                .imageUrl(imageUrl)
                 .address(address)
                 .email(email)
                 .pets(pets)

@@ -25,12 +25,12 @@ public class AccountController {
     }
 
     @GetMapping("/modify-page")
-    public CommonResponseEntity<ProfileInfo.ModifyPage> getModifyInfo(PayloadDto payloadDto) {
-        return success(accountService.getModifyPage(payloadDto.getAccountId()));
+    public CommonResponseEntity<ProfileInfo.UpdatePage> getUpdateInfo(PayloadDto payloadDto) {
+        return success(accountService.getUpdatePage(payloadDto.getAccountId()));
     }
 
     @PatchMapping("/info")
-    public CommonResponseEntity<AccountResp> modifyInfo(@RequestBody ModifyInfoReq request, PayloadDto payloadDto) {
-        return success(accountService.modifyInfo(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<AccountResp> updateInfo(@RequestBody UpdateInfoReq request, PayloadDto payloadDto) {
+        return success(accountService.updateInfo(request, payloadDto.getAccountId()));
     }
 }

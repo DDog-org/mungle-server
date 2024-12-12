@@ -1,12 +1,11 @@
 package ddog.vet.application;
 
-import ddog.domain.payment.Reservation;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.review.CareReview;
+import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
-import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.vet.port.VetPersist;
 import ddog.vet.application.exception.CareReviewException;
 import ddog.vet.application.exception.CareReviewExceptionType;
@@ -57,7 +56,7 @@ public class ReviewService {
             return ReviewSummaryResp.builder()
                     .careReviewId(careReview.getCareReviewId())
                     .reviewerName(reviewer.getNickname())
-                    .reviewerImageUrl(reviewer.getUserImage())
+                    .reviewerImageUrl(reviewer.getImageUrl())
                     .vetId(careReview.getVetId())
                     .careKeywordList(careReview.getCareKeywordList())
                     .revieweeName(careReview.getRevieweeName())
