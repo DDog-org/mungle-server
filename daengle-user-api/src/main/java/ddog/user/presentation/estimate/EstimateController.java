@@ -75,12 +75,36 @@ public class EstimateController {
     }
 
     /* (지정) 대기 미용 견적서 페이지 반려동물 정보 반환 */
+    @GetMapping("/designation/grooming")
+    public CommonResponseEntity<EstimateInfo.Pet> findDesignationGroomingPets(PayloadDto payloadDto) {
+        return success(estimateService.findDesignationGroomingPets(payloadDto.getAccountId()));
+    }
 
     /* (지정) 대기 진료 견적서 페이지 반려동물 정보 반환 */
+    @GetMapping("/designation/care")
+    public CommonResponseEntity<EstimateInfo.Pet> findDesignationCarePets(PayloadDto payloadDto) {
+        return success(estimateService.findDesignationCarePets(payloadDto.getAccountId()));
+    }
 
     /* (지정) 대기 미용 견적서 리스트 조회 */
+    @GetMapping("/designation/grooming/{petId}")
+    public CommonResponseEntity<EstimateInfo.Grooming> findDesignationGroomingEstimates(
+            @PathVariable Long petId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return success(estimateService.findDesignationGroomingEstimates(petId, page, size));
+    }
 
     /* (지정) 대기 진료 견적서 리스트 조회 */
+    @GetMapping("/designation/care/{petId}")
+    public CommonResponseEntity<EstimateInfo.Care> findDesignationCareEstimates(
+            @PathVariable Long petId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return success(estimateService.findDesignationCareEstimates(petId, page, size));
+    }
 
     /* 사용자가 작성한 미용 견적서 조회 */
     @GetMapping("/request/grooming/{estimateId}")

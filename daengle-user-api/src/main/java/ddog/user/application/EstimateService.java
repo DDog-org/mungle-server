@@ -1,7 +1,9 @@
 package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.Proposal;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
@@ -29,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -165,8 +166,71 @@ public class EstimateService {
     public EstimateInfo.Grooming findGeneralGroomingEstimates(Long petId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndPageable(petId, pageable);
+        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.GENERAL, pageable);
 
+        return groomingEstimatesToContents(estimates);
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Care findGeneralCareEstimates(Long petId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.GENERAL, pageable);
+
+        return careEstimatesToContents(estimates);
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Pet findDesignationGroomingPets(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<Pet> pets = user.getPets();
+        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
+        for (Pet pet : pets) {
+            if (groomingEstimatePersist.hasDesignationEstimateByPetId(pet.getPetId())) {
+                contents.add(EstimateInfo.Pet.Content.builder()
+                        .id(pet.getPetId())
+                        .imageURL(pet.getPetImage())
+                        .name(pet.getPetName())
+                        .build());
+            }
+        }
+        return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Pet findDesignationCarePets(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<Pet> pets = user.getPets();
+        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
+        for (Pet pet : pets) {
+            if (careEstimatePersist.hasDesignationEstimateByPetId(pet.getPetId())) {
+                contents.add(EstimateInfo.Pet.Content.builder()
+                        .id(pet.getPetId())
+                        .imageURL(pet.getPetImage())
+                        .name(pet.getPetName())
+                        .build());
+            }
+        }
+        return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EstimateInfo.Grooming findDesignationGroomingEstimates(Long petId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
+
+        return groomingEstimatesToContents(estimates);
+    }
+
+    private EstimateInfo.Grooming groomingEstimatesToContents(Page<GroomingEstimate> estimates) {
         List<EstimateInfo.Grooming.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
@@ -181,11 +245,14 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo.Care findGeneralCareEstimates(Long petId, int page, int size) {
-
+    public EstimateInfo.Care findDesignationCareEstimates(Long petId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndPageable(petId, pageable);
+        Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
 
+        return careEstimatesToContents(estimates);
+    }
+
+    private EstimateInfo.Care careEstimatesToContents(Page<CareEstimate> estimates) {
         List<EstimateInfo.Care.Content> contents = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
             Vet vet = vetPersist.findByAccountId(estimate.getVetId())

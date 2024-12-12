@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.jpa.repository;
 
 import ddog.domain.estimate.EstimateStatus;
+import ddog.domain.estimate.Proposal;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,9 +43,13 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     @Query("UPDATE CareEstimates c SET c.status = :status WHERE c.parentId = :parentId")
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
 
-    Page<CareEstimateJpaEntity> findByPetId(Long petId, Pageable pageable);
+    Page<CareEstimateJpaEntity> findByPetIdAndStatusAndProposal(Long petId, EstimateStatus status, Proposal proposal, Pageable pageable);
 
     @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
-            "FROM CareEstimates g WHERE g.proposal = 'NEW' AND g.petId = :petId")
-    boolean existsNewProposalByPetId(@Param("petId") Long petId);
+            "FROM CareEstimates g WHERE g.status = 'NEW' AND g.proposal = 'GENERAL' AND g.petId = :petId")
+    boolean existsNewAndGeneralByPetId(@Param("petId") Long petId);
+
+    @Query("SELECT CASE WHEN COUNT(g) > 0 THEN TRUE ELSE FALSE END " +
+            "FROM CareEstimates g WHERE g.status = 'NEW' AND g.proposal = 'DESIGNATION' AND g.petId = :petId")
+    boolean existsNewAndDesignationByPetId(@Param("petId") Long petId);
 }
