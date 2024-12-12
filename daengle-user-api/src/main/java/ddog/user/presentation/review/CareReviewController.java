@@ -20,14 +20,14 @@ public class CareReviewController {
 
     private final CareReviewService careReviewService;
 
-    @PostMapping("/care/review")
-    public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
-        return success(careReviewService.postReview(postCareReviewInfo));
-    }
-
     @GetMapping("/care/review/{reviewId}")
     public CommonResponseEntity<CareReviewDetailResp> findReview(@PathVariable Long reviewId) {
         return success(careReviewService.findReview(reviewId));
+    }
+
+    @PostMapping("/care/review")
+    public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
+        return success(careReviewService.postReview(postCareReviewInfo));
     }
 
     @PatchMapping("care/review/{reviewId}")

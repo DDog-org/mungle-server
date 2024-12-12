@@ -2,17 +2,14 @@ package ddog.user.presentation.review;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.user.presentation.review.dto.request.ModifyGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 import ddog.user.application.GroomingReviewService;
 import ddog.user.presentation.review.dto.response.GroomingReviewDetailResp;
 import ddog.user.presentation.review.dto.response.GroomingReviewListResp;
-import ddog.user.presentation.review.dto.response.GroomingReviewSummaryResp;
 import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
@@ -23,20 +20,20 @@ public class GroomingReviewController {
 
     private final GroomingReviewService groomingReviewService;
 
-    @PostMapping("/grooming/review")
-    public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostGroomingReviewInfo postGroomingReviewInfo) {
-        return success(groomingReviewService.postReview(postGroomingReviewInfo));
-    }
-
     @GetMapping("/grooming/review/{reviewId}")
     public CommonResponseEntity<GroomingReviewDetailResp> findReview(@PathVariable Long reviewId) {
         return success(groomingReviewService.findReview(reviewId));
     }
 
+    @PostMapping("/grooming/review")
+    public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostGroomingReviewInfo postGroomingReviewInfo) {
+        return success(groomingReviewService.postReview(postGroomingReviewInfo));
+    }
+
     @PatchMapping("/grooming/review/{reviewId}")
     public CommonResponseEntity<ReviewResp> updateReview(@PathVariable Long reviewId,
-                                                         @RequestBody ModifyGroomingReviewInfo modifyGroomingReviewInfo) {
-        return success(groomingReviewService.updateReview(reviewId, modifyGroomingReviewInfo));
+                                                         @RequestBody UpdateGroomingReviewInfo updateGroomingReviewInfo) {
+        return success(groomingReviewService.updateReview(reviewId, updateGroomingReviewInfo));
     }
 
     @DeleteMapping("/grooming/review/{reviewId}")

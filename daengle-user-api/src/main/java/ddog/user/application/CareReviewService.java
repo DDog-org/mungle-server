@@ -43,6 +43,27 @@ public class CareReviewService {
 
     private final BadWordFiltering badWordFiltering;
 
+    @Transactional(readOnly = true)
+    public CareReviewDetailResp findReview(Long reviewId) {
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
+                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
+
+        Reservation savedReservation = reservationPersist.findByReservationId(savedCareReview.getReservationId())
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        return CareReviewDetailResp.builder()
+                .careReviewId(savedCareReview.getCareReviewId())
+                .vetId(savedCareReview.getVetId())
+                .careKeywordReviewList(savedCareReview.getCareKeywordReviewList())
+                .revieweeName(savedCareReview.getRevieweeName())
+                .shopName(savedCareReview.getShopName())
+                .starRating(savedCareReview.getStarRating())
+                .schedule(savedReservation.getSchedule())
+                .content(savedCareReview.getContent())
+                .imageUrlList(savedCareReview.getImageUrlList())
+                .build();
+    }
+
     @Transactional
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
@@ -98,23 +119,6 @@ public class CareReviewService {
     }
 
     @Transactional(readOnly = true)
-    public CareReviewDetailResp findReview(Long reviewId) {
-        CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
-                .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
-
-        return CareReviewDetailResp.builder()
-                .careReviewId(savedCareReview.getCareReviewId())
-                .vetId(savedCareReview.getVetId())
-                .careKeywordList(savedCareReview.getCareKeywordList())
-                .revieweeName(savedCareReview.getRevieweeName())
-                .shopName(savedCareReview.getShopName())
-                .starRating(savedCareReview.getStarRating())
-                .content(savedCareReview.getContent())
-                .imageUrlList(savedCareReview.getImageUrlList())
-                .build();
-    }
-
-    @Transactional(readOnly = true)
     public CareReviewListResp findMyReviewList(Long accountId, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -137,14 +141,14 @@ public class CareReviewService {
 
     private void validatePostCareReviewInfoDataFormat(PostCareReviewInfo postCareReviewInfo) {
         CareReview.validateStarRating(postCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordList());
+        CareReview.validateCareKeywordReviewList(postCareReviewInfo.getCareKeywordReviewList());
         CareReview.validateContent(postCareReviewInfo.getContent());
         CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 
     private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
         CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordList());
+        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordReviewList());
         CareReview.validateContent(modifyCareReviewInfo.getContent());
         CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
     }
@@ -160,7 +164,7 @@ public class CareReviewService {
                     .reviewerName(reviewer.getUsername())
                     .reviewerImageUrl(reviewer.getUserImage())
                     .vetId(careReview.getVetId())
-                    .careKeywordList(careReview.getCareKeywordList())
+                    .careKeywordReviewList(careReview.getCareKeywordReviewList())
                     .revieweeName(careReview.getRevieweeName())
                     .starRating(careReview.getStarRating())
                     .content(careReview.getContent())
