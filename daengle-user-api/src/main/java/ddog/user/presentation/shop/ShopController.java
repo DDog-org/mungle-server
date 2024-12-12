@@ -5,10 +5,8 @@ import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.application.ShopService;
 import ddog.user.presentation.shop.dto.ShopResp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 
@@ -27,4 +25,9 @@ public class ShopController {
     public CommonResponseEntity<ShopResp> getVetsList(@RequestParam(required = false) String address, PayloadDto payloadDto) {
         return success(shopService.findVets(payloadDto.getAccountId(), address));
     }
+
+//    @GetMapping("/shop/{shopId}")
+//    public CommonResponseEntity<ShopResp.ShopInfo> getBeautyShopDetail(@PathVariable("shopId") Long shopId, PayloadDto payloadDto) {
+//        return success(shopService.findBeautyShops())
+//    }
 }

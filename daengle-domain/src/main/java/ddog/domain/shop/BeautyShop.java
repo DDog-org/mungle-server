@@ -21,4 +21,5 @@ public class BeautyShop {
     private List<Groomer> groomers;
     private LocalTime startTime;
     private LocalTime endTime;
+    private String introduction;
 }

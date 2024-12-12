@@ -35,6 +35,8 @@ public class BeautyShopJpaEntity {
     private LocalTime startTime;
     private LocalTime endTime;
 
+    private String introduction;
+
     public static BeautyShopJpaEntity from (BeautyShop beautyShop) {
         return BeautyShopJpaEntity.builder()
                 .shopId(beautyShop.getShopId())
@@ -46,6 +48,7 @@ public class BeautyShopJpaEntity {
                         .toList())
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
+                .introduction(beautyShop.getIntroduction())
                 .build();
     }
 
@@ -58,7 +61,8 @@ public class BeautyShopJpaEntity {
                 .groomers(groomers.stream().map(GroomerJpaEntity::toModel).toList())
                 .startTime(startTime)
                 .endTime(endTime)
-                 .build();
+                .introduction(introduction)
+                .build();
     }
 
 }

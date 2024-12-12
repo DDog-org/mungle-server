@@ -50,6 +50,11 @@ public class ShopService {
                 .build();
     }
 
+//    public ShopResp.ShopInfo findBeautyShop(Long shopId) {
+//        List<ShopResp.ShopInfo> shopInfos = convertToBeautyShopList(address, accountId);
+//        return ShopResp.ShopInfo.builder()
+//                .shopId()
+//    }
     public List<ShopResp.VetInfo> convertToVetList(String address, Long accountId) {
         if (address == null) {
             address = userPersist.findByAccountId(accountId).orElseThrow(() ->
