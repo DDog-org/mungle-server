@@ -12,7 +12,7 @@ public class UserInfo {
     @Getter
     @Builder
     public static class Grooming {
-        private String groomerImage;
+        private String groomerImageURL;
         private String groomerName;
         private String shopName;
 
@@ -23,7 +23,7 @@ public class UserInfo {
     @Getter
     @Builder
     public static class Care {
-        private String vetImage;
+        private String vetImageURL;
         private String vetName;
 
         private String address;
@@ -34,7 +34,7 @@ public class UserInfo {
     @Builder
     public static class PetInfo {
         private Long petId;
-        private String image;
+        private String imageURL;
         private String name;
     }
 }

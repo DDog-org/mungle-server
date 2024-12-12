@@ -13,7 +13,7 @@ public class VetMapper {
         return Vet.builder()
                 .accountId(accountId)
                 .daengleMeter(0)
-                .vetName(request.getName())
+                .name(request.getName())
                 .address(request.getAddress())
                 .detailAddress(request.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())
@@ -26,15 +26,15 @@ public class VetMapper {
 
     public static ProfileInfo.ModifyPage toModifyPage(Vet vet) {
         return ProfileInfo.ModifyPage.builder()
-                .image(vet.getVetImage())
-                .name(vet.getVetName())
+                .image(vet.getImageURL())
+                .name(vet.getName())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
                 .closedDays(vet.getClosedDays())
                 .phoneNumber(vet.getPhoneNumber())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
-                .introduction(vet.getVetIntroduction())
+                .introduction(vet.getIntroduction())
                 .build();
     }
 
@@ -44,12 +44,12 @@ public class VetMapper {
                 .accountId(vet.getAccountId())
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
-                .vetName(vet.getVetName())
-                .vetImage(request.getImage())
+                .name(vet.getName())
+                .imageURL(request.getImage())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())
-                .vetIntroduction(request.getIntroduction())
+                .introduction(request.getIntroduction())
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
                 .closedDays(request.getClosedDays())

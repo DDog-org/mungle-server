@@ -18,12 +18,12 @@ public class Pet {
 
     private Long petId;
     private Long accountId;
-    private Gender petGender;
-    private String petName;
-    private String petImage;
-    private String petSignificant;
-    private int petBirth;
-    private Weight petWeight;
+    private Gender gender;
+    private String name;
+    private String imageURL;
+    private String significant;
+    private int birth;
+    private Weight weight;
     private Breed breed;
     private Boolean isNeutered;
     private Boolean groomingExperience;
@@ -81,6 +81,6 @@ public class Pet {
     public int getAge() {
         int currentYear = LocalDate.now().getYear();
 
-        return currentYear - petBirth + 1;
+        return currentYear - birth + 1;
     }
 }

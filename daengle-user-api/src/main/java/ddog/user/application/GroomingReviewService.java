@@ -170,7 +170,7 @@ public class GroomingReviewService {
             return GroomingReviewSummaryResp.builder()
                     .groomingReviewId(groomingReview.getGroomingReviewId())
                     .reviewerName(reviewer.getNickname())
-                    .reviewerImageUrl(reviewer.getUserImage())
+                    .reviewerImageUrl(reviewer.getImageURL())
                     .groomerId(groomingReview.getGroomerId())
                     .groomingKeywordList(groomingReview.getGroomingKeywordList())
                     .revieweeName(groomingReview.getRevieweeName())

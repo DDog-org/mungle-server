@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EstimateDetail {
 
-    private String userImage;
+    private String userImageURL;
     private String nickname;
     private String address;
 
@@ -21,7 +21,7 @@ public class EstimateDetail {
     private Proposal proposal;
 
     private Long petId;
-    private String petImage;
+    private String petImageURL;
     private String petName;
     private int age;
     private Weight weight;

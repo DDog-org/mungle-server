@@ -24,14 +24,14 @@ public class PetJpaEntity {
     private Long accountId;
 
     @Enumerated(EnumType.STRING)
-    private Gender petGender;
-    private String petName;
-    private String petImage;
-    private String petSignificant;
-    private int petBirth;
+    private Gender gender;
+    private String name;
+    private String imageURL;
+    private String significant;
+    private int birth;
 
     @Enumerated(EnumType.STRING)
-    private Weight petWeight;
+    private Weight weight;
     @Enumerated(EnumType.STRING)
     private Breed breed;
     private Boolean isNeutered;
@@ -54,12 +54,12 @@ public class PetJpaEntity {
         return Pet.builder()
                 .petId(petId)
                 .accountId(accountId)
-                .petGender(petGender)
-                .petName(petName)
-                .petImage(petImage)
-                .petSignificant(petSignificant)
-                .petBirth(petBirth)
-                .petWeight(petWeight)
+                .gender(gender)
+                .name(name)
+                .imageURL(imageURL)
+                .significant(significant)
+                .birth(birth)
+                .weight(weight)
                 .breed(breed)
                 .isNeutered(isNeutered)
                 .groomingExperience(groomingExperience)
@@ -73,12 +73,12 @@ public class PetJpaEntity {
         return PetJpaEntity.builder()
                 .petId(pet.getPetId())
                 .accountId(pet.getAccountId())
-                .petGender(pet.getPetGender())
-                .petName(pet.getPetName())
-                .petImage(pet.getPetImage())
-                .petSignificant(pet.getPetSignificant())
-                .petBirth(pet.getPetBirth())
-                .petWeight(pet.getPetWeight())
+                .gender(pet.getGender())
+                .name(pet.getName())
+                .imageURL(pet.getImageURL())
+                .significant(pet.getSignificant())
+                .birth(pet.getBirth())
+                .weight(pet.getWeight())
                 .breed(pet.getBreed())
                 .isNeutered(pet.getIsNeutered())
                 .groomingExperience(pet.getGroomingExperience())

@@ -133,8 +133,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageURL(pet.getImageURL())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -153,8 +153,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageURL(pet.getImageURL())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -192,8 +192,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageURL(pet.getImageURL())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()
@@ -213,8 +213,8 @@ public class EstimateService {
                     .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
                             .estimateId(estimate.getEstimateId())
                             .petId(pet.getPetId())
-                            .imageURL(pet.getPetImage())
-                            .name(pet.getPetName())
+                            .imageURL(pet.getImageURL())
+                            .name(pet.getName())
                             .build()));
         }
         return EstimateInfo.Pet.builder()

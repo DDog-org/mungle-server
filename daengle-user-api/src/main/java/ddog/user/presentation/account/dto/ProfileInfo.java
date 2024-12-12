@@ -9,7 +9,7 @@ public class ProfileInfo {
 
     @Getter
     @Builder
-    public static class ModifyPage {
+    public static class UpdatePage {
         private String image;
         private String nickname;
         private String username;

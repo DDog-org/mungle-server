@@ -17,14 +17,14 @@ public class Groomer {
     private Long groomerId;
     private Long accountId;
     private int daengleMeter;
-    private String groomerName;
+    private String name;
     private String phoneNumber;
-    private String groomerImage;
+    private String imageURL;
     private String email;
     private String address;
     private String detailAddress;
     private String shopName;
-    private String groomerIntroduction;
+    private String introduction;
     private List<String> businessLicenses;
     private List<String> licenses;
     private List<GroomingKeyword> keywords;

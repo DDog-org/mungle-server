@@ -13,7 +13,7 @@ public class CareEstimateDetail {
 
     private Long careEstimateId;
     private Long vetId;
-    private String image;
+    private String imageURL;
     private String name;
     private int daengleMeter;
     private Proposal proposal;

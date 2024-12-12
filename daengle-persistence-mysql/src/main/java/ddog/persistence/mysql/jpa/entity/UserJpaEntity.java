@@ -27,7 +27,7 @@ public class UserJpaEntity {
     private String username;
     private String phoneNumber;
     private String nickname;
-    private String userImage;
+    private String imageURL;
     private String address;
     private String email;
 
@@ -42,7 +42,7 @@ public class UserJpaEntity {
                 .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
                 .nickname(user.getNickname())
-                .userImage(user.getUserImage())
+                .imageURL(user.getImageURL())
                 .address(user.getAddress())
                 .email(user.getEmail())
                 .pets(UserJpaEntity.fromPetModel(user.getPets()))
@@ -56,7 +56,7 @@ public class UserJpaEntity {
                 .username(username)
                 .phoneNumber(phoneNumber)
                 .nickname(nickname)
-                .userImage(userImage)
+                .imageURL(imageURL)
                 .address(address)
                 .email(email)
                 .pets(toPetModel())

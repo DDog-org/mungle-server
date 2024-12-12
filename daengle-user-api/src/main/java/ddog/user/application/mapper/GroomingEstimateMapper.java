@@ -7,7 +7,6 @@ import ddog.domain.groomer.Groomer;
 import ddog.domain.pet.Pet;
 import ddog.domain.user.User;
 import ddog.user.presentation.estimate.dto.*;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class GroomingEstimateMapper {
         List<UserInfo.PetInfo> petInfos = toPetInfos(user);
 
         return UserInfo.Grooming.builder()
-                .groomerImage(groomer.getGroomerImage())
-                .groomerName(groomer.getGroomerName())
+                .groomerImageURL(groomer.getImageURL())
+                .groomerName(groomer.getName())
                 .shopName(groomer.getShopName())
                 .address(user.getAddress())
                 .petInfos(petInfos)
@@ -41,8 +40,8 @@ public class GroomingEstimateMapper {
         for (Pet pet : user.getPets()) {
             petInfos.add(UserInfo.PetInfo.builder()
                     .petId(pet.getPetId())
-                    .image(pet.getPetImage())
-                    .name(pet.getPetName())
+                    .imageURL(pet.getImageURL())
+                    .name(pet.getName())
                     .build());
         }
         return petInfos;
@@ -82,9 +81,9 @@ public class GroomingEstimateMapper {
     public static EstimateInfo.Grooming.Content mapToEstimateInfo(GroomingEstimate estimate, Groomer groomer) {
         return EstimateInfo.Grooming.Content.builder()
                 .id(estimate.getEstimateId())
-                .name(groomer.getGroomerName())
+                .name(groomer.getName())
                 .daengleMeter(groomer.getDaengleMeter())
-                .imageURL(groomer.getGroomerImage())
+                .imageURL(groomer.getImageURL())
                 .shopName(groomer.getShopName())
                 .keywords(groomer.getKeywords())
                 .reservedDate(estimate.getReservedDate())
@@ -97,8 +96,8 @@ public class GroomingEstimateMapper {
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
-                .petImage(pet.getPetImage())
-                .petName(pet.getPetName())
+                .petImageURL(pet.getImageURL())
+                .petName(pet.getName())
                 .desiredStyle(estimate.getDesiredStyle())
                 .requirements(estimate.getRequirements())
                 .build();
@@ -108,15 +107,15 @@ public class GroomingEstimateMapper {
         return GroomingEstimateDetail.builder()
                 .groomingEstimateId(estimate.getEstimateId())
                 .groomerId(groomer.getGroomerId())
-                .image(groomer.getGroomerImage())
-                .name(groomer.getGroomerName())
+                .imageURL(groomer.getImageURL())
+                .name(groomer.getName())
                 .shopName(groomer.getShopName())
                 .daengleMeter(groomer.getDaengleMeter())
                 .proposal(estimate.getProposal())
-                .introduction(groomer.getGroomerIntroduction())
+                .introduction(groomer.getIntroduction())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
-                .weight(pet.getPetWeight())
+                .weight(pet.getWeight())
                 .desiredStyle(estimate.getDesiredStyle())
                 .overallOpinion(estimate.getOverallOpinion())
                 .build();

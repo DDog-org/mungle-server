@@ -40,9 +40,9 @@ public class UserMapper {
                 .build();
     }
 
-    public static ProfileInfo.ModifyPage toUserProfileInfo(User user) {
-        return ProfileInfo.ModifyPage.builder()
-                .image(user.getUserImage())
+    public static ProfileInfo.UpdatePage toUserProfileInfo(User user) {
+        return ProfileInfo.UpdatePage.builder()
+                .image(user.getImageURL())
                 .nickname(user.getNickname())
                 .username(user.getUsername())
                 .phoneNumber(user.getPhoneNumber())
@@ -72,18 +72,18 @@ public class UserMapper {
 
             petDetails.add(PetInfo.Detail.builder()
                     .id(pet.getPetId())
-                    .image(pet.getPetImage())
-                    .name(pet.getPetName())
-                    .birth(pet.getPetBirth())
-                    .gender(pet.getPetGender())
+                    .image(pet.getImageURL())
+                    .name(pet.getName())
+                    .birth(pet.getBirth())
+                    .gender(pet.getGender())
                     .breed(pet.getBreed())
                     .isNeutered(pet.getIsNeutered())
-                    .weight(pet.getPetWeight())
+                    .weight(pet.getWeight())
                     .groomingExperience(pet.getGroomingExperience())
                     .isBite(pet.getIsBite())
                     .dislikeParts(dislikeParts)
                     .significantTags(significantTags)
-                    .significant(pet.getPetSignificant())
+                    .significant(pet.getSignificant())
                     .build());
         }
         return PetInfo.builder()

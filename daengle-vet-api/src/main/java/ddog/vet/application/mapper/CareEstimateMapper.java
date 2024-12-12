@@ -16,10 +16,10 @@ public class CareEstimateMapper {
     public static EstimateInfo.General.Content mapToGeneralContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.General.Content.builder()
                 .id(estimate.getEstimateId())
-                .imageURL(user.getUserImage())
+                .imageURL(user.getImageURL())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
-                .significant(pet.getPetSignificant())
+                .significant(pet.getSignificant())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }
@@ -27,27 +27,27 @@ public class CareEstimateMapper {
     public static EstimateInfo.Designation.Content mapToDesignationContent(CareEstimate estimate, User user, Pet pet) {
         return EstimateInfo.Designation.Content.builder()
                 .id(estimate.getEstimateId())
-                .imageURL(user.getUserImage())
+                .imageURL(user.getImageURL())
                 .nickname(user.getNickname())
                 .proposal(estimate.getProposal())
-                .significant(pet.getPetSignificant())
+                .significant(pet.getSignificant())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }
 
     public static EstimateDetail mapToEstimateDetail(CareEstimate estimate, User user, Pet pet) {
         return EstimateDetail.builder()
-                .userImage(user.getUserImage())
+                .userImageURL(user.getImageURL())
                 .nickname(user.getNickname())
                 .address(estimate.getAddress())
                 .reservedDate(estimate.getReservedDate())
                 .proposal(estimate.getProposal())
                 .petId(pet.getPetId())
-                .petImage(pet.getPetImage())
-                .petName(pet.getPetName())
+                .petImageURL(pet.getImageURL())
+                .petName(pet.getName())
                 .age(pet.getAge())
-                .weight(pet.getPetWeight())
-                .significant(pet.getPetSignificant())
+                .weight(pet.getWeight())
+                .significant(pet.getSignificant())
                 .symptoms(estimate.getSymptoms())
                 .requirements(estimate.getRequirements())
                 .diagnosis(estimate.getDiagnosis())

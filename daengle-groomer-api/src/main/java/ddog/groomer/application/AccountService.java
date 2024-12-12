@@ -73,7 +73,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
+    public ProfileInfo.UpdatePage getUpdatePage(Long accountId) {
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
@@ -81,7 +81,7 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
+    public AccountResp updateInfo(UpdateInfoReq request, Long accountId) {
         Groomer.validateIntroduction(request.getIntroduction());
 
         Groomer groomer = groomerPersist.findByAccountId(accountId)

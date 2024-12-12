@@ -25,12 +25,12 @@ public class VetJpaEntity {
     private Long accountId;
     private String email;
     private int daengleMeter;
-    private String vetName;
-    private String vetImage;
+    private String name;
+    private String imageURL;
     private String address;
     private String detailAddress;
     private String phoneNumber;
-    private String vetIntroduction;
+    private String introduction;
     private LocalTime startTime;
     private LocalTime endTime;
 
@@ -55,12 +55,12 @@ public class VetJpaEntity {
                 .accountId(vet.getAccountId())
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
-                .vetName(vet.getVetName())
-                .vetImage(vet.getVetImage())
+                .name(vet.getName())
+                .imageURL(vet.getImageURL())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(vet.getPhoneNumber())
-                .vetIntroduction(vet.getVetIntroduction())
+                .introduction(vet.getIntroduction())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
                 .closedDays(vet.getClosedDays())
@@ -75,12 +75,12 @@ public class VetJpaEntity {
                 .accountId(accountId)
                 .email(email)
                 .daengleMeter(daengleMeter)
-                .vetName(vetName)
-                .vetImage(vetImage)
+                .name(name)
+                .imageURL(imageURL)
                 .address(address)
                 .detailAddress(detailAddress)
                 .phoneNumber(phoneNumber)
-                .vetIntroduction(vetIntroduction)
+                .introduction(introduction)
                 .startTime(startTime)
                 .endTime(endTime)
                 .closedDays(closedDays)
