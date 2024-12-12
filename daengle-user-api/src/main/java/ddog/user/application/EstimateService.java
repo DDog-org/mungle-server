@@ -286,6 +286,28 @@ public class EstimateService {
         return CareEstimateMapper.mapToUserCareEstimate(estimate, pet);
     }
 
+    public EstimateResp cancelGroomingEstimate(Long estimateId) {
+        GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getEstimateId());
+
+        return EstimateResp.builder()
+                .requestResult("미용 견적서가 성공적으로 취소되었습니다.")
+                .build();
+    }
+
+    public EstimateResp cancelCareEstimate(Long estimateId) {
+        CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        careEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getEstimateId());
+
+        return EstimateResp.builder()
+                .requestResult("진료 견적서가 성공적으로 취소되었습니다.")
+                .build();
+    }
+
     @Transactional(readOnly = true)
     public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
         GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)

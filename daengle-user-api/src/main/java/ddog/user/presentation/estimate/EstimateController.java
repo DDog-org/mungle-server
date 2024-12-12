@@ -118,6 +118,18 @@ public class EstimateController {
         return success(estimateService.getCareEstimate(estimateId));
     }
 
+    /* 미용 견적서 취소하기 */
+    @PostMapping("/cancel/grooming")
+    public CommonResponseEntity<EstimateResp> cancelGroomingEstimate(@RequestBody CancelEstimateReq request) {
+        return success(estimateService.cancelGroomingEstimate(request.getEstimateId()));
+    }
+
+    /* 진료 견적서 취소하기 */
+    @PostMapping("/cancel/care")
+    public CommonResponseEntity<EstimateResp> cancelCareEstimate(@RequestBody CancelEstimateReq request) {
+        return success(estimateService.cancelCareEstimate(request.getEstimateId()));
+    }
+
     /* (대기) 미용 견적서 상세 조회 */
     @GetMapping("/{groomingEstimateId}/grooming-detail")
     public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
