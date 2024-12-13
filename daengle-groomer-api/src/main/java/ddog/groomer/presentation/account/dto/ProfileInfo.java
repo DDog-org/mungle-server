@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -19,7 +19,6 @@ public class ProfileInfo {
         private String phoneNumber;
         private String email;
         private String introduction;
-        private List<String> businessLicences;
         private List<LicenseDetail> licenses;
 
         @Getter
@@ -27,8 +26,8 @@ public class ProfileInfo {
         public static class LicenseDetail {
             private String name;
 
-            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-            private LocalDateTime acquisitionDate;
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+            private LocalDate acquisitionDate;
         }
     }
 }

@@ -33,7 +33,6 @@ public class GroomerMapper {
                 .phoneNumber(groomer.getPhoneNumber())
                 .email(groomer.getEmail())
                 .introduction(groomer.getIntroduction())
-                .businessLicences(groomer.getBusinessLicenses())
                 .licenses(details)
                 .build();
     }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -24,7 +25,7 @@ public class LicenseJpaEntity {
     private Long accountId;
     private String imageUrl;
     private String name;
-    private LocalDateTime acquisitionDate;
+    private LocalDate acquisitionDate;
 
     public static LicenseJpaEntity from(License license) {
         return LicenseJpaEntity.builder()

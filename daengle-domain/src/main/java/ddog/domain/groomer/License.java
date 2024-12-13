@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -17,7 +17,7 @@ public class License {
     private Long accountId;
     private String imageUrl;
     private String name;
-    private LocalDateTime acquisitionDate;
+    private LocalDate acquisitionDate;
 
     public static License createWithImageUrl(Long accountId, String imageUrl) {
         return License.builder()
