@@ -33,4 +33,9 @@ public class BeautyShopRepository implements BeautyShopPersist {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public BeautyShop findBeautyShopById(Long shopId) {
+        return beautyShopJpaRepository.findByShopId(shopId).get().toModel();
+    }
+
 }
