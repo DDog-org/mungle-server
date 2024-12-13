@@ -43,7 +43,7 @@ public class ScheduleInfoService {
         int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(groomerId).size();
         int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(groomerId).size();
 
-        List<ScheduleResp.TodayReservation> todayReservation = reservationPersist
+        List<ScheduleResp.TodayReservation> toSaveReservations = reservationPersist
                 .findTodayGroomingReservationByPartnerId(LocalDateTime.now(), ServiceType.GROOMING, groomerId)
                 .stream()
                 .map(reservation -> {
@@ -69,7 +69,7 @@ public class ScheduleInfoService {
                 .totalScheduleCount(String.valueOf(estimateTotalCount))
                 .totalReservationCount(String.valueOf(reservationCount))
                 .designationCount(String.valueOf(designationCount))
-                .allReservations(todayReservation)
+                .allReservations(toSaveReservations)
                 .build();
     }
 
