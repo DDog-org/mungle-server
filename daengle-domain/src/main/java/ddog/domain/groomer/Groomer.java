@@ -17,6 +17,7 @@ public class Groomer {
     private Long groomerId;
     private Long accountId;
     private int daengleMeter;
+    private String instagramId;
     private String name;
     private String phoneNumber;
     private String imageUrl;
@@ -33,6 +34,12 @@ public class Groomer {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {
             throw new IllegalArgumentException("Shop name must be 1-20 characters long and can contain Korean, " +
                     "English letters, numbers, and spaces, but cannot start or end with a space.");
+        }
+    }
+
+    public static void validateInstagramId(String instagramId) {
+        if (instagramId.length() < 2 || instagramId.length() > 30) {
+            throw new IllegalArgumentException("Instagram ID must be at least 2 characters and no more than 30 characters.");
         }
     }
 

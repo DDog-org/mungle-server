@@ -104,6 +104,7 @@ public class AccountService {
     @Transactional
     public AccountResp updateInfo(UpdateInfoReq request, Long accountId) {
         Groomer.validateIntroduction(request.getIntroduction());
+        Groomer.validateInstagramId(request.getInstagramId());
 
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
