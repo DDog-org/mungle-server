@@ -19,10 +19,10 @@ public class BanWordValidator {
     }
 
     public boolean isContainBanWord(String content) {
-        String normalizedContent = ContentNormalizer.normalize(content);
+        String normalizedContent = normalizeAndRemoveAllowedWords(content);
 
         for (String banWord : banWords) {
-            if (kmpMatcher.search(normalizedContent, banWord) && !isAllowWord(normalizedContent, banWord)) {
+            if (kmpMatcher.search(normalizedContent, banWord)) {
                 return true;
             }
         }
@@ -31,10 +31,10 @@ public class BanWordValidator {
 
     public Set<String> findAllBanWords(String content) {
         Set<String> detectedBanWords = new HashSet<>();
-        String normalizedContent = ContentNormalizer.normalize(content);
+        String normalizedContent = normalizeAndRemoveAllowedWords(content);
 
         for (String banWord : banWords) {
-            if (kmpMatcher.search(normalizedContent, banWord) && !isAllowWord(normalizedContent, banWord)) {
+            if (kmpMatcher.search(normalizedContent, banWord)) {
                 detectedBanWords.add(banWord);
             }
         }
@@ -42,25 +42,28 @@ public class BanWordValidator {
     }
 
     public String getBanWords(String content) {
-        String normalizedContent = ContentNormalizer.normalize(content);
+        String normalizedContent = normalizeAndRemoveAllowedWords(content);
 
         for (String banWord : banWords) {
-            if (kmpMatcher.search(normalizedContent, banWord) && !isAllowWord(normalizedContent, banWord)) {
+            if (kmpMatcher.search(normalizedContent, banWord)) {
                 return banWord;
             }
         }
         return null;
     }
 
-    private boolean isAllowWord(String normalizedContent, String banWord) {
+    /**
+     * 허용어를 제거한 뒤 정규화된 콘텐츠 반환
+     */
+    private String normalizeAndRemoveAllowedWords(String content) {
+        String normalizedContent = ContentNormalizer.normalize(content);
+
         for (String allowedWord : allowWords) {
-            // 허용어가 금칙어보다 우선 적용되는지 확인
             if (kmpMatcher.search(normalizedContent, allowedWord)) {
-                if (normalizedContent.contains(allowedWord) && allowedWord.contains(banWord)) {
-                    return true; // 허용어가 금칙어를 포함한 경우
-                }
+                normalizedContent = normalizedContent.replaceAll(allowedWord, "");
             }
         }
-        return false;
+
+        return normalizedContent;
     }
 }

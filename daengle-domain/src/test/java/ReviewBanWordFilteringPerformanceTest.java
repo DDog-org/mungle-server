@@ -24,13 +24,14 @@ public class ReviewBanWordFilteringPerformanceTest {
     @Test
     public void testPerformance_maxLengthInput() {
         // Arrange: 최대 400자의 리뷰 텍스트 생성
-        String content = "이 미용사는 정말 병신 같아요! ".repeat(20); // 총 400자
+        String content = "이 미용사는 정말 병신 같아요!짜증나".repeat(20); // 총 400자
         int contentLength = content.length();
-        Assertions.assertTrue(contentLength <= 400, "입력 텍스트는 400자를 초과할 수 없습니다.");
+        Assertions.assertTrue(contentLength <= 400, "입력 텍스트는 500자를 초과할 수 없습니다.");
         int iterations = 1000; // 1,000번 반복
 
         // Act: 성능 측정 시작
         long startTime = System.nanoTime();
+
         for (int i = 0; i < iterations; i++) {
             banWordValidator.findAllBanWords(content);
         }
