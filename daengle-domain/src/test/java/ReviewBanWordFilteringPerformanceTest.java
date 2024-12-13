@@ -32,7 +32,7 @@ public class ReviewBanWordFilteringPerformanceTest {
         // Act: 성능 측정 시작
         long startTime = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
-            banWordValidator.isContainBanWord(content);
+            banWordValidator.findAllBanWords(content);
         }
         long endTime = System.nanoTime();
 
