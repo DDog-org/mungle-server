@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BeautyShopJpaRepository extends JpaRepository<BeautyShopJpaEntity, Long> {
     @Query("SELECT b FROM BeautyShops b " +
@@ -14,4 +15,6 @@ public interface BeautyShopJpaRepository extends JpaRepository<BeautyShopJpaEnti
 
     @Query("SELECT b FROM BeautyShops b WHERE b.shopAddress LIKE CONCAT(:addressPrefix, '%')")
     List<BeautyShopJpaEntity> findBeautyShopsByAddressPrefix(@Param("addressPrefix") String addressPrefix);
+
+    Optional<BeautyShopJpaEntity> findByShopId(Long id);
 }
