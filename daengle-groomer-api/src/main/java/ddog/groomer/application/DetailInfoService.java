@@ -36,15 +36,6 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
-    private String extractDistrict(String address) {
-        if (address == null) return null;
-        String[] parts = address.split(" ");
-        if (parts.length >= 3) {
-            return String.join(" ", parts[0], parts[1], parts[2]);
-        }
-        return address;
-    }
-
     public List<DetailResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
         if (address == null) {
             address = userPersist.findByAccountId(accountId).orElseThrow(() ->
@@ -151,5 +142,18 @@ public class DetailInfoService {
                 .reviewCount(groomingReview.getTotalElements())
                 .build();
     }
+
+    private String extractDistrict(String address) {
+        if (address == null) return null;
+        String[] parts = address.split(" ");
+        System.out.println(parts.length);
+        if (parts.length == 3) {
+            return String.join(" ", parts[0], parts[1]);
+        } else if (parts.length >= 4) {
+            return String.join(" ", parts[0], parts[1], parts[2]);
+        }
+        return address;
+    }
+
 }
 
