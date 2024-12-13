@@ -1,5 +1,6 @@
 package ddog.groomer.presentation.account.dto;
 
+import ddog.domain.groomer.License;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,6 +19,6 @@ public class ProfileInfo {
         private String email;
         private String introduction;
         private List<String> businessLicences;
-        private List<String> licenses;
+        private List<License> licenses;
     }
 }

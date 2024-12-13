@@ -4,6 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.License;
+import ddog.domain.groomer.port.LicensePersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -31,6 +34,7 @@ public class AccountService {
 
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
+    private final LicensePersist licensePersist;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -41,7 +45,15 @@ public class AccountService {
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
 
-        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request);
+        List<License> licenses = new ArrayList<>();
+        for (String imageUrl : request.getLicenses()) {
+            License newLicense = License.createWithImageUrl(savedAccount.getAccountId(), imageUrl);
+            License savedLicense = licensePersist.save(newLicense);
+
+            licenses.add(savedLicense);
+        }
+
+        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses);
         groomerPersist.save(newGroomer);
 
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());

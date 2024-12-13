@@ -26,7 +26,7 @@ public class Groomer {
     private String shopName;
     private String introduction;
     private List<String> businessLicenses;
-    private List<String> licenses;
+    private List<License> licenses;
     private List<GroomingKeyword> keywords;
 
     public static void validateShopName(String shopName) {
