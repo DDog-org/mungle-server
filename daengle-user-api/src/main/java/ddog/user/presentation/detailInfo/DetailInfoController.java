@@ -1,9 +1,9 @@
-package ddog.user.presentation.shop;
+package ddog.user.presentation.detailInfo;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.application.DetailInfoService;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.user.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

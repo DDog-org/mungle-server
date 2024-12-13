@@ -2,7 +2,7 @@ package ddog.user.application.mapper;
 
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.vet.Vet;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.user.presentation.detailInfo.dto.DetailResp;
 
 public class DetailInfoMapper {
 

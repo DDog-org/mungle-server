@@ -1,4 +1,4 @@
-package ddog.user.presentation.shop.dto;
+package ddog.user.presentation.detailInfo.dto;
 
 import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.enums.GroomingKeyword;

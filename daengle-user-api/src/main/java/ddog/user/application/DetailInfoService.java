@@ -17,7 +17,7 @@ import ddog.user.application.exception.account.GroomerExceptionType;
 import ddog.user.application.exception.account.VetException;
 import ddog.user.application.exception.account.VetExceptionType;
 import ddog.user.application.mapper.DetailInfoMapper;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.user.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
