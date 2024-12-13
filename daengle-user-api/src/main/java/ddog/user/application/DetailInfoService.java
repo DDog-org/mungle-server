@@ -142,6 +142,7 @@ public class DetailInfoService {
                 .shopId(beautyShop.getShopId())
                 .keywords(findGroomer.getKeywords())
                 .reviewCount(groomingReview.getTotalElements())
+                .groomerImage(findGroomer.getImageUrl())
                 .build();
     }
 

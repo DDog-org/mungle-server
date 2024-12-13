@@ -76,6 +76,7 @@ public class DetailResp {
     public static class GroomerDetailInfo {
         private Long groomerAccountId;
         private String groomerName;
+        private String groomerImage;
         private List<GroomingKeyword> keywords;
         private String introduction;
         private Long shopId;
