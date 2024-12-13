@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEstimateJpaEntity, Long> {
@@ -36,4 +37,11 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
     Page<GroomingEstimateJpaEntity> findByStatusAndProposalAndAddress(EstimateStatus status, Proposal proposal, String address, Pageable pageable);
 
     Page<GroomingEstimateJpaEntity> findByStatusAndProposalAndGroomerId(EstimateStatus status, Proposal proposal, Long groomerId, Pageable pageable);
+
+    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndStatus(Long groomerId, EstimateStatus status);
+
+    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId, Proposal proposal);
+
+    List<GroomingEstimateJpaEntity> findByGroomerId(Long groomerId);
+
 }

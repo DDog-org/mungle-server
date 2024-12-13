@@ -2,6 +2,7 @@ package ddog.domain.vet.port;
 
 import ddog.domain.vet.Vet;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VetPersist {
@@ -9,4 +10,7 @@ public interface VetPersist {
     Optional<Vet> findByVetId(Long vetId);
 
     void save(Vet vet);
+
+    List<Vet> findByAddress(String address);
+    List<Vet> findByAddressPrefix(String addressPrefix);
 }

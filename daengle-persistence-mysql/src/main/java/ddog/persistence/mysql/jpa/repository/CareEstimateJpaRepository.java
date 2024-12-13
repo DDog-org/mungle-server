@@ -16,7 +16,6 @@ import java.util.Optional;
 
 
 public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpaEntity, Long> {
-
     CareEstimateJpaEntity save(CareEstimateJpaEntity careEstimate);
 
     Optional<CareEstimateJpaEntity> findByEstimateId(Long estimateId);
@@ -38,4 +37,11 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     Page<CareEstimateJpaEntity> findByStatusAndProposalAndAddress(EstimateStatus status, Proposal proposal, String address, Pageable pageable);
 
     Page<CareEstimateJpaEntity> findByStatusAndProposalAndVetId(EstimateStatus status, Proposal proposal, Long vetId, Pageable pageable);
+
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndStatus(Long vetId, EstimateStatus status);
+
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndProposal(Long vetId, Proposal proposal);
+
+    List<CareEstimateJpaEntity> findByVetId(Long vetId);
+
 }

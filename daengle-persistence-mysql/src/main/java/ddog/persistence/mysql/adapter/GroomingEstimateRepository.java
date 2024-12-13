@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -57,5 +59,33 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     public Page<GroomingEstimate> findByStatusAndProposalAndGroomerId(EstimateStatus status, Proposal proposal, Long groomerId, Pageable pageable) {
         return groomingEstimateJpaRepository.findByStatusAndProposalAndGroomerId(status, proposal, groomerId, pageable)
                 .map(GroomingEstimateJpaEntity::toModel);
+    }
+
+    @Override
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndEstimateStatus(Long groomerId) {
+        List<GroomingEstimate> estimate = new ArrayList<>();
+        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findGroomingEstimatesByGroomerIdAndStatus(groomerId, EstimateStatus.ON_RESERVATION);
+
+        for (GroomingEstimateJpaEntity findEstimate : findEstimates) {
+            estimate.add(findEstimate.toModel());
+        }
+
+        return estimate;
+    }
+
+    @Override
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId) {
+        List<GroomingEstimate> estimate = new ArrayList<>();
+        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findGroomingEstimatesByGroomerIdAndProposal(groomerId, Proposal.DESIGNATION);
+
+        for (GroomingEstimateJpaEntity findEstimate : findEstimates) {
+            estimate.add(findEstimate.toModel());
+        }
+        return estimate;
+    }
+
+    @Override
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerId) {
+        return groomingEstimateJpaRepository.findByGroomerId(groomerId).stream().map(GroomingEstimateJpaEntity::toModel).toList();
     }
 }

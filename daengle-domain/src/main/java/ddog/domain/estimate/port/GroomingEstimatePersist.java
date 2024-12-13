@@ -6,6 +6,7 @@ import ddog.domain.estimate.Proposal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GroomingEstimatePersist {
@@ -22,4 +23,10 @@ public interface GroomingEstimatePersist {
     Page<GroomingEstimate> findByStatusAndProposalAndAddress(EstimateStatus status, Proposal proposal, String address, Pageable pageable);
 
     Page<GroomingEstimate> findByStatusAndProposalAndGroomerId(EstimateStatus status, Proposal proposal, Long groomerId, Pageable pageable);
+
+    List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndEstimateStatus(Long groomerId);
+
+    List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId);
+
+    List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerId);
 }

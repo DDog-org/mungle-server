@@ -21,4 +21,5 @@ public class PostOrderInfo {
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;
+    private Long petId;
 }

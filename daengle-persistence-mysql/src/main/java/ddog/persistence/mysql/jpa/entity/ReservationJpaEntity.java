@@ -42,6 +42,7 @@ public class ReservationJpaEntity {
     private String visitorName;
     private String visitorPhoneNumber;
     private Long paymentId;
+    private Long petId;
 
     public static ReservationJpaEntity from(Reservation reservation) {
         return ReservationJpaEntity.builder()
@@ -61,6 +62,7 @@ public class ReservationJpaEntity {
                 .visitorName(reservation.getVisitorName())
                 .visitorPhoneNumber(reservation.getVisitorPhoneNumber())
                 .paymentId(reservation.getPaymentId())
+                .petId(reservation.getPetId())
                 .build();
     }
 
@@ -82,6 +84,7 @@ public class ReservationJpaEntity {
                 .visitorName(visitorName)
                 .visitorPhoneNumber(visitorPhoneNumber)
                 .paymentId(paymentId)
+                .petId(petId)
                 .build();
     }
 }
