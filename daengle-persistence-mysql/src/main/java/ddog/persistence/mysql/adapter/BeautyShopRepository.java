@@ -35,7 +35,12 @@ public class BeautyShopRepository implements BeautyShopPersist {
 
     @Override
     public BeautyShop findBeautyShopById(Long shopId) {
-        return beautyShopJpaRepository.findByShopId(shopId).get().toModel();
+        return beautyShopJpaRepository.findByShopId(shopId).orElseThrow().toModel();
+    }
+
+    @Override
+    public BeautyShop findBeautyShopByNameAndAddress(String name, String address) {
+        return beautyShopJpaRepository.findBeautyShopJpaEntityByShopNameAndShopAddress(name, address).orElseThrow().toModel();
     }
 
 }

@@ -17,4 +17,6 @@ public interface BeautyShopJpaRepository extends JpaRepository<BeautyShopJpaEnti
     List<BeautyShopJpaEntity> findBeautyShopsByAddressPrefix(@Param("addressPrefix") String addressPrefix);
 
     Optional<BeautyShopJpaEntity> findByShopId(Long id);
+
+    Optional<BeautyShopJpaEntity> findBeautyShopJpaEntityByShopNameAndShopAddress(String shopName, String address);
 }
