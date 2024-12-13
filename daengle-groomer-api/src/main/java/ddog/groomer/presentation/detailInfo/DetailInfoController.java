@@ -14,6 +14,7 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 @RequiredArgsConstructor
 @RequestMapping("/api/groomer")
 public class DetailInfoController {
+
     private final DetailInfoService detailInfoService;
 
     @GetMapping("/shops")

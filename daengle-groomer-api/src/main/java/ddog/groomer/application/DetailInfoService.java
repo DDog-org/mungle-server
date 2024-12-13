@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DetailInfoService {
+
     private final BeautyShopPersist beautyShopPersist;
     private final UserPersist userPersist;
     private final CareReviewPersist careReviewPersist;
