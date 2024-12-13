@@ -10,6 +10,7 @@ import ddog.domain.account.port.AccountPersist;
 import ddog.user.application.exception.account.AccountException;
 import ddog.user.application.exception.account.AccountExceptionType;
 import ddog.user.presentation.auth.dto.LoginResult;
+import ddog.user.presentation.auth.dto.ValidateResp;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -87,4 +88,12 @@ public class AuthService {
                 .build();
     }
 
+    public ValidateResp validateUser(Long accountId) {
+
+        boolean isValidateMember = accountId != null;
+
+        return ValidateResp.builder()
+                .IsValidateMember(isValidateMember)
+                .build();
+    }
 }

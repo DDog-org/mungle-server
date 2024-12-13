@@ -15,6 +15,7 @@ public class ProfileInfo {
     @Builder
     public static class UpdatePage {
         private String image;
+        private String instagramId;
         private String name;
         private String phoneNumber;
         private String email;

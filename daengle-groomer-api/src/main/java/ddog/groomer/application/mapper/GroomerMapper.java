@@ -29,6 +29,7 @@ public class GroomerMapper {
     public static ProfileInfo.UpdatePage mapToUpdatePage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
         return ProfileInfo.UpdatePage.builder()
                 .image(groomer.getImageUrl())
+                .instagramId(groomer.getInstagramId())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
                 .email(groomer.getEmail())
@@ -42,6 +43,7 @@ public class GroomerMapper {
                 .groomerId(groomer.getGroomerId())
                 .accountId(groomer.getAccountId())
                 .daengleMeter(groomer.getDaengleMeter())
+                .instagramId(request.getInstagramId())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
                 .imageUrl(request.getImage())
