@@ -26,7 +26,7 @@ public class GroomerMapper {
                 .build();
     }
 
-    public static ProfileInfo.UpdatePage toModifyPage(Groomer groomer) {
+    public static ProfileInfo.UpdatePage toModifyPage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
         return ProfileInfo.UpdatePage.builder()
                 .image(groomer.getImageUrl())
                 .name(groomer.getName())
@@ -34,7 +34,7 @@ public class GroomerMapper {
                 .email(groomer.getEmail())
                 .introduction(groomer.getIntroduction())
                 .businessLicences(groomer.getBusinessLicenses())
-                .licenses(groomer.getLicenses())
+                .licenses(details)
                 .build();
     }
 

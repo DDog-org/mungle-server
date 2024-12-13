@@ -1,9 +1,10 @@
 package ddog.groomer.presentation.account.dto;
 
-import ddog.domain.groomer.License;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,15 @@ public class ProfileInfo {
         private String email;
         private String introduction;
         private List<String> businessLicences;
-        private List<License> licenses;
+        private List<LicenseDetail> licenses;
+
+        @Getter
+        @Builder
+        public static class LicenseDetail {
+            private String name;
+
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+            private LocalDateTime acquisitionDate;
+        }
     }
 }

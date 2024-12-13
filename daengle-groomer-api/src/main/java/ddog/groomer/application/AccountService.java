@@ -89,7 +89,16 @@ public class AccountService {
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-        return GroomerMapper.toModifyPage(groomer);
+        List<License> licenses = groomer.getLicenses();
+        List<ProfileInfo.UpdatePage.LicenseDetail> details = new ArrayList<>();
+        for (License license : licenses) {
+            details.add(ProfileInfo.UpdatePage.LicenseDetail.builder()
+                    .name(license.getName())
+                    .acquisitionDate(license.getAcquisitionDate())
+                    .build());
+        }
+
+        return GroomerMapper.toModifyPage(groomer, details);
     }
 
     @Transactional
