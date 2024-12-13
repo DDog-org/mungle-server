@@ -17,6 +17,7 @@ public class BeautyShop {
     private Long shopId;
     private String shopName;
     private String shopAddress;
+    private String imageUrl;
     private List<String> imageUrlList;
     private List<Groomer> groomers;
     private LocalTime startTime;

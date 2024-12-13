@@ -11,7 +11,7 @@ public class ShopMapper {
                 .shopId(beautyShop.getShopId())
                 .shopName(beautyShop.getShopName())
                 .shopAddress(beautyShop.getShopAddress())
-                .imageUrlList(beautyShop.getImageUrlList())
+                .imageUrl(beautyShop.getImageUrl())
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
                 .build();

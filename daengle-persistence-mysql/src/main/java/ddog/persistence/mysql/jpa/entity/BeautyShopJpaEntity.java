@@ -37,6 +37,8 @@ public class BeautyShopJpaEntity {
 
     private String introduction;
 
+    private String imageUrl;
+
     public static BeautyShopJpaEntity from (BeautyShop beautyShop) {
         return BeautyShopJpaEntity.builder()
                 .shopId(beautyShop.getShopId())
@@ -49,6 +51,7 @@ public class BeautyShopJpaEntity {
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
                 .introduction(beautyShop.getIntroduction())
+                .imageUrl(beautyShop.getImageUrl())
                 .build();
     }
 
@@ -62,6 +65,7 @@ public class BeautyShopJpaEntity {
                 .startTime(startTime)
                 .endTime(endTime)
                 .introduction(introduction)
+                .imageUrl(imageUrl)
                 .build();
     }
 

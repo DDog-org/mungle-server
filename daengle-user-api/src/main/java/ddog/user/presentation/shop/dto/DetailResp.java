@@ -22,7 +22,7 @@ public class DetailResp {
         private Long shopId;
         private String shopName;
         private String shopAddress;
-        private List<String> imageUrlList;
+        private String imageUrl;
         private LocalTime startTime;
         private LocalTime endTime;
     }
