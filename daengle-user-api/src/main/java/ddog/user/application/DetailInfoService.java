@@ -16,7 +16,7 @@ import ddog.user.application.exception.account.GroomerException;
 import ddog.user.application.exception.account.GroomerExceptionType;
 import ddog.user.application.exception.account.VetException;
 import ddog.user.application.exception.account.VetExceptionType;
-import ddog.user.application.mapper.ShopMapper;
+import ddog.user.application.mapper.DetailInfoMapper;
 import ddog.user.presentation.shop.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,22 +37,14 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
-    public List<DetailResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(districtAddress);
-
-        return findBeautyShops.stream()
-                .map(ShopMapper::mapToBeautyShop)
-                .collect(Collectors.toList());
-    }
-
     public DetailResp findBeautyShops(Long accountId, String address) {
-        List<DetailResp.ShopInfo> shopInfos = convertToBeautyShopList(address, accountId);
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+
+        List<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address);
+
+        List<DetailResp.ShopInfo> shopInfos = savedBeautyShop.stream().map(DetailInfoMapper::mapToBeautyShop).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allShops(shopInfos)
                 .build();
@@ -86,22 +78,18 @@ public class DetailInfoService {
                 .build();
     }
 
-    public List<DetailResp.VetInfo> convertToVetList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<Vet> findVets = vetPersist.findByAddressPrefix(districtAddress);
-
-        return findVets.stream()
-                .map(ShopMapper::mapToVet)
-                .collect(Collectors.toList());
-    }
-
     public DetailResp findVets(Long accountId, String address) {
-        List<DetailResp.VetInfo> vetInfos = convertToVetList(address, accountId);
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+
+        address = address.replace(" ", "");
+
+        System.out.println(address);
+
+        List<Vet> savedVet = vetPersist.findByAddress(address);
+
+        List<DetailResp.VetInfo> vetInfos = savedVet.stream().map(DetailInfoMapper::mapToVet).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allVets(vetInfos)
                 .build();
@@ -159,4 +147,3 @@ public class DetailInfoService {
     }
 
 }
-

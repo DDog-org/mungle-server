@@ -24,11 +24,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class DetailInfoService {
-
     private final BeautyShopPersist beautyShopPersist;
     private final UserPersist userPersist;
     private final CareReviewPersist careReviewPersist;
@@ -36,22 +34,14 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
-    public List<DetailResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(districtAddress);
-
-        return findBeautyShops.stream()
-                .map(DetailInfoMapper::mapToBeautyShop)
-                .collect(Collectors.toList());
-    }
-
     public DetailResp findBeautyShops(Long accountId, String address) {
-        List<DetailResp.ShopInfo> shopInfos = convertToBeautyShopList(address, accountId);
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+
+        List<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address);
+
+        List<DetailResp.ShopInfo> shopInfos = savedBeautyShop.stream().map(DetailInfoMapper::mapToBeautyShop).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allShops(shopInfos)
                 .build();
@@ -85,22 +75,16 @@ public class DetailInfoService {
                 .build();
     }
 
-    public List<DetailResp.VetInfo> convertToVetList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<Vet> findVets = vetPersist.findByAddressPrefix(districtAddress);
-
-        return findVets.stream()
-                .map(DetailInfoMapper::mapToVet)
-                .collect(Collectors.toList());
-    }
-
     public DetailResp findVets(Long accountId, String address) {
-        List<DetailResp.VetInfo> vetInfos = convertToVetList(address, accountId);
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+
+        address = address.replace(" ", "");
+
+        List<Vet> savedVet = vetPersist.findByAddress(address);
+
+        List<DetailResp.VetInfo> vetInfos = savedVet.stream().map(DetailInfoMapper::mapToVet).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allVets(vetInfos)
                 .build();
@@ -127,10 +111,12 @@ public class DetailInfoService {
 
     public DetailResp.GroomerDetailInfo findGroomerById(Long groomerId) {
         Groomer findGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-        BeautyShop beautyShop = beautyShopPersist.findBeautyShopsByAddress(findGroomer.getAddress()).get(0);
+        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress());
+        System.out.println(beautyShop.getShopId());
         Pageable pageable = Pageable.unpaged();
 
         Page<GroomingReview> groomingReview = groomingReviewPersist.findByGroomerId(findGroomer.getGroomerId(), pageable);
+
         return DetailResp.GroomerDetailInfo.builder()
                 .groomerId(findGroomer.getGroomerId())
                 .groomerName(findGroomer.getName())
@@ -156,4 +142,3 @@ public class DetailInfoService {
     }
 
 }
-

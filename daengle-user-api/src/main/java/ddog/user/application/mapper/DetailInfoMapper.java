@@ -4,7 +4,7 @@ import ddog.domain.shop.BeautyShop;
 import ddog.domain.vet.Vet;
 import ddog.user.presentation.shop.dto.DetailResp;
 
-public class ShopMapper {
+public class DetailInfoMapper {
 
     public static DetailResp.ShopInfo mapToBeautyShop(BeautyShop beautyShop){
         return DetailResp.ShopInfo.builder()
