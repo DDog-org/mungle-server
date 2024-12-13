@@ -26,7 +26,7 @@ public class GroomerMapper {
                 .build();
     }
 
-    public static ProfileInfo.UpdatePage toModifyPage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
+    public static ProfileInfo.UpdatePage mapToUpdatePage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
         return ProfileInfo.UpdatePage.builder()
                 .image(groomer.getImageUrl())
                 .name(groomer.getName())
@@ -37,7 +37,7 @@ public class GroomerMapper {
                 .build();
     }
 
-    public static Groomer withUpdate(Groomer groomer, UpdateInfoReq request) {
+    public static Groomer updateWithUpdateInfoReq(Groomer groomer, UpdateInfoReq request) {
         return Groomer.builder()
                 .groomerId(groomer.getGroomerId())
                 .accountId(groomer.getAccountId())

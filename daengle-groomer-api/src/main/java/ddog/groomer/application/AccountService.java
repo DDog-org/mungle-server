@@ -98,7 +98,7 @@ public class AccountService {
                     .build());
         }
 
-        return GroomerMapper.toModifyPage(groomer, details);
+        return GroomerMapper.mapToUpdatePage(groomer, details);
     }
 
     @Transactional
@@ -108,7 +108,7 @@ public class AccountService {
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-        Groomer updatedGroomer = GroomerMapper.withUpdate(groomer, request);
+        Groomer updatedGroomer = GroomerMapper.updateWithUpdateInfoReq(groomer, request);
         groomerPersist.save(updatedGroomer);
 
         return AccountResp.builder()
