@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 
 
 @Configuration
-public class BadWordFilteringConfig {
+public class BanWordValidatorConfig {
 
     private static final String BAN_WORDS_FILE = "filter/banWords.txt";
     private static final String ALLOW_WORDS_FILE = "filter/allowWords.txt";
