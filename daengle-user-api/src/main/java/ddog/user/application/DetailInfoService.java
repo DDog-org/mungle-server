@@ -14,6 +14,8 @@ import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.application.exception.account.GroomerException;
 import ddog.user.application.exception.account.GroomerExceptionType;
+import ddog.user.application.exception.account.VetException;
+import ddog.user.application.exception.account.VetExceptionType;
 import ddog.user.application.mapper.ShopMapper;
 import ddog.user.presentation.shop.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +108,7 @@ public class DetailInfoService {
     }
 
     public DetailResp.VetDetailInfo findVet(Long vetId) {
-        Vet findVet = vetPersist.findByVetId(vetId).get();
+        Vet findVet = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
         Pageable pageable = Pageable.unpaged();
         Page<CareReview> results = careReviewPersist.findByVetId(vetId, pageable);
 
