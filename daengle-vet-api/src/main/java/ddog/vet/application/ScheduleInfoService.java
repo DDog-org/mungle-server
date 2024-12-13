@@ -33,11 +33,11 @@ public class ScheduleInfoService {
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(vetId).size();
         int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(vetId).size();
 
-        List<Reservation> findReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDateTime.now(), ServiceType.CARE, vetId);
+        List<Reservation> savedReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDateTime.now(), ServiceType.CARE, vetId);
 
         List<ScheduleResp.TodayReservation> todayReservation = new ArrayList<>();
 
-        for (Reservation reservation : findReservations) {
+        for (Reservation reservation : savedReservations) {
             Long petId = reservation.getPetId();
             Pet pet = petPersist.findByPetId(petId).get();
             todayReservation.add(ScheduleResp.TodayReservation.builder()

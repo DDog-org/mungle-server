@@ -32,24 +32,21 @@ public class ScheduleInfoService {
     private final GroomingEstimatePersist groomingEstimatePersist;
 
     public ScheduleResp getScheduleByGroomerId(Long accountId) {
-        Long groomerId = groomerPersist.findByAccountId(accountId)
+        Long savedGroomerId = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND))
                 .getGroomerId();
 
-        Groomer groomerInfo = groomerPersist.findByGroomerId(groomerId)
-                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-
-        int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(groomerId).size();
-        int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(groomerId).size();
-        int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(groomerId).size();
+        int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(savedGroomerId).size();
+        int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(savedGroomerId).size();
+        int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(savedGroomerId).size();
 
         List<ScheduleResp.TodayReservation> toSaveReservations = reservationPersist
-                .findTodayGroomingReservationByPartnerId(LocalDateTime.now(), ServiceType.GROOMING, groomerId)
+                .findTodayGroomingReservationByPartnerId(LocalDateTime.now(), ServiceType.GROOMING, savedGroomerId)
                 .stream()
                 .map(reservation -> {
                     Long petId = reservation.getPetId();
                     Long estimateId = reservation.getEstimateId();
-                    Pet pet = petPersist.findByPetId(petId)
+                    Pet savedPet = petPersist.findByPetId(petId)
                             .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
                     String desiredStyle = groomingEstimatePersist.findByEstimateId(estimateId)
                             .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND))
@@ -57,8 +54,8 @@ public class ScheduleInfoService {
 
                     return ScheduleResp.TodayReservation.builder()
                             .petId(petId)
-                            .petName(pet.getName())
-                            .petImage(pet.getImageUrl())
+                            .petName(savedPet.getName())
+                            .petImage(savedPet.getImageUrl())
                             .reservationTime(reservation.getSchedule().toLocalTime())
                             .desiredStyle(desiredStyle)
                             .build();
