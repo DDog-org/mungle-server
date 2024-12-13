@@ -120,6 +120,7 @@ public class DetailInfoService {
                 .introductions(findVet.getIntroduction())
                 .daengleMeter(findVet.getDaengleMeter())
                 .reviewCount(results.getTotalElements())
+                .imageUrlList(findVet.getImageUrlList())
                 .build();
     }
 

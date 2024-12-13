@@ -68,6 +68,7 @@ public class DetailResp {
         private String introductions;
         private int daengleMeter;
         private Long reviewCount;
+        private List<String> imageUrlList;
     }
 
     @Getter
