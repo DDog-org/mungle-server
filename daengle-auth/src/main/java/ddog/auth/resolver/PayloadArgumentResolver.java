@@ -2,6 +2,8 @@ package ddog.auth.resolver;
 
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.AuthException;
+import ddog.auth.exception.AuthExceptionType;
 import ddog.domain.account.Role;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +35,11 @@ public class PayloadArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = resolveToken(request);
 
+        // TODO 회원/비회원 로직을 처리하기 위해 리팩토링 전 적어둔 로직, 추후 리팩토링 때 회원/비회원 로직 처리를 어떻게 해야할지 고민 필요
+        if (token == null) {
+            return new PayloadDto(null, null, null);
+        }
+
         if (jwtTokenProvider.validateToken(token)) {
             Claims claims = jwtTokenProvider.parseClaims(token);
             String[] subjects = claims.getSubject().split(",");
@@ -48,12 +55,17 @@ public class PayloadArgumentResolver implements HandlerMethodArgumentResolver {
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+
+        // TODO 회원/비회원 로직을 처리하기 위해 리팩토링 전 적어둔 로직, 추후 리팩토링 때 회원/비회원 로직 처리를 어떻게 해야할지 고민 필요
+        if (bearerToken == null) {
+            return null;
+        }
+
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
 
-        /* 추후 예외 변경 필요 */
-        throw new RuntimeException();
+        throw new AuthException(AuthExceptionType.UNSUPPORTED_TOKEN);
     }
 
     private Role fromString(String roleString) {
