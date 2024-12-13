@@ -1,4 +1,4 @@
-package ddog.user.application;
+package ddog.groomer.application;
 
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.GroomerSummaryInfo;
@@ -12,10 +12,10 @@ import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
-import ddog.user.application.exception.account.GroomerException;
-import ddog.user.application.exception.account.GroomerExceptionType;
-import ddog.user.application.mapper.ShopMapper;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.groomer.application.exception.account.GroomerException;
+import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.mapper.DetailInfoMapper;
+import ddog.groomer.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DetailInfoService {
+
     private final BeautyShopPersist beautyShopPersist;
     private final UserPersist userPersist;
     private final CareReviewPersist careReviewPersist;
@@ -54,7 +55,7 @@ public class DetailInfoService {
         List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(districtAddress);
 
         return findBeautyShops.stream()
-                .map(ShopMapper::mapToBeautyShop)
+                .map(DetailInfoMapper::mapToBeautyShop)
                 .collect(Collectors.toList());
     }
 
@@ -103,7 +104,7 @@ public class DetailInfoService {
         List<Vet> findVets = vetPersist.findByAddressPrefix(districtAddress);
 
         return findVets.stream()
-                .map(ShopMapper::mapToVet)
+                .map(DetailInfoMapper::mapToVet)
                 .collect(Collectors.toList());
     }
 
