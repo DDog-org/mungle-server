@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,6 +28,12 @@ public class VetJpaEntity {
     private int daengleMeter;
     private String name;
     private String imageUrl;
+
+    @ElementCollection // 휴무일 리스트
+    @CollectionTable(name = "vet_image_urls", joinColumns = @JoinColumn(name = "vet_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrlList = new ArrayList<>();
+
     private String address;
     private String detailAddress;
     private String phoneNumber;
@@ -57,6 +64,7 @@ public class VetJpaEntity {
                 .daengleMeter(vet.getDaengleMeter())
                 .name(vet.getName())
                 .imageUrl(vet.getImageUrl())
+                .imageUrlList(vet.getImageUrlList())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(vet.getPhoneNumber())
@@ -77,6 +85,7 @@ public class VetJpaEntity {
                 .daengleMeter(daengleMeter)
                 .name(name)
                 .imageUrl(imageUrl)
+                .imageUrlList(imageUrlList)
                 .address(address)
                 .detailAddress(detailAddress)
                 .phoneNumber(phoneNumber)

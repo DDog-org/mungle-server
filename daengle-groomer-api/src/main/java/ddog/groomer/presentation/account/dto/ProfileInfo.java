@@ -1,8 +1,10 @@
 package ddog.groomer.presentation.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -17,7 +19,15 @@ public class ProfileInfo {
         private String phoneNumber;
         private String email;
         private String introduction;
-        private List<String> businessLicences;
-        private List<String> licenses;
+        private List<LicenseDetail> licenses;
+
+        @Getter
+        @Builder
+        public static class LicenseDetail {
+            private String name;
+
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+            private LocalDate acquisitionDate;
+        }
     }
 }
