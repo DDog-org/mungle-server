@@ -17,7 +17,7 @@ public class BeautyShopRepository implements BeautyShopPersist {
     private final BeautyShopJpaRepository beautyShopJpaRepository;
 
     @Override
-    public List<BeautyShop> findBeautyShops(String address) {
+    public List<BeautyShop> findBeautyShopsByAddress(String address) {
         List<BeautyShopJpaEntity> beautyShops = beautyShopJpaRepository.findBeautyShopsByShopAddress(address);
 
         return beautyShops.stream()

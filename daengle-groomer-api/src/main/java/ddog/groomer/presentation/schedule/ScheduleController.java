@@ -17,14 +17,12 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 @RequestMapping("/api/groomer")
 public class ScheduleController {
     private final ScheduleInfoService scheduleInfoService;
-    private final GroomerPersist groomerPersist;
 
     @GetMapping("/schedule")
     public CommonResponseEntity<ScheduleResp> getGroomerSchedule(PayloadDto payloadDto) {
         Long accountId = payloadDto.getAccountId();
-        Long groomerId = groomerPersist.findByAccountId(accountId).get().getGroomerId();
 
-        return success(scheduleInfoService.getScheduleByGroomerId(groomerId));
+        return success(scheduleInfoService.getScheduleByGroomerId(accountId));
     }
 
 }

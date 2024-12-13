@@ -20,15 +20,6 @@ public class ShopService {
     private final UserPersist userPersist;
     private final VetPersist vetPersist;
 
-    private String extractDistrict(String address) {
-        if (address == null) return null;
-        String[] parts = address.split(" ");
-        if (parts.length >= 3) {
-            return String.join(" ", parts[0], parts[1], parts[2]);
-        }
-        return address;
-    }
-
     public List<ShopResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
         if (address == null) {
             address = userPersist.findByAccountId(accountId).orElseThrow(() ->
@@ -69,5 +60,14 @@ public class ShopService {
         return ShopResp.builder()
                 .allVets(vetInfos)
                 .build();
+    }
+
+    private String extractDistrict(String address) {
+        if (address == null) return null;
+        String[] parts = address.split(" ");
+        if (parts.length >= 3) {
+            return String.join(" ", parts[0], parts[1], parts[2]);
+        }
+        return address;
     }
 }

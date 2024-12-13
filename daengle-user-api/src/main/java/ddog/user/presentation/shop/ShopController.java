@@ -14,6 +14,7 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 @RequiredArgsConstructor
 @RequestMapping("/api/user/list")
 public class ShopController {
+
     private final ShopService shopService;
 
     @GetMapping("/shops")
