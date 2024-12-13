@@ -31,7 +31,6 @@ public class Reservation {
     private String visitorName;
     private String visitorPhoneNumber;
     private Long paymentId;
-    private Long petId;
 
     public static void validateShopName(String shopName) {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {

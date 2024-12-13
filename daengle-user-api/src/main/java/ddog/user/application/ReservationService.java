@@ -87,7 +87,7 @@ public class ReservationService {
         GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
-        Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
+        Groomer groomer = groomerPersist.findByGroomerId(estimate.getGroomerId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         Pet pet = petPersist.findByPetId(estimate.getPetId())
@@ -100,7 +100,7 @@ public class ReservationService {
         CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
-        Vet vet = vetPersist.findByAccountId(estimate.getVetId())
+        Vet vet = vetPersist.findByVetId(estimate.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         return ReservationMapper.mapToCareEstimateDetail(estimateId, vet, estimate);
