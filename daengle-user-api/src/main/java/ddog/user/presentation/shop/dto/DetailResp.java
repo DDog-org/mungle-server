@@ -1,6 +1,6 @@
 package ddog.user.presentation.shop.dto;
 
-import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
@@ -23,7 +23,6 @@ public class DetailResp {
         private String shopName;
         private String shopAddress;
         private List<String> imageUrlList;
-        private List<Groomer> groomers;
         private LocalTime startTime;
         private LocalTime endTime;
     }
@@ -35,7 +34,7 @@ public class DetailResp {
         private String shopName;
         private String shopAddress;
         private List<String> imageUrlList;
-        private List<Groomer> groomers;
+        private List<GroomerSummaryInfo> groomers;
         private LocalTime startTime;
         private LocalTime endTime;
         private String introduction;

@@ -1,6 +1,7 @@
 package ddog.user.application;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.review.CareReview;
 import ddog.domain.review.GroomingReview;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,13 +67,27 @@ public class DetailInfoService {
 
     public DetailResp.ShopDetailInfo findBeautyShop(Long shopId) {
         BeautyShop findBeautyShop = beautyShopPersist.findBeautyShopById(shopId);
+        List<GroomerSummaryInfo> groomerSummaryInfos = new ArrayList<>();
+
+        for (Groomer groomer : findBeautyShop.getGroomers()) {
+            Long groomerReviewCount = groomingReviewPersist.findByGroomerId(groomer.getGroomerId(), Pageable.unpaged()).getTotalElements();
+            groomerSummaryInfos.add(GroomerSummaryInfo.builder()
+                    .groomerName(groomer.getName())
+                    .groomerImage(groomer.getImageUrl())
+                    .reviewCount(groomerReviewCount)
+                    .keywords(groomer.getKeywords())
+                    .daengleMeter(groomer.getDaengleMeter())
+                    .groomerId(groomer.getGroomerId())
+                    .build());
+        }
+
         return DetailResp.ShopDetailInfo.builder()
                 .shopId(findBeautyShop.getShopId())
                 .shopName(findBeautyShop.getShopName())
                 .shopAddress(findBeautyShop.getShopAddress())
                 .endTime(findBeautyShop.getEndTime())
                 .startTime(findBeautyShop.getStartTime())
-                .groomers(findBeautyShop.getGroomers())
+                .groomers(groomerSummaryInfos)
                 .imageUrlList(findBeautyShop.getImageUrlList())
                 .introduction(findBeautyShop.getIntroduction())
                 .build();

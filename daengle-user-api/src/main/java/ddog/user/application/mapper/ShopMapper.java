@@ -12,7 +12,6 @@ public class ShopMapper {
                 .shopName(beautyShop.getShopName())
                 .shopAddress(beautyShop.getShopAddress())
                 .imageUrlList(beautyShop.getImageUrlList())
-                .groomers(beautyShop.getGroomers())
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
                 .build();
