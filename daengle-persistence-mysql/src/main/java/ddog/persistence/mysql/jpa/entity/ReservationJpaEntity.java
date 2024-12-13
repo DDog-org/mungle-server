@@ -23,6 +23,7 @@ public class ReservationJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
     private Long estimateId;
+    private Long petId;
 
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
@@ -42,12 +43,12 @@ public class ReservationJpaEntity {
     private String visitorName;
     private String visitorPhoneNumber;
     private Long paymentId;
-    private Long petId;
 
     public static ReservationJpaEntity from(Reservation reservation) {
         return ReservationJpaEntity.builder()
                 .reservationId(reservation.getReservationId())
                 .estimateId(reservation.getEstimateId())
+                .petId(reservation.getPetId())
                 .serviceType(reservation.getServiceType())
                 .reservationStatus(reservation.getReservationStatus())
                 .recipientId(reservation.getRecipientId())
@@ -62,7 +63,6 @@ public class ReservationJpaEntity {
                 .visitorName(reservation.getVisitorName())
                 .visitorPhoneNumber(reservation.getVisitorPhoneNumber())
                 .paymentId(reservation.getPaymentId())
-                .petId(reservation.getPetId())
                 .build();
     }
 
@@ -70,6 +70,7 @@ public class ReservationJpaEntity {
         return Reservation.builder()
                 .reservationId(reservationId)
                 .estimateId(estimateId)
+                .petId(petId)
                 .serviceType(serviceType)
                 .reservationStatus(reservationStatus)
                 .recipientId(recipientId)
@@ -84,7 +85,6 @@ public class ReservationJpaEntity {
                 .visitorName(visitorName)
                 .visitorPhoneNumber(visitorPhoneNumber)
                 .paymentId(paymentId)
-                .petId(petId)
                 .build();
     }
 }

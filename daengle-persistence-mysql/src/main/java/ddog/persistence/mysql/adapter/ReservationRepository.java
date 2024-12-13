@@ -3,14 +3,15 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.enums.ServiceType;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.persistence.mysql.jpa.entity.ReservationJpaEntity;
 import ddog.persistence.mysql.jpa.repository.ReservationJpaRepository;
-import ddog.domain.payment.port.ReservationPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,14 @@ public class ReservationRepository implements ReservationPersist {
         return reservationJpaRepository.findByCustomerIdAndServiceTypeAndReservationStatus(
                         accountId, serviceType, ReservationStatus.DEPOSIT_PAID, pageable)
                 .map(ReservationJpaEntity::toModel);
+    }
+
+    @Override
+    public List<Reservation> findByTypeAndStatusAndCustomerId(ServiceType type, ReservationStatus status, Long customerId) {
+        return reservationJpaRepository.findReservationJpaEntitiesByServiceTypeAndReservationStatusAndCustomerId(type, status, customerId)
+                .stream()
+                .map(ReservationJpaEntity::toModel)
+                .toList();
     }
 
     @Override

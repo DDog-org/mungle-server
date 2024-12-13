@@ -12,6 +12,7 @@ public class OrderMapper {
     public static Order createBy(Long accountId, PostOrderInfo postOrderInfo, Payment payment) {
         return Order.builder()
                 .serviceType(postOrderInfo.getServiceType())
+                .petId(postOrderInfo.getPetId())
                 .price(postOrderInfo.getPrice())
                 .estimateId(postOrderInfo.getEstimateId())
                 .orderUid(String.valueOf(UUID.randomUUID()))

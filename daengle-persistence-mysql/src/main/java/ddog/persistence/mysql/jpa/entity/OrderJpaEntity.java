@@ -22,6 +22,8 @@ public class OrderJpaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
+    private Long petId;
+
     @Enumerated(EnumType.STRING)
     private ServiceType serviceType;
 
@@ -47,6 +49,7 @@ public class OrderJpaEntity {
     public Order toModel() {
         return Order.builder()
                 .orderId(this.orderId)
+                .petId(this.petId)
                 .serviceType(this.serviceType)
                 .price(this.price)
                 .estimateId(this.estimateId)
@@ -71,6 +74,7 @@ public class OrderJpaEntity {
 
         return OrderJpaEntity.builder()
                 .orderId(order.getOrderId())
+                .petId(order.getPetId())
                 .serviceType(order.getServiceType())
                 .price(order.getPrice())
                 .estimateId(order.getEstimateId())
