@@ -56,7 +56,7 @@ jobs:
 
       - name: Build JAR with Gradle
         run: |
-          ./gradlew clean :${{ matrix.module.name }}:build -x test
+          ./gradlew clean :${{ matrix.module.path }}:build -x test
 
       # 5. Verify Build Output
       - name: Verify Build Output
