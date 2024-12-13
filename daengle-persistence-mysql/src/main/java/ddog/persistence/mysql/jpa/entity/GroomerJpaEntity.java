@@ -23,6 +23,7 @@ public class GroomerJpaEntity {
     private Long groomerId;
     private Long accountId;
     private int daengleMeter;
+    private String instagramId;
     private String name;
     private String phoneNumber;
     private String imageUrl;
@@ -51,6 +52,7 @@ public class GroomerJpaEntity {
                 .groomerId(groomer.getGroomerId())
                 .accountId(groomer.getAccountId())
                 .daengleMeter(groomer.getDaengleMeter())
+                .instagramId(groomer.getInstagramId())
                 .name(groomer.getName())
                 .phoneNumber(groomer.getPhoneNumber())
                 .imageUrl(groomer.getImageUrl())
@@ -72,6 +74,7 @@ public class GroomerJpaEntity {
                 .groomerId(groomerId)
                 .accountId(accountId)
                 .daengleMeter(daengleMeter)
+                .instagramId(instagramId)
                 .name(name)
                 .phoneNumber(phoneNumber)
                 .imageUrl(imageUrl)

@@ -17,6 +17,7 @@ public class Groomer {
     private Long groomerId;
     private Long accountId;
     private int daengleMeter;
+    private String instagramId;
     private String name;
     private String phoneNumber;
     private String imageUrl;
