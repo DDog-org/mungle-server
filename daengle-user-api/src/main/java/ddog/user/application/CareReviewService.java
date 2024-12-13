@@ -1,11 +1,11 @@
 package ddog.user.application;
 
-import com.vane.badwordfiltering.BadWordFiltering;
+import ddog.domain.filter.BanWordValidator;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
 import ddog.user.application.mapper.CareReviewMapper;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
-import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 import ddog.domain.user.User;
 import ddog.domain.vet.Vet;
@@ -41,7 +41,7 @@ public class CareReviewService {
     private final VetPersist vetPersist;
     private final UserPersist userPersist;
 
-    private final BadWordFiltering badWordFiltering;
+    private final BanWordValidator banWordValidator;
 
     @Transactional(readOnly = true)
     public CareReviewDetailResp findReview(Long reviewId) {
@@ -69,7 +69,6 @@ public class CareReviewService {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
-        if(isContainBanWord(postCareReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
@@ -77,30 +76,36 @@ public class CareReviewService {
 
         //TODO 댕글미터 계산해서 영속
 
+        String banWord = banWordValidator.getBanWords(postCareReviewInfo.getContent());
+
         return ReviewResp.builder()
                 .reviewId(savedCareReview.getCareReviewId())
                 .reviewerId(savedCareReview.getReviewerId())
                 .revieweeId(savedCareReview.getVetId())
+                .banWord(banWord)
                 .build();
     }
 
     @Transactional
-    public ReviewResp updateReview(Long reviewId, ModifyCareReviewInfo modifyCareReviewInfo) {
+    public ReviewResp updateReview(Long reviewId, UpdateCareReviewInfo updateCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
-        if(isContainBanWord(modifyCareReviewInfo.getContent())) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD);
-        validateModifyCareReviewInfoDataFormat(modifyCareReviewInfo);
+        validateModifyCareReviewInfoDataFormat(updateCareReviewInfo);
 
-        CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, modifyCareReviewInfo);
+        CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, updateCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
+
+        String banWord = banWordValidator.getBanWords(updateCareReviewInfo.getContent());
 
         return ReviewResp.builder()
                 .reviewId(updatedCareReview.getCareReviewId())
                 .reviewerId(updatedCareReview.getReviewerId())
                 .revieweeId(updatedCareReview.getVetId())
+                .banWord(banWord)
+
                 .build();
     }
 
@@ -146,11 +151,11 @@ public class CareReviewService {
         CareReview.validateImageUrlList(postCareReviewInfo.getImageUrlList());
     }
 
-    private void validateModifyCareReviewInfoDataFormat(ModifyCareReviewInfo modifyCareReviewInfo) {
-        CareReview.validateStarRating(modifyCareReviewInfo.getStarRating());
-        CareReview.validateCareKeywordReviewList(modifyCareReviewInfo.getCareKeywordList());
-        CareReview.validateContent(modifyCareReviewInfo.getContent());
-        CareReview.validateImageUrlList(modifyCareReviewInfo.getImageUrlList());
+    private void validateModifyCareReviewInfoDataFormat(UpdateCareReviewInfo updateCareReviewInfo) {
+        CareReview.validateStarRating(updateCareReviewInfo.getStarRating());
+        CareReview.validateCareKeywordReviewList(updateCareReviewInfo.getCareKeywordList());
+        CareReview.validateContent(updateCareReviewInfo.getContent());
+        CareReview.validateImageUrlList(updateCareReviewInfo.getImageUrlList());
     }
 
     private CareReviewListResp mappingToCareReviewListResp(Page<CareReview> careReviews) {
@@ -180,10 +185,5 @@ public class CareReviewService {
                 .reviewCount(careReviews.getTotalElements())
                 .reviewList(careReviewList)
                 .build();
-    }
-
-    private boolean isContainBanWord(String content) {
-        String filteredContent = badWordFiltering.change(content, new String[] {"_",",",".","!","?","@","1","2","3","4","5","6","7","8","9","0"," "});
-        return !content.equals(filteredContent);
     }
 }

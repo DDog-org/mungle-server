@@ -3,7 +3,7 @@ package ddog.user.presentation.review;
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
-import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 import ddog.user.application.CareReviewService;
 import ddog.user.presentation.review.dto.response.CareReviewDetailResp;
@@ -32,8 +32,8 @@ public class CareReviewController {
 
     @PatchMapping("care/review/{reviewId}")
     public CommonResponseEntity<ReviewResp> updateReview(@PathVariable Long reviewId,
-                                                         @RequestBody ModifyCareReviewInfo modifyCareReviewInfo) {
-        return success(careReviewService.updateReview(reviewId, modifyCareReviewInfo));
+                                                         @RequestBody UpdateCareReviewInfo updateCareReviewInfo) {
+        return success(careReviewService.updateReview(reviewId, updateCareReviewInfo));
     }
 
     @DeleteMapping("/care/review/{reviewId}")
