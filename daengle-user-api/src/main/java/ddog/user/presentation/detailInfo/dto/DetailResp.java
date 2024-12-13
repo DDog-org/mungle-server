@@ -47,7 +47,7 @@ public class DetailResp {
     @Getter
     @Builder
     public static class VetInfo {
-        private Long vetId;
+        private Long vetAccountId;
         private String vetName;
         private String vetAddress;
         private String vetImage;
@@ -58,7 +58,7 @@ public class DetailResp {
     @Getter
     @Builder
     public static class VetDetailInfo {
-        private Long vetId;
+        private Long vetAccountId;
         private String vetName;
         private String vetAddress;
         private String vetImage;
@@ -73,7 +73,7 @@ public class DetailResp {
     @Getter
     @Builder
     public static class GroomerDetailInfo {
-        private Long groomerId;
+        private Long groomerAccountId;
         private String groomerName;
         private List<GroomingKeyword> keywords;
         private String introduction;

@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 public class GroomerSummaryInfo {
-    private Long groomerId;
+    private Long groomerAccountId;
     private String groomerName;
     private String groomerImage;
     private List<GroomingKeyword> keywords;

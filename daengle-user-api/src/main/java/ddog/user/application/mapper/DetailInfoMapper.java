@@ -19,7 +19,7 @@ public class DetailInfoMapper {
 
     public static DetailResp.VetInfo mapToVet(Vet vet){
         return DetailResp.VetInfo.builder()
-                .vetId(vet.getVetId())
+                .vetAccountId(vet.getAccountId())
                 .vetName(vet.getName())
                 .vetAddress(vet.getAddress())
                 .vetImage(vet.getImageUrl())
