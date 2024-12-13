@@ -42,51 +42,51 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private final IamportClient iamportClient;
-    private final UserPersist userPersist;
-    private final OrderPersist orderPersist;
-    private final PaymentPersist paymentPersist;
-    private final ReservationPersist reservationPersist;
+                private final IamportClient iamportClient;
+                private final UserPersist userPersist;
+                private final OrderPersist orderPersist;
+                private final PaymentPersist paymentPersist;
+                private final ReservationPersist reservationPersist;
 
-    private final GroomingEstimatePersist groomingEstimatePersist;
-    private final CareEstimatePersist careEstimatePersist;
+                private final GroomingEstimatePersist groomingEstimatePersist;
+                private final CareEstimatePersist careEstimatePersist;
 
-    @Transactional
-    public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
-        Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
-        Payment payment = order.getPayment();
+                @Transactional
+                public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
+                    Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+                    Payment payment = order.getPayment();
 
-        validateEstimate(order);
+                    validateEstimate(order);
 
-        try {
-            com.siot.IamportRestClient.response.Payment iamportResp =
-                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
-            String paymentStatus = iamportResp.getStatus();
-            long paymentAmount = iamportResp.getAmount().longValue();
+                    try {
+                        com.siot.IamportRestClient.response.Payment iamportResp =
+                                iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
+                        String paymentStatus = iamportResp.getStatus();
+                        long paymentAmount = iamportResp.getAmount().longValue();
 
-            //결제 완료 검증
-            if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
+                        //결제 완료 검증
+                        if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                            payment.invalidate();
+                            paymentPersist.save(payment);
 
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
-            }
+                            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
+                        }
 
-            //결제 금액 검증
-            if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
+                        //결제 금액 검증
+                        if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                            payment.invalidate();
+                            paymentPersist.save(payment);
 
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
-            }
+                            iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
+                            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
+                        }
 
-            //결제 검증 절차 성공
-            payment.validationSuccess(iamportResp.getImpUid());
-            paymentPersist.save(payment);
+                        //결제 검증 절차 성공
+                        payment.validationSuccess(iamportResp.getImpUid());
+                        paymentPersist.save(payment);
 
-            //예약 정보 생성
-            Reservation reservationToSave = ReservationMapper.createBy(order, payment);
+                        //예약 정보 생성
+                        Reservation reservationToSave = ReservationMapper.createBy(order, payment);
             Reservation savedReservation = reservationPersist.save(reservationToSave);
 
             return PaymentCallbackResp.builder()

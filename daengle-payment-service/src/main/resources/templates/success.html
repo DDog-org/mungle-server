@@ -50,15 +50,15 @@
             amount: urlParams.get("amount"),
         };
 
-        const response = await fetch("/v2/payment/confirm", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(requestData),
-        });
-
-        const json = await response.json();
+        // const response = await fetch("/v1/payment/confirm", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(requestData),
+        // });
+        //
+        // const json = await response.json();
 
         if (!response.ok) {
             // TODO: 결제 실패 비즈니스 로직을 구현하세요.

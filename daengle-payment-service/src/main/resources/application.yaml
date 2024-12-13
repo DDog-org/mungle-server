@@ -14,4 +14,4 @@ spring:
 PSP:
   toss:
     url: https://api.tosspayments.com
-    secretKey: test_sk_5OWRapdA8ddQz7lJ62WW8o1zEqZK
+    secretKey: test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6

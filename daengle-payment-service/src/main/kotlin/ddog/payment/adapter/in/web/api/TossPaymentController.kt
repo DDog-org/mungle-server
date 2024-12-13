@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
 
 @WebAdapter
-@RequestMapping("/v2/payment")
+@RequestMapping("/v1/payment")
 @RestController
 class TossPaymentController(private val tossPaymentExecutor: TossPaymentExecutor) {
 

@@ -11,11 +11,17 @@ class PaymentController {
 
     @GetMapping("/success")
     fun successPage(): Mono<String> {
+
+        System.out.println("success page !~!!!!!! \n\n\n\n")
+
         return Mono.just("success")
     }
 
     @GetMapping("/fail")
     fun failurePage(): Mono<String> {
+
+        System.out.println("failure page !~!!!!!!!! \n\n\n\n")
+
         return Mono.just("fail")
     }
 }
