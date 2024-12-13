@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -70,21 +71,27 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ProfileInfo.ModifyPage getModifyPage(Long accountId) {
+    public ProfileInfo.UpdatePage getModifyPage(Long accountId) {
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        return VetMapper.toModifyPage(vet);
+        return VetMapper.mapToUpdatePage(vet);
     }
 
     @Transactional
-    public AccountResp modifyInfo(ModifyInfoReq request, Long accountId) {
+    public AccountResp modifyInfo(UpdateInfo request, Long accountId) {
         validateModifyInfoDataFormat(request);
 
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        Vet updatedVet = VetMapper.withUpdate(vet, request);
+        List<String> imageUrls = request.getImageUrls();
+
+        String updateImageUrl = "";
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            updateImageUrl = imageUrls.get(0);
+        }
+        Vet updatedVet = VetMapper.updateWithUpdateInfo(vet, request, updateImageUrl);
         vetPersist.save(updatedVet);
 
         return AccountResp.builder()
@@ -92,7 +99,7 @@ public class AccountService {
                 .build();
     }
 
-    private void validateModifyInfoDataFormat(ModifyInfoReq request) {
+    private void validateModifyInfoDataFormat(UpdateInfo request) {
         Vet.validateTimeRange(request.getStartTime(), request.getEndTime());
         Vet.validateClosedDays(request.getClosedDays());
         Vet.validatePhoneNumber(request.getPhoneNumber());

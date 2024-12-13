@@ -1,7 +1,7 @@
 package ddog.vet.application.mapper;
 
 import ddog.domain.vet.Vet;
-import ddog.vet.presentation.account.dto.ModifyInfoReq;
+import ddog.vet.presentation.account.dto.UpdateInfo;
 import ddog.vet.presentation.account.dto.ProfileInfo;
 import ddog.vet.presentation.account.dto.SignUpReq;
 
@@ -14,6 +14,7 @@ public class VetMapper {
                 .accountId(accountId)
                 .daengleMeter(0)
                 .name(request.getName())
+                .imageUrl("")
                 .address(request.getAddress())
                 .detailAddress(request.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())
@@ -24,8 +25,8 @@ public class VetMapper {
                 .build();
     }
 
-    public static ProfileInfo.ModifyPage toModifyPage(Vet vet) {
-        return ProfileInfo.ModifyPage.builder()
+    public static ProfileInfo.UpdatePage mapToUpdatePage(Vet vet) {
+        return ProfileInfo.UpdatePage.builder()
                 .image(vet.getImageUrl())
                 .name(vet.getName())
                 .startTime(vet.getStartTime())
@@ -38,14 +39,15 @@ public class VetMapper {
                 .build();
     }
 
-    public static Vet withUpdate(Vet vet, ModifyInfoReq request) {
+    public static Vet updateWithUpdateInfo(Vet vet, UpdateInfo request, String imageUrl) {
         return Vet.builder()
                 .vetId(vet.getVetId())
                 .accountId(vet.getAccountId())
                 .email(vet.getEmail())
                 .daengleMeter(vet.getDaengleMeter())
                 .name(vet.getName())
-                .imageUrl(request.getImage())
+                .imageUrl(imageUrl)
+                .imageUrlList(request.getImageUrls())
                 .address(vet.getAddress())
                 .detailAddress(vet.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())

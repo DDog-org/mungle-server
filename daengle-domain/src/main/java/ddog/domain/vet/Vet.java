@@ -23,6 +23,7 @@ public class Vet {
     private int daengleMeter;
     private String name;
     private String imageUrl;
+    private List<String> imageUrlList;
     private String address;
     private String detailAddress;
     private String phoneNumber;
@@ -32,6 +33,10 @@ public class Vet {
     private List<Day> closedDays;
     private List<String> licenses;
     private List<CareKeyword> keywords;
+
+    public void updateWithImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public static void validateName(String name) {
         if (name == null || name.length() < 2 || name.length() > 10 || !name.matches("^[가-힣\\s]+$")) {

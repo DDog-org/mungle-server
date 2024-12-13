@@ -7,8 +7,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Getter
-public class ModifyInfoReq {
-    private String image;
+public class UpdateInfo {
+    private List<String> imageUrls;
     private LocalTime startTime;
     private LocalTime endTime;
     private List<Day> closedDays;

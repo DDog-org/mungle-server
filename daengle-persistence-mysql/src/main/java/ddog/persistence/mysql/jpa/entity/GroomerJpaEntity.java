@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.License;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,10 +37,9 @@ public class GroomerJpaEntity {
     @Column(name = "business_license_url")
     private List<String> businessLicenses;
 
-    @ElementCollection // 자격증 URL 리스트
-    @CollectionTable(name = "groomer_licenses", joinColumns = @JoinColumn(name = "groomer_id"))
-    @Column(name = "license_url")
-    private List<String> licenses;
+    @OneToMany
+    @JoinColumn(name = "account_id", referencedColumnName = "accountId")
+    private List<LicenseJpaEntity> licenses;
 
     @ElementCollection // 해시태그 리스트
     @CollectionTable(name = "grooming_keywords", joinColumns = @JoinColumn(name = "groomer_id"))
@@ -60,7 +60,9 @@ public class GroomerJpaEntity {
                 .shopName(groomer.getShopName())
                 .introduction(groomer.getIntroduction())
                 .businessLicenses(groomer.getBusinessLicenses())
-                .licenses(groomer.getLicenses())
+                .licenses(groomer.getLicenses().stream()
+                        .map(LicenseJpaEntity::from)
+                        .toList())
                 .keywords(groomer.getKeywords())
                 .build();
     }
@@ -79,7 +81,9 @@ public class GroomerJpaEntity {
                 .shopName(shopName)
                 .introduction(introduction)
                 .businessLicenses(businessLicenses)
-                .licenses(licenses)
+                .licenses(licenses.stream()
+                        .map(LicenseJpaEntity::toModel)
+                        .toList())
                 .keywords(keywords)
                 .build();
     }
