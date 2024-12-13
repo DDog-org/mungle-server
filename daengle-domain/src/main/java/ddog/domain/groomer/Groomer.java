@@ -37,6 +37,12 @@ public class Groomer {
         }
     }
 
+    public static void validateInstagramId(String instagramId) {
+        if (instagramId.length() < 2 || instagramId.length() > 30) {
+            throw new IllegalArgumentException("Instagram ID must be at least 2 characters and no more than 30 characters.");
+        }
+    }
+
     public static void validateName(String name) {
         if (name == null || !name.matches("^[가-힣]{2,10}$")) {
             throw new IllegalArgumentException("Name must be 2-10 Korean characters.");
