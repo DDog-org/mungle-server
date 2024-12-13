@@ -15,6 +15,9 @@ public class DetailResp {
 
     List<ShopInfo> allShops;
     List<VetInfo> allVets;
+    int totalPages;
+    Long totalElements;
+    int currentPage;
 
     @Getter
     @Builder

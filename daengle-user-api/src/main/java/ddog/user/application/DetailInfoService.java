@@ -20,6 +20,7 @@ import ddog.user.application.mapper.DetailInfoMapper;
 import ddog.user.presentation.shop.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,16 +38,21 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
-    public DetailResp findBeautyShops(Long accountId, String address) {
+    public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
         if (accountId == null) address = "서울 강남구 역삼동";
         else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
 
-        List<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address, pageable);
 
         List<DetailResp.ShopInfo> shopInfos = savedBeautyShop.stream().map(DetailInfoMapper::mapToBeautyShop).collect(Collectors.toList());
 
         return DetailResp.builder()
                 .allShops(shopInfos)
+                .totalPages(savedBeautyShop.getTotalPages())
+                .totalElements(savedBeautyShop.getTotalElements())
+                .currentPage(savedBeautyShop.getNumber())
                 .build();
     }
 
@@ -78,20 +84,22 @@ public class DetailInfoService {
                 .build();
     }
 
-    public DetailResp findVets(Long accountId, String address) {
+    public DetailResp findVets(Long accountId, String address, int page, int size) {
         if (accountId == null) address = "서울 강남구 역삼동";
         else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
 
         address = address.replace(" ", "");
 
-        System.out.println(address);
-
-        List<Vet> savedVet = vetPersist.findByAddress(address);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Vet> savedVet = vetPersist.findByAddress(address, pageable);
 
         List<DetailResp.VetInfo> vetInfos = savedVet.stream().map(DetailInfoMapper::mapToVet).collect(Collectors.toList());
 
         return DetailResp.builder()
                 .allVets(vetInfos)
+                .totalPages(savedVet.getTotalPages())
+                .totalElements(savedVet.getTotalElements())
+                .currentPage(savedVet.getNumber())
                 .build();
     }
 

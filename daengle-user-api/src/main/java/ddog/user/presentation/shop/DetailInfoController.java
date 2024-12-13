@@ -17,13 +17,18 @@ public class DetailInfoController {
     private final DetailInfoService detailInfoService;
 
     @GetMapping("/shops")
-    public CommonResponseEntity<DetailResp> getBeautyShopsList(@RequestParam(required = false) String address, PayloadDto payloadDto) {
-        return success(detailInfoService.findBeautyShops(payloadDto.getAccountId(), address));
+    public CommonResponseEntity<DetailResp> getBeautyShopsList(@RequestParam(required = false) String address, PayloadDto payloadDto,
+                                                               @RequestParam(defaultValue = "0") int page,
+                                                               @RequestParam(defaultValue = "5") int size) {
+        return success(detailInfoService.findBeautyShops(payloadDto.getAccountId(), address, page, size));
     }
 
     @GetMapping("/vets")
-    public CommonResponseEntity<DetailResp> getVetsList(@RequestParam(required = false) String address, PayloadDto payloadDto) {
-        return success(detailInfoService.findVets(payloadDto.getAccountId(), address));
+    public CommonResponseEntity<DetailResp> getVetsList(@RequestParam(required = false) String address,
+                                                        PayloadDto payloadDto,
+                                                        @RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "5") int size){
+        return success(detailInfoService.findVets(payloadDto.getAccountId(), address, page, size));
     }
 
     @GetMapping("/shop/{shopId}")

@@ -5,6 +5,8 @@ import ddog.persistence.mysql.jpa.entity.VetJpaEntity;
 import ddog.persistence.mysql.jpa.repository.VetJpaRepository;
 import ddog.domain.vet.port.VetPersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -35,11 +37,10 @@ public class VetRepository implements VetPersist {
     }
 
     @Override
-    public List<Vet> findByAddress(String address) {
-        List<VetJpaEntity> vets = vetJpaRepository.findVetsByAddress(address);
+    public Page<Vet> findByAddress(String address, Pageable pageable) {
+        Page<VetJpaEntity> vets = vetJpaRepository.findVetsByAddress(address, pageable);
 
-        return vets.stream().map(VetJpaEntity::toModel)
-                .collect(Collectors.toList());
+        return vets.map(VetJpaEntity::toModel);
     }
 
     @Override
