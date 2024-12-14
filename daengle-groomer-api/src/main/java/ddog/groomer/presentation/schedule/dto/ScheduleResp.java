@@ -10,9 +10,9 @@ import java.util.List;
 @Builder
 public class ScheduleResp {
 
-    public String totalScheduleCount;
-    public String designationCount;
-    public String totalReservationCount;
+    public Integer totalScheduleCount;
+    public Integer designationCount;
+    public Integer totalReservationCount;
     List<TodayReservation> todayAllReservations;
 
     @Getter

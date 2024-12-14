@@ -5,7 +5,6 @@ import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.port.GroomerPersist;
-import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 
@@ -24,7 +23,6 @@ import java.util.List;
 public class ScheduleInfoService {
     private final GroomerPersist groomerPersist;
     private final PetPersist petPersist;
-    private final ReservationPersist reservationPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
 
     public ScheduleResp getScheduleByGroomerAccountId(Long accountId) {
@@ -53,9 +51,9 @@ public class ScheduleInfoService {
         }
 
         return ScheduleResp.builder()
-                .totalScheduleCount(String.valueOf(estimateTotalCount))
-                .totalReservationCount(String.valueOf(reservationCount))
-                .designationCount(String.valueOf(designationCount))
+                .totalScheduleCount(estimateTotalCount)
+                .totalReservationCount(reservationCount)
+                .designationCount(designationCount)
                 .todayAllReservations(toSaveReservations)
                 .build();
     }
