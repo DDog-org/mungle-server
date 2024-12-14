@@ -17,11 +17,11 @@ import java.io.InputStreamReader;
 @Configuration
 public class BanWordValidatorConfig {
 
-    private static final String BAN_WORDS_FILE = "filter/banWords.txt";
+    private static final String BAN_WORDS_FILE = "filter/badWords.txt";
     private static final String ALLOW_WORDS_FILE = "filter/allowWords.txt";
 
     @Bean
-    public Set<String> banWords() throws IOException {
+    public Set<String> badWords() throws IOException {
         return loadWordsFromResource(new ClassPathResource(BAN_WORDS_FILE));
     }
 
@@ -31,8 +31,8 @@ public class BanWordValidatorConfig {
     }
 
     @Bean
-    public BanWordValidator banWordValidator(Set<String> banWords, Set<String> allowWords) {
-        return new BanWordValidator(banWords, allowWords);
+    public BanWordValidator banWordValidator(Set<String> badWords, Set<String> allowWords) {
+        return new BanWordValidator(badWords, allowWords);
     }
 
     private Set<String> loadWordsFromResource(Resource resource) throws IOException {
