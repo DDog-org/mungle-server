@@ -73,30 +73,18 @@ public class GroomingReviewService {
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 
         String includedBanWord = banWordValidator.getBanWords(postGroomingReviewInfo.getContent());
-
         if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
-            //return InvalidReviewResp(reservation, includedBanWord);
 
         GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
         GroomingReview SavedGroomingReview = groomingReviewPersist.save(groomingReviewToSave);
 
         //TODO 댕글미터 계산해서 영속
 
-
         return ReviewResp.builder()
                 .reviewId(SavedGroomingReview.getGroomingReviewId())
                 .reviewerId(SavedGroomingReview.getReviewerId())
                 .revieweeId(SavedGroomingReview.getGroomerId())
                 .banWord(null)
-                .build();
-    }
-
-    private ReviewResp InvalidReviewResp(Reservation reservation, String includedBanWord) {
-        return ReviewResp.builder()
-                .reviewId(null)
-                .reviewerId(reservation.getCustomerId())
-                .revieweeId(reservation.getRecipientId())
-                .banWord(includedBanWord)
                 .build();
     }
 
@@ -107,18 +95,19 @@ public class GroomingReviewService {
 
         validateModifyGroomingReviewInfoDataFormat(updateGroomingReviewInfo);
 
+        String includedBanWord = banWordValidator.getBanWords(updateGroomingReviewInfo.getContent());
+        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+
         GroomingReview modifiedReview = GroomingReviewMapper.updateBy(savedGroomingReview, updateGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
 
-        String banWord = banWordValidator.getBanWords(updateGroomingReviewInfo.getContent());
-
         return ReviewResp.builder()
                 .reviewId(updatedGroomingReview.getGroomingReviewId())
                 .reviewerId(updatedGroomingReview.getReviewerId())
                 .revieweeId(updatedGroomingReview.getGroomerId())
-                .banWord(banWord)
+                .banWord(null)
                 .build();
     }
 

@@ -71,18 +71,19 @@ public class CareReviewService {
 
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
+        String includedBanWord = banWordValidator.getBanWords(postCareReviewInfo.getContent());
+        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
         //TODO 댕글미터 계산해서 영속
 
-        String banWord = banWordValidator.getBanWords(postCareReviewInfo.getContent());
-
         return ReviewResp.builder()
                 .reviewId(savedCareReview.getCareReviewId())
                 .reviewerId(savedCareReview.getReviewerId())
                 .revieweeId(savedCareReview.getVetId())
-                .banWord(banWord)
+                .banWord(null)
                 .build();
     }
 
@@ -93,18 +94,19 @@ public class CareReviewService {
 
         validateModifyCareReviewInfoDataFormat(updateCareReviewInfo);
 
+        String includedBanWord = banWordValidator.getBanWords(updateCareReviewInfo.getContent());
+        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+
         CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, updateCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);
 
         //TODO 댕글미터 재계산해서 영속
 
-        String banWord = banWordValidator.getBanWords(updateCareReviewInfo.getContent());
-
         return ReviewResp.builder()
                 .reviewId(updatedCareReview.getCareReviewId())
                 .reviewerId(updatedCareReview.getReviewerId())
                 .revieweeId(updatedCareReview.getVetId())
-                .banWord(banWord)
+                .banWord(null)
 
                 .build();
     }
