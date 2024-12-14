@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CareReviewJpaRepository extends JpaRepository<CareReviewJpaEntity, Long> {
+    Optional<CareReviewJpaEntity> findByReservationId(Long reservationId);
     Optional<CareReviewJpaEntity> findByReviewerIdAndReservationId(Long reviewerId, Long reservationId);
     Page<CareReviewJpaEntity> findByReviewerId(Long reviewerId, Pageable pageable);
     Page<CareReviewJpaEntity> findByRevieweeId(Long reviewerId, Pageable pageable);

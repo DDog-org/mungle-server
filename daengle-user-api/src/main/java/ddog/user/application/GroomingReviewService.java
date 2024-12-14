@@ -3,6 +3,7 @@ package ddog.user.application;
 import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.review.GroomingReview;
 import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
@@ -69,6 +70,11 @@ public class GroomingReviewService {
     public ReviewResp postReview(PostGroomingReviewInfo postGroomingReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        if(reservation.getServiceType() != ServiceType.GROOMING) throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
+
+        if(groomingReviewPersist.findByReservationId(postGroomingReviewInfo.getReservationId())
+                .isPresent()) throw new ReviewException(ReviewExceptionType.REVIEW_HAS_WRITTEN);
 
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 

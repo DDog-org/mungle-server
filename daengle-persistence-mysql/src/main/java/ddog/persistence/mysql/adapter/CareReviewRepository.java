@@ -34,6 +34,11 @@ public class CareReviewRepository implements CareReviewPersist {
     }
 
     @Override
+    public Optional<CareReview> findByReservationId(Long reservationId) {
+        return careReviewJpaRepository.findByReservationId(reservationId).map(CareReviewJpaEntity::toModel);
+    }
+
+    @Override
     public Optional<CareReview> findByReviewerIdAndReservationId(Long reviewerId, Long reservationId) {
         return careReviewJpaRepository.findByReviewerIdAndReservationId(reviewerId, reservationId).map(CareReviewJpaEntity::toModel);
     }

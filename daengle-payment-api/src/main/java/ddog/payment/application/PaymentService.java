@@ -155,7 +155,7 @@ public class PaymentService {
                 .build();
     }
 
-    //TODO Estimate 도메인 객체에게 역할 위임하기 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
+    //TODO Estimate 도메인 객체에게 역할 위임하기, 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
     private void validateEstimateBy(Order order) {
         if (order.getServiceType().equals(ServiceType.GROOMING)) {
             GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(order.getEstimateId())
@@ -180,7 +180,7 @@ public class PaymentService {
         }
     }
 
-    //TODO Review 도메인 객체에게 역할 위임하기 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00리뷰 서비스가 추가될 수 있다)
+    //TODO Review 도메인 객체에게 역할 위임하기, 확장성이 있는 검사 로직을 구현하기 (언제든 새로운 00리뷰 서비스가 추가될 수 있다)
     private Boolean checkIfReviewExistsBy(Reservation reservation) {
         Long reviewerId = reservation.getCustomerId();
         Long reservationId = reservation.getReservationId();
