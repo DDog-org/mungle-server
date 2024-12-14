@@ -1,9 +1,7 @@
 package ddog.groomer.application;
 
 import ddog.domain.estimate.port.GroomingEstimatePersist;
-import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.port.GroomerPersist;
-import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
@@ -32,6 +30,7 @@ public class ScheduleInfoService {
     private final GroomingEstimatePersist groomingEstimatePersist;
 
     public ScheduleResp getScheduleByGroomerId(Long accountId) {
+        System.out.println(accountId);
         Long savedGroomerId = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND))
                 .getGroomerId();

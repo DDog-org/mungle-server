@@ -6,6 +6,8 @@ import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.License;
 import ddog.domain.groomer.port.LicensePersist;
+import ddog.domain.shop.BeautyShop;
+import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
@@ -35,6 +37,7 @@ public class AccountService {
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
     private final LicensePersist licensePersist;
+    private final BeautyShopPersist beautyShopPersist;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -58,6 +61,11 @@ public class AccountService {
 
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
+
+        BeautyShop newBeautyShop = BeautyShop.create(request.getShopName(), request.getAddress());
+        System.out.println(newBeautyShop);
+        newBeautyShop.addGroomer(newGroomer);
+        beautyShopPersist.save(newBeautyShop);
 
         return SignUpResp.builder()
                 .accessToken(accessToken)

@@ -19,6 +19,12 @@ public class BeautyShopRepository implements BeautyShopPersist {
     private final BeautyShopJpaRepository beautyShopJpaRepository;
 
     @Override
+    public void save(BeautyShop beautyShop) {
+        System.out.println("save--------");
+        beautyShopJpaRepository.save(BeautyShopJpaEntity.from(beautyShop));
+    }
+
+    @Override
     public Page<BeautyShop> findBeautyShopsByAddress(String address, Pageable pageable){
         Page<BeautyShopJpaEntity> beautyShops = beautyShopJpaRepository.findBeautyShopsByShopAddress(address, pageable);
 

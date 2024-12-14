@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface BeautyShopPersist {
+    void save(BeautyShop beautyShop);
     Page<BeautyShop> findBeautyShopsByAddress(String address, Pageable pageable);
     List<BeautyShop> findBeautyShopsByAddressPrefix(String addressPrefix);
     BeautyShop findBeautyShopById(Long shopId);
