@@ -1,6 +1,6 @@
 package ddog.user.application;
 
-import ddog.domain.filter.BanWordValidator;
+import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.GroomingReview;

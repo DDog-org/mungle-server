@@ -1,4 +1,4 @@
-package ddog.domain.filter;
+package ddog.domain.filtering;
 
 public class ContentNormalizer {
 

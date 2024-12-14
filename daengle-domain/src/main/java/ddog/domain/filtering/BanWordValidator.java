@@ -1,4 +1,4 @@
-package ddog.domain.filter;
+package ddog.domain.filtering;
 
 import lombok.extern.slf4j.Slf4j;
 

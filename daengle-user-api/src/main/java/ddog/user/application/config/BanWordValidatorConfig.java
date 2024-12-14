@@ -1,6 +1,6 @@
 package ddog.user.application.config;
 
-import ddog.domain.filter.BanWordValidator;
+import ddog.domain.filtering.BanWordValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
