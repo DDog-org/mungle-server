@@ -14,7 +14,7 @@ import ddog.groomer.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +34,8 @@ public class ScheduleInfoService {
         int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(savedGroomerId).size();
         int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(savedGroomerId).size();
         int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(savedGroomerId).size();
-        System.out.println(estimateTotalCount+ " + " +designationCount+ " + " + reservationCount);
 
-        List<Reservation> savedReservation = reservationPersist.findTodayGroomingReservationByPartnerId(LocalDateTime.now(), ServiceType.GROOMING, savedGroomerId);
+        List<Reservation> savedReservation = reservationPersist.findTodayGroomingReservationByPartnerId(LocalDate.now(), ServiceType.GROOMING, savedGroomerId);
         List<ScheduleResp.TodayReservation> toSaveReservations = new ArrayList<>();
 
         for (Reservation reservation : savedReservation) {
@@ -55,7 +54,7 @@ public class ScheduleInfoService {
                 .totalScheduleCount(String.valueOf(estimateTotalCount))
                 .totalReservationCount(String.valueOf(reservationCount))
                 .designationCount(String.valueOf(designationCount))
-                .allReservations(toSaveReservations)
+                .todayAllReservations(toSaveReservations)
                 .build();
     }
 

@@ -20,7 +20,6 @@ public class BeautyShopRepository implements BeautyShopPersist {
 
     @Override
     public void save(BeautyShop beautyShop) {
-        System.out.println("save--------");
         beautyShopJpaRepository.save(BeautyShopJpaEntity.from(beautyShop));
     }
 

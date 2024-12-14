@@ -12,11 +12,9 @@ import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,6 @@ public class ScheduleInfoService {
 
         List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
 
-
         for (Reservation reservation : savedReservations) {
             Long petId = reservation.getPetId();
             Pet pet = petPersist.findByPetId(petId).get();
@@ -58,7 +55,7 @@ public class ScheduleInfoService {
                 .totalScheduleCount(String.valueOf(estimateTotalCount))
                 .totalReservationCount(String.valueOf(reservationCount))
                 .designationCount(String.valueOf(designationCount))
-                .allReservations(toSaveReservation)
+                .todayAllReservations(toSaveReservation)
                 .build();
     }
 }

@@ -62,6 +62,7 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.findByEstimateId(estimateId)
                 .map(CareEstimateJpaEntity::toModel);
     }
+
     public List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetId) {
         List<CareEstimate> estimate = new ArrayList<>();
         List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndStatus(vetId, EstimateStatus.ON_RESERVATION);

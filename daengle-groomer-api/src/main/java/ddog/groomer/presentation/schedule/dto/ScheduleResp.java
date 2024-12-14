@@ -13,7 +13,7 @@ public class ScheduleResp {
     public String totalScheduleCount;
     public String designationCount;
     public String totalReservationCount;
-    List<TodayReservation> allReservations;
+    List<TodayReservation> todayAllReservations;
 
     @Getter
     @Builder
