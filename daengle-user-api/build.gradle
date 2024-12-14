@@ -21,10 +21,6 @@ dependencies {
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.assertj:assertj-core'
 
-    //금칙어 필터링 시스템
-    implementation 'io.github.vaneproject:badwordfiltering:1.0.0'
-    testImplementation 'com.opencsv:opencsv:5.7.1'
-
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'

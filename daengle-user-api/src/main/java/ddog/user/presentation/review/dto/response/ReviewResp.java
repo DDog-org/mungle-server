@@ -9,4 +9,5 @@ public class ReviewResp {
     private Long reviewId;
     private Long reviewerId;
     private Long revieweeId;
+    private String banWord;
 }

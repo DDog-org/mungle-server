@@ -2,7 +2,7 @@ package ddog.user.application.mapper;
 
 import ddog.domain.payment.Reservation;
 import ddog.domain.review.CareReview;
-import ddog.user.presentation.review.dto.request.ModifyCareReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
 
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public class CareReviewMapper {
                 .build();
     }
 
-    public static CareReview modifyBy(CareReview careReview, ModifyCareReviewInfo modifyCareReviewInfo) {
+    public static CareReview modifyBy(CareReview careReview, UpdateCareReviewInfo updateCareReviewInfo) {
         return CareReview.builder()
                 .careReviewId(careReview.getCareReviewId())
                 .reservationId(careReview.getReservationId())
@@ -32,12 +32,12 @@ public class CareReviewMapper {
                 .vetId(careReview.getVetId())
                 .revieweeName(careReview.getRevieweeName())
                 .shopName(careReview.getShopName())
-                .starRating(modifyCareReviewInfo.getStarRating())
-                .content(modifyCareReviewInfo.getContent())
+                .starRating(updateCareReviewInfo.getStarRating())
+                .content(updateCareReviewInfo.getContent())
                 .createdAt(careReview.getCreatedAt())
                 .modifiedTime(LocalDateTime.now())
-                .imageUrlList(modifyCareReviewInfo.getImageUrlList())
-                .careKeywordList(modifyCareReviewInfo.getCareKeywordList())
+                .imageUrlList(updateCareReviewInfo.getImageUrlList())
+                .careKeywordList(updateCareReviewInfo.getCareKeywordList())
                 .build();
     }
 }

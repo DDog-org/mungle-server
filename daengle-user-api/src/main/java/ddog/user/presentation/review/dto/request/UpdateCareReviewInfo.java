@@ -8,7 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class ModifyCareReviewInfo {
+public class UpdateCareReviewInfo {
     private Long starRating;
     private List<CareKeyword> careKeywordList;
     private String content;
