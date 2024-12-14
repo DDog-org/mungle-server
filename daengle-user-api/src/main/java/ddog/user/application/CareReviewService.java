@@ -54,6 +54,7 @@ public class CareReviewService {
 
         return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
+                .reservationId(savedReservation.getReservationId())
                 .vetId(savedCareReview.getVetId())
                 .careKeywordList(savedCareReview.getCareKeywordList())
                 .revieweeName(savedCareReview.getRevieweeName())

@@ -55,6 +55,7 @@ public class GroomingReviewService {
 
         return GroomingReviewDetailResp.builder()
                 .groomingReviewId(savedGroomingReview.getGroomingReviewId())
+                .reservationId(savedReservation.getReservationId())
                 .groomerId(savedGroomingReview.getGroomerId())
                 .groomingKeywordList(savedGroomingReview.getGroomingKeywordList())
                 .revieweeName(savedGroomingReview.getRevieweeName())
