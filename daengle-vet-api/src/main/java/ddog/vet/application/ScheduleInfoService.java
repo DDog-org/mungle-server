@@ -12,8 +12,10 @@ import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +36,10 @@ public class ScheduleInfoService {
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(vetId).size();
         int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(vetId).size();
 
-        List<Reservation> savedReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDateTime.now(), ServiceType.CARE, vetId);
+        List<Reservation> savedReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDate.now(), ServiceType.CARE, vetId);
 
         List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
+
 
         for (Reservation reservation : savedReservations) {
             Long petId = reservation.getPetId();
