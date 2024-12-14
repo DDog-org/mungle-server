@@ -57,13 +57,12 @@ public class AccountService {
         }
 
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses);
-        groomerPersist.save(newGroomer);
+//        groomerPersist.save(newGroomer);
 
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
         BeautyShop newBeautyShop = BeautyShop.create(request.getShopName(), request.getAddress());
-        System.out.println(newBeautyShop);
         newBeautyShop.addGroomer(newGroomer);
         beautyShopPersist.save(newBeautyShop);
 

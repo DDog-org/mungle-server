@@ -19,7 +19,7 @@ public interface ReservationPersist {
 
     List<Reservation> findByTypeAndStatusAndCustomerId(ServiceType serviceType, ReservationStatus status, Long accountId);
 
-    List<Reservation> findTodayCareReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId);
+    List<Reservation> findTodayCareReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long accountId);
 
     List<Reservation> findTodayGroomingReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId);
 

@@ -38,9 +38,9 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
 
     Page<GroomingEstimateJpaEntity> findByStatusAndProposalAndGroomerId(EstimateStatus status, Proposal proposal, Long groomerId, Pageable pageable);
 
-    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndStatus(Long groomerId, EstimateStatus status);
+    List<GroomingEstimateJpaEntity> findAllByGroomerIdAndStatus(Long groomerId, EstimateStatus status);
 
-    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId, Proposal proposal);
+    List<GroomingEstimateJpaEntity> findAllByGroomerIdAndProposal(Long groomerId, Proposal proposal);
 
     List<GroomingEstimateJpaEntity> findByGroomerId(Long groomerId);
 

@@ -2,7 +2,6 @@ package ddog.vet.presentation.schedule;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.vet.port.VetPersist;
 import ddog.vet.application.ScheduleInfoService;
 import ddog.vet.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +15,10 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 @RequestMapping("/api/vet")
 public class ScheduleController {
     private final ScheduleInfoService scheduleInfoService;
-    private final VetPersist vetPersist;
 
     @GetMapping("/schedule")
     public CommonResponseEntity<ScheduleResp> getVetSchedule(PayloadDto payloadDto) {
-        Long accountId = payloadDto.getAccountId();
-        Long vetId = vetPersist.findByVetId(accountId).get().getVetId();
-
-        return success(scheduleInfoService.getScheduleByVetId(vetId));
+        return success(scheduleInfoService.getScheduleByVetAccountId(payloadDto.getAccountId()));
     }
 
 }

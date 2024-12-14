@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
@@ -21,9 +19,7 @@ public class ScheduleController {
 
     @GetMapping("/schedule")
     public CommonResponseEntity<ScheduleResp> getGroomerSchedule(PayloadDto payloadDto) {
-        Long accountId = payloadDto.getAccountId();
-        System.out.println(LocalDateTime.now());
-        return success(scheduleInfoService.getScheduleByGroomerId(accountId));
+        return success(scheduleInfoService.getScheduleByGroomerAccountId(payloadDto.getAccountId()));
     }
 
 }

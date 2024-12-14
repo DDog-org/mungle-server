@@ -26,8 +26,9 @@ public class ScheduleInfoService {
     private final PetPersist petPersist;
     private final ReservationPersist reservationPersist;
 
-    public ScheduleResp getScheduleByVetId(Long vetId) {
-        Vet vetInfo = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+    public ScheduleResp getScheduleByVetAccountId(Long accountId) {
+        Vet savedVet = vetPersist.findByAccountId(accountId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+        Long vetId  = savedVet.getVetId();
 
         int estimateTotalCount = careEstimatePersist.findCareEstimatesByVetId(vetId).size();
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(vetId).size();
@@ -35,12 +36,12 @@ public class ScheduleInfoService {
 
         List<Reservation> savedReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDateTime.now(), ServiceType.CARE, vetId);
 
-        List<ScheduleResp.TodayReservation> todayReservation = new ArrayList<>();
+        List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
 
         for (Reservation reservation : savedReservations) {
             Long petId = reservation.getPetId();
             Pet pet = petPersist.findByPetId(petId).get();
-            todayReservation.add(ScheduleResp.TodayReservation.builder()
+            toSaveReservation.add(ScheduleResp.TodayReservation.builder()
                     .petId(reservation.getPetId())
                     .petName(pet.getName())
                     .petImage(pet.getImageUrl())
@@ -54,7 +55,7 @@ public class ScheduleInfoService {
                 .totalScheduleCount(String.valueOf(estimateTotalCount))
                 .totalReservationCount(String.valueOf(reservationCount))
                 .designationCount(String.valueOf(designationCount))
-                .allReservations(todayReservation)
+                .allReservations(toSaveReservation)
                 .build();
     }
 }
