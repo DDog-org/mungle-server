@@ -20,4 +20,5 @@ public class PaymentHistoryDetail {
     private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;
+    private Boolean hasWrittenReview;
 }
