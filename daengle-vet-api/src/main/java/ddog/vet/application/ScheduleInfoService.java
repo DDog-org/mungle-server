@@ -42,6 +42,7 @@ public class ScheduleInfoService {
                     .petId(reservation.getPetId())
                     .petName(pet.getName())
                     .petImage(pet.getImageUrl())
+                    .estimateId(reservation.getEstimateId())
                     .reservationTime(reservation.getReservedDate().toLocalTime())
                     .desiredStyle(null)
                     .build());

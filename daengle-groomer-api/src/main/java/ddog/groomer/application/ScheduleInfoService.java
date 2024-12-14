@@ -47,6 +47,7 @@ public class ScheduleInfoService {
                     .petName(pet.getName())
                     .reservationTime(reservation.getReservedDate().toLocalTime())
                     .desiredStyle(savedGroomingEstimate.getDesiredStyle())
+                    .estimateId(savedGroomingEstimate.getEstimateId())
                     .build());
 
         }

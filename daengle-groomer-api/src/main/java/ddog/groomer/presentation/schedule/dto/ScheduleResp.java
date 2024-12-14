@@ -22,6 +22,7 @@ public class ScheduleResp {
         public String petImage;
         public String petName;
         public String desiredStyle;
+        public Long estimateId;
         public LocalTime reservationTime;
     }
 }
