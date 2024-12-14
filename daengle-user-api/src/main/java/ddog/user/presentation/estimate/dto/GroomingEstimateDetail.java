@@ -16,6 +16,7 @@ public class GroomingEstimateDetail {
     private Long groomerId;
     private String imageUrl;
     private String name;
+    private Long shopId;
     private String shopName;
     private int daengleMeter;
     private Proposal proposal;
