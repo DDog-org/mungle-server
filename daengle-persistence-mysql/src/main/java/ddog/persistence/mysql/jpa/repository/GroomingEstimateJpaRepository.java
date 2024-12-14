@@ -21,6 +21,8 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
 
     Optional<GroomingEstimateJpaEntity> findByEstimateId(Long estimateId);
 
+    List<GroomingEstimateJpaEntity> findGroomingEstimateJpaEntitiesByUserId(Long userId);
+
     @Modifying
     @Transactional
     @Query("UPDATE GroomingEstimates g SET g.status = :status WHERE g.estimateId = :parentId")

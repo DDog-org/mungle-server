@@ -39,8 +39,7 @@ public class DetailInfoService {
     private final GroomingReviewPersist groomingReviewPersist;
 
     public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
-        if (accountId == null) address = "서울 강남구 역삼동";
-        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+        address = checkUserLoggedIn(accountId, address);
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -85,8 +84,7 @@ public class DetailInfoService {
     }
 
     public DetailResp findVets(Long accountId, String address, int page, int size) {
-        if (accountId == null) address = "서울 강남구 역삼동";
-        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
+        address = checkUserLoggedIn(accountId, address);
 
         address = address.replace(" ", "");
 
@@ -154,6 +152,12 @@ public class DetailInfoService {
         } else if (parts.length >= 4) {
             return String.join(" ", parts[0], parts[1], parts[2]);
         }
+        return address;
+    }
+
+    private String checkUserLoggedIn(Long accountId, String address) {
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
         return address;
     }
 

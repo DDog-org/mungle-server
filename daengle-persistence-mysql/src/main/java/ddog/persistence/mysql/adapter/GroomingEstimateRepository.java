@@ -95,4 +95,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
         return groomingEstimateJpaRepository.findTodayScheduleByGroomerId(dateTime, groomerAccountId, estimateStatus)
                 .stream().map(GroomingEstimateJpaEntity::toModel).toList();
     }
+
+    @Override
+    public List<GroomingEstimate> findMyEstimatesByUserId(Long userId) {
+        return groomingEstimateJpaRepository.findGroomingEstimateJpaEntitiesByUserId(userId).stream().map(GroomingEstimateJpaEntity::toModel).toList();
+    }
 }

@@ -48,4 +48,5 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     @Query("SELECT c FROM CareEstimates c WHERE DATE(c.reservedDate) = :today AND c.vetId = :vetAccountId AND c.status = :status")
     List<CareEstimateJpaEntity> finTodayScheduleByVetId(LocalDate today, Long vetAccountId, EstimateStatus status);
 
+    List<CareEstimateJpaEntity> findCareEstimateJpaEntitiesByUserId(Long userId);
 }
