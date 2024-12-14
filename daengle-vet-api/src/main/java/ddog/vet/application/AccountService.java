@@ -70,6 +70,13 @@ public class AccountService {
         return authentication;
     }
 
+    public ProfileInfo getVetInfo(Long accountId) {
+        Vet vet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        return VetMapper.mapToProfileInfo(vet);
+    }
+
     @Transactional(readOnly = true)
     public ProfileInfo.UpdatePage getModifyPage(Long accountId) {
         Vet vet = vetPersist.findByAccountId(accountId)

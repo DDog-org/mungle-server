@@ -25,9 +25,25 @@ public class VetMapper {
                 .build();
     }
 
+    public static ProfileInfo mapToProfileInfo(Vet vet) {
+        return ProfileInfo.builder()
+                .imageUrls(vet.getImageUrlList())
+                .name(vet.getName())
+                .keywords(vet.getKeywords())
+                .closedDays(vet.getClosedDays())
+                .startTime(vet.getStartTime())
+                .endTime(vet.getEndTime())
+                .phoneNumber(vet.getPhoneNumber())
+                .address(vet.getAddress())
+                .detailAddress(vet.getDetailAddress())
+                .introduction(vet.getIntroduction())
+                .daengleMeter(vet.getDaengleMeter())
+                .build();
+    }
+
     public static ProfileInfo.UpdatePage mapToUpdatePage(Vet vet) {
         return ProfileInfo.UpdatePage.builder()
-                .image(vet.getImageUrl())
+                .imageUrls(vet.getImageUrlList())
                 .name(vet.getName())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
