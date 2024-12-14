@@ -50,9 +50,9 @@ public class ScheduleInfoService {
 
 
         return ScheduleResp.builder()
-                .totalScheduleCount(String.valueOf(estimateTotalCount))
-                .totalReservationCount(String.valueOf(reservationCount))
-                .designationCount(String.valueOf(designationCount))
+                .totalScheduleCount(estimateTotalCount)
+                .totalReservationCount(reservationCount)
+                .designationCount(designationCount)
                 .todayAllReservations(toSaveReservation)
                 .build();
     }
