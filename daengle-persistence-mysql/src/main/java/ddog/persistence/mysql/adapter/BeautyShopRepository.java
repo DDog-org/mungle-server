@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -44,8 +45,8 @@ public class BeautyShopRepository implements BeautyShopPersist {
     }
 
     @Override
-    public BeautyShop findBeautyShopByNameAndAddress(String name, String address) {
-        return beautyShopJpaRepository.findBeautyShopJpaEntityByShopNameAndShopAddress(name, address).orElseThrow().toModel();
+    public Optional<BeautyShop> findBeautyShopByNameAndAddress(String name, String address) {
+        return Optional.ofNullable(beautyShopJpaRepository.findBeautyShopJpaEntityByShopNameAndShopAddress(name, address).orElseThrow().toModel());
     }
 
 }

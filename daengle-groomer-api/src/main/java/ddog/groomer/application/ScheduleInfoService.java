@@ -1,9 +1,10 @@
 package ddog.groomer.application;
 
+import ddog.domain.estimate.EstimateStatus;
+import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
+import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.port.GroomerPersist;
-import ddog.domain.payment.Reservation;
-import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
@@ -27,25 +28,25 @@ public class ScheduleInfoService {
     private final GroomingEstimatePersist groomingEstimatePersist;
 
     public ScheduleResp getScheduleByGroomerAccountId(Long accountId) {
-        Long savedGroomerId = groomerPersist.findByAccountId(accountId)
-                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND))
-                .getGroomerId();
 
-        int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(savedGroomerId).size();
-        int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(savedGroomerId).size();
-        int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(savedGroomerId).size();
+        int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(accountId).size();
+        int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(accountId).size();
+        int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(accountId).size();
 
-        List<Reservation> savedReservation = reservationPersist.findTodayGroomingReservationByPartnerId(LocalDate.now(), ServiceType.GROOMING, savedGroomerId);
+        Groomer savedGroomer = groomerPersist.findByAccountId(accountId).orElseThrow(()-> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        List<GroomingEstimate> savedReservation = groomingEstimatePersist.findTodayGroomingSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
         List<ScheduleResp.TodayReservation> toSaveReservations = new ArrayList<>();
 
-        for (Reservation reservation : savedReservation) {
+        for (GroomingEstimate reservation : savedReservation) {
             Long petId = reservation.getPetId();
             Pet pet = petPersist.findByPetId(petId).get();
+            GroomingEstimate savedGroomingEstimate =groomingEstimatePersist.findByEstimateId(reservation.getEstimateId()).get();
             toSaveReservations.add(ScheduleResp.TodayReservation.builder()
                     .petId(petId)
                     .petName(pet.getName())
-                    .reservationTime(reservation.getSchedule().toLocalTime())
-                    .desiredStyle(null)
+                    .reservationTime(reservation.getReservedDate().toLocalTime())
+                    .desiredStyle(savedGroomingEstimate.getDesiredStyle())
                     .build());
 
         }

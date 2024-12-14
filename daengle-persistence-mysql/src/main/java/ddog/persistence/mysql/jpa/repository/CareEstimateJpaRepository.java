@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +39,13 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
 
     Page<CareEstimateJpaEntity> findByStatusAndProposalAndVetId(EstimateStatus status, Proposal proposal, Long vetId, Pageable pageable);
 
-    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndStatus(Long vetId, EstimateStatus status);
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndStatus(Long vetAccountId, EstimateStatus status);
 
-    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndProposal(Long vetId, Proposal proposal);
+    List<CareEstimateJpaEntity> findCareEstimatesByVetIdAndProposal(Long vetAccountId, Proposal proposal);
 
-    List<CareEstimateJpaEntity> findByVetId(Long vetId);
+    List<CareEstimateJpaEntity> findByVetId(Long vetAccountId);
+
+    @Query("SELECT c FROM CareEstimates c WHERE DATE(c.reservedDate) = :today AND c.vetId = :vetAccountId AND c.status = :status")
+    List<CareEstimateJpaEntity> finTodayScheduleByVetId(LocalDate today, Long vetAccountId, EstimateStatus status);
 
 }

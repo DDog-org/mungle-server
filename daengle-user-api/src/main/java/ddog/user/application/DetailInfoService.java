@@ -127,7 +127,7 @@ public class DetailInfoService {
     public DetailResp.GroomerDetailInfo findGroomerById(Long accountId) {
         Long groomerId = groomerPersist.findByAccountId(accountId).get().getGroomerId();
         Groomer findGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress());
+        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress()).get();
         Pageable pageable = Pageable.unpaged();
 
         Page<GroomingReview> groomingReview = groomingReviewPersist.findByGroomerId(findGroomer.getGroomerId(), pageable);
