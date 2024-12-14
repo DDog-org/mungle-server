@@ -1,6 +1,8 @@
 package ddog.domain.vet.port;
 
 import ddog.domain.vet.Vet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +13,6 @@ public interface VetPersist {
 
     void save(Vet vet);
 
-    List<Vet> findByAddress(String address);
+    Page<Vet> findByAddress(String address, Pageable pageable);
     List<Vet> findByAddressPrefix(String addressPrefix);
 }

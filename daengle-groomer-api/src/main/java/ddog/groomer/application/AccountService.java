@@ -6,6 +6,8 @@ import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.License;
 import ddog.domain.groomer.port.LicensePersist;
+import ddog.domain.shop.BeautyShop;
+import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.application.mapper.GroomerMapper;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -35,6 +38,7 @@ public class AccountService {
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
     private final LicensePersist licensePersist;
+    private final BeautyShopPersist beautyShopPersist;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -53,11 +57,18 @@ public class AccountService {
             licenses.add(savedLicense);
         }
 
-        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses);
-        groomerPersist.save(newGroomer);
-
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
+
+        Optional<BeautyShop> existingBeautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(request.getShopName(), request.getAddress());
+
+        BeautyShop savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
+
+        beautyShopPersist.save(savedBeautyShop);
+        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();;
+
+        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
+        groomerPersist.save(newGroomer);
 
         return SignUpResp.builder()
                 .accessToken(accessToken)

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GroomerMapper {
 
-    public static Groomer create(Long accountId, SignUpReq request, List<License> licenses) {
+    public static Groomer create(Long accountId, SignUpReq request, List<License> licenses, Long shopId) {
         return Groomer.builder()
                 .accountId(accountId)
                 .daengleMeter(0)
@@ -20,6 +20,7 @@ public class GroomerMapper {
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .detailAddress(request.getDetailAddress())
+                .shopId(shopId)
                 .shopName(request.getShopName())
                 .businessLicenses(request.getBusinessLicenses())
                 .licenses(licenses)
@@ -53,6 +54,26 @@ public class GroomerMapper {
                 .introduction(request.getIntroduction())
                 .businessLicenses(groomer.getBusinessLicenses())
                 .licenses(groomer.getLicenses())
+                .shopId(groomer.getShopId())
+                .build();
+    }
+
+    public static Groomer updateShopId(Groomer groomer, Long shopId) {
+        return Groomer.builder()
+                .groomerId(groomer.getGroomerId())
+                .accountId(groomer.getAccountId())
+                .daengleMeter(groomer.getDaengleMeter())
+                .instagramId(groomer.getInstagramId())
+                .name(groomer.getName())
+                .phoneNumber(groomer.getPhoneNumber())
+                .imageUrl(groomer.getImageUrl())
+                .email(groomer.getEmail())
+                .address(groomer.getAddress())
+                .shopName(groomer.getShopName())
+                .introduction(groomer.getIntroduction())
+                .businessLicenses(groomer.getBusinessLicenses())
+                .licenses(groomer.getLicenses())
+                .shopId(shopId)
                 .build();
     }
 }

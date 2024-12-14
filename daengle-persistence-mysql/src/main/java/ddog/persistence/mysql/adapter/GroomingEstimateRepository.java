@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,9 +63,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndEstimateStatus(Long groomerId) {
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndEstimateStatus(Long groomerAccountId) {
         List<GroomingEstimate> estimate = new ArrayList<>();
-        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findGroomingEstimatesByGroomerIdAndStatus(groomerId, EstimateStatus.ON_RESERVATION);
+        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findAllByGroomerIdAndStatus(groomerAccountId, EstimateStatus.ON_RESERVATION);
 
         for (GroomingEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());
@@ -74,9 +75,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId) {
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerIdAndProposal(Long groomerAccountId) {
         List<GroomingEstimate> estimate = new ArrayList<>();
-        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findGroomingEstimatesByGroomerIdAndProposal(groomerId, Proposal.DESIGNATION);
+        List<GroomingEstimateJpaEntity> findEstimates = groomingEstimateJpaRepository.findAllByGroomerIdAndProposal(groomerAccountId, Proposal.DESIGNATION);
 
         for (GroomingEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());
@@ -85,7 +86,13 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerId) {
-        return groomingEstimateJpaRepository.findByGroomerId(groomerId).stream().map(GroomingEstimateJpaEntity::toModel).toList();
+    public List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerAccountId) {
+        return groomingEstimateJpaRepository.findAllByGroomerId(groomerAccountId).stream().map(GroomingEstimateJpaEntity::toModel).toList();
+    }
+
+    @Override
+    public List<GroomingEstimate> findTodayGroomingSchedule(Long groomerAccountId, LocalDate dateTime, EstimateStatus estimateStatus) {
+        return groomingEstimateJpaRepository.findTodayScheduleByGroomerId(dateTime, groomerAccountId, estimateStatus)
+                .stream().map(GroomingEstimateJpaEntity::toModel).toList();
     }
 }

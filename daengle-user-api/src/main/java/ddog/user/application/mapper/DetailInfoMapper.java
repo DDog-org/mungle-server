@@ -2,16 +2,16 @@ package ddog.user.application.mapper;
 
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.vet.Vet;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.user.presentation.detailInfo.dto.DetailResp;
 
-public class ShopMapper {
+public class DetailInfoMapper {
 
     public static DetailResp.ShopInfo mapToBeautyShop(BeautyShop beautyShop){
         return DetailResp.ShopInfo.builder()
                 .shopId(beautyShop.getShopId())
                 .shopName(beautyShop.getShopName())
                 .shopAddress(beautyShop.getShopAddress())
-                .imageUrl(beautyShop.getImageUrl())
+                .shopImage(beautyShop.getImageUrl())
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
                 .build();
@@ -19,7 +19,7 @@ public class ShopMapper {
 
     public static DetailResp.VetInfo mapToVet(Vet vet){
         return DetailResp.VetInfo.builder()
-                .vetId(vet.getVetId())
+                .vetAccountId(vet.getAccountId())
                 .vetName(vet.getName())
                 .vetAddress(vet.getAddress())
                 .vetImage(vet.getImageUrl())

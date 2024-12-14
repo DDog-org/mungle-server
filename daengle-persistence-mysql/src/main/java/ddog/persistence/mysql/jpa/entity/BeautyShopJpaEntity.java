@@ -29,7 +29,7 @@ public class BeautyShopJpaEntity {
     private List<String> imageUrlList;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shop_id")
+    @JoinColumn(name = "shopId")
     private List<GroomerJpaEntity> groomers;
 
     private LocalTime startTime;

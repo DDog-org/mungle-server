@@ -1,4 +1,4 @@
-package ddog.user.presentation.shop.dto;
+package ddog.user.presentation.detailInfo.dto;
 
 import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.enums.GroomingKeyword;
@@ -15,6 +15,9 @@ public class DetailResp {
 
     List<ShopInfo> allShops;
     List<VetInfo> allVets;
+    int totalPages;
+    Long totalElements;
+    int currentPage;
 
     @Getter
     @Builder
@@ -22,7 +25,7 @@ public class DetailResp {
         private Long shopId;
         private String shopName;
         private String shopAddress;
-        private String imageUrl;
+        private String shopImage;
         private LocalTime startTime;
         private LocalTime endTime;
     }
@@ -44,7 +47,7 @@ public class DetailResp {
     @Getter
     @Builder
     public static class VetInfo {
-        private Long vetId;
+        private Long vetAccountId;
         private String vetName;
         private String vetAddress;
         private String vetImage;
@@ -55,7 +58,7 @@ public class DetailResp {
     @Getter
     @Builder
     public static class VetDetailInfo {
-        private Long vetId;
+        private Long vetAccountId;
         private String vetName;
         private String vetAddress;
         private String vetImage;
@@ -65,13 +68,15 @@ public class DetailResp {
         private String introductions;
         private int daengleMeter;
         private Long reviewCount;
+        private List<String> imageUrlList;
     }
 
     @Getter
     @Builder
     public static class GroomerDetailInfo {
-        private Long groomerId;
+        private Long groomerAccountId;
         private String groomerName;
+        private String groomerImage;
         private List<GroomingKeyword> keywords;
         private String introduction;
         private Long shopId;

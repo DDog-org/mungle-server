@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,4 +24,33 @@ public class BeautyShop {
     private LocalTime startTime;
     private LocalTime endTime;
     private String introduction;
+
+    public static BeautyShop create(String shopName, String shopAddress){
+        return BeautyShop.builder()
+                .shopName(shopName)
+                .shopAddress(shopAddress)
+                .startTime(LocalTime.of(8, 0))
+                .endTime(LocalTime.of(18, 0))
+                .introduction(shopName)
+                .groomers(new ArrayList<>())
+                .build();
+    }
+
+    public BeautyShop addGroomer(Groomer groomer) {
+        if (groomers == null) {
+            groomers = new ArrayList<>();
+        }
+        groomers.add(groomer);
+
+        return BeautyShop.builder()
+                .shopId(shopId)
+                .shopName(shopName)
+                .shopAddress(shopAddress)
+                .imageUrl(imageUrl)
+                .imageUrlList(imageUrlList)
+                .groomers(groomers)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+    }
 }

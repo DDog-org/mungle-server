@@ -6,6 +6,7 @@ import ddog.domain.payment.enums.ServiceType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +20,8 @@ public interface ReservationPersist {
 
     List<Reservation> findByTypeAndStatusAndCustomerId(ServiceType serviceType, ReservationStatus status, Long accountId);
 
-    List<Reservation> findTodayCareReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId);
+    List<Reservation> findTodayCareReservationByPartnerId(LocalDate dateTime, ServiceType serviceType, Long accountId);
 
-    List<Reservation> findTodayGroomingReservationByPartnerId(LocalDateTime dateTime, ServiceType serviceType, Long recipientId);
+    List<Reservation> findTodayGroomingReservationByPartnerId(LocalDate dateTime, ServiceType serviceType, Long recipientId);
 
 }

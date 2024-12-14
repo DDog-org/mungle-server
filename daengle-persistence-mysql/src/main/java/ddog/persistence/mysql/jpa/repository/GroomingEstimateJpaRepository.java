@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +39,13 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
 
     Page<GroomingEstimateJpaEntity> findByStatusAndProposalAndGroomerId(EstimateStatus status, Proposal proposal, Long groomerId, Pageable pageable);
 
-    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndStatus(Long groomerId, EstimateStatus status);
+    List<GroomingEstimateJpaEntity> findAllByGroomerIdAndStatus(Long groomerId, EstimateStatus status);
 
-    List<GroomingEstimateJpaEntity> findGroomingEstimatesByGroomerIdAndProposal(Long groomerId, Proposal proposal);
+    List<GroomingEstimateJpaEntity> findAllByGroomerIdAndProposal(Long groomerId, Proposal proposal);
 
-    List<GroomingEstimateJpaEntity> findByGroomerId(Long groomerId);
+    List<GroomingEstimateJpaEntity> findAllByGroomerId(Long groomerId);
+
+    @Query("SELECT g FROM GroomingEstimates g WHERE DATE(g.reservedDate) = :today AND g.groomerId = :groomerAccountId AND g.status = :status")
+    List<GroomingEstimateJpaEntity> findTodayScheduleByGroomerId(LocalDate today, Long groomerAccountId, EstimateStatus status);
 
 }

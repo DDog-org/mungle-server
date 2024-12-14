@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,9 +63,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.findByEstimateId(estimateId)
                 .map(CareEstimateJpaEntity::toModel);
     }
-    public List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetId) {
+
+    public List<CareEstimate> findCareEstimatesByVetIdAndEstimateStatus(Long vetAccountId) {
         List<CareEstimate> estimate = new ArrayList<>();
-        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndStatus(vetId, EstimateStatus.ON_RESERVATION);
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndStatus(vetAccountId, EstimateStatus.ON_RESERVATION);
 
         for (CareEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());
@@ -74,9 +76,9 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findCareEstimatesByVetIdAndProposal(Long vetId) {
+    public List<CareEstimate> findCareEstimatesByVetIdAndProposal(Long vetAccountId) {
         List<CareEstimate> estimate = new ArrayList<>();
-        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndProposal(vetId, Proposal.DESIGNATION);
+        List<CareEstimateJpaEntity> findEstimates = careEstimateJpaRepository.findCareEstimatesByVetIdAndProposal(vetAccountId, Proposal.DESIGNATION);
 
         for (CareEstimateJpaEntity findEstimate : findEstimates) {
             estimate.add(findEstimate.toModel());
@@ -86,8 +88,13 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public List<CareEstimate> findCareEstimatesByVetId(Long vetId) {
-        return careEstimateJpaRepository.findByVetId(vetId).stream().map(CareEstimateJpaEntity::toModel).toList();
+    public List<CareEstimate> findCareEstimatesByVetId(Long vetAccountId) {
+        return careEstimateJpaRepository.findByVetId(vetAccountId).stream().map(CareEstimateJpaEntity::toModel).toList();
+    }
+
+    public List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus){
+        return careEstimateJpaRepository.finTodayScheduleByVetId(dateTime, vetAccountId, estimateStatus)
+                .stream().map(CareEstimateJpaEntity::toModel).toList();
     }
 }
 

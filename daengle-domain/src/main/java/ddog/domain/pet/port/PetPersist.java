@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface PetPersist {
     Pet save(Pet pet);
 
-    Optional<Pet> findByPetId(Long accountId);
+    Optional<Pet> findByPetId(Long petId);
 
     void deletePetById(Long petId);
 }

@@ -2,7 +2,6 @@ package ddog.groomer.presentation.schedule;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.groomer.port.GroomerPersist;
 import ddog.groomer.application.ScheduleInfoService;
 import ddog.groomer.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +19,7 @@ public class ScheduleController {
 
     @GetMapping("/schedule")
     public CommonResponseEntity<ScheduleResp> getGroomerSchedule(PayloadDto payloadDto) {
-        Long accountId = payloadDto.getAccountId();
-
-        return success(scheduleInfoService.getScheduleByGroomerId(accountId));
+        return success(scheduleInfoService.getScheduleByGroomerAccountId(payloadDto.getAccountId()));
     }
 
 }

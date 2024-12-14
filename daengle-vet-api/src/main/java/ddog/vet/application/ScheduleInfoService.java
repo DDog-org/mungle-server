@@ -1,9 +1,8 @@
 package ddog.vet.application;
 
+import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.port.CareEstimatePersist;
-import ddog.domain.payment.Reservation;
-import ddog.domain.payment.enums.ServiceType;
-import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.vet.Vet;
@@ -14,7 +13,7 @@ import ddog.vet.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,27 +23,27 @@ public class ScheduleInfoService {
     private final VetPersist vetPersist;
     private final CareEstimatePersist careEstimatePersist;
     private final PetPersist petPersist;
-    private final ReservationPersist reservationPersist;
 
-    public ScheduleResp getScheduleByVetId(Long vetId) {
-        Vet vetInfo = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+    public ScheduleResp getScheduleByVetAccountId(Long accountId) {
+        Vet savedVet = vetPersist.findByAccountId(accountId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        int estimateTotalCount = careEstimatePersist.findCareEstimatesByVetId(vetId).size();
-        int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(vetId).size();
-        int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(vetId).size();
+        int estimateTotalCount = careEstimatePersist.findCareEstimatesByVetId(accountId).size();
+        int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(accountId).size();
+        int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(accountId).size();
 
-        List<Reservation> savedReservations = reservationPersist.findTodayCareReservationByPartnerId(LocalDateTime.now(), ServiceType.CARE, vetId);
+        List<CareEstimate> savedReservations = careEstimatePersist.findTodayCareSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
 
-        List<ScheduleResp.TodayReservation> todayReservation = new ArrayList<>();
+        List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
 
-        for (Reservation reservation : savedReservations) {
+        for (CareEstimate reservation : savedReservations) {
             Long petId = reservation.getPetId();
             Pet pet = petPersist.findByPetId(petId).get();
-            todayReservation.add(ScheduleResp.TodayReservation.builder()
+            toSaveReservation.add(ScheduleResp.TodayReservation.builder()
                     .petId(reservation.getPetId())
                     .petName(pet.getName())
                     .petImage(pet.getImageUrl())
-                    .reservationTime(reservation.getSchedule().toLocalTime())
+                    .estimateId(reservation.getEstimateId())
+                    .reservationTime(reservation.getReservedDate().toLocalTime())
                     .desiredStyle(null)
                     .build());
         }
@@ -54,7 +53,7 @@ public class ScheduleInfoService {
                 .totalScheduleCount(String.valueOf(estimateTotalCount))
                 .totalReservationCount(String.valueOf(reservationCount))
                 .designationCount(String.valueOf(designationCount))
-                .allReservations(todayReservation)
+                .todayAllReservations(toSaveReservation)
                 .build();
     }
 }

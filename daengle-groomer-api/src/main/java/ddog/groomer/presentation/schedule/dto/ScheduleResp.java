@@ -13,7 +13,7 @@ public class ScheduleResp {
     public String totalScheduleCount;
     public String designationCount;
     public String totalReservationCount;
-    List<TodayReservation> allReservations;
+    List<TodayReservation> todayAllReservations;
 
     @Getter
     @Builder
@@ -22,6 +22,7 @@ public class ScheduleResp {
         public String petImage;
         public String petName;
         public String desiredStyle;
+        public Long estimateId;
         public LocalTime reservationTime;
     }
 }

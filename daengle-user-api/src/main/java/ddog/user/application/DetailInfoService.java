@@ -16,10 +16,11 @@ import ddog.user.application.exception.account.GroomerException;
 import ddog.user.application.exception.account.GroomerExceptionType;
 import ddog.user.application.exception.account.VetException;
 import ddog.user.application.exception.account.VetExceptionType;
-import ddog.user.application.mapper.ShopMapper;
-import ddog.user.presentation.shop.dto.DetailResp;
+import ddog.user.application.mapper.DetailInfoMapper;
+import ddog.user.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,24 +38,21 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
-    public List<DetailResp.ShopInfo> convertToBeautyShopList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<BeautyShop> findBeautyShops = beautyShopPersist.findBeautyShopsByAddressPrefix(districtAddress);
+    public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
 
-        return findBeautyShops.stream()
-                .map(ShopMapper::mapToBeautyShop)
-                .collect(Collectors.toList());
-    }
+        Pageable pageable = PageRequest.of(page, size);
 
-    public DetailResp findBeautyShops(Long accountId, String address) {
-        List<DetailResp.ShopInfo> shopInfos = convertToBeautyShopList(address, accountId);
+        Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address, pageable);
+
+        List<DetailResp.ShopInfo> shopInfos = savedBeautyShop.stream().map(DetailInfoMapper::mapToBeautyShop).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allShops(shopInfos)
+                .totalPages(savedBeautyShop.getTotalPages())
+                .totalElements(savedBeautyShop.getTotalElements())
+                .currentPage(savedBeautyShop.getNumber())
                 .build();
     }
 
@@ -70,7 +68,7 @@ public class DetailInfoService {
                     .reviewCount(groomerReviewCount)
                     .keywords(groomer.getKeywords())
                     .daengleMeter(groomer.getDaengleMeter())
-                    .groomerId(groomer.getGroomerId())
+                    .groomerAccountId(groomer.getAccountId())
                     .build());
         }
 
@@ -86,34 +84,33 @@ public class DetailInfoService {
                 .build();
     }
 
-    public List<DetailResp.VetInfo> convertToVetList(String address, Long accountId) {
-        if (address == null) {
-            address = userPersist.findByAccountId(accountId).orElseThrow(() ->
-                    new IllegalArgumentException("사용자 주소를 찾을 수 없습니다.")
-            ).getAddress();
-        }
-        String districtAddress = extractDistrict(address);
-        List<Vet> findVets = vetPersist.findByAddressPrefix(districtAddress);
+    public DetailResp findVets(Long accountId, String address, int page, int size) {
+        if (accountId == null) address = "서울 강남구 역삼동";
+        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
 
-        return findVets.stream()
-                .map(ShopMapper::mapToVet)
-                .collect(Collectors.toList());
-    }
+        address = address.replace(" ", "");
 
-    public DetailResp findVets(Long accountId, String address) {
-        List<DetailResp.VetInfo> vetInfos = convertToVetList(address, accountId);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Vet> savedVet = vetPersist.findByAddress(address, pageable);
+
+        List<DetailResp.VetInfo> vetInfos = savedVet.stream().map(DetailInfoMapper::mapToVet).collect(Collectors.toList());
+
         return DetailResp.builder()
                 .allVets(vetInfos)
+                .totalPages(savedVet.getTotalPages())
+                .totalElements(savedVet.getTotalElements())
+                .currentPage(savedVet.getNumber())
                 .build();
     }
 
-    public DetailResp.VetDetailInfo findVet(Long vetId) {
+    public DetailResp.VetDetailInfo findVetById(Long accountId) {
+        Long vetId = vetPersist.findByAccountId(accountId).get().getVetId();
         Vet findVet = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
         Pageable pageable = Pageable.unpaged();
         Page<CareReview> results = careReviewPersist.findByVetId(vetId, pageable);
 
         return DetailResp.VetDetailInfo.builder()
-                .vetId(findVet.getVetId())
+                .vetAccountId(findVet.getAccountId())
                 .vetImage(findVet.getImageUrl())
                 .vetAddress(findVet.getAddress())
                 .vetName(findVet.getName())
@@ -123,19 +120,20 @@ public class DetailInfoService {
                 .introductions(findVet.getIntroduction())
                 .daengleMeter(findVet.getDaengleMeter())
                 .reviewCount(results.getTotalElements())
+                .imageUrlList(findVet.getImageUrlList())
                 .build();
     }
 
-    public DetailResp.GroomerDetailInfo findGroomerById(Long groomerId) {
+    public DetailResp.GroomerDetailInfo findGroomerById(Long accountId) {
+        Long groomerId = groomerPersist.findByAccountId(accountId).get().getGroomerId();
         Groomer findGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress());
-        System.out.println(beautyShop.getShopId());
+        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress()).get();
         Pageable pageable = Pageable.unpaged();
 
         Page<GroomingReview> groomingReview = groomingReviewPersist.findByGroomerId(findGroomer.getGroomerId(), pageable);
 
         return DetailResp.GroomerDetailInfo.builder()
-                .groomerId(findGroomer.getGroomerId())
+                .groomerAccountId(findGroomer.getAccountId())
                 .groomerName(findGroomer.getName())
                 .daengleMeter(findGroomer.getDaengleMeter())
                 .introduction(findGroomer.getIntroduction())
@@ -143,17 +141,20 @@ public class DetailInfoService {
                 .shopId(beautyShop.getShopId())
                 .keywords(findGroomer.getKeywords())
                 .reviewCount(groomingReview.getTotalElements())
+                .groomerImage(findGroomer.getImageUrl())
                 .build();
     }
 
     private String extractDistrict(String address) {
         if (address == null) return null;
         String[] parts = address.split(" ");
-        if (parts.length >= 3) {
+        System.out.println(parts.length);
+        if (parts.length == 3) {
+            return String.join(" ", parts[0], parts[1]);
+        } else if (parts.length >= 4) {
             return String.join(" ", parts[0], parts[1], parts[2]);
         }
         return address;
     }
 
 }
-
