@@ -62,8 +62,7 @@ public class AccountService {
 
         Optional<BeautyShop> existingBeautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(request.getShopName(), request.getAddress());
 
-        BeautyShop savedBeautyShop;
-        savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
+        BeautyShop savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
 
         beautyShopPersist.save(savedBeautyShop);
         Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();;

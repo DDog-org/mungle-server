@@ -29,6 +29,9 @@ public class BeautyShop {
         return BeautyShop.builder()
                 .shopName(shopName)
                 .shopAddress(shopAddress)
+                .startTime(LocalTime.of(8, 0))
+                .endTime(LocalTime.of(18, 0))
+                .introduction(shopName)
                 .groomers(new ArrayList<>())
                 .build();
     }
