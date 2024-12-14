@@ -55,9 +55,9 @@ public class AccountInfoService {
         Integer estimateCount = savedCareEstimate.size() + savedGroomingEstimate.size();
 
         return MyProfileResp.builder()
-                .accountId(accountId)
-                .profileImage(profileImage)
-                .profileName(profileName)
+                .id(accountId)
+                .image(profileImage)
+                .nickname(profileName)
                 .reviewCount(reviewCount)
                 .estimateCount(estimateCount)
                 .petInfos(toSavePetInfo)

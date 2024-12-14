@@ -8,9 +8,9 @@ import java.util.List;
 @Getter
 @Builder
 public class MyProfileResp {
-    Long accountId;
-    String profileImage;
-    String profileName;
+    Long id;
+    String image;
+    String nickname;
     Integer reviewCount;
     Integer estimateCount;
     List<PetSummaryInfo> petInfos;
