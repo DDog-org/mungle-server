@@ -24,6 +24,7 @@ public class Groomer {
     private String email;
     private String address;
     private String detailAddress;
+    private Long shopId;
     private String shopName;
     private String introduction;
     private List<String> businessLicenses;

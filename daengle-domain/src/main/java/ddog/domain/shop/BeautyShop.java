@@ -32,10 +32,22 @@ public class BeautyShop {
                 .groomers(new ArrayList<>())
                 .build();
     }
-    public void addGroomer(Groomer groomer) {
-        if (this.groomers == null) {
-            this.groomers = new ArrayList<>();
+
+    public BeautyShop addGroomer(Groomer groomer) {
+        if (groomers == null) {
+            groomers = new ArrayList<>();
         }
-        this.groomers.add(groomer);
+        groomers.add(groomer);
+
+        return BeautyShop.builder()
+                .shopId(shopId)
+                .shopName(shopName)
+                .shopAddress(shopAddress)
+                .imageUrl(imageUrl)
+                .imageUrlList(imageUrlList)
+                .groomers(groomers)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
     }
 }

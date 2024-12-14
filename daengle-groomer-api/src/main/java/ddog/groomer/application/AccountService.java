@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -56,15 +57,19 @@ public class AccountService {
             licenses.add(savedLicense);
         }
 
-        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses);
-//        groomerPersist.save(newGroomer);
-
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
 
-        BeautyShop newBeautyShop = BeautyShop.create(request.getShopName(), request.getAddress());
-        newBeautyShop.addGroomer(newGroomer);
-        beautyShopPersist.save(newBeautyShop);
+        Optional<BeautyShop> existingBeautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(request.getShopName(), request.getAddress());
+
+        BeautyShop savedBeautyShop;
+        savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
+
+        beautyShopPersist.save(savedBeautyShop);
+        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();;
+
+        Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
+        groomerPersist.save(newGroomer);
 
         return SignUpResp.builder()
                 .accessToken(accessToken)

@@ -46,7 +46,7 @@ public class BeautyShopRepository implements BeautyShopPersist {
 
     @Override
     public Optional<BeautyShop> findBeautyShopByNameAndAddress(String name, String address) {
-        return Optional.ofNullable(beautyShopJpaRepository.findBeautyShopJpaEntityByShopNameAndShopAddress(name, address).orElseThrow().toModel());
+        return beautyShopJpaRepository.findBeautyShopJpaEntityByShopNameAndShopAddress(name, address).map(BeautyShopJpaEntity::toModel);
     }
 
 }
