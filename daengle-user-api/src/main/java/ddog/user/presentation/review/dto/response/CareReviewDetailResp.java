@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class CareReviewDetailResp {
     private Long careReviewId;
+    private Long reservationId;
     private Long vetId;
     private List<CareKeyword> careKeywordList;
     private String revieweeName;

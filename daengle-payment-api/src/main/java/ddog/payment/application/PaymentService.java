@@ -15,6 +15,10 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
+import ddog.domain.review.CareReview;
+import ddog.domain.review.GroomingReview;
+import ddog.domain.review.port.CareReviewPersist;
+import ddog.domain.review.port.GroomingReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
@@ -42,51 +46,55 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentService {
 
-                private final IamportClient iamportClient;
-                private final UserPersist userPersist;
-                private final OrderPersist orderPersist;
-                private final PaymentPersist paymentPersist;
-                private final ReservationPersist reservationPersist;
+    private final IamportClient iamportClient;
 
-                private final GroomingEstimatePersist groomingEstimatePersist;
-                private final CareEstimatePersist careEstimatePersist;
+    private final UserPersist userPersist;
+    private final OrderPersist orderPersist;
+    private final PaymentPersist paymentPersist;
+    private final ReservationPersist reservationPersist;
 
-                @Transactional
-                public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
-                    Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
-                    Payment payment = order.getPayment();
+    private final GroomingEstimatePersist groomingEstimatePersist;
+    private final CareEstimatePersist careEstimatePersist;
 
-                    validateEstimate(order);
+    private final CareReviewPersist careReviewPersist;
+    private final GroomingReviewPersist groomingReviewPersist;
 
-                    try {
-                        com.siot.IamportRestClient.response.Payment iamportResp =
-                                iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
-                        String paymentStatus = iamportResp.getStatus();
-                        long paymentAmount = iamportResp.getAmount().longValue();
+    @Transactional
+    public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
+        Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+        Payment payment = order.getPayment();
 
-                        //결제 완료 검증
-                        if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                            payment.invalidate();
-                            paymentPersist.save(payment);
+        validateEstimateBy(order);
 
-                            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
-                        }
+        try {
+            com.siot.IamportRestClient.response.Payment iamportResp =
+                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
+            String paymentStatus = iamportResp.getStatus();
+            long paymentAmount = iamportResp.getAmount().longValue();
 
-                        //결제 금액 검증
-                        if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                            payment.invalidate();
-                            paymentPersist.save(payment);
+            //결제 완료 검증
+            if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
 
-                            iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
-                            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
-                        }
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
+            }
 
-                        //결제 검증 절차 성공
-                        payment.validationSuccess(iamportResp.getImpUid());
-                        paymentPersist.save(payment);
+            //결제 금액 검증
+            if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
 
-                        //예약 정보 생성
-                        Reservation reservationToSave = ReservationMapper.createBy(order, payment);
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
+            }
+
+            //결제 검증 절차 성공
+            payment.validationSuccess(iamportResp.getImpUid());
+            paymentPersist.save(payment);
+
+            //예약 정보 생성
+            Reservation reservationToSave = ReservationMapper.createBy(order, payment);
             Reservation savedReservation = reservationPersist.save(reservationToSave);
 
             return PaymentCallbackResp.builder()
@@ -101,8 +109,54 @@ public class PaymentService {
         }
     }
 
-    //TODO Estimate 도메인 객체에게 역할 위임하기 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
-    private void validateEstimate(Order order) {
+    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
+
+        Boolean hasWrittenReview = checkIfReviewExistsBy(savedReservation);
+
+        return PaymentHistoryDetail.builder()
+                .reservationId(savedReservation.getReservationId())
+                .reservationStatus(savedReservation.getReservationStatus())
+                .recipientName(savedReservation.getRecipientName())
+                .shopName(savedReservation.getShopName())
+                .schedule(savedReservation.getSchedule())
+                .deposit(savedReservation.getDeposit())
+                .customerName(savedReservation.getCustomerName())
+                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
+                .visitorName(savedReservation.getVisitorName())
+                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
+                .hasWrittenReview(hasWrittenReview)
+                .build();
+    }
+
+    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
+
+        return mappingToPaymentHistoryListResp(reservations);
+    }
+
+    private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {
+        List<PaymentHistorySummaryResp> paymentHistoryList = reservations.stream().map(reservation -> PaymentHistorySummaryResp.builder()
+                .reservationId(reservation.getReservationId())
+                .recipientImageUrl(reservation.getRecipientImageUrl())
+                .recipientName(reservation.getRecipientName())
+                .shopName(reservation.getShopName())
+                .paymentDate(reservation.getSchedule())
+                .status(reservation.getReservationStatus().name())
+                .build()).collect(Collectors.toList());
+
+        return PaymentHistoryListResp.builder()
+                .paymentHistoryList(paymentHistoryList)
+                .build();
+    }
+
+    //TODO Estimate 도메인 객체에게 역할 위임하기, 확장성이 있는 유효성 검사 로직을 구현하기 (언제든 새로운 00견적 서비스가 추가될 수 있다)
+    private void validateEstimateBy(Order order) {
         if (order.getServiceType().equals(ServiceType.GROOMING)) {
             GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(order.getEstimateId())
                     .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
@@ -126,46 +180,17 @@ public class PaymentService {
         }
     }
 
-    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
-        User savedUser = userPersist.findByAccountId(accountId)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+    //TODO Review 도메인 객체에게 역할 위임하기, 확장성이 있는 검사 로직을 구현하기 (언제든 새로운 00리뷰 서비스가 추가될 수 있다)
+    private Boolean checkIfReviewExistsBy(Reservation reservation) {
+        Long reviewerId = reservation.getCustomerId();
+        Long reservationId = reservation.getReservationId();
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
+        if (reservation.getServiceType().equals(ServiceType.GROOMING)) {
+            return groomingReviewPersist.findByReviewerIdAndReservationId(reviewerId, reservationId).isPresent();
 
-        return mappingToPaymentHistoryListResp(reservations);
-    }
-
-    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
-        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
-
-        return PaymentHistoryDetail.builder()
-                .reservationId(savedReservation.getReservationId())
-                .reservationStatus(savedReservation.getReservationStatus())
-                .recipientName(savedReservation.getRecipientName())
-                .shopName(savedReservation.getShopName())
-                .schedule(savedReservation.getSchedule())
-                .deposit(savedReservation.getDeposit())
-                .customerName(savedReservation.getCustomerName())
-                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
-                .visitorName(savedReservation.getVisitorName())
-                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
-                .build();
-    }
-
-    private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {
-        List<PaymentHistorySummaryResp> paymentHistoryList = reservations.stream().map(reservation -> PaymentHistorySummaryResp.builder()
-                .reservationId(reservation.getReservationId())
-                .recipientImageUrl(reservation.getRecipientImageUrl())
-                .recipientName(reservation.getRecipientName())
-                .shopName(reservation.getShopName())
-                .paymentDate(reservation.getSchedule())
-                .status(reservation.getReservationStatus().name())
-                .build()).collect(Collectors.toList());
-
-        return PaymentHistoryListResp.builder()
-                .paymentHistoryList(paymentHistoryList)
-                .build();
+        } else if (reservation.getServiceType().equals(ServiceType.CARE)) {
+            return careReviewPersist.findByReviewerIdAndReservationId(reviewerId, reservationId).isPresent();
+        }
+        return false;
     }
 }

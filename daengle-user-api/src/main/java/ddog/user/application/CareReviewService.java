@@ -2,6 +2,7 @@ package ddog.user.application;
 
 import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.review.CareReview;
 import ddog.user.application.mapper.CareReviewMapper;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
@@ -53,6 +54,7 @@ public class CareReviewService {
 
         return CareReviewDetailResp.builder()
                 .careReviewId(savedCareReview.getCareReviewId())
+                .reservationId(savedReservation.getReservationId())
                 .vetId(savedCareReview.getVetId())
                 .careKeywordList(savedCareReview.getCareKeywordList())
                 .revieweeName(savedCareReview.getRevieweeName())
@@ -68,6 +70,11 @@ public class CareReviewService {
     public ReviewResp postReview(PostCareReviewInfo postCareReviewInfo) {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        if(careReviewPersist.findByReservationId(postCareReviewInfo.getReservationId())
+                .isPresent()) throw new ReviewException(ReviewExceptionType.REVIEW_HAS_WRITTEN);
+
+        if(reservation.getServiceType() != ServiceType.CARE) throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
 
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
