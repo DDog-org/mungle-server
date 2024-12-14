@@ -27,6 +27,10 @@ public class GroomerMapper {
                 .build();
     }
 
+    public static ProfileInfo mapToProfileInfo(Groomer groomer) {
+        return null;
+    }
+
     public static ProfileInfo.UpdatePage mapToUpdatePage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
         return ProfileInfo.UpdatePage.builder()
                 .image(groomer.getImageUrl())
