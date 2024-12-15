@@ -5,10 +5,7 @@ import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.vet.application.ReviewService;
 import ddog.vet.presentation.review.dto.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
@@ -27,11 +24,20 @@ public class ReviewController {
         return success(reviewService.findReviewList(payloadDto.getAccountId(), page, size));
     }
 
+    @GetMapping("/report/{careReviewId}")
+    public CommonResponseEntity<ReportReviewResp> reportReview(@PathVariable Long careReviewId) {
+        return success(reviewService.reportReview(careReviewId));
+    }
+
     @PostMapping("/report")
-    public CommonResponseEntity<ReportReviewResp> reportReview(@RequestBody ReportReviewReq reportReviewReq) {
+    public CommonResponseEntity<SubmitReportReviewResp> reportReview(@RequestBody ReportReviewReq reportReviewReq) {
         return success(reviewService.reportReview(reportReviewReq));
     }
 
-//    @GetMapping("/report/list")
-//    public CommonResponseEntity<ReportedReviewListResp> findReportedReviewList(PayloadDto payloadDto)
+    @GetMapping("/report/list")
+    public CommonResponseEntity<ReportedReviewListResp> findReportedReviewList(PayloadDto payloadDto,
+                                                                               @RequestParam(defaultValue = "0") int page,
+                                                                               @RequestParam(defaultValue = "10") int size) {
+        return success(reviewService.findReportedReviewList(payloadDto.getAccountId(), page, size));
+    }
 }

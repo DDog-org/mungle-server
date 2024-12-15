@@ -6,7 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ReportReviewResp {
-    private Long reviewId;
-    private Long reviewerId;
-    private Long revieweeId;
+    private String reviewerNickName;
+    private String reviewerImageUrl;
 }
