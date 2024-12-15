@@ -12,6 +12,7 @@ import ddog.domain.account.port.AccountPersist;
 import ddog.groomer.application.exception.account.AccountException;
 import ddog.groomer.application.exception.account.AccountExceptionType;
 import ddog.groomer.presentation.auth.dto.LoginResult;
+import ddog.groomer.presentation.auth.dto.ValidateResp;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -97,6 +98,14 @@ public class AuthService {
         return AccessTokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
+                .build();
+    }
+
+    public ValidateResp validateMember(Long accountId) {
+        boolean isValidateMember = accountId != null;
+
+        return ValidateResp.builder()
+                .IsValidateMember(isValidateMember)
                 .build();
     }
 }
