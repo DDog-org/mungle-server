@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class VetDaengleMeter {
     private Long vetDaengleMeterId;
     private Long vetId;
-    private Long score;
+    private Integer score;
     private Long evaluationCount;
 }

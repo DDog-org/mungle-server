@@ -4,12 +4,15 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerDaengleMeter;
 import ddog.domain.groomer.License;
+import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
 import ddog.domain.groomer.port.LicensePersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.application.mapper.GroomerDaengleMeterMapper;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
 import ddog.domain.account.port.AccountPersist;
@@ -37,8 +40,11 @@ public class AccountService {
 
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
+
     private final LicensePersist licensePersist;
     private final BeautyShopPersist beautyShopPersist;
+    private final GroomerDaengleMeterPersist groomerDaengleMeterPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -65,10 +71,13 @@ public class AccountService {
         BeautyShop savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
 
         beautyShopPersist.save(savedBeautyShop);
-        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();;
+        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();
 
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
-        groomerPersist.save(newGroomer);
+        Groomer savedGroomer =  groomerPersist.save(newGroomer);
+
+        GroomerDaengleMeter newGroomerDaengleMeter = GroomerDaengleMeterMapper.create(savedGroomer.getGroomerId());
+        groomerDaengleMeterPersist.save(newGroomerDaengleMeter);
 
         return SignUpResp.builder()
                 .accessToken(accessToken)

@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class GroomerDaengleMeter {
     private Long groomerDaengleMeterId;
     private Long groomerId;
-    private Long score;
+    private Integer score;
     private Long evaluationCount;
 }
