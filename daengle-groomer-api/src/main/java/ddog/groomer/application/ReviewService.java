@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class ReviewService {
     private final UserPersist userPersist;
     private final GroomerPersist groomerPersist;
 
+    @Transactional(readOnly = true)
     public ReviewListResp findReviewList(Long accountId, int page, int size) {
         Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
@@ -52,6 +54,7 @@ public class ReviewService {
         return mappingToGroomingReviewListResp(groomingReviews);
     }
 
+    @Transactional(readOnly = true)
     public ReportReviewResp reportReview(Long groomingReviewId) {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(groomingReviewId)
                 .orElseThrow(() -> new GroomingReviewException(GroomingReviewExceptionType.GROOMING_REVIEW_NOT_FOUND));
@@ -65,6 +68,7 @@ public class ReviewService {
                 .build();
     }
 
+    @Transactional
     public SubmitReportReviewResp reportReview(ReportReviewReq reportReviewReq) {
         groomerPersist.findByGroomerId(reportReviewReq.getGroomerId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
@@ -82,6 +86,7 @@ public class ReviewService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ReportedReviewListResp findReportedReviewList(Long accountId, int page, int size) {
         Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
