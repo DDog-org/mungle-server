@@ -2,6 +2,7 @@ package ddog.payment.application.mapper;
 
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
+import ddog.domain.user.User;
 import ddog.payment.presentation.dto.PostOrderInfo;
 
 import java.time.LocalDateTime;
@@ -9,15 +10,15 @@ import java.util.UUID;
 
 public class OrderMapper {
 
-    public static Order createBy(Long accountId, PostOrderInfo postOrderInfo, Payment payment) {
+    public static Order createBy(User user, PostOrderInfo postOrderInfo, Payment payment) {
         return Order.builder()
                 .serviceType(postOrderInfo.getServiceType())
                 .petId(postOrderInfo.getPetId())
                 .price(postOrderInfo.getPrice())
                 .estimateId(postOrderInfo.getEstimateId())
                 .orderUid(String.valueOf(UUID.randomUUID()))
-                .accountId(accountId)
-                .customerName(postOrderInfo.getCustomerName())
+                .accountId(user.getAccountId())
+                .customerName(user.getNickname())
                 .recipientId(postOrderInfo.getRecipientId())
                 .recipientImageUrl(postOrderInfo.getRecipientImageUrl())
                 .recipientName(postOrderInfo.getRecipientName())
@@ -25,7 +26,7 @@ public class OrderMapper {
                 .orderDate(LocalDateTime.now())
                 .schedule(postOrderInfo.getSchedule())
                 .visitorName(postOrderInfo.getVisitorName())
-                .customerPhoneNumber(postOrderInfo.getCustomerPhoneNumber())
+                .customerPhoneNumber(user.getPhoneNumber())
                 .visitorPhoneNumber(postOrderInfo.getVisitorPhoneNumber())
                 .payment(payment)
                 .build();

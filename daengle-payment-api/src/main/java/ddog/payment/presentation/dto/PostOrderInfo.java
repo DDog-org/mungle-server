@@ -18,8 +18,6 @@ public class PostOrderInfo {
     private String shopName;
     private LocalDateTime schedule;
     private Long price;
-    private String customerName;
-    private String customerPhoneNumber;
     private String visitorName;
     private String visitorPhoneNumber;
 }

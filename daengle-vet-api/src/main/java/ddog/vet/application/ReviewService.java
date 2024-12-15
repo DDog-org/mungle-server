@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class ReviewService {
     private final UserPersist userPersist;
     private final VetPersist vetPersist;
 
+    @Transactional(readOnly = true)
     public ReviewListResp findReviewList(Long accountId, int page, int size) {
         Vet savedVet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
@@ -48,6 +50,7 @@ public class ReviewService {
         return mappingToCareReviewListResp(careReviews);
     }
 
+    @Transactional(readOnly = true)
     public ReportReviewResp reportReview(Long careReviewId) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(careReviewId)
                 .orElseThrow(() -> new CareReviewException(CareReviewExceptionType.CARE_REVIEW_RESERVATION_NOT_FOUND));
@@ -61,6 +64,7 @@ public class ReviewService {
                 .build();
     }
 
+    @Transactional
     public SubmitReportReviewResp reportReview(ReportReviewReq reportReviewReq) {
         vetPersist.findByVetId(reportReviewReq.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
@@ -78,6 +82,7 @@ public class ReviewService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ReportedReviewListResp findReportedReviewList(Long accountId, int page, int size) {
         Vet savedVet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
