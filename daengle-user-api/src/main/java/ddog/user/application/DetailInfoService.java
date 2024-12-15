@@ -40,6 +40,7 @@ public class DetailInfoService {
 
     public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
         address = checkUserLoggedIn(accountId, address);
+        address = address.replace(" ", "");
 
         Pageable pageable = PageRequest.of(page, size);
 
