@@ -34,8 +34,8 @@ public class ChatController {
     }
 
     @PostMapping("/messages/{roomId}")
-    public CommonResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessageReq messageReq, @PathVariable Long roomId) {
-        ChatMessage savedMessage = chatService.sendAndSaveMessage(messageReq, roomId);
+    public CommonResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessageReq messageReq, @PathVariable Long roomId, PayloadDto payloadDto) {
+        ChatMessage savedMessage = chatService.sendAndSaveMessage(messageReq, roomId, payloadDto.getAccountId());
         messagingTemplate.convertAndSend("/messages/" + roomId, savedMessage);
         return success(savedMessage);
     }

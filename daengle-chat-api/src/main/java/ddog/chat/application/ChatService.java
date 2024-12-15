@@ -147,7 +147,7 @@ public class ChatService {
         return true;
     }
 
-    public ChatMessage sendAndSaveMessage(ChatMessageReq chatMessageReq, Long roomId){
+    public ChatMessage sendAndSaveMessage(ChatMessageReq chatMessageReq, Long roomId, Long accountId){
         Long recipientId = findMessageRecipientByRoomId(roomId, chatMessageReq.getSenderId());
         Long messageId = System.currentTimeMillis();
 
@@ -155,7 +155,7 @@ public class ChatService {
                 .messageId(messageId)
                 .chatRoomId(roomId)
                 .messageType(chatMessageReq.getMessageType())
-                .senderId(chatMessageReq.getSenderId())
+                .senderId(accountId)
                 .content(chatMessageReq.getMessageContent())
                 .recipientId(recipientId)
                 .timestamp(LocalDateTime.now())
