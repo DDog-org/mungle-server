@@ -38,6 +38,7 @@ public class ReservationMapper {
                 .groomerId(groomer.getAccountId())
                 .imageUrl(groomer.getImageUrl())
                 .name(groomer.getName())
+                .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
                 .daengleMeter(groomer.getDaengleMeter())
                 .keywords(groomer.getKeywords())
