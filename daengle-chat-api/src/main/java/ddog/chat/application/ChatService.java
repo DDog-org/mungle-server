@@ -55,21 +55,25 @@ public class ChatService {
         ChatRoom savedChatRoom = startChat(role, userAccountId, otherUserId);
         Long estimateId = null;
         String otherUserProfile = null;
+        String otherUserName = null;
         if (role.equals(Role.DAENGLE)) {
             Account savedOtherUser = accountPersist.findById(otherUserId);
             if (savedOtherUser.getRole().equals(Role.GROOMER)) {
                 Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).get();
                 otherUserProfile = savedGroomer.getImageUrl();
+                otherUserName = savedGroomer.getName();
                 estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(userAccountId, otherUserId).map(GroomingEstimate::getEstimateId).orElse(null);
             }
             else if (savedOtherUser.getRole().equals(Role.VET)) {
                 Vet savedVet = vetPersist.findByAccountId(otherUserId).get();
                 otherUserProfile = savedVet.getImageUrl();
+                otherUserName = savedVet.getName();
                 estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(userAccountId, otherUserId).map(CareEstimate::getEstimateId).orElse(null);
             }
         } else {
             User savedUser = userPersist.findByAccountId(otherUserId).get();
             otherUserProfile = savedUser.getImageUrl();
+            otherUserName = savedUser.getNickname();
             if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER)) estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId).map(GroomingEstimate::getEstimateId).orElse(null);
             else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET)) estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId).map(CareEstimate::getEstimateId).orElse(null);
         }
@@ -81,6 +85,7 @@ public class ChatService {
                     .roomId(savedChatRoom.getChatRoomId())
                     .userId(savedChatRoom.getUserId())
                     .partnerId(savedChatRoom.getPartnerId())
+                    .partnerName(otherUserName)
                     .partnerProfile(otherUserProfile)
                     .messagesGroupedByDate(Collections.emptyMap())
                     .estimateId(estimateId)
@@ -106,6 +111,7 @@ public class ChatService {
                 .roomId(savedChatRoom.getChatRoomId())
                 .userId(savedChatRoom.getUserId())
                 .partnerId(savedChatRoom.getPartnerId())
+                .partnerName(otherUserName)
                 .partnerProfile(otherUserProfile)
                 .messagesGroupedByDate(groupedMessages)
                 .estimateId(estimateId)

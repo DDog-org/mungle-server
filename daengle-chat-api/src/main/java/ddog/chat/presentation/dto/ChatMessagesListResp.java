@@ -16,6 +16,7 @@ public class ChatMessagesListResp {
     private Long userId;
     private Long partnerId;
     private String partnerProfile;
+    private String partnerName;
     private Long estimateId;
 
     private Map<LocalDate, List<ChatMessageSummary>> messagesGroupedByDate;
