@@ -38,7 +38,8 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowedOrigins(Arrays.asList(
-                                "http://localhost:3000", "https://dev-user.daengle.com", "https://dev-groomer.daengle.com", "https://dev-vet.daengle.com",
+                                "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
+                                "https://dev-user.daengle.com", "https://dev-groomer.daengle.com", "https://dev-vet.daengle.com",
                                 "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com"
                         ));
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
