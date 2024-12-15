@@ -109,6 +109,7 @@ public class GroomingEstimateMapper {
                 .groomerId(groomer.getGroomerId())
                 .imageUrl(groomer.getImageUrl())
                 .name(groomer.getName())
+                .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
                 .daengleMeter(groomer.getDaengleMeter())
                 .proposal(estimate.getProposal())

@@ -24,6 +24,11 @@ public class AccountController {
         return success(accountService.signUp(request, response));
     }
 
+    @GetMapping("/info")
+    public CommonResponseEntity<ProfileInfo> getGroomerInfo(PayloadDto payloadDto) {
+        return success(accountService.getGroomerInfo(payloadDto.getAccountId()));
+    }
+
     @GetMapping("/modify-page")
     public CommonResponseEntity<ProfileInfo.UpdatePage> getUpdateInfo(PayloadDto payloadDto) {
         return success(accountService.getUpdatePage(payloadDto.getAccountId()));

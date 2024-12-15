@@ -22,6 +22,7 @@ public class EstimateDetail {
         private Long groomerId;
         private String imageUrl;
         private String name;
+        private Long shopId;
         private String shopName;
         private int daengleMeter;
         private List<GroomingKeyword> keywords;

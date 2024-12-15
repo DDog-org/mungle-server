@@ -27,6 +27,18 @@ public class GroomerMapper {
                 .build();
     }
 
+    public static ProfileInfo mapToProfileInfo(Groomer groomer) {
+        return ProfileInfo.builder()
+                .imageUrl(groomer.getImageUrl())
+                .name(groomer.getName())
+                .keywords(groomer.getKeywords())
+                .shopId(groomer.getShopId())
+                .shopName(groomer.getShopName())
+                .introduction(groomer.getIntroduction())
+                .daengleMeter(groomer.getDaengleMeter())
+                .build();
+    }
+
     public static ProfileInfo.UpdatePage mapToUpdatePage(Groomer groomer, List<ProfileInfo.UpdatePage.LicenseDetail> details) {
         return ProfileInfo.UpdatePage.builder()
                 .image(groomer.getImageUrl())

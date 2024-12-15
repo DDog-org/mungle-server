@@ -23,6 +23,11 @@ public class AccountController {
         return success(accountService.signUp(request, response));
     }
 
+    @GetMapping("/info")
+    public CommonResponseEntity<ProfileInfo> getVetInfo(PayloadDto payloadDto) {
+        return success(accountService.getVetInfo(payloadDto.getAccountId()));
+    }
+
     @GetMapping("/modify-page")
     public CommonResponseEntity<ProfileInfo.UpdatePage> getModifyInfo(PayloadDto payloadDto) {
         return success(accountService.getModifyPage(payloadDto.getAccountId()));

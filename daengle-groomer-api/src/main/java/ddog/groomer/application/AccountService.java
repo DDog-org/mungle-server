@@ -95,6 +95,13 @@ public class AccountService {
         return authentication;
     }
 
+    public ProfileInfo getGroomerInfo(Long accountId) {
+        Groomer groomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        return GroomerMapper.mapToProfileInfo(groomer);
+    }
+
     @Transactional(readOnly = true)
     public ProfileInfo.UpdatePage getUpdatePage(Long accountId) {
         Groomer groomer = groomerPersist.findByAccountId(accountId)

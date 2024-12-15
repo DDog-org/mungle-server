@@ -34,10 +34,6 @@ public class Vet {
     private List<String> licenses;
     private List<CareKeyword> keywords;
 
-    public void updateWithImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public static void validateName(String name) {
         if (name == null || name.length() < 2 || name.length() > 10 || !name.matches("^[가-힣\\s]+$")) {
             throw new IllegalArgumentException("Invalid name: must be 2-10 characters and in Korean.");
@@ -80,6 +76,9 @@ public class Vet {
     public static void validateTimeRange(LocalTime startTime, LocalTime endTime) {
         if (startTime == null || endTime == null) {
             throw new IllegalArgumentException("Invalid time: startTime and endTime cannot be null.");
+        }
+        if (startTime == endTime) {
+            throw new IllegalArgumentException("Invalid time: startTime and endTime cannot be the same.");
         }
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException("Invalid time range: endTime cannot be before startTime.");
