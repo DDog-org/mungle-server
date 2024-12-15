@@ -1,10 +1,8 @@
 package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.chat.ChatRoom;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import ddog.domain.chat.enums.PartnerType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,12 +20,15 @@ public class ChatRoomJpaEntity {
     private Long chatRoomId;
     private Long userId;
     private Long partnerId;
+    @Enumerated(value = EnumType.STRING)
+    private PartnerType partnerType;
 
     public static ChatRoomJpaEntity from(ChatRoom chatRoom) {
         return ChatRoomJpaEntity.builder()
                 .chatRoomId(chatRoom.getChatRoomId())
                 .userId(chatRoom.getUserId())
                 .partnerId(chatRoom.getPartnerId())
+                .partnerType(chatRoom.getPartnerType())
                 .build();
     }
 
@@ -36,6 +37,7 @@ public class ChatRoomJpaEntity {
                 .chatRoomId(chatRoomId)
                 .userId(userId)
                 .partnerId(partnerId)
+                .partnerType(partnerType)
                 .build();
     }
 }

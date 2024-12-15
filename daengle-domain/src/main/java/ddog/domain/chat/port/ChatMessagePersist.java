@@ -7,4 +7,5 @@ import java.util.List;
 public interface ChatMessagePersist {
     ChatMessage save(ChatMessage message);
     List<ChatMessage> findByChatRoomId(Long chatRoomId);
+    ChatMessage findLatestMessageByRoomId(Long chatRoomId);
 }

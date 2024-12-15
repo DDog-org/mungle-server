@@ -1,5 +1,6 @@
 package ddog.domain.chat;
 
+import ddog.domain.chat.enums.PartnerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,4 +14,5 @@ public class ChatRoom {
     private Long chatRoomId;
     private Long userId; // 일반 사용자 id
     private Long partnerId; // 미용사 or 수의사 id
+    private PartnerType partnerType;
 }
