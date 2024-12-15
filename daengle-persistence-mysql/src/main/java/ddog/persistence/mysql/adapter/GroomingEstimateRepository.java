@@ -100,4 +100,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     public List<GroomingEstimate> findMyEstimatesByUserId(Long userId) {
         return groomingEstimateJpaRepository.findGroomingEstimateJpaEntitiesByUserId(userId).stream().map(GroomingEstimateJpaEntity::toModel).toList();
     }
+
+    @Override
+    public Optional<GroomingEstimate> findEstimateByUserIdAndGroomerId(Long userId, Long groomerId) {
+        return groomingEstimateJpaRepository.findGroomingEstimateJpaEntityByUserIdAndGroomerId(userId, groomerId).map(GroomingEstimateJpaEntity::toModel);
+    }
 }

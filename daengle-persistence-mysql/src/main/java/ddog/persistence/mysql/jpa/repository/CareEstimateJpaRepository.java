@@ -49,4 +49,6 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     List<CareEstimateJpaEntity> finTodayScheduleByVetId(LocalDate today, Long vetAccountId, EstimateStatus status);
 
     List<CareEstimateJpaEntity> findCareEstimateJpaEntitiesByUserId(Long userId);
+
+    Optional<CareEstimateJpaEntity> findCareEstimateJpaEntityByUserIdAndVetId(Long userId, Long vetId);
 }

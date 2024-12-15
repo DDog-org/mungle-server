@@ -1,15 +1,19 @@
 package ddog.chat.presentation;
 
+import ddog.auth.dto.PayloadDto;
+import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.chat.application.ChatService;
+import ddog.chat.presentation.dto.ChatMessageReq;
+import ddog.chat.presentation.dto.ChatMessagesListResp;
+import ddog.chat.presentation.dto.PartnerChatRoomListResp;
+import ddog.chat.presentation.dto.UserChatRoomListResp;
 import ddog.domain.chat.ChatMessage;
+import ddog.domain.chat.enums.PartnerType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,22 +21,41 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/{roomId}")
-    @SendTo("/queue/{roomId}")
-    public ChatMessage sendMessage(@DestinationVariable Long roomId, ChatMessage message) {
-        chatService.saveMessage(roomId, message);
-        return message;
+    @GetMapping("/with")
+    public CommonResponseEntity<ChatMessagesListResp> startChatMessage(PayloadDto payloadDto, @RequestParam Long otherId) {
+        return success(chatService.getAllMessagesByRoomId(payloadDto.getRole(), payloadDto.getAccountId(), otherId));
     }
 
-    @PostMapping("/messages")
-    public ResponseEntity<ChatMessage> saveMessage(@RequestBody ChatMessage message) {
-        ChatMessage savedMessage = chatService.saveMessage(1L, message); // 예시 저장
-        return ResponseEntity.ok(savedMessage);
+    @DeleteMapping("/delete/{roomId}")
+    public CommonResponseEntity<Boolean> deleteChatRoom(@PathVariable Long roomId) {
+        return success(chatService.deleteChatRoom(roomId));
     }
 
-    @GetMapping("/enter/{roomId}")
-    public List<ChatMessage> findMessagesByRoomId(@PathVariable Long roomId) {
-        return chatService.findMessagesByRoomId(roomId);
+    @PostMapping("/messages/{roomId}")
+    public CommonResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessageReq messageReq, @PathVariable Long roomId, PayloadDto payloadDto) {
+        ChatMessage savedMessage = chatService.sendAndSaveMessage(messageReq, roomId, payloadDto.getAccountId());
+        messagingTemplate.convertAndSend("/messages/" + roomId, savedMessage);
+        return success(savedMessage);
+    }
+
+    @GetMapping("/user/groomer/list")
+    public CommonResponseEntity<UserChatRoomListResp> findGroomerUserChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findUserChatRoomList(payloadDto.getAccountId(), PartnerType.GROOMER_PARTNER));
+    }
+    @GetMapping("/user/vet/list")
+    public CommonResponseEntity<UserChatRoomListResp> findVetUserChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findUserChatRoomList(payloadDto.getAccountId(), PartnerType.VET_PARTNER));
+    }
+
+    @GetMapping("/groomer/list")
+    public CommonResponseEntity<PartnerChatRoomListResp> findGroomerChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findPartnerChatRoomList(payloadDto.getAccountId()));
+    }
+
+    @GetMapping("/vet/list")
+    public CommonResponseEntity<PartnerChatRoomListResp> findVetChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findPartnerChatRoomList(payloadDto.getAccountId()));
     }
 }

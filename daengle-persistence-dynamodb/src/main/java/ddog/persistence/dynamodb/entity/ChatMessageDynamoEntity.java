@@ -7,9 +7,8 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 @NoArgsConstructor
@@ -22,39 +21,45 @@ public class ChatMessageDynamoEntity {
     private ChatType messageType;
     private Long senderId;
     private Long recipientId;
-    private Long timestamp;
+    private String timestamp;
     private String content;
 
-    @DynamoDbPartitionKey
-    public Long getMessageId() {
-        return messageId;
+    @DynamoDbSortKey
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    @DynamoDbSortKey
+    @DynamoDbPartitionKey
     public Long getChatRoomId() {
         return chatRoomId;
     }
 
     public ChatMessage toModel() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime parsedTimestamp = LocalDateTime.parse(timestamp, formatter);
+
         return ChatMessage.builder()
                 .chatRoomId(chatRoomId)
                 .messageId(messageId)
                 .messageType(messageType)
                 .senderId(senderId)
                 .recipientId(recipientId)
-                .timestamp(LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()))
+                .timestamp(parsedTimestamp)
                 .content(content)
                 .build();
     }
 
     public static ChatMessageDynamoEntity from(ChatMessage message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
         return ChatMessageDynamoEntity.builder()
                 .chatRoomId(message.getChatRoomId())
                 .messageId(message.getMessageId())
                 .messageType(message.getMessageType())
                 .senderId(message.getSenderId())
                 .recipientId(message.getRecipientId())
-                .timestamp(message.getTimestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+                .timestamp(message.getTimestamp().format(formatter))
                 .content(message.getContent())
                 .build();
     }

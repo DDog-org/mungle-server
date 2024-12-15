@@ -1,5 +1,6 @@
 package ddog.persistence.mysql.jpa.repository;
 
+import ddog.domain.chat.enums.PartnerType;
 import ddog.persistence.mysql.jpa.entity.ChatRoomJpaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,4 +13,7 @@ public interface ChatRoomJpaRepository extends JpaRepository<ChatRoomJpaEntity, 
 
     ChatRoomJpaEntity findByUserIdAndPartnerId(Long userId, Long partnerId);
 
+    ChatRoomJpaEntity findByChatRoomId(Long chatRoomId);
+
+    List<ChatRoomJpaEntity> findAllByUserIdAndPartnerType(Long userId, PartnerType partnerType);
 }

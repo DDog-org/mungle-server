@@ -16,9 +16,9 @@ public class ChatMessage {
 
     private Long chatRoomId;
     private Long messageId;
-    private ChatType messageType; // 기본 메시지 or 사진
-    private Long senderId; // 보내는 사람
-    private Long recipientId; // 받는 사람
+    private ChatType messageType;
+    private Long senderId;
+    private Long recipientId;
     private LocalDateTime timestamp;
     private String content;
 

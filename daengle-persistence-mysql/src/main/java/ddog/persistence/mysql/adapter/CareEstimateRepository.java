@@ -101,5 +101,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public List<CareEstimate> findMyEstimatesByUserId(Long userId) {
         return careEstimateJpaRepository.findCareEstimateJpaEntitiesByUserId(userId).stream().map(CareEstimateJpaEntity::toModel).toList();
     }
+
+    @Override
+    public Optional<CareEstimate> findEstimateByUserIdAndVetId(Long userId, Long vetId) {
+        return careEstimateJpaRepository.findCareEstimateJpaEntityByUserIdAndVetId(userId, vetId).map(CareEstimateJpaEntity::toModel);
+    }
 }
 

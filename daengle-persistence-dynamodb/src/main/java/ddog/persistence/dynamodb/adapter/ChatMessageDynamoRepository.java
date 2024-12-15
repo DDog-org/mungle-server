@@ -6,10 +6,16 @@ import ddog.domain.chat.port.ChatMessagePersist;
 import ddog.persistence.dynamodb.entity.ChatMessageDynamoEntity;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.enhanced.dynamodb.*;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -43,15 +49,65 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
     @Override
     public List<ChatMessage> findByChatRoomId(Long chatRoomId) {
         try {
-            return getTable()
-                    .scan()
+            QueryEnhancedRequest queryRequest = QueryEnhancedRequest.builder()
+                    .queryConditional(QueryConditional.keyEqualTo(Key.builder()
+                            .partitionValue(chatRoomId)
+                            .build()))
+                    .scanIndexForward(false)
+                    .build();
+
+            List<ChatMessage> messages = getTable()
+                    .query(queryRequest)
                     .items()
                     .stream()
-                    .filter(item -> chatRoomId.equals(item.getChatRoomId()))
                     .map(ChatMessageDynamoEntity::toModel)
                     .collect(Collectors.toList());
+
+            if (messages.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            Map<LocalDate, List<ChatMessage>> groupedMessages = messages.stream()
+                    .collect(Collectors.groupingBy(
+                            message -> message.getTimestamp().toLocalDate()
+                    ));
+
+            groupedMessages.forEach((date, messageList) -> {
+                messageList.sort(Comparator.comparing(ChatMessage::getTimestamp));
+            });
+
+            List<ChatMessage> sortedMessages = groupedMessages.entrySet().stream()
+                    .flatMap(entry -> entry.getValue().stream())
+                    .collect(Collectors.toList());
+
+            return sortedMessages;
+
         } catch (DynamoDbException e) {
-            System.err.println("FETCH FAILED" + e.getMessage());
+            System.err.println("FETCH FAILED: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
+    @Override
+    public ChatMessage findLatestMessageByRoomId(Long chatRoomId) {
+        try {
+            QueryEnhancedRequest queryRequest = QueryEnhancedRequest.builder()
+                    .queryConditional(QueryConditional.keyEqualTo(Key.builder()
+                            .partitionValue(chatRoomId)
+                            .build()))
+                    .scanIndexForward(false)
+                    .limit(1)
+                    .build();
+
+            return getTable().query(queryRequest)
+                    .items()
+                    .stream()
+                    .findFirst()
+                    .map(ChatMessageDynamoEntity::toModel)
+                    .orElse(null);
+        } catch (DynamoDbException e) {
+            System.err.println("FETCH LATEST MESSAGE FAILED: " + e.getMessage());
             throw e;
         }
     }
