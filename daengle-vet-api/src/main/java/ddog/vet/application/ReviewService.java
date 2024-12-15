@@ -2,7 +2,9 @@ package ddog.vet.application;
 
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.review.CareReview;
+import ddog.domain.review.ReportedReview;
 import ddog.domain.review.port.CareReviewPersist;
+import ddog.domain.review.port.ReportReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
@@ -13,6 +15,9 @@ import ddog.vet.application.exception.account.UserException;
 import ddog.vet.application.exception.account.UserExceptionType;
 import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
+import ddog.vet.application.mapper.ReportReviewMapper;
+import ddog.vet.presentation.review.dto.ReportReviewReq;
+import ddog.vet.presentation.review.dto.ReportReviewResp;
 import ddog.vet.presentation.review.dto.ReviewListResp;
 import ddog.vet.presentation.review.dto.ReviewSummaryResp;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +36,8 @@ public class ReviewService {
 
     private final CareReviewPersist careReviewPersist;
     private final ReservationPersist reservationPersist;
+    private final ReportReviewPersist reportReviewPersist;
+
     private final UserPersist userPersist;
     private final VetPersist vetPersist;
 
@@ -42,6 +49,23 @@ public class ReviewService {
         Page<CareReview> careReviews = careReviewPersist.findByRevieweeId(savedVet.getAccountId(), pageable);
 
         return mappingToCareReviewListResp(careReviews);
+    }
+
+    public ReportReviewResp reportReview(ReportReviewReq reportReviewReq) {
+        vetPersist.findByVetId(reportReviewReq.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        CareReview savedCareReview = careReviewPersist.findByReviewId(reportReviewReq.getReviewId())
+                .orElseThrow(() -> new CareReviewException(CareReviewExceptionType.CARE_REVIEW_RESERVATION_NOT_FOUND));
+
+        ReportedReview reportReviewToSave = ReportReviewMapper.create(savedCareReview, reportReviewReq);
+        ReportedReview savedReportReview = reportReviewPersist.save(reportReviewToSave);
+
+        return ReportReviewResp.builder()
+                .reviewId(savedReportReview.getReportedReviewId())
+                .reviewerId(savedReportReview.getReviewerId())
+                .revieweeId(savedReportReview.getReporterId())
+                .build();
     }
 
     private ReviewListResp mappingToCareReviewListResp(Page<CareReview> careReviews) {
