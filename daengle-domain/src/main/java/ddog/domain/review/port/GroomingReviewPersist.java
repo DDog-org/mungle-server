@@ -13,5 +13,6 @@ public interface GroomingReviewPersist {
     Optional<GroomingReview> findByReservationId(Long reservationId);
     Optional<GroomingReview> findByReviewerIdAndReservationId(Long reviewerId, Long reservationId);
     Page<GroomingReview> findByReviewerId(Long userId, Pageable pageable);
+    Page<GroomingReview> findByRevieweeId(Long userId, Pageable pageable);
     Page<GroomingReview> findByGroomerId(Long userId, Pageable pageable);
 }
