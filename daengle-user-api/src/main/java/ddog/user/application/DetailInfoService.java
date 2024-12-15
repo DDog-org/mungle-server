@@ -68,7 +68,7 @@ public class DetailInfoService {
                     .reviewCount(groomerReviewCount)
                     .keywords(groomer.getKeywords())
                     .daengleMeter(groomer.getDaengleMeter())
-                    .groomerAccountId(groomer.getGroomerId())
+                    .groomerAccountId(groomer.getAccountId())
                     .build());
         }
 
@@ -102,13 +102,13 @@ public class DetailInfoService {
                 .build();
     }
 
-    public DetailResp.VetDetailInfo findVetById(Long vetId) {
-        Vet findVet = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+    public DetailResp.VetDetailInfo findVetById(Long vetAccountId) {
+        Vet findVet = vetPersist.findByAccountId(vetAccountId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
         Pageable pageable = Pageable.unpaged();
-        Page<CareReview> results = careReviewPersist.findByVetId(vetId, pageable);
+        Page<CareReview> results = careReviewPersist.findByVetId(findVet.getVetId(), pageable);
 
         return DetailResp.VetDetailInfo.builder()
-                .vetAccountId(findVet.getVetId())
+                .vetAccountId(findVet.getAccountId())
                 .vetImage(findVet.getImageUrl())
                 .vetAddress(findVet.getAddress())
                 .vetName(findVet.getName())
@@ -122,15 +122,15 @@ public class DetailInfoService {
                 .build();
     }
 
-    public DetailResp.GroomerDetailInfo findGroomerById(Long groomerId) {
-        Groomer findGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+    public DetailResp.GroomerDetailInfo findGroomerById(Long groomerAccountId) {
+        Groomer findGroomer = groomerPersist.findByAccountId(groomerAccountId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
         BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress()).get();
         Pageable pageable = Pageable.unpaged();
 
         Page<GroomingReview> groomingReview = groomingReviewPersist.findByGroomerId(findGroomer.getGroomerId(), pageable);
 
         return DetailResp.GroomerDetailInfo.builder()
-                .groomerAccountId(findGroomer.getGroomerId())
+                .groomerAccountId(findGroomer.getAccountId())
                 .groomerName(findGroomer.getName())
                 .daengleMeter(findGroomer.getDaengleMeter())
                 .introduction(findGroomer.getIntroduction())
