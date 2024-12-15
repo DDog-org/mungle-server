@@ -8,6 +8,7 @@ import ddog.chat.presentation.dto.ChatMessagesListResp;
 import ddog.chat.presentation.dto.PartnerChatRoomListResp;
 import ddog.chat.presentation.dto.UserChatRoomListResp;
 import ddog.domain.chat.ChatMessage;
+import ddog.domain.chat.enums.PartnerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping
-    public CommonResponseEntity<ChatMessagesListResp> startChatMessage(PayloadDto payloadDto, @RequestParam Long otherUserId) {
-        return success(chatService.getAllMessagesByRoomId(payloadDto.getRole(), payloadDto.getAccountId(), otherUserId));
+    public CommonResponseEntity<ChatMessagesListResp> startChatMessage(PayloadDto payloadDto, @RequestParam Long otherId) {
+        return success(chatService.getAllMessagesByRoomId(payloadDto.getRole(), payloadDto.getAccountId(), otherId));
     }
 
     @DeleteMapping("/delete/{roomId}")
@@ -35,13 +36,17 @@ public class ChatController {
     @PostMapping("/messages/{roomId}")
     public CommonResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessageReq messageReq, @PathVariable Long roomId) {
         ChatMessage savedMessage = chatService.sendAndSaveMessage(messageReq, roomId);
-        messagingTemplate.convertAndSend("/sub/" + roomId, savedMessage);
+        messagingTemplate.convertAndSend("/messages/" + roomId, savedMessage);
         return success(savedMessage);
     }
 
-    @GetMapping("/user/list")
-    public CommonResponseEntity<UserChatRoomListResp> findAllUserChatRoomList(PayloadDto payloadDto){
-        return success(chatService.findUserChatRoomList(payloadDto.getAccountId()));
+    @GetMapping("/user/groomer/list")
+    public CommonResponseEntity<UserChatRoomListResp> findGroomerUserChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findUserChatRoomList(payloadDto.getAccountId(), PartnerType.GROOMER_PARTNER));
+    }
+    @GetMapping("/user/vet/list")
+    public CommonResponseEntity<UserChatRoomListResp> findVetUserChatRoomList(PayloadDto payloadDto){
+        return success(chatService.findUserChatRoomList(payloadDto.getAccountId(), PartnerType.VET_PARTNER));
     }
 
     @GetMapping("/groomer/list")

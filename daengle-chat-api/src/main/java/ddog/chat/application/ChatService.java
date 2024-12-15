@@ -99,8 +99,8 @@ public class ChatService {
                 .build();
     }
 
-    public UserChatRoomListResp findUserChatRoomList(Long userId) {
-        List<ChatRoom> savedChatRooms = chatRoomPersist.findByUserId(userId);
+    public UserChatRoomListResp findUserChatRoomList(Long userId, PartnerType partnerType) {
+        List<ChatRoom> savedChatRooms = chatRoomPersist.findByUserIdAndPartnerType(userId, partnerType);
 
         List<UserChatRoomListResp.RoomList> userChatRoomListResps = new ArrayList<>();
         for (ChatRoom savedChatRoom : savedChatRooms) {

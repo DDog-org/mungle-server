@@ -12,4 +12,5 @@ public interface ChatRoomPersist {
     ChatRoom findByRoomId(Long roomId);
     List<ChatRoom> findByUserId(Long userId);
     List<ChatRoom> findByPartnerId(Long partnerId);
+    List<ChatRoom> findByUserIdAndPartnerType(Long userId, PartnerType partnerType);
 }

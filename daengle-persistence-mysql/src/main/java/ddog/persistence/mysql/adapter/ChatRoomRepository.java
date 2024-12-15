@@ -58,4 +58,9 @@ public class ChatRoomRepository implements ChatRoomPersist {
     public List<ChatRoom> findByPartnerId(Long partnerId) {
         return chatRoomJpaRepository.findByPartnerId(partnerId).stream().map(ChatRoomJpaEntity::toModel).collect(Collectors.toList());
     }
+
+    @Override
+    public List<ChatRoom> findByUserIdAndPartnerType(Long userId, PartnerType partnerType) {
+        return chatRoomJpaRepository.findAllByUserIdAndPartnerType(userId, partnerType).stream().map(ChatRoomJpaEntity::toModel).toList();
+    }
 }
