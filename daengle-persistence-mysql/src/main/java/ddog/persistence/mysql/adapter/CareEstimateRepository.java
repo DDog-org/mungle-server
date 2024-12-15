@@ -96,5 +96,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.finTodayScheduleByVetId(dateTime, vetAccountId, estimateStatus)
                 .stream().map(CareEstimateJpaEntity::toModel).toList();
     }
+
+    @Override
+    public List<CareEstimate> findMyEstimatesByUserId(Long userId) {
+        return careEstimateJpaRepository.findCareEstimateJpaEntitiesByUserId(userId).stream().map(CareEstimateJpaEntity::toModel).toList();
+    }
 }
 

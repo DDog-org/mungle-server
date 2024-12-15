@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BeautyShopJpaRepository extends JpaRepository<BeautyShopJpaEntity, Long> {
-    @Query("SELECT b FROM BeautyShops b " +
-            "WHERE b.shopAddress = :address")
+    @Query("SELECT s FROM BeautyShops s " +
+            "WHERE REPLACE(s.shopAddress, ' ', '') LIKE CONCAT('%', REPLACE(:address, ' ', ''), '%')")
     Page<BeautyShopJpaEntity> findBeautyShopsByShopAddress(@Param("address") String address, Pageable pageable);
 
-    @Query("SELECT b FROM BeautyShops b WHERE b.shopAddress LIKE CONCAT(:addressPrefix, '%')")
+    @Query("SELECT s FROM BeautyShops s WHERE s.shopAddress LIKE CONCAT(:addressPrefix, '%')")
     List<BeautyShopJpaEntity> findBeautyShopsByAddressPrefix(@Param("addressPrefix") String addressPrefix);
 
     Optional<BeautyShopJpaEntity> findByShopId(Long id);

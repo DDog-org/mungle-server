@@ -36,13 +36,13 @@ public class DetailInfoController {
         return success(detailInfoService.findBeautyShop(shopId));
     }
 
-    @GetMapping("/vet/{accountId}")
-    public CommonResponseEntity<DetailResp.VetDetailInfo> getVetDetail(@PathVariable Long accountId) {
-        return success(detailInfoService.findVetById(accountId));
+    @GetMapping("/vet/{vetId}")
+    public CommonResponseEntity<DetailResp.VetDetailInfo> getVetDetail(@PathVariable Long vetId) {
+        return success(detailInfoService.findVetById(vetId));
     }
 
-    @GetMapping("/groomer/{accountId}")
-    public CommonResponseEntity<DetailResp.GroomerDetailInfo> getGroomerDetail(@PathVariable Long accountId) {
-        return success(detailInfoService.findGroomerById(accountId));
+    @GetMapping("/groomer/{groomerId}")
+    public CommonResponseEntity<DetailResp.GroomerDetailInfo> getGroomerDetail(@PathVariable Long groomerId) {
+        return success(detailInfoService.findGroomerById(groomerId));
     }
 }

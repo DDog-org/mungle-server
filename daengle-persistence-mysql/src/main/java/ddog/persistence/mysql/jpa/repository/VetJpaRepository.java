@@ -16,7 +16,7 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
     Optional<VetJpaEntity> findByVetId(Long vetId);
 
     @Query("SELECT v FROM Vets v " +
-            "WHERE REPLACE(v.address, ' ', '') = REPLACE(:address, ' ', '')")
+            "WHERE REPLACE(v.address, ' ', '') LIKE CONCAT('%', REPLACE(:address, ' ', ''), '%')")
     Page<VetJpaEntity> findVetsByAddress(@Param("address") String address, Pageable pageable);
 
     @Query("SELECT v FROM Vets v WHERE v.address LIKE CONCAT(:addressPrefix, '%')")
