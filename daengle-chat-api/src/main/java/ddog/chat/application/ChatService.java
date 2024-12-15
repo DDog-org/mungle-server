@@ -40,18 +40,15 @@ public class ChatService {
     private final VetPersist vetPersist;
     private final AccountPersist accountPersist;
 
-    // 채팅방 생성 및 입장
-    private ChatRoom startChat(Role role, Long accountId, Long otherUserId) { // 이것도 상대방 accountId
+    private ChatRoom startChat(Role role, Long accountId, Long otherUserId) {
         return findOrSaveChatRoom(role, accountId, otherUserId);
     }
 
-    // 채팅방 내역 가져오기
     public ChatMessagesListResp getAllMessagesByRoomId(Role role, Long userAccountId, Long otherUserId) {
         ChatRoom savedChatRoom = startChat(role, userAccountId, otherUserId);
         
         String otherUserProfile = null;
-        if (role.equals(Role.DAENGLE)) { // 일반 사용자면
-            // 상대방이 병원이면
+        if (role.equals(Role.DAENGLE)) {
             Account savedOtherUser = accountPersist.findById(otherUserId);
             if (savedOtherUser.getRole().equals(Role.GROOMER)) {
                 Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).get();
@@ -74,7 +71,7 @@ public class ChatService {
                     .userId(savedChatRoom.getUserId())
                     .partnerId(savedChatRoom.getPartnerId())
                     .partnerProfile(otherUserProfile)
-                    .messagesGroupedByDate(Collections.emptyMap())  // 빈 메시지 그룹 반환
+                    .messagesGroupedByDate(Collections.emptyMap())
                     .build();
         }
 
@@ -102,9 +99,6 @@ public class ChatService {
                 .build();
     }
 
-
-
-    // 사용자 입장 채팅방 목록 가져오기
     public UserChatRoomListResp findUserChatRoomList(Long userId) {
         List<ChatRoom> savedChatRooms = chatRoomPersist.findByUserId(userId);
 
@@ -126,12 +120,11 @@ public class ChatService {
             }
             // 최근 메시지 가져오기
             ChatMessage savedLastMessages = chatMessagePersist.findLatestMessageByRoomId(savedChatRoom.getChatRoomId());
-            String lastMessage = (savedLastMessages != null) ? savedLastMessages.getContent() : ""; // 최근 메시지가 없으면 빈 문자열
+            String lastMessage = (savedLastMessages != null) ? savedLastMessages.getContent() : "";
             String messageTime = (savedLastMessages != null)
                     ? savedLastMessages.getTimestamp().toLocalTime().toString()
-                    : ""; // 시간이 없으면 빈 문자열
+                    : "";
 
-            // 응답 리스트에 추가
             userChatRoomListResps.add(UserChatRoomListResp.RoomList.builder()
                     .roomId(savedChatRoom.getChatRoomId())
                     .partnerId(savedChatRoom.getPartnerId())
@@ -148,7 +141,6 @@ public class ChatService {
                 .build();
     }
 
-    // 채팅방 삭제
     public boolean deleteChatRoom(Long roomId) {
         ChatRoom savedChatRoom = chatRoomPersist.findByRoomId(roomId);
         chatRoomPersist.exitChatRoom(savedChatRoom.getUserId(), savedChatRoom.getPartnerId());
@@ -156,7 +148,6 @@ public class ChatService {
         return true;
     }
 
-    // 채팅 전송 및 저장
     public ChatMessage sendAndSaveMessage(ChatMessageReq chatMessageReq, Long roomId){
         Long recipientId = findMessageRecipientByRoomId(roomId, chatMessageReq.getSenderId());
         Long messageId = System.currentTimeMillis();
@@ -174,9 +165,6 @@ public class ChatService {
         return chatMessagePersist.save(chatMessage);
     }
 
-
-
-    // 수의사/미용사 입장 채팅방 목록 가져오기
     public PartnerChatRoomListResp findPartnerChatRoomList(Long userId) {
         List<ChatRoom> savedChatRooms = chatRoomPersist.findByPartnerId(userId);
 
@@ -225,6 +213,4 @@ public class ChatService {
         if (savedChatRoom.getUserId().equals(senderId)) return savedChatRoom.getPartnerId();
         else return savedChatRoom.getUserId();
     }
-
-
 }

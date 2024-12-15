@@ -11,8 +11,11 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -46,13 +49,11 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
     @Override
     public List<ChatMessage> findByChatRoomId(Long chatRoomId) {
         try {
-            // chatRoomId와 messageId를 함께 사용하는 경우
             QueryEnhancedRequest queryRequest = QueryEnhancedRequest.builder()
                     .queryConditional(QueryConditional.keyEqualTo(Key.builder()
-                            .partitionValue(chatRoomId)  // partition key로 chatRoomId 사용
-                            .sortValue(0L) // 예시: sort key로 messageId 사용, 적절한 값 설정 필요
+                            .partitionValue(chatRoomId)
                             .build()))
-                    .scanIndexForward(false)  // 내림차순으로 정렬
+                    .scanIndexForward(false)
                     .build();
 
             List<ChatMessage> messages = getTable()
@@ -62,23 +63,41 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
                     .map(ChatMessageDynamoEntity::toModel)
                     .collect(Collectors.toList());
 
-            return messages.isEmpty() ? Collections.emptyList() : messages;
+            if (messages.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            Map<LocalDate, List<ChatMessage>> groupedMessages = messages.stream()
+                    .collect(Collectors.groupingBy(
+                            message -> message.getTimestamp().toLocalDate()
+                    ));
+
+            groupedMessages.forEach((date, messageList) -> {
+                messageList.sort(Comparator.comparing(ChatMessage::getTimestamp));
+            });
+
+            List<ChatMessage> sortedMessages = groupedMessages.entrySet().stream()
+                    .flatMap(entry -> entry.getValue().stream())
+                    .collect(Collectors.toList());
+
+            return sortedMessages;
+
         } catch (DynamoDbException e) {
             System.err.println("FETCH FAILED: " + e.getMessage());
             throw e;
         }
     }
 
+
     @Override
     public ChatMessage findLatestMessageByRoomId(Long chatRoomId) {
         try {
-            // Query를 사용하여 가장 최신 메시지 가져오기
             QueryEnhancedRequest queryRequest = QueryEnhancedRequest.builder()
                     .queryConditional(QueryConditional.keyEqualTo(Key.builder()
-                            .partitionValue(chatRoomId)  // Partition Key로 chatRoomId 사용
+                            .partitionValue(chatRoomId)
                             .build()))
-                    .scanIndexForward(false) // 내림차순으로 정렬 (최신 메시지가 먼저)
-                    .limit(1)  // 가장 최근 메시지 1개만 가져오기
+                    .scanIndexForward(false)
+                    .limit(1)
                     .build();
 
             return getTable().query(queryRequest)
@@ -86,7 +105,7 @@ public class ChatMessageDynamoRepository implements ChatMessagePersist {
                     .stream()
                     .findFirst()
                     .map(ChatMessageDynamoEntity::toModel)
-                    .orElse(null);  // 메시지가 없으면 null 반환
+                    .orElse(null);
         } catch (DynamoDbException e) {
             System.err.println("FETCH LATEST MESSAGE FAILED: " + e.getMessage());
             throw e;

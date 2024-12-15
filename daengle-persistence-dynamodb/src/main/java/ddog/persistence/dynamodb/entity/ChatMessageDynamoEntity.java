@@ -25,8 +25,8 @@ public class ChatMessageDynamoEntity {
     private String content;
 
     @DynamoDbSortKey
-    public Long getMessageId() {
-        return messageId;
+    public String getTimestamp() {
+        return timestamp;
     }
 
     @DynamoDbPartitionKey
@@ -36,8 +36,8 @@ public class ChatMessageDynamoEntity {
 
     public ChatMessage toModel() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // ISO_LOCAL_DATE_TIME 사용
-        LocalDateTime parsedTimestamp = LocalDateTime.parse(timestamp, formatter); // 파싱
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        LocalDateTime parsedTimestamp = LocalDateTime.parse(timestamp, formatter);
 
         return ChatMessage.builder()
                 .chatRoomId(chatRoomId)
@@ -53,14 +53,13 @@ public class ChatMessageDynamoEntity {
     public static ChatMessageDynamoEntity from(ChatMessage message) {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-
         return ChatMessageDynamoEntity.builder()
                 .chatRoomId(message.getChatRoomId())
                 .messageId(message.getMessageId())
                 .messageType(message.getMessageType())
                 .senderId(message.getSenderId())
                 .recipientId(message.getRecipientId())
-                .timestamp(message.getTimestamp().format(formatter))  // ISO_LOCAL_DATE_TIME으로 저장
+                .timestamp(message.getTimestamp().format(formatter))
                 .content(message.getContent())
                 .build();
     }
