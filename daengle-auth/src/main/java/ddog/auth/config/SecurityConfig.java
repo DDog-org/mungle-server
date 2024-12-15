@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         // 임시로 모든 API 에 대해 통과, 각 모듈 테스트 컨트롤러 API 에 대해 통과, 임시 payment 및 notification 관련 API 통과
-                        .requestMatchers("/**", "/api/*/test/**", "/api/payment/**", "/notify/**").permitAll()
+                        .requestMatchers("/**", "/api/*/test/**", "/api/payment/**", "/notify/**", "api/chat/**", "/chat/**").permitAll()
                         // Kakao 소셜 로그인을 위한 URL 허용
                         .requestMatchers("/api/*/kakao", "/api/*/refresh-token").permitAll()
                         // 온보딩을 위한 URL 허용
