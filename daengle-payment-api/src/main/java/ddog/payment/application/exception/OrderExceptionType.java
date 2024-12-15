@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 public enum OrderExceptionType {
+    ORDER_USER_NOT_FOUNDED(HttpStatus.NOT_FOUND, 404, "존재하지 않는 유저"),
     ORDER_NOT_FOUNDED(HttpStatus.NOT_FOUND, 6001, "주문 내역 존재하지 않음");
 
     private final HttpStatus httpStatus;

@@ -6,6 +6,9 @@ import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
+import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.OrderMapper;
 import ddog.payment.application.mapper.PaymentMapper;
 import ddog.payment.presentation.dto.PostOrderInfo;
@@ -14,10 +17,6 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.payment.application.dto.response.PostOrderResp;
-import ddog.payment.application.exception.CareEstimateException;
-import ddog.payment.application.exception.CareEstimateExceptionType;
-import ddog.payment.application.exception.GroomingEstimateException;
-import ddog.payment.application.exception.GroomingEstimateExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +28,23 @@ public class OrderService {
     private final OrderPersist orderPersist;
     private final PaymentPersist paymentPersist;
 
+    private final UserPersist userPersist;
+
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
     public PostOrderResp processOrder(Long accountId, PostOrderInfo postOrderInfo) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_USER_NOT_FOUNDED));
+
         validateEstimate(postOrderInfo.getServiceType(), postOrderInfo.getEstimateId());
         validatePostOrderInfoDataFormat(postOrderInfo);
 
-        Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(accountId, postOrderInfo);
+        Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(savedUser.getAccountId(), postOrderInfo);
         Payment SavedPayment = paymentPersist.save(paymentToSave);
 
-        Order orderToSave = OrderMapper.createBy(accountId, postOrderInfo, SavedPayment);
+        Order orderToSave = OrderMapper.createBy(savedUser, postOrderInfo, SavedPayment);
         Order savedOrder = orderPersist.save(orderToSave);
 
         return PostOrderResp.builder()
@@ -57,7 +61,6 @@ public class OrderService {
         Order.validateShopName(postOrderInfo.getShopName());
         Order.validateSchedule(postOrderInfo.getSchedule());
         Order.validatePrice(postOrderInfo.getPrice());
-        Order.validatePhoneNumber(postOrderInfo.getCustomerPhoneNumber());
         Order.validatePhoneNumber(postOrderInfo.getVisitorPhoneNumber());
     }
 
