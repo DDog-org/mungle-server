@@ -24,6 +24,8 @@ jobs:
             path: daengle-vet-api
           - name: daengle-groomer
             path: daengle-groomer-api
+          - name: daengle-chat
+            path: daengle-chat-api
 
     steps:
       - name: Checkout code

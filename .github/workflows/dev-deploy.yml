@@ -22,6 +22,8 @@ jobs:
           - name: daengle-groomer
             path: daengle-groomer-api
             ssh_host_var: SSH_GROOMER_HOST
+          - name : daengle-chat
+            path : daengle-chat-api
       max-parallel: 1
 
     env:
@@ -30,6 +32,7 @@ jobs:
       SSH_USER_HOST: ${{ secrets.SSH_USER_HOST }}
       SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
       SSH_GROOMER_HOST: ${{ secrets.SSH_GROOMER_HOST }}
+      SSH_CHAT_HOST : ${{ secrets.SSH_CHAT_HOST }}
 
     steps:
       # 1. Checkout Repository
