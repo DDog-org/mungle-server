@@ -118,7 +118,6 @@ public class ChatService {
                 partnerName = savedVet.getName();
                 partnerProfile = savedVet.getImageUrl();
             }
-            // 최근 메시지 가져오기
             ChatMessage savedLastMessages = chatMessagePersist.findLatestMessageByRoomId(savedChatRoom.getChatRoomId());
             String lastMessage = (savedLastMessages != null) ? savedLastMessages.getContent() : "";
             String messageTime = (savedLastMessages != null)

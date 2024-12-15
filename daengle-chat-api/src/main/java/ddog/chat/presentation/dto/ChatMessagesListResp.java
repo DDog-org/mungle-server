@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
-// 채팅방 내역
 @Builder
 @Getter
 public class ChatMessagesListResp {
