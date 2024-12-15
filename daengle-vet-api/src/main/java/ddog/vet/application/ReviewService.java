@@ -4,7 +4,7 @@ import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.review.CareReview;
 import ddog.domain.review.ReportedReview;
 import ddog.domain.review.port.CareReviewPersist;
-import ddog.domain.review.port.ReportReviewPersist;
+import ddog.domain.review.port.ReportedReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
@@ -32,8 +32,8 @@ import java.util.List;
 public class ReviewService {
 
     private final CareReviewPersist careReviewPersist;
+    private final ReportedReviewPersist reportedReviewPersist;
     private final ReservationPersist reservationPersist;
-    private final ReportReviewPersist reportReviewPersist;
 
     private final UserPersist userPersist;
     private final VetPersist vetPersist;
@@ -43,7 +43,7 @@ public class ReviewService {
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<CareReview> careReviews = careReviewPersist.findByRevieweeId(savedVet.getAccountId(), pageable);
+        Page<CareReview> careReviews = careReviewPersist.findByVetId(savedVet.getVetId(), pageable);
 
         return mappingToCareReviewListResp(careReviews);
     }
@@ -69,7 +69,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CareReviewException(CareReviewExceptionType.CARE_REVIEW_RESERVATION_NOT_FOUND));
 
         ReportedReview reportReviewToSave = ReportReviewMapper.create(savedCareReview, reportReviewReq);
-        ReportedReview savedReportReview = reportReviewPersist.save(reportReviewToSave);
+        ReportedReview savedReportReview = reportedReviewPersist.save(reportReviewToSave);
 
         return SubmitReportReviewResp.builder()
                 .reviewId(savedReportReview.getReportedReviewId())
@@ -83,7 +83,7 @@ public class ReviewService {
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<ReportedReview> reportedReviews = reportReviewPersist.findByReporterId(savedVet.getVetId(), pageable);
+        Page<ReportedReview> reportedReviews = reportedReviewPersist.findByReporterId(savedVet.getVetId(), pageable);
 
         return mappingToReportedReviewListResp(reportedReviews);
     }

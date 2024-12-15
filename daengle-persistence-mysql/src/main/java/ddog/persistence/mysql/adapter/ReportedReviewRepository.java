@@ -1,7 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.review.ReportedReview;
-import ddog.domain.review.port.ReportReviewPersist;
+import ddog.domain.review.port.ReportedReviewPersist;
 import ddog.persistence.mysql.jpa.entity.ReportedReviewJpaEntity;
 import ddog.persistence.mysql.jpa.repository.ReportedReviewJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class ReportedReviewRepository implements ReportReviewPersist {
+public class ReportedReviewRepository implements ReportedReviewPersist {
 
     private final ReportedReviewJpaRepository reportedReviewJpaRepository;
 

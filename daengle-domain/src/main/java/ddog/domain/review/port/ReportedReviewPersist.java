@@ -4,7 +4,7 @@ import ddog.domain.review.ReportedReview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface ReportReviewPersist {
+public interface ReportedReviewPersist {
     ReportedReview save(ReportedReview reportedReview);
 
     Page<ReportedReview> findByReporterId(Long vetId, Pageable pageable);
