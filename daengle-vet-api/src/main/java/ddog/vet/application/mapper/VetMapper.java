@@ -12,7 +12,7 @@ public class VetMapper {
     public static Vet create(Long accountId, SignUpReq request) {
         return Vet.builder()
                 .accountId(accountId)
-                .daengleMeter(0)
+                .daengleMeter(50)
                 .name(request.getName())
                 .imageUrl("")
                 .address(request.getAddress())
