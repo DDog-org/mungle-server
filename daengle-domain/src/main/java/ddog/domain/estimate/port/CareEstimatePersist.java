@@ -34,4 +34,6 @@ public interface CareEstimatePersist {
     List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus);
 
     List<CareEstimate> findMyEstimatesByUserId(Long userId);
+
+    Optional<CareEstimate> findEstimateByUserIdAndVetId(Long userId, Long vetId);
 }

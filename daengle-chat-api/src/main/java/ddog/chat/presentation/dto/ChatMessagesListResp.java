@@ -18,7 +18,6 @@ public class ChatMessagesListResp {
     private String partnerProfile;
     private Long estimateId;
 
-    private LocalDate dateTime;
     private Map<LocalDate, List<ChatMessageSummary>> messagesGroupedByDate;
 
     @Getter

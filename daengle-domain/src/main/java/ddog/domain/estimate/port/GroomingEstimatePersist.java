@@ -34,4 +34,6 @@ public interface GroomingEstimatePersist {
     List<GroomingEstimate> findTodayGroomingSchedule(Long goroomerAccountId, LocalDate dateTime, EstimateStatus estimateStatus);
 
     List<GroomingEstimate> findMyEstimatesByUserId(Long userId);
+
+    Optional<GroomingEstimate> findEstimateByUserIdAndGroomerId(Long userId, Long groomerId);
 }

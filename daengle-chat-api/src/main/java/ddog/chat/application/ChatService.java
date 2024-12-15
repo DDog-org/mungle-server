@@ -12,6 +12,10 @@ import ddog.domain.chat.ChatRoom;
 import ddog.domain.chat.enums.PartnerType;
 import ddog.domain.chat.port.ChatMessagePersist;
 import ddog.domain.chat.port.ChatRoomPersist;
+import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.GroomingEstimate;
+import ddog.domain.estimate.port.CareEstimatePersist;
+import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.user.User;
@@ -40,27 +44,34 @@ public class ChatService {
     private final VetPersist vetPersist;
     private final AccountPersist accountPersist;
 
+    private final GroomingEstimatePersist groomingEstimatePersist;
+    private final CareEstimatePersist careEstimatePersist;
+
     private ChatRoom startChat(Role role, Long accountId, Long otherUserId) {
         return findOrSaveChatRoom(role, accountId, otherUserId);
     }
 
     public ChatMessagesListResp getAllMessagesByRoomId(Role role, Long userAccountId, Long otherUserId) {
         ChatRoom savedChatRoom = startChat(role, userAccountId, otherUserId);
-        
+        Long estimateId = null;
         String otherUserProfile = null;
         if (role.equals(Role.DAENGLE)) {
             Account savedOtherUser = accountPersist.findById(otherUserId);
             if (savedOtherUser.getRole().equals(Role.GROOMER)) {
                 Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).get();
                 otherUserProfile = savedGroomer.getImageUrl();
+                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(userAccountId, otherUserId).map(GroomingEstimate::getEstimateId).orElse(null);
             }
             else if (savedOtherUser.getRole().equals(Role.VET)) {
                 Vet savedVet = vetPersist.findByAccountId(otherUserId).get();
                 otherUserProfile = savedVet.getImageUrl();
+                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(userAccountId, otherUserId).map(CareEstimate::getEstimateId).orElse(null);
             }
         } else {
             User savedUser = userPersist.findByAccountId(otherUserId).get();
             otherUserProfile = savedUser.getImageUrl();
+            if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER)) estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId).map(GroomingEstimate::getEstimateId).orElse(null);
+            else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET)) estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId).map(CareEstimate::getEstimateId).orElse(null);
         }
         
         List<ChatMessage> savedMessages = chatMessagePersist.findByChatRoomId(savedChatRoom.getChatRoomId());
@@ -72,6 +83,7 @@ public class ChatService {
                     .partnerId(savedChatRoom.getPartnerId())
                     .partnerProfile(otherUserProfile)
                     .messagesGroupedByDate(Collections.emptyMap())
+                    .estimateId(estimateId)
                     .build();
         }
 
@@ -96,6 +108,7 @@ public class ChatService {
                 .partnerId(savedChatRoom.getPartnerId())
                 .partnerProfile(otherUserProfile)
                 .messagesGroupedByDate(groupedMessages)
+                .estimateId(estimateId)
                 .build();
     }
 
