@@ -88,7 +88,7 @@ public class AuthService {
                 .build();
     }
 
-    public ValidateResp validateUser(Long accountId) {
+    public ValidateResp validateMember(Long accountId) {
 
         boolean isValidateMember = accountId != null;
 

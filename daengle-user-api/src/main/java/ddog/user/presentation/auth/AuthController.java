@@ -35,7 +35,7 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-    public CommonResponseEntity<ValidateResp> validateUser(PayloadDto payloadDto) {
-        return success(authService.validateUser(payloadDto.getAccountId()));
+    public CommonResponseEntity<ValidateResp> validateMember(PayloadDto payloadDto) {
+        return success(authService.validateMember(payloadDto.getAccountId()));
     }
 }
