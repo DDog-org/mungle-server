@@ -40,7 +40,7 @@ public class SecurityConfig {
                         config.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
                                 "https://dev-user.daengle.com", "https://dev-groomer.daengle.com", "https://dev-vet.daengle.com",
-                                "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com"
+                                "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com", "http://10.10.222.203:3000"
                         ));
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                         config.setAllowCredentials(true);
