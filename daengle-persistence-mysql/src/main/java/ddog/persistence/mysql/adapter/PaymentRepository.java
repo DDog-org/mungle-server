@@ -8,13 +8,20 @@ import ddog.domain.payment.port.PaymentPersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-    @Repository
+import java.util.Optional;
+
+@Repository
     @RequiredArgsConstructor
     public class PaymentRepository implements PaymentPersist {
 
         private final PaymentJpaRepository paymentJpaRepository;
 
-        @Override
+    @Override
+    public Optional<Payment> findByPaymentId(Long paymentId) {
+        return paymentJpaRepository.findByPaymentId(paymentId).map(PaymentJpaEntity::toModel);
+    }
+
+    @Override
         public Payment save(Payment payment) {
             PaymentJpaEntity paymentJpaEntity = paymentJpaRepository.save(PaymentJpaEntity.from(payment));
             return paymentJpaEntity.toModel();

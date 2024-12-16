@@ -20,6 +20,7 @@ public class ReservationInfo {
         @Getter
         @Builder
         public static class Content {
+            private Long reservationId;
             private Long estimateId;
             private String groomerName;
             private String petName;
@@ -40,6 +41,7 @@ public class ReservationInfo {
         @Getter
         @Builder
         public static class Content {
+            private Long reservationId;
             private Long estimateId;
             private String vetName;
             private String petName;

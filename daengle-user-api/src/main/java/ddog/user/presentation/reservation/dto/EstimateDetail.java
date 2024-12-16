@@ -18,6 +18,7 @@ public class EstimateDetail {
     @Getter
     @Builder
     public static class Grooming {
+        private Long reservationId;
         private Long groomingEstimateId;
         private Long groomerId;
         private String imageUrl;
@@ -39,6 +40,7 @@ public class EstimateDetail {
     @Getter
     @Builder
     public static class Care {
+        private Long reservationId;
         private Long careEstimateId;
         private Long vetId;
         private String imageUrl;
