@@ -11,6 +11,7 @@ import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.PaymentStatus;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
@@ -62,6 +63,7 @@ public class PaymentService {
         Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
         Payment payment = order.getPayment();
 
+        if(payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED) throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
         validateEstimateBy(order);
 
         try {

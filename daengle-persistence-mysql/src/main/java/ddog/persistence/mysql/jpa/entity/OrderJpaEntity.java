@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Orders")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "orderUid"))
 public class OrderJpaEntity {
 
     @Id
@@ -29,7 +30,10 @@ public class OrderJpaEntity {
 
     private Long price;
     private Long estimateId;
+
+    @Column(nullable = false, unique = true)
     private String orderUid;
+
     private Long accountId;
     private String customerName;
     private Long recipientId;
