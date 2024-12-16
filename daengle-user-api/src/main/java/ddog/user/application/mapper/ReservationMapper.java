@@ -13,6 +13,7 @@ public class ReservationMapper {
 
     public static ReservationInfo.Grooming.Content mapToGroomingContent(Reservation estimate, Pet pet) {
         return ReservationInfo.Grooming.Content.builder()
+                .reservationId(estimate.getReservationId())
                 .estimateId(estimate.getEstimateId())
                 .groomerName(estimate.getRecipientName())
                 .petName(pet.getName())
@@ -24,6 +25,7 @@ public class ReservationMapper {
 
     public static ReservationInfo.Care.Content mapToCareContent(Reservation estimate, Pet pet) {
         return ReservationInfo.Care.Content.builder()
+                .reservationId(estimate.getReservationId())
                 .estimateId(estimate.getEstimateId())
                 .vetName(estimate.getRecipientName())
                 .petName(pet.getName())
@@ -32,8 +34,9 @@ public class ReservationMapper {
                 .build();
     }
 
-    public static EstimateDetail.Grooming mapToGroomingEstimateDetail(Long estimateId, Groomer groomer, GroomingEstimate estimate, Pet pet) {
+    public static EstimateDetail.Grooming mapToGroomingEstimateDetail(Long reservationId, Long estimateId, Groomer groomer, GroomingEstimate estimate, Pet pet) {
         return EstimateDetail.Grooming.builder()
+                .reservationId(reservationId)
                 .groomingEstimateId(estimateId)
                 .groomerId(groomer.getAccountId())
                 .imageUrl(groomer.getImageUrl())
@@ -51,8 +54,9 @@ public class ReservationMapper {
                 .build();
     }
 
-    public static EstimateDetail.Care mapToCareEstimateDetail(Long estimateId, Vet vet, CareEstimate estimate) {
+    public static EstimateDetail.Care mapToCareEstimateDetail(Long reservationId, Long estimateId, Vet vet, CareEstimate estimate) {
         return EstimateDetail.Care.builder()
+                .reservationId(reservationId)
                 .careEstimateId(estimateId)
                 .vetId(vet.getAccountId())
                 .imageUrl(vet.getImageUrl())
