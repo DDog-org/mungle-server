@@ -83,6 +83,6 @@ public class DetailResp {
         private String shopName;
         private int daengleMeter;
         private Long reviewCount;
-        private String urlLink;
+        private String instagram;
     }
 }
