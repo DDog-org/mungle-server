@@ -2,12 +2,16 @@ package ddog.groomer.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.notification.enums.NotifyType;
 import ddog.groomer.application.EstimateService;
 import ddog.groomer.presentation.estimate.dto.CreatePendingEstimateReq;
 import ddog.groomer.presentation.estimate.dto.EstimateDetail;
 import ddog.groomer.presentation.estimate.dto.EstimateInfo;
 import ddog.groomer.presentation.estimate.dto.EstimateResp;
+import ddog.notification.application.KakaoNotificationService;
+import ddog.notification.application.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
@@ -18,6 +22,11 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 public class EstimateController {
 
     private final EstimateService estimateService;
+    private final NotificationService notificationService;
+    private final KakaoNotificationService kakaoNotificationService;
+
+    private final Environment environment;
+
 
     /* (신규) 일반 견적서들 리스트 조회 */
     @GetMapping("/general/list")
@@ -48,6 +57,9 @@ public class EstimateController {
     /* 미용사 -> 사용자 (대기) 미용 견적서 작성 */
     @PostMapping
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
+        notificationService.sendNotificationToUser(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
+        kakaoNotificationService.sendOneTalk(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname(), estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone(),
+                environment.getProperty("templateId.CALL"));
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }
