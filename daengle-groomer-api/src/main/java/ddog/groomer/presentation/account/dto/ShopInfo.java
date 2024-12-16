@@ -15,6 +15,7 @@ public class ShopInfo {
     @Getter
     @Builder
     public static class UpdatePage {
+        private Long shopId;
         private List<String> imageUrlList;
         private String shopName;
 

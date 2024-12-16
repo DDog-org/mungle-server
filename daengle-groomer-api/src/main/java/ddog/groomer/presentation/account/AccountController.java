@@ -40,9 +40,9 @@ public class AccountController {
         return success(accountService.updateInfo(request, payloadDto.getAccountId()));
     }
 
-    @GetMapping("/shop/{shopId}/info")
-    public CommonResponseEntity<ShopInfo.UpdatePage> getShopInfo(@PathVariable Long shopId) {
-        return success(accountService.getShopInfo(shopId));
+    @GetMapping("/shop/info")
+    public CommonResponseEntity<ShopInfo.UpdatePage> getShopInfo(PayloadDto payloadDto) {
+        return success(accountService.getShopInfo(payloadDto.getAccountId()));
     }
 
     @PatchMapping("/shop/info")

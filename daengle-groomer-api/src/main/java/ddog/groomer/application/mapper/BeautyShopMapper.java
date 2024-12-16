@@ -48,6 +48,7 @@ public class BeautyShopMapper {
     }
     public static ShopInfo.UpdatePage mapToShopInfo(BeautyShop shop) {
         return ShopInfo.UpdatePage.builder()
+                .shopId(shop.getShopId())
                 .imageUrlList(shop.getImageUrlList())
                 .shopName(shop.getShopName())
                 .startTime(shop.getStartTime())
