@@ -40,7 +40,7 @@ public class AccountController {
     }
 
     @GetMapping("/shop/{shopId}/info")
-    public CommonResponseEntity<ShopInfo> getShopInfo(@PathVariable Long shopId) {
+    public CommonResponseEntity<ShopInfo.UpdatePage> getShopInfo(@PathVariable Long shopId) {
         return success(accountService.getShopInfo(shopId));
     }
 }

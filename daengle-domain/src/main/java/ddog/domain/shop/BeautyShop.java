@@ -1,6 +1,7 @@
 package ddog.domain.shop;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.vet.Day;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,14 +19,23 @@ public class BeautyShop {
     private Long shopId;
     private String shopName;
     private String shopAddress;
+    private String shopDetailAddress;
+    private String phoneNumber;
     private String imageUrl;
     private List<String> imageUrlList;
     private List<Groomer> groomers;
     private LocalTime startTime;
     private LocalTime endTime;
+    private List<Day> closedDays;
     private String introduction;
 
-    public static BeautyShop create(String shopName, String shopAddress){
+    public static void validateImageUrlList(List<String> imageUrlList) {
+        if (imageUrlList != null && imageUrlList.size() > 10) {
+            throw new IllegalArgumentException("Invalid image url list: The maximum number of images is 10.");
+        }
+    }
+
+    public static BeautyShop create(String shopName, String shopAddress) {
         return BeautyShop.builder()
                 .shopName(shopName)
                 .shopAddress(shopAddress)

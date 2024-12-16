@@ -136,7 +136,7 @@ public class AccountService {
                 .build();
     }
 
-    public ShopInfo getShopInfo(Long shopId) {
+    public ShopInfo.UpdatePage getShopInfo(Long shopId) {
         BeautyShop shop = beautyShopPersist.findBeautyShopById(shopId);
 
         return BeautyShopMapper.mapToShopInfo(shop);

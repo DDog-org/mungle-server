@@ -42,11 +42,20 @@ public class BeautyShopMapper {
     @Getter
     @Builder
     public static class UpdateInfoResp {
-
         private String requestResult;
     }
 
-    public static ShopInfo mapToShopInfo(BeautyShop shop) {
-        return ShopInfo
+    public static ShopInfo.UpdatePage mapToShopInfo(BeautyShop shop) {
+        return ShopInfo.UpdatePage.builder()
+                .imageUrlList(shop.getImageUrlList())
+                .shopName(shop.getShopName())
+                .startTime(shop.getStartTime())
+                .endTime(shop.getEndTime())
+                .closedDays(shop.getClosedDays())
+                .phoneNumber(shop.getPhoneNumber())
+                .address(shop.getShopAddress())
+                .detailAddress(shop.getShopDetailAddress())
+                .introduction(shop.getIntroduction())
+                .build();
     }
 }
