@@ -2,6 +2,7 @@ package ddog.groomer.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.estimate.Estimate;
 import ddog.domain.notification.enums.NotifyType;
 import ddog.groomer.application.EstimateService;
 import ddog.groomer.presentation.estimate.dto.CreatePendingEstimateReq;
@@ -57,12 +58,9 @@ public class EstimateController {
     /* 미용사 -> 사용자 (대기) 미용 견적서 작성 */
     @PostMapping
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
-        notificationService.sendNotificationToUser(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
-        kakaoNotificationService.sendOneTalk(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname(), estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone(),
-                environment.getProperty("templateId.ESTIMATED"));
-        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone());
-        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId());
-        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname());
+        EstimateInfo.EstimateUserInfo savedEstimate = estimateService.findByUserInfoByEstimateId(request.getId());
+        notificationService.sendNotificationToUser(savedEstimate.getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
+        kakaoNotificationService.sendOneTalk(savedEstimate.getUserNickname(), savedEstimate.getUserPhone(), environment.getProperty("templateId.ESTIMATED"));
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }

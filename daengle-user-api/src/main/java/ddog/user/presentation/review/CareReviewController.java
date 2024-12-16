@@ -2,9 +2,13 @@ package ddog.user.presentation.review;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.notification.enums.NotifyType;
 import ddog.domain.payment.port.ReservationPersist;
+import ddog.notification.application.KakaoNotificationService;
+import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.application.ReservationService;
+import ddog.user.presentation.reservation.dto.ReservationInfo;
 import ddog.user.presentation.reservation.dto.ReservationSummary;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
 import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
@@ -13,6 +17,7 @@ import ddog.user.application.CareReviewService;
 import ddog.user.presentation.review.dto.response.CareReviewDetailResp;
 import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
@@ -24,7 +29,9 @@ public class CareReviewController {
 
     private final CareReviewService careReviewService;
     private final ReservationService reservationService;
-    private final EstimateService estimateService;
+    private final KakaoNotificationService kakaoNotificationService;
+    private final NotificationService notificationService;
+    private final Environment environment;
 
     @GetMapping("/care/review/{reviewId}")
     public CommonResponseEntity<CareReviewDetailResp> findReview(@PathVariable Long reviewId) {
@@ -33,9 +40,9 @@ public class CareReviewController {
 
     @PostMapping("/care/review")
     public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
-        ReservationSummary savedReservation = reservationService.getReservationSummary(postCareReviewInfo.getReservationId());
-        Long reservationId = savedReservation.getReservationId();
-
+        ReservationInfo.ReservationUsersInfo findReservationInfo= reservationService.getCareUserAndPartnerDetail(postCareReviewInfo.getReservationId());
+        kakaoNotificationService.sendOneTalk(findReservationInfo.getPartnerName(), findReservationInfo.getPartnerPhone(), environment.getProperty("templateId.REVIEWED"));
+        notificationService.sendNotificationToUser(findReservationInfo.getPartnerId(), NotifyType.REVIEWED, findReservationInfo.getUserName()+"님의 리뷰가 등록됐어요!");
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 

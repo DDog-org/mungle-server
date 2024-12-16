@@ -12,6 +12,8 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.application.exception.account.*;
@@ -34,6 +36,7 @@ public class ReservationService {
     private final ReservationPersist reservationPersist;
     private final PetPersist petPersist;
     private final VetPersist vetPersist;
+    private final UserPersist userPersist;
     private final GroomerPersist groomerPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;
@@ -106,8 +109,47 @@ public class ReservationService {
         return ReservationMapper.mapToCareEstimateDetail(estimateId, vet, estimate);
     }
 
-//    public ReservationInfo.Grooming findReservationByReservationId(Long reservationId) {
-//        Reservation reservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
-//
-//    }
+    public ReservationInfo.ReservationUsersInfo getCareUserAndPartnerDetail(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+        Long estimateId = savedReservation.getEstimateId();
+        CareEstimate savedCareEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(()-> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+
+        Long userId = savedCareEstimate.getUserId();
+        Long vetId = savedCareEstimate.getVetId();
+
+        Vet savedVet = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+        User savedUser = userPersist.findByAccountId(userId).orElseThrow(()-> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+
+        return ReservationInfo.ReservationUsersInfo.builder()
+                .estimateId(estimateId)
+                .partnerId(savedVet.getAccountId())
+                .partnerName(savedVet.getName())
+                .partnerPhone(savedVet.getPhoneNumber())
+                .userId(savedUser.getAccountId())
+                .userName(savedUser.getNickname())
+                .build();
+    }
+
+    public ReservationInfo.ReservationUsersInfo getGroomingUserAndPartnerDetail(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+        Long estimateId = savedReservation.getEstimateId();
+        GroomingEstimate savedGroomingEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        Long userId = savedGroomingEstimate.getUserId();
+        Long groomerId = savedGroomingEstimate.getGroomerId();
+
+        Groomer savedGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+        User savedUser = userPersist.findByAccountId(userId).orElseThrow(()-> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+
+        return ReservationInfo.ReservationUsersInfo.builder()
+                .estimateId(estimateId)
+                .partnerId(savedGroomer.getAccountId())
+                .partnerName(savedGroomer.getName())
+                .partnerPhone(savedGroomer.getPhoneNumber())
+                .userId(savedUser.getAccountId())
+                .userName(savedUser.getNickname())
+                .build();
+    }
 }

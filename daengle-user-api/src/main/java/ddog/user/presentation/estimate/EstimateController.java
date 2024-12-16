@@ -2,10 +2,13 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.notification.enums.NotifyType;
+import ddog.notification.application.KakaoNotificationService;
 import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
@@ -17,6 +20,9 @@ public class EstimateController {
 
     private final EstimateService estimateService;
     private final NotificationService notificationService;
+    private final KakaoNotificationService kakaoNotificationService;
+
+    private final Environment environment;
 
     /* 미용사, 사용자 및 반려견 정보 제공 */
     @PostMapping("/groomer-user-info")
@@ -33,12 +39,22 @@ public class EstimateController {
     /* 사용자 -> 미용사 (신규) 미용 견적서 등록 */
     @PostMapping("/grooming")
     public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateNewGroomingEstimateReq request, PayloadDto payloadDto) {
+        if (request.getGroomerId() != null) {
+            DesignationEstimateInfo findPartnerInfo = estimateService.findGroomingEstimateUserAndPartner(request);
+            kakaoNotificationService.sendOneTalk(findPartnerInfo.getPartnerName(), findPartnerInfo.getPartnerPhone(), environment.getProperty("templateId.CALL"));
+            notificationService.sendNotificationToUser(findPartnerInfo.getPartnerId(), NotifyType.CALL, "지정 견적이 도착했어요!");
+        }
         return success(estimateService.createNewGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
     /* 사용자 -> 병원 (신규) 진료 견적서 등록 */
     @PostMapping("/care")
     public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CreateNewCareEstimateReq request, PayloadDto payloadDto) {
+        if (request.getVetId() != null) {
+            DesignationEstimateInfo findPartnerInfo = estimateService.findCareEstimateUserAndPartner(request);
+            kakaoNotificationService.sendOneTalk(findPartnerInfo.getPartnerName(), findPartnerInfo.getPartnerPhone(), environment.getProperty("templateId.CALL"));
+            notificationService.sendNotificationToUser(findPartnerInfo.getPartnerId(), NotifyType.CALL, "지정 견적이 도착했어요!");
+        }
         return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 

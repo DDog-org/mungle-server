@@ -57,8 +57,8 @@ public class ReservationInfo {
         private Long partnerId;
         private String partnerPhone;
         private String partnerName;
-
         private Long userId;
+        private String userName;
 
     }
 }

@@ -339,4 +339,27 @@ public class EstimateService {
 
         return CareEstimateMapper.mapToEstimateDetail(careEstimate, vet, pet);
     }
+
+    @Transactional(readOnly = true)
+    public DesignationEstimateInfo findCareEstimateUserAndPartner(CreateNewCareEstimateReq request) {
+        Long savedVetId = request.getVetId();
+        Vet savedVet = vetPersist.findByVetId(savedVetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+        return DesignationEstimateInfo.builder()
+                .partnerId(savedVet.getAccountId())
+                .partnerName(savedVet.getName())
+                .partnerPhone(savedVet.getPhoneNumber())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public DesignationEstimateInfo findGroomingEstimateUserAndPartner(CreateNewGroomingEstimateReq request) {
+        Long savedGroomerId = request.getGroomerId();
+        Groomer savedGroomer = groomerPersist.findByGroomerId(savedGroomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+        return DesignationEstimateInfo.builder()
+                .partnerId(savedGroomer.getAccountId())
+                .partnerName(savedGroomer.getName())
+                .partnerPhone(savedGroomer.getPhoneNumber())
+                .build();
+
+    }
 }
