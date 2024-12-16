@@ -4,6 +4,10 @@ import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.review.CareReview;
+import ddog.domain.vet.VetDaengleMeter;
+import ddog.domain.vet.port.VetDaengleMeterPersist;
+import ddog.user.application.exception.account.VetException;
+import ddog.user.application.exception.account.VetExceptionType;
 import ddog.user.application.mapper.CareReviewMapper;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
 import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
@@ -37,10 +41,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CareReviewService {
 
-    private final CareReviewPersist careReviewPersist;
-    private final ReservationPersist reservationPersist;
     private final VetPersist vetPersist;
     private final UserPersist userPersist;
+    private final CareReviewPersist careReviewPersist;
+    private final ReservationPersist reservationPersist;
+    private final VetDaengleMeterPersist vetDaengleMeterPersist;
 
     private final BanWordValidator banWordValidator;
 
@@ -71,6 +76,9 @@ public class CareReviewService {
         Reservation reservation = reservationPersist.findByReservationId(postCareReviewInfo.getReservationId()).orElseThrow(()
                 -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
+        Vet savedVet = vetPersist.findByVetId(reservation.getRecipientId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
         if(careReviewPersist.findByReservationId(postCareReviewInfo.getReservationId())
                 .isPresent()) throw new ReviewException(ReviewExceptionType.REVIEW_HAS_WRITTEN);
 
@@ -84,7 +92,16 @@ public class CareReviewService {
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
-        //TODO 댕글미터 계산해서 영속
+        VetDaengleMeter vetDaengleMeter = vetDaengleMeterPersist.findByVetId(savedCareReview.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_DAENGLE_METER_NOT_FOUND));
+
+        Integer daengleScore = convertStarRatingToDaengleScore(postCareReviewInfo.getStarRating());
+
+        vetDaengleMeter.updateMeterForNewReview(daengleScore);
+        vetDaengleMeterPersist.save(vetDaengleMeter);
+
+        savedVet.updateDaengleMeter(vetDaengleMeter.getScore());
+        vetPersist.save(savedVet);
 
         return ReviewResp.builder()
                 .reviewId(savedCareReview.getCareReviewId())
@@ -99,6 +116,9 @@ public class CareReviewService {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        Vet savedVet = vetPersist.findByVetId(savedCareReview.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
         validateModifyCareReviewInfoDataFormat(updateCareReviewInfo);
 
         String includedBanWord = banWordValidator.getBanWords(updateCareReviewInfo.getContent());
@@ -107,7 +127,17 @@ public class CareReviewService {
         CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, updateCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);
 
-        //TODO 댕글미터 재계산해서 영속
+        VetDaengleMeter vetDaengleMeter = vetDaengleMeterPersist.findByVetId(savedVet.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_DAENGLE_METER_NOT_FOUND));
+
+        Integer oldScore = convertStarRatingToDaengleScore(savedCareReview.getStarRating());
+        Integer newScore = convertStarRatingToDaengleScore(updateCareReviewInfo.getStarRating());
+
+        vetDaengleMeter.updateMeterForModifiedReview(oldScore, newScore);
+        vetDaengleMeterPersist.save(vetDaengleMeter);
+
+        savedVet.updateDaengleMeter(vetDaengleMeter.getScore());
+        vetPersist.save(savedVet);
 
         return ReviewResp.builder()
                 .reviewId(updatedCareReview.getCareReviewId())
@@ -123,7 +153,21 @@ public class CareReviewService {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        Vet savedVet = vetPersist.findByVetId(savedCareReview.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
         careReviewPersist.delete(savedCareReview);
+
+        VetDaengleMeter vetDaengleMeter = vetDaengleMeterPersist.findByVetId(savedVet.getVetId())
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_DAENGLE_METER_NOT_FOUND));
+
+        Integer daengleScore = convertStarRatingToDaengleScore(savedCareReview.getStarRating());
+
+        vetDaengleMeter.updateMeterForDeletedReview(daengleScore);
+        vetDaengleMeterPersist.save(vetDaengleMeter);
+
+        savedVet.updateDaengleMeter(daengleScore);
+        vetPersist.save(savedVet);
 
         return ReviewResp.builder()
                 .reviewId(savedCareReview.getCareReviewId())
@@ -194,5 +238,9 @@ public class CareReviewService {
                 .reviewCount(careReviews.getTotalElements())
                 .reviewList(careReviewList)
                 .build();
+    }
+
+    private Integer convertStarRatingToDaengleScore(Integer starRating) {
+        return starRating * 20;
     }
 }

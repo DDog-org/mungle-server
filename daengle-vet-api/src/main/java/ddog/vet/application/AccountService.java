@@ -5,9 +5,12 @@ import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.vet.Vet;
 import ddog.domain.account.port.AccountPersist;
+import ddog.domain.vet.VetDaengleMeter;
+import ddog.domain.vet.port.VetDaengleMeterPersist;
 import ddog.domain.vet.port.VetPersist;
 import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
+import ddog.vet.application.mapper.VetDaengleMeterMapper;
 import ddog.vet.application.mapper.VetMapper;
 import ddog.vet.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,7 +34,10 @@ import java.util.List;
 public class AccountService {
 
     private final AccountPersist accountPersist;
+
     private final VetPersist vetPersist;
+    private final VetDaengleMeterPersist vetDaengleMeterPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -42,7 +48,10 @@ public class AccountService {
         Account savedAccount = accountPersist.save(newAccount);
 
         Vet newVet = VetMapper.create(savedAccount.getAccountId(), request);
-        vetPersist.save(newVet);
+        Vet savedVet = vetPersist.save(newVet);
+
+        VetDaengleMeter vetDaengleMeterToSave = VetDaengleMeterMapper.create(savedVet.getVetId());
+        vetDaengleMeterPersist.save(vetDaengleMeterToSave);
 
         Authentication authentication = getAuthentication(savedAccount.getAccountId(), request.getEmail());
         String accessToken = jwtTokenProvider.generateToken(authentication, response);
