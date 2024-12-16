@@ -41,6 +41,6 @@ public class AccountController {
 
     @GetMapping("/shop/{shopId}/info")
     public CommonResponseEntity<ShopInfo> getShopInfo(@PathVariable Long shopId) {
-
+        return success(accountService.getShopInfo(shopId));
     }
 }

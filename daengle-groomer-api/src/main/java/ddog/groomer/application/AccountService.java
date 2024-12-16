@@ -10,6 +10,7 @@ import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.application.mapper.BeautyShopMapper;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
 import ddog.domain.account.port.AccountPersist;
@@ -133,5 +134,11 @@ public class AccountService {
         return AccountResp.builder()
                 .requestResult("미용사 정보가 성공적으로 수정 되었습니다.")
                 .build();
+    }
+
+    public ShopInfo getShopInfo(Long shopId) {
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(shopId);
+
+        return BeautyShopMapper.mapToShopInfo(shop);
     }
 }

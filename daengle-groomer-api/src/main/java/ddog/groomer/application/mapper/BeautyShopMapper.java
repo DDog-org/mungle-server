@@ -2,6 +2,7 @@ package ddog.groomer.application.mapper;
 
 import ddog.domain.groomer.Groomer;
 import ddog.domain.shop.BeautyShop;
+import ddog.groomer.presentation.account.dto.ShopInfo;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +14,7 @@ public class BeautyShopMapper {
     @Getter
     public class UpdateShopInfo {
         private Long shopId;
+
         private String shopName;
         private String shopAddress;
         private String imageUrl;
@@ -40,7 +42,11 @@ public class BeautyShopMapper {
     @Getter
     @Builder
     public static class UpdateInfoResp {
+
         private String requestResult;
     }
 
+    public static ShopInfo mapToShopInfo(BeautyShop shop) {
+        return ShopInfo
+    }
 }
