@@ -2,6 +2,7 @@ package ddog.user.presentation.detailInfo.dto;
 
 import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.vet.Day;
 import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class DetailResp {
         private LocalTime endTime;
         private String introduction;
         private Long reviewCount;
+        private List<Day> closedDay;
     }
 
     @Getter
@@ -65,10 +67,12 @@ public class DetailResp {
         private LocalTime startTime;
         private LocalTime endTime;
         private List<CareKeyword> keywords;
-        private String introductions;
+        private String introduction;
         private int daengleMeter;
         private Long reviewCount;
         private List<String> imageUrlList;
+        private String vetNumber;
+        private List<Day> closedDay;
     }
 
     @Getter
