@@ -98,6 +98,7 @@ public class AccountService {
     public AccountResp modifyInfo(UpdateInfo request, Long accountId) {
         validateModifyInfoDataFormat(request);
 
+
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
@@ -120,5 +121,6 @@ public class AccountService {
         Vet.validateClosedDays(request.getClosedDays());
         Vet.validatePhoneNumber(request.getPhoneNumber());
         Vet.validateIntroduction(request.getIntroduction());
+        Vet.validateImageUrlList(request.getImageUrls());
     }
 }

@@ -12,6 +12,7 @@ import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.application.mapper.BeautyShopMapper;
 import ddog.groomer.application.mapper.GroomerDaengleMeterMapper;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
@@ -142,5 +143,32 @@ public class AccountService {
         return AccountResp.builder()
                 .requestResult("미용사 정보가 성공적으로 수정 되었습니다.")
                 .build();
+    }
+
+    public ShopInfo.UpdatePage getShopInfo(Long shopId) {
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(shopId);
+
+        return BeautyShopMapper.mapToShopInfo(shop);
+    }
+
+    public ShopInfo.UpdateResp updateShopInfo(UpdateShopReq request) {
+        validateUpdateShopInfoDataFormat(request);
+
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(request.getShopId());
+        BeautyShop updatedShop = BeautyShopMapper.updateShopInfoWithUpdateShopReq(shop, request);
+
+        beautyShopPersist.save(updatedShop);
+
+        return ShopInfo.UpdateResp.builder()
+                .requestResp("마이샵 정보가 성공적으로 변경되었습니다.")
+                .build();
+    }
+
+    private void validateUpdateShopInfoDataFormat(UpdateShopReq request) {
+        BeautyShop.validateImageUrlList(request.getImageUrlList());
+        BeautyShop.validateTimeRange(request.getStartTime(), request.getEndTime());
+        BeautyShop.validateClosedDays(request.getClosedDays());
+        BeautyShop.validateIntroduction(request.getIntroduction());
+        BeautyShop.validatePhoneNumber(request.getPhoneNumber());
     }
 }
