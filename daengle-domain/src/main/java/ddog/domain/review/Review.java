@@ -18,13 +18,13 @@ public abstract class Review {
     private Long reviewerId;
     private String revieweeName;
     private String shopName;
-    private Long starRating;
+    private Integer starRating;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedTime;
     private List<String> imageUrlList;
 
-    public static void validateStarRating(Long starRating) {
+    public static void validateStarRating(Integer starRating) {
         if (starRating == null || starRating < 1 || starRating > 5) {
             throw new IllegalArgumentException("Star rating must be between 1 and 5.");
         }

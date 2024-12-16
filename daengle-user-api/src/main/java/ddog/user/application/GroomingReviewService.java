@@ -2,9 +2,13 @@ package ddog.user.application;
 
 import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerDaengleMeter;
+import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.review.GroomingReview;
+import ddog.user.application.exception.account.GroomerException;
+import ddog.user.application.exception.account.GroomerExceptionType;
 import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 import ddog.domain.user.User;
@@ -38,10 +42,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GroomingReviewService {
 
-    private final GroomingReviewPersist groomingReviewPersist;
-    private final ReservationPersist reservationPersist;
-    private final GroomerPersist groomerPersist;
     private final UserPersist userPersist;
+    private final GroomerPersist groomerPersist;
+    private final ReservationPersist reservationPersist;
+    private final GroomingReviewPersist groomingReviewPersist;
+    private final GroomerDaengleMeterPersist groomerDaengleMeterPersist;
 
     private final BanWordValidator banWordValidator;
 
@@ -69,8 +74,11 @@ public class GroomingReviewService {
 
     @Transactional
     public ReviewResp postReview(PostGroomingReviewInfo postGroomingReviewInfo) {
-        Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId()).orElseThrow(()
-                -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+        Reservation reservation = reservationPersist.findByReservationId(postGroomingReviewInfo.getReservationId())
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        Groomer savedGroomer = groomerPersist.findByGroomerId(reservation.getRecipientId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         if(reservation.getServiceType() != ServiceType.GROOMING) throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
 
@@ -85,7 +93,16 @@ public class GroomingReviewService {
         GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
         GroomingReview SavedGroomingReview = groomingReviewPersist.save(groomingReviewToSave);
 
-        //TODO 댕글미터 계산해서 영속
+        GroomerDaengleMeter groomerDaengleMeter = groomerDaengleMeterPersist.findByGroomerId(savedGroomer.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_DAENGLE_METER_NOT_FOUND));
+
+        Integer daengleScore = convertStarRatingToDaengleScore(postGroomingReviewInfo.getStarRating());
+
+        groomerDaengleMeter.updateMeterForNewReview(daengleScore);
+        groomerDaengleMeterPersist.save(groomerDaengleMeter);
+
+        savedGroomer.updateDaengleMeter(groomerDaengleMeter.getScore());
+        groomerPersist.save(savedGroomer);
 
         return ReviewResp.builder()
                 .reviewId(SavedGroomingReview.getGroomingReviewId())
@@ -100,6 +117,9 @@ public class GroomingReviewService {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        Groomer savedGroomer = groomerPersist.findByGroomerId(savedGroomingReview.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
         validateModifyGroomingReviewInfoDataFormat(updateGroomingReviewInfo);
 
         String includedBanWord = banWordValidator.getBanWords(updateGroomingReviewInfo.getContent());
@@ -108,7 +128,17 @@ public class GroomingReviewService {
         GroomingReview modifiedReview = GroomingReviewMapper.updateBy(savedGroomingReview, updateGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
 
-        //TODO 댕글미터 재계산해서 영속
+        GroomerDaengleMeter groomerDaengleMeter = groomerDaengleMeterPersist.findByGroomerId(savedGroomer.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_DAENGLE_METER_NOT_FOUND));
+
+        Integer oldScore = convertStarRatingToDaengleScore(savedGroomingReview.getStarRating());
+        Integer newScore = convertStarRatingToDaengleScore(updateGroomingReviewInfo.getStarRating());
+
+        groomerDaengleMeter.updateMeterForModifiedReview(oldScore, newScore);
+        groomerDaengleMeterPersist.save(groomerDaengleMeter);
+
+        savedGroomer.updateDaengleMeter(groomerDaengleMeter.getScore());
+        groomerPersist.save(savedGroomer);
 
         return ReviewResp.builder()
                 .reviewId(updatedGroomingReview.getGroomingReviewId())
@@ -123,9 +153,21 @@ public class GroomingReviewService {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEW_NOT_FOUND));
 
+        Groomer savedGroomer = groomerPersist.findByGroomerId(savedGroomingReview.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
         groomingReviewPersist.delete(savedGroomingReview);
 
-        //TODO 댕글미터 재계산해서 영속
+        GroomerDaengleMeter groomerDaengleMeter = groomerDaengleMeterPersist.findByGroomerId(savedGroomer.getGroomerId())
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_DAENGLE_METER_NOT_FOUND));
+
+        Integer daengleScore = convertStarRatingToDaengleScore(savedGroomingReview.getStarRating());
+
+        groomerDaengleMeter.updateMeterForDeletedReview(daengleScore);
+        groomerDaengleMeterPersist.save(groomerDaengleMeter);
+
+        savedGroomer.updateDaengleMeter(groomerDaengleMeter.getScore());
+        groomerPersist.save(savedGroomer);
 
         return ReviewResp.builder()
                 .reviewId(savedGroomingReview.getGroomingReviewId())
@@ -197,5 +239,9 @@ public class GroomingReviewService {
                 .reviewCount(groomingReviews.getTotalElements())
                 .reviewList(groomingReviewList)
                 .build();
+    }
+
+    private Integer convertStarRatingToDaengleScore(Integer starRating) {
+        return starRating * 20;
     }
 }

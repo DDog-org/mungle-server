@@ -21,7 +21,7 @@ public class VetDaengleMeterJpaEntity {
     Long vetDaengleMeterId;
 
     Long vetId;
-    Long score;
+    Integer score;
     Long evaluationCount;
 
     public VetDaengleMeter toModel() {

@@ -4,12 +4,16 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerDaengleMeter;
 import ddog.domain.groomer.License;
+import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
 import ddog.domain.groomer.port.LicensePersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.application.mapper.BeautyShopMapper;
+import ddog.groomer.application.mapper.GroomerDaengleMeterMapper;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
 import ddog.domain.account.port.AccountPersist;
@@ -37,8 +41,11 @@ public class AccountService {
 
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
+
     private final LicensePersist licensePersist;
     private final BeautyShopPersist beautyShopPersist;
+    private final GroomerDaengleMeterPersist groomerDaengleMeterPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
@@ -65,10 +72,13 @@ public class AccountService {
         BeautyShop savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
 
         beautyShopPersist.save(savedBeautyShop);
-        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();;
+        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();
 
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
-        groomerPersist.save(newGroomer);
+        Groomer savedGroomer =  groomerPersist.save(newGroomer);
+
+        GroomerDaengleMeter newGroomerDaengleMeter = GroomerDaengleMeterMapper.create(savedGroomer.getGroomerId());
+        groomerDaengleMeterPersist.save(newGroomerDaengleMeter);
 
         return SignUpResp.builder()
                 .accessToken(accessToken)
@@ -133,5 +143,32 @@ public class AccountService {
         return AccountResp.builder()
                 .requestResult("미용사 정보가 성공적으로 수정 되었습니다.")
                 .build();
+    }
+
+    public ShopInfo.UpdatePage getShopInfo(Long shopId) {
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(shopId);
+
+        return BeautyShopMapper.mapToShopInfo(shop);
+    }
+
+    public ShopInfo.UpdateResp updateShopInfo(UpdateShopReq request) {
+        validateUpdateShopInfoDataFormat(request);
+
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(request.getShopId());
+        BeautyShop updatedShop = BeautyShopMapper.updateShopInfoWithUpdateShopReq(shop, request);
+
+        beautyShopPersist.save(updatedShop);
+
+        return ShopInfo.UpdateResp.builder()
+                .requestResp("마이샵 정보가 성공적으로 변경되었습니다.")
+                .build();
+    }
+
+    private void validateUpdateShopInfoDataFormat(UpdateShopReq request) {
+        BeautyShop.validateImageUrlList(request.getImageUrlList());
+        BeautyShop.validateTimeRange(request.getStartTime(), request.getEndTime());
+        BeautyShop.validateClosedDays(request.getClosedDays());
+        BeautyShop.validateIntroduction(request.getIntroduction());
+        BeautyShop.validatePhoneNumber(request.getPhoneNumber());
     }
 }

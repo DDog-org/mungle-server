@@ -13,7 +13,7 @@ public class GroomerMapper {
     public static Groomer create(Long accountId, SignUpReq request, List<License> licenses, Long shopId) {
         return Groomer.builder()
                 .accountId(accountId)
-                .daengleMeter(0)
+                .daengleMeter(50)
                 .imageUrl("")
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())

@@ -22,8 +22,8 @@ public class GroomerRepository implements GroomerPersist {
     }
 
     @Override
-    public void save(Groomer newGroomer) {
-        groomerJpaRepository.save(GroomerJpaEntity.from(newGroomer));
+    public Groomer save(Groomer newGroomer) {
+        return groomerJpaRepository.save(GroomerJpaEntity.from(newGroomer)).toModel();
     }
 
     @Override

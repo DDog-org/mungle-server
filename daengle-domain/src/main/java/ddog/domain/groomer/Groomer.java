@@ -31,6 +31,11 @@ public class Groomer {
     private List<License> licenses;
     private List<GroomingKeyword> keywords;
 
+
+    public void updateDaengleMeter(Integer newMeterValue) {
+        this.daengleMeter = newMeterValue;
+    }
+
     public static void validateShopName(String shopName) {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {
             throw new IllegalArgumentException("Shop name must be 1-20 characters long and can contain Korean, " +

@@ -11,7 +11,7 @@ public interface VetPersist {
     Optional<Vet> findByAccountId(Long accountId);
     Optional<Vet> findByVetId(Long vetId);
 
-    void save(Vet vet);
+    Vet save(Vet vet);
 
     Page<Vet> findByAddress(String address, Pageable pageable);
     List<Vet> findByAddressPrefix(String addressPrefix);

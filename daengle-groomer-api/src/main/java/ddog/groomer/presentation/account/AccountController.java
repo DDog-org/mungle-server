@@ -4,6 +4,7 @@ import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.AccountService;
 
+import ddog.groomer.application.mapper.BeautyShopMapper;
 import ddog.groomer.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,15 @@ public class AccountController {
     @PatchMapping("/info")
     public CommonResponseEntity<AccountResp> updateInfo(@RequestBody UpdateInfoReq request, PayloadDto payloadDto) {
         return success(accountService.updateInfo(request, payloadDto.getAccountId()));
+    }
+
+    @GetMapping("/shop/{shopId}/info")
+    public CommonResponseEntity<ShopInfo.UpdatePage> getShopInfo(@PathVariable Long shopId) {
+        return success(accountService.getShopInfo(shopId));
+    }
+
+    @PatchMapping("/shop/info")
+    public CommonResponseEntity<ShopInfo.UpdateResp> updateShopInfo(@RequestBody UpdateShopReq request) {
+        return success(accountService.updateShopInfo(request));
     }
 }

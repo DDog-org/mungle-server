@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @Getter
 public class UpdateCareReviewInfo {
-    private Long starRating;
+    private Integer starRating;
     private List<CareKeyword> careKeywordList;
     private String content;
     private List<String> imageUrlList;
