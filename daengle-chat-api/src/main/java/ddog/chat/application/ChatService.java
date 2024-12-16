@@ -56,30 +56,33 @@ public class ChatService {
         if (role.equals(Role.DAENGLE)) {
             Account savedOtherUser = accountPersist.findById(otherUserId);
             if (savedOtherUser.getRole().equals(Role.GROOMER)) {
-                Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).get();
-                otherUserProfile = savedGroomer.getImageUrl();
-                otherUserName = savedGroomer.getName();
-                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(userAccountId, otherUserId).map(GroomingEstimate::getEstimateId).orElse(null);
-            }
-            else if (savedOtherUser.getRole().equals(Role.VET)) {
-                Vet savedVet = vetPersist.findByAccountId(otherUserId).get();
-                otherUserProfile = savedVet.getImageUrl();
-                otherUserName = savedVet.getName();
-                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(userAccountId, otherUserId).map(CareEstimate::getEstimateId).orElse(null);
+                Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).orElse(null);
+                otherUserProfile = (savedGroomer != null) ? savedGroomer.getImageUrl() : null;
+                otherUserName = (savedGroomer != null) ? savedGroomer.getName() : null;
+                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(userAccountId, otherUserId)
+                        .map(GroomingEstimate::getEstimateId).orElse(null);
+            } else if (savedOtherUser.getRole().equals(Role.VET)) {
+                Vet savedVet = vetPersist.findByAccountId(otherUserId).orElse(null);
+                otherUserProfile = (savedVet != null) ? savedVet.getImageUrl() : null;
+                otherUserName = (savedVet != null) ? savedVet.getName() : null;
+                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(userAccountId, otherUserId)
+                        .map(CareEstimate::getEstimateId).orElse(null);
             }
         } else {
-            User savedUser = userPersist.findByAccountId(otherUserId).get();
-            otherUserProfile = savedUser.getImageUrl();
-            otherUserName = savedUser.getNickname();
+            User savedUser = userPersist.findByAccountId(otherUserId).orElse(null);
+            otherUserProfile = (savedUser != null) ? savedUser.getImageUrl() : null;
+            otherUserName = (savedUser != null) ? savedUser.getNickname() : null;
             if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER))
-                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId).map(GroomingEstimate::getEstimateId).orElse(null);
+                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId)
+                        .map(GroomingEstimate::getEstimateId).orElse(null);
             else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET))
-                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId).map(CareEstimate::getEstimateId).orElse(null);
+                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId)
+                        .map(CareEstimate::getEstimateId).orElse(null);
         }
 
         List<ChatMessage> savedMessages = chatMessagePersist.findByChatRoomId(savedChatRoom.getChatRoomId());
 
-        if (savedMessages.isEmpty()) {
+        if (savedMessages == null || savedMessages.isEmpty()) {
             return ChatMessagesListResp.builder()
                     .roomId(savedChatRoom.getChatRoomId())
                     .userId(savedChatRoom.getUserId())
@@ -100,7 +103,7 @@ public class ChatService {
                                         .messageId(message.getMessageId())
                                         .messageSenderId(message.getSenderId())
                                         .messageContent(message.getContent())
-                                        .messageTime(message.getTimestamp().toLocalTime())
+                                        .messageTime(message.getTimestamp())
                                         .messageType(message.getMessageType())
                                         .build(),
                                 Collectors.toList()
@@ -130,6 +133,10 @@ public class ChatService {
     public UserChatRoomListResp findUserChatRoomList(Long userId, PartnerType partnerType) {
         List<ChatRoom> savedChatRooms = chatRoomPersist.findByUserIdAndPartnerType(userId, partnerType);
 
+        if (savedChatRooms == null || savedChatRooms.isEmpty()) {
+            return UserChatRoomListResp.builder().roomList(Collections.emptyList()).build();
+        }
+
         List<UserChatRoomListResp.RoomList> userChatRoomListResps = new ArrayList<>();
         for (ChatRoom savedChatRoom : savedChatRooms) {
 
@@ -138,18 +145,18 @@ public class ChatService {
 
             Account partnerAccount = accountPersist.findById(savedChatRoom.getPartnerId());
             if (partnerAccount.getRole().equals(Role.GROOMER)) {
-                Groomer savedGroomer = groomerPersist.findByAccountId(partnerAccount.getAccountId()).get();
-                partnerName = savedGroomer.getName();
-                partnerProfile = savedGroomer.getImageUrl();
+                Groomer savedGroomer = groomerPersist.findByAccountId(partnerAccount.getAccountId()).orElse(null);
+                partnerName = (savedGroomer != null) ? savedGroomer.getName() : null;
+                partnerProfile = (savedGroomer != null) ? savedGroomer.getImageUrl() : null;
             } else if (partnerAccount.getRole().equals(Role.VET)) {
-                Vet savedVet = vetPersist.findByAccountId(partnerAccount.getAccountId()).get();
-                partnerName = savedVet.getName();
-                partnerProfile = savedVet.getImageUrl();
+                Vet savedVet = vetPersist.findByAccountId(partnerAccount.getAccountId()).orElse(null);
+                partnerName = (savedVet != null) ? savedVet.getName() : null;
+                partnerProfile = (savedVet != null) ? savedVet.getImageUrl() : null;
             }
             ChatMessage savedLastMessages = chatMessagePersist.findLatestMessageByRoomId(savedChatRoom.getChatRoomId());
             String lastMessage = (savedLastMessages != null) ? savedLastMessages.getContent() : "";
             String messageTime = (savedLastMessages != null)
-                    ? savedLastMessages.getTimestamp().toLocalTime().toString()
+                    ? savedLastMessages.getTimestamp().toString()
                     : "";
 
             userChatRoomListResps.add(UserChatRoomListResp.RoomList.builder()
@@ -170,12 +177,15 @@ public class ChatService {
 
     public boolean deleteChatRoom(Long roomId) {
         ChatRoom savedChatRoom = chatRoomPersist.findByRoomId(roomId);
+        if (savedChatRoom == null) {
+            return false;
+        }
         chatRoomPersist.exitChatRoom(savedChatRoom.getUserId(), savedChatRoom.getPartnerId());
 
         return true;
     }
 
-    public ChatMessage sendAndSaveMessage(ChatMessageReq chatMessageReq, Long roomId, Long accountId){
+    public ChatMessage sendAndSaveMessage(ChatMessageReq chatMessageReq, Long roomId, Long accountId) {
         Long recipientId = findMessageRecipientByRoomId(roomId, chatMessageReq.getSenderId());
         Long messageId = System.currentTimeMillis();
 
@@ -195,20 +205,24 @@ public class ChatService {
     public PartnerChatRoomListResp findPartnerChatRoomList(Long userId) {
         List<ChatRoom> savedChatRooms = chatRoomPersist.findByPartnerId(userId);
 
+        if (savedChatRooms == null || savedChatRooms.isEmpty()) {
+            return PartnerChatRoomListResp.builder().roomList(Collections.emptyList()).build();
+        }
+
         List<PartnerChatRoomListResp.RoomList> partnerChatRoomListResps = new ArrayList<>();
         for (ChatRoom savedChatRoom : savedChatRooms) {
 
-            User savedUser = userPersist.findByAccountId(savedChatRoom.getUserId()).get();
+            User savedUser = userPersist.findByAccountId(savedChatRoom.getUserId()).orElse(null);
 
             ChatMessage savedLastMessages = chatMessagePersist.findLatestMessageByRoomId(savedChatRoom.getChatRoomId());
 
             partnerChatRoomListResps.add(PartnerChatRoomListResp.RoomList.builder()
                     .roomId(savedChatRoom.getChatRoomId())
                     .partnerId(savedChatRoom.getUserId())
-                    .partnerName(savedUser.getNickname())
-                    .partnerProfile(savedUser.getImageUrl())
-                    .messageTime(savedLastMessages.getTimestamp().toLocalTime().toString())
-                    .lastMessage(savedLastMessages.getContent())
+                    .partnerName((savedUser != null) ? savedUser.getNickname() : null)
+                    .partnerProfile((savedUser != null) ? savedUser.getImageUrl() : null)
+                    .messageTime((savedLastMessages != null) ? savedLastMessages.getTimestamp().toString() : null)
+                    .lastMessage((savedLastMessages != null) ? savedLastMessages.getContent() : null)
                     .build());
 
         }
@@ -220,7 +234,7 @@ public class ChatService {
     private ChatRoom findOrSaveChatRoom(Role role, Long accountId, Long otherUserId) {
         ChatRoom toSaveChat = null;
         if (role.equals(Role.DAENGLE)) {
-            if (accountPersist.findById(otherUserId).getRole().equals(Role.VET)){
+            if (accountPersist.findById(otherUserId).getRole().equals(Role.VET)) {
                 toSaveChat = chatRoomPersist.enterChatRoom(accountId, otherUserId, PartnerType.VET_PARTNER);
             } else if (accountPersist.findById(otherUserId).getRole().equals(Role.GROOMER)) {
                 toSaveChat = chatRoomPersist.enterChatRoom(accountId, otherUserId, PartnerType.GROOMER_PARTNER);
@@ -237,6 +251,9 @@ public class ChatService {
 
     private Long findMessageRecipientByRoomId(Long roomId, Long senderId) {
         ChatRoom savedChatRoom = chatRoomPersist.findByRoomId(roomId);
+        if (savedChatRoom == null) {
+            return null;
+        }
         if (savedChatRoom.getUserId().equals(senderId)) return savedChatRoom.getPartnerId();
         else return savedChatRoom.getUserId();
     }
