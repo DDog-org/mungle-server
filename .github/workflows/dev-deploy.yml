@@ -24,6 +24,7 @@ jobs:
             ssh_host_var: SSH_GROOMER_HOST
           - name : daengle-chat
             path : daengle-chat-api
+            ssh_host_var: SSH_CHAT_HOST
       max-parallel: 1
 
     env:
