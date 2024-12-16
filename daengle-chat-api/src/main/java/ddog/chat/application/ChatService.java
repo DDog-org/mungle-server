@@ -27,10 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,10 +71,12 @@ public class ChatService {
             User savedUser = userPersist.findByAccountId(otherUserId).get();
             otherUserProfile = savedUser.getImageUrl();
             otherUserName = savedUser.getNickname();
-            if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER)) estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId).map(GroomingEstimate::getEstimateId).orElse(null);
-            else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET)) estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId).map(CareEstimate::getEstimateId).orElse(null);
+            if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER))
+                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId).map(GroomingEstimate::getEstimateId).orElse(null);
+            else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET))
+                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId).map(CareEstimate::getEstimateId).orElse(null);
         }
-        
+
         List<ChatMessage> savedMessages = chatMessagePersist.findByChatRoomId(savedChatRoom.getChatRoomId());
 
         if (savedMessages.isEmpty()) {
@@ -87,25 +86,35 @@ public class ChatService {
                     .partnerId(savedChatRoom.getPartnerId())
                     .partnerName(otherUserName)
                     .partnerProfile(otherUserProfile)
-                    .messagesGroupedByDate(Collections.emptyMap())
+                    .messagesGroupedByDate(Collections.emptyList())
                     .estimateId(estimateId)
                     .build();
         }
 
-        Map<LocalDate, List<ChatMessagesListResp.ChatMessageSummary>> groupedMessages =
-                savedMessages.stream()
-                        .collect(Collectors.groupingBy(
-                                message -> message.getTimestamp().toLocalDate(),
-                                Collectors.mapping(
-                                        message -> ChatMessagesListResp.ChatMessageSummary.builder()
-                                                .messageId(message.getMessageId())
-                                                .messageSenderId(message.getSenderId())
-                                                .messageContent(message.getContent())
-                                                .messageTime(message.getTimestamp().toLocalTime())
-                                                .messageType(message.getMessageType())
-                                                .build(),
-                                        Collectors.toList()
-                                )));
+        Map<LocalDate, List<ChatMessagesListResp.ChatMessageSummary>> groupedMessages = savedMessages.stream()
+                .sorted(Comparator.comparing(ChatMessage::getTimestamp))
+                .collect(Collectors.groupingBy(
+                        message -> message.getTimestamp().toLocalDate(),
+                        Collectors.mapping(
+                                message -> ChatMessagesListResp.ChatMessageSummary.builder()
+                                        .messageId(message.getMessageId())
+                                        .messageSenderId(message.getSenderId())
+                                        .messageContent(message.getContent())
+                                        .messageTime(message.getTimestamp().toLocalTime())
+                                        .messageType(message.getMessageType())
+                                        .build(),
+                                Collectors.toList()
+                        )));
+
+        List<Map<String, Object>> messagesByDate = groupedMessages.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> {
+                    Map<String, Object> dateMap = new HashMap<>();
+                    dateMap.put("date", entry.getKey().toString());
+                    dateMap.put("messages", entry.getValue());
+                    return dateMap;
+                })
+                .collect(Collectors.toList());
 
         return ChatMessagesListResp.builder()
                 .roomId(savedChatRoom.getChatRoomId())
@@ -113,7 +122,7 @@ public class ChatService {
                 .partnerId(savedChatRoom.getPartnerId())
                 .partnerName(otherUserName)
                 .partnerProfile(otherUserProfile)
-                .messagesGroupedByDate(groupedMessages)
+                .messagesGroupedByDate(messagesByDate)
                 .estimateId(estimateId)
                 .build();
     }

@@ -38,12 +38,12 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowedOrigins(Arrays.asList(
-                                "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
+                                "http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "10.10.223.78:3000",
                                 "https://dev-user.daengle.com", "https://dev-groomer.daengle.com", "https://dev-vet.daengle.com",
-                                "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com"
+                                "https://daengle.com", "https://www.daengle.com", "https://groomer.daengle.com", "https://vet.daengle.com", "http://10.10.222.203:3000"
                         ));
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                        config.setAllowCredentials(true);
+                        config.setAllowCredentials(false);
                         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Authorization-refresh", "X-Api-Key"));
                         config.setMaxAge(3600L);
                         return config;

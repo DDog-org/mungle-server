@@ -4,7 +4,6 @@ import ddog.domain.chat.enums.ChatType;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class ChatMessagesListResp {
     private String partnerName;
     private Long estimateId;
 
-    private Map<LocalDate, List<ChatMessageSummary>> messagesGroupedByDate;
+    private List<Map<String, Object>> messagesGroupedByDate;
 
     @Getter
     @Builder
@@ -30,5 +29,4 @@ public class ChatMessagesListResp {
         private LocalTime messageTime;
         private ChatType messageType;
     }
-
 }
