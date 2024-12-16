@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-
+@Slf4j
 @Getter
 @Builder
 @AllArgsConstructor
@@ -42,5 +45,24 @@ public class Payment {
 
     public void invalidate() {
         this.status = PaymentStatus.PAYMENT_INVALIDATION;
+    }
+
+    public void cancel() {
+        this.status = PaymentStatus.PAYMENT_CANCELED;
+    }
+
+    // 환불 금액 산정
+    public BigDecimal calculateRefundAmount(LocalDateTime schedule) {
+        long daysLeft = ChronoUnit.DAYS.between(LocalDateTime.now(), schedule);
+
+        if (daysLeft >= 3) {
+            return BigDecimal.valueOf(this.price); // 100% 환불
+        } else if (daysLeft == 2) {
+            return BigDecimal.valueOf(this.price * 0.5); // 50% 환불
+        } else if (daysLeft == 1) {
+            return BigDecimal.valueOf(this.price * 0.5); // 50% 환불 (기본 정책)
+        } else {
+            return BigDecimal.ZERO; // 환불 불가
+        }
     }
 }

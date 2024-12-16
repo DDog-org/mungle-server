@@ -22,10 +22,7 @@ import ddog.domain.review.port.GroomingReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
-import ddog.payment.application.dto.response.PaymentCallbackResp;
-import ddog.payment.application.dto.response.PaymentHistoryDetail;
-import ddog.payment.application.dto.response.PaymentHistoryListResp;
-import ddog.payment.application.dto.response.PaymentHistorySummaryResp;
+import ddog.payment.application.dto.response.*;
 import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,6 +100,34 @@ public class PaymentService {
                     .reservationId(savedReservation.getReservationId())
                     .paymentId(payment.getPaymentId())
                     .price(payment.getPrice())
+                    .build();
+
+        } catch (IamportResponseException | IOException e) {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        }
+    }
+
+    public PaymentCancelResp cancelPayment(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_RESERVATION_NOT_FOUND));
+
+        Payment savedPayment = paymentPersist.findByPaymentId(savedReservation.getPaymentId())
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_NOT_FOUND));
+
+        BigDecimal refundAmount = savedPayment.calculateRefundAmount(savedReservation.getSchedule());
+        CancelData cancel_data = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
+
+        try {
+            if(refundAmount.compareTo(BigDecimal.ZERO) > 0) iamportClient.cancelPaymentByImpUid(cancel_data);
+
+            savedPayment.cancel();
+            paymentPersist.save(savedPayment);
+
+            return PaymentCancelResp.builder()
+                    .paymentId(savedPayment.getPaymentId())
+                    .reservationId(savedReservation.getReservationId())
+                    .originDepositAmount(savedPayment.getPrice())
+                    .refundAmount(refundAmount)
                     .build();
 
         } catch (IamportResponseException | IOException e) {
