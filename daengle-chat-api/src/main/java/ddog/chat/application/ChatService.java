@@ -85,10 +85,10 @@ public class ChatService {
         if (savedMessages == null || savedMessages.isEmpty()) {
             return ChatMessagesListResp.builder()
                     .roomId(savedChatRoom.getChatRoomId())
-                    .userId(savedChatRoom.getUserId())
-                    .partnerId(savedChatRoom.getPartnerId())
-                    .partnerName(otherUserName)
-                    .partnerProfile(otherUserProfile)
+                    .userId(userAccountId)
+                    .otherId(otherUserId)
+                    .otherName(otherUserName)
+                    .otherProfile(otherUserProfile)
                     .messagesGroupedByDate(Collections.emptyList())
                     .estimateId(estimateId)
                     .build();
@@ -121,10 +121,10 @@ public class ChatService {
 
         return ChatMessagesListResp.builder()
                 .roomId(savedChatRoom.getChatRoomId())
-                .userId(savedChatRoom.getUserId())
-                .partnerId(savedChatRoom.getPartnerId())
-                .partnerName(otherUserName)
-                .partnerProfile(otherUserProfile)
+                .userId(userAccountId)
+                .otherId(otherUserId)
+                .otherName(otherUserName)
+                .otherProfile(otherUserProfile)
                 .messagesGroupedByDate(messagesByDate)
                 .estimateId(estimateId)
                 .build();
@@ -161,9 +161,9 @@ public class ChatService {
 
             userChatRoomListResps.add(UserChatRoomListResp.RoomList.builder()
                     .roomId(savedChatRoom.getChatRoomId())
-                    .partnerId(savedChatRoom.getPartnerId())
-                    .partnerName(partnerName)
-                    .partnerProfile(partnerProfile)
+                    .otherId(savedChatRoom.getPartnerId())
+                    .otherName(partnerName)
+                    .otherProfile(partnerProfile)
                     .messageTime(messageTime)
                     .lastMessage(lastMessage)
                     .partnerType(savedChatRoom.getPartnerType())
@@ -218,9 +218,9 @@ public class ChatService {
 
             partnerChatRoomListResps.add(PartnerChatRoomListResp.RoomList.builder()
                     .roomId(savedChatRoom.getChatRoomId())
-                    .partnerId(savedChatRoom.getUserId())
-                    .partnerName((savedUser != null) ? savedUser.getNickname() : null)
-                    .partnerProfile((savedUser != null) ? savedUser.getImageUrl() : null)
+                    .otherId(savedChatRoom.getUserId())
+                    .otherName((savedUser != null) ? savedUser.getNickname() : null)
+                    .otherProfile((savedUser != null) ? savedUser.getImageUrl() : null)
                     .messageTime((savedLastMessages != null) ? savedLastMessages.getTimestamp().toString() : null)
                     .lastMessage((savedLastMessages != null) ? savedLastMessages.getContent() : null)
                     .build());
