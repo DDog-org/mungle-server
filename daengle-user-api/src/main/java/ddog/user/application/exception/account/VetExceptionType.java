@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum VetExceptionType {
     INVALID_REQUEST_DATA_FORMAT(HttpStatus.BAD_REQUEST, 400, "데이터 형식 오류"),
+    VET_DAENGLE_METER_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "댕글 미터 초기값 존재하지 않음"),
     VET_NOT_FOUND(HttpStatus.NOT_FOUND, 2001, "병원이 존재하지 않음.");
 
     private final HttpStatus httpStatus;

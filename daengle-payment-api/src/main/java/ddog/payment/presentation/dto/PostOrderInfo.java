@@ -12,7 +12,7 @@ public class PostOrderInfo {
     private Long estimateId;
     private Long petId;
     private ServiceType serviceType;
-    private Long recipientId;
+    private Long recipientId; //미용사 or 병원 PK
     private String recipientImageUrl;
     private String recipientName;
     private String shopName;

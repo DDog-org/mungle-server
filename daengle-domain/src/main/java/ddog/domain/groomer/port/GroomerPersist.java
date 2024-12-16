@@ -8,7 +8,7 @@ public interface GroomerPersist {
 
     Optional<Groomer> findByAccountId(Long accountId);
 
-    void save(Groomer newGroomer);
+    Groomer save(Groomer newGroomer);
 
     Optional<Groomer> findByGroomerId(Long groomerId);
 
