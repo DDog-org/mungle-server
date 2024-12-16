@@ -16,8 +16,6 @@ jobs:
         module:
           - name: daengle-payment-api
             path: daengle-payment-api
-          - name: daengle-payment-service
-            path: daengle-payment-service
           - name: daengle-user
             path: daengle-user-api
           - name: daengle-vet
