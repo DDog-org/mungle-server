@@ -105,4 +105,9 @@ public class ReservationService {
 
         return ReservationMapper.mapToCareEstimateDetail(estimateId, vet, estimate);
     }
+
+//    public ReservationInfo.Grooming findReservationByReservationId(Long reservationId) {
+//        Reservation reservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+//
+//    }
 }

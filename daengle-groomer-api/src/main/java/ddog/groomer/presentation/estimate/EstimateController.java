@@ -60,6 +60,9 @@ public class EstimateController {
         notificationService.sendNotificationToUser(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
         kakaoNotificationService.sendOneTalk(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname(), estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone(),
                 environment.getProperty("templateId.ESTIMATED"));
+        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone());
+        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId());
+        System.out.println(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname());
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }

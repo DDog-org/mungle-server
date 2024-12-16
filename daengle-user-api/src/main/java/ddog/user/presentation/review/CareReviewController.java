@@ -2,6 +2,10 @@ package ddog.user.presentation.review;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.payment.port.ReservationPersist;
+import ddog.user.application.EstimateService;
+import ddog.user.application.ReservationService;
+import ddog.user.presentation.reservation.dto.ReservationSummary;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
 import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
@@ -19,6 +23,8 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 public class CareReviewController {
 
     private final CareReviewService careReviewService;
+    private final ReservationService reservationService;
+    private final EstimateService estimateService;
 
     @GetMapping("/care/review/{reviewId}")
     public CommonResponseEntity<CareReviewDetailResp> findReview(@PathVariable Long reviewId) {
@@ -27,6 +33,9 @@ public class CareReviewController {
 
     @PostMapping("/care/review")
     public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostCareReviewInfo postCareReviewInfo) {
+        ReservationSummary savedReservation = reservationService.getReservationSummary(postCareReviewInfo.getReservationId());
+        Long reservationId = savedReservation.getReservationId();
+
         return success(careReviewService.postReview(postCareReviewInfo));
     }
 
