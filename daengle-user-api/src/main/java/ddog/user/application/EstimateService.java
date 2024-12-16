@@ -4,6 +4,7 @@ import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.dto.PetInfos;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
@@ -141,27 +142,19 @@ public class EstimateService {
                             .name(pet.getName())
                             .build()));
         }
+
         return EstimateInfo.Pet.builder()
                 .pets(contents)
                 .build();
     }
 
-    public EstimateInfo.Pet findGeneralCarePets(Long accountId) {
-        User user = userPersist.findByAccountId(accountId)
+    public PetInfos findGeneralCarePets(Long accountId) {
+        userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
-        List<Pet> pets = user.getPets();
-        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
-        for (Pet pet : pets) {
-            careEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.GENERAL, pet.getPetId())
-                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
-                            .estimateId(estimate.getEstimateId())
-                            .petId(pet.getPetId())
-                            .imageUrl(pet.getImageUrl())
-                            .name(pet.getName())
-                            .build()));
-        }
-        return EstimateInfo.Pet.builder()
+        List<PetInfos.Content> contents = careEstimatePersist.findByStatusAndProposalAndUserId(EstimateStatus.NEW, Proposal.GENERAL, accountId);
+
+        return PetInfos.builder()
                 .pets(contents)
                 .build();
     }

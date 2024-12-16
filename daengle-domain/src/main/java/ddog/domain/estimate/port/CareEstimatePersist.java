@@ -3,6 +3,7 @@ package ddog.domain.estimate.port;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.dto.PetInfos;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,6 +21,8 @@ public interface CareEstimatePersist {
     Page<CareEstimate> findByPetIdAndStatusAndProposal(Long petId, EstimateStatus status, Proposal proposal, Pageable pageable);
 
     Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId);
+
+    List<PetInfos.Content> findByStatusAndProposalAndUserId(EstimateStatus status, Proposal proposal, Long userId);
 
     Page<CareEstimate> findByStatusAndProposalAndAddress(EstimateStatus estimateStatus, Proposal proposal, String address, Pageable pageable);
 

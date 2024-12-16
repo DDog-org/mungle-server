@@ -3,9 +3,11 @@ package ddog.persistence.mysql.adapter;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.dto.PetInfos;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
 import ddog.persistence.mysql.jpa.repository.CareEstimateJpaRepository;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,6 +47,20 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public Optional<CareEstimate> findByEstimateStatusAndProposalAndPetId(EstimateStatus estimateStatus, Proposal proposal, Long petId) {
         return careEstimateJpaRepository.findTopByStatusAndProposalAndPetId(estimateStatus, proposal, petId)
                 .map(CareEstimateJpaEntity::toModel);
+    }
+
+    @Override
+    public List<PetInfos.Content> findByStatusAndProposalAndUserId(EstimateStatus status, Proposal proposal, Long userId) {
+        List<Tuple> results = careEstimateJpaRepository.findByStatusAndProposalAndUserId(status, proposal, userId);
+
+        return results.stream()
+                .map(tuple -> PetInfos.Content.builder()
+                        .estimateId(tuple.get("estimateId", Long.class))
+                        .petId(tuple.get("petId", Long.class))
+                        .imageUrl(tuple.get("imageUrl", String.class))
+                        .name(tuple.get("name", String.class))
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override

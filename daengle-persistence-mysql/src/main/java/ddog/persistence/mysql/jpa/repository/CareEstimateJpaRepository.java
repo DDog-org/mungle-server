@@ -2,7 +2,9 @@ package ddog.persistence.mysql.jpa.repository;
 
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.dto.PetInfos;
 import ddog.persistence.mysql.jpa.entity.CareEstimateJpaEntity;
+import jakarta.persistence.Tuple;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,6 +34,11 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
     void updateStatusByParentId(@Param("status") EstimateStatus status, @Param("parentId") Long parentId);
 
     Optional<CareEstimateJpaEntity> findTopByStatusAndProposalAndPetId(EstimateStatus status, Proposal proposal, Long petId);
+
+    @Query("SELECT c.estimateId as estimateId, c.petId as petId, p.imageUrl as imageUrl, p.name as name " +
+            "FROM CareEstimates c JOIN Pets p ON c.petId = p.petId " +
+            "WHERE c.userId = :userId AND c.status = :status AND c.proposal = :proposal")
+    List<Tuple> findByStatusAndProposalAndUserId(EstimateStatus status, Proposal proposal, Long userId);
 
     Page<CareEstimateJpaEntity> findByPetIdAndStatusAndProposal(Long petId, EstimateStatus status, Proposal proposal, Pageable pageable);
 
