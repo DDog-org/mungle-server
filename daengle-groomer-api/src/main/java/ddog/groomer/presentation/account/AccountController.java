@@ -38,4 +38,9 @@ public class AccountController {
     public CommonResponseEntity<AccountResp> updateInfo(@RequestBody UpdateInfoReq request, PayloadDto payloadDto) {
         return success(accountService.updateInfo(request, payloadDto.getAccountId()));
     }
+
+    @GetMapping("/shop/{shopId}/info")
+    public CommonResponseEntity<ShopInfo> getShopInfo(@PathVariable Long shopId) {
+
+    }
 }
