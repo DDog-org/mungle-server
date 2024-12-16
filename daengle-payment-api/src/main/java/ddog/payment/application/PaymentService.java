@@ -107,6 +107,7 @@ public class PaymentService {
         }
     }
 
+    @Transactional
     public PaymentCancelResp cancelPayment(Long reservationId) {
         Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
                 .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_RESERVATION_NOT_FOUND));
@@ -135,6 +136,19 @@ public class PaymentService {
         }
     }
 
+    @Transactional
+    public List<PaymentCancelResp> cancelPayments(List<Long> reservationIds) {
+        try {
+            return reservationIds.stream()
+                    .map(this::cancelPayment) // cancelPayment 호출
+                    .collect(Collectors.toList()); // 모든 결과 수집
+        } catch (Exception e) {
+            // 예외 발생 시 전체 작업 롤백
+            throw new PaymentException(PaymentExceptionType.PAYMENT_CANCEL_BATCH_ERROR);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
         Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
                 .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
@@ -156,6 +170,7 @@ public class PaymentService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
