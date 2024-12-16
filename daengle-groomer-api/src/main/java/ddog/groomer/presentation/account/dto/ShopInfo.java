@@ -1,5 +1,6 @@
 package ddog.groomer.presentation.account.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.vet.Day;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,11 @@ public class ShopInfo {
     public static class UpdatePage {
         private List<String> imageUrlList;
         private String shopName;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         private LocalTime startTime;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         private LocalTime endTime;
         private List<Day> closedDays;
         private String phoneNumber;
