@@ -32,8 +32,8 @@ public class VetRepository implements VetPersist {
     }
 
     @Override
-    public void save(Vet vet) {
-        vetJpaRepository.save(VetJpaEntity.from(vet));
+    public Vet save(Vet vet) {
+        return vetJpaRepository.save(VetJpaEntity.from(vet)).toModel();
     }
 
     @Override

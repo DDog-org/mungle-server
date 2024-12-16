@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class PostCareReviewInfo {
     private Long reservationId;
-    private Long starRating;
+    private Integer starRating;
     private List<CareKeyword> careKeywordList;
     private String content;
     private List<String> imageUrlList;

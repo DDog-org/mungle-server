@@ -26,7 +26,7 @@ public class GroomingReviewJpaEntity {
     private Long revieweeId;
     private String revieweeName;
     private String shopName;
-    private Long starRating;
+    private Integer starRating;
     private String content;
     private LocalDateTime createdAt;
 
