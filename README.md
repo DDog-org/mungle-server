@@ -1,7 +1,7 @@
 ![image](https://github.com/user-attachments/assets/1571a693-841e-471b-8b45-4efba5601e26)
 
 <div align=center>
-  <h1> 댕글 서비스의 핵심 키워드! </h2>
+  <h1> 🐶댕글 서비스의 핵심 키워드!🐶 </h2>
   https://daengle.com/
   <br>
   <br>
@@ -11,36 +11,65 @@
 
 </div>
 
-## 🧑‍💻 Project Overview (프로젝트 개요)
-- 프로젝트 이름: 댕글
-- 프로젝트 설명: 강아지 미용 중계 플랫폼
+## 📦 멀티 모듈
+### 🔌 Ports & Adapters Architecture
 
-<br/>
-<br/>
+<br />
+<br />
 
-## 💻 기술 스택
+### 🚨 장애대응
+
+<br />
+<br />
+
+### 🚛 CI/CD 모듈별 자동 배포
+
+<br />
+<br />
+
+### 🖥️ 부하 테스트 및 성능 모니터링
+
+<br />
+<br />
+
+## 💬 DynamoDB + 실시간 채팅
+
+<br />
+<br />
+
+## 🚀 SQL 튜닝을 통한 DB 최적화
+
+<br />
+<br />
+
+## 🕵️ 금칙어 필터링
+
+<br />
+<br />
+
+## 🧰 기술 스택
 ![image](https://github.com/user-attachments/assets/ae5eefdc-2156-41aa-bb18-430c02ad39cf)
 <br />
 <br />
 
-## 🦉 서비스 아키텍처
+## 🏗️ 서비스 아키텍처
 ![image](https://github.com/user-attachments/assets/bd2b5c99-8bcc-44e8-915b-a85efdf93341)
 <br />
 <br />
 
-## 🦉 CI/CD
+## 🚢 CI/CD
 ![image](https://github.com/user-attachments/assets/e9916060-7677-4c43-8a42-1fc8ad517c69)
 <br />
 <br />
 
-## 🦉 ERD 설계도
+## 🗃️ ERD 설계도
 ![image](https://github.com/user-attachments/assets/f1980534-20ec-441f-8d53-d0d0cfead8a2)
 
 <br />
 <br />
 
 ## 👥 팀원 소개
-|                                              [🐈‍⬛ 진명인](https://github.com/myeonginjin)                                               |                                              [👍 백효석](https://github.com/alexization)                                               |                                               [🌱 심지혜](https://github.com/sapientia1007)                                                |
+|                                              [🐈 진명인](https://github.com/myeonginjin)                                               |                                              [🐳 백효석](https://github.com/alexization)                                               |                                               [🌱 심지혜](https://github.com/sapientia1007)                                                |
 | :-------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
 | <a href="https://github.com/myeonginjin"> <img src="https://avatars.githubusercontent.com/myeonginjin" width=200px alt="_"/> </a> | <a href="https://github.com/alexization"> <img src="https://avatars.githubusercontent.com/alexization" width=200px alt="_"/> </a> | <a href="https://github.com/sapientia1007"> <img src="https://avatars.githubusercontent.com/sapientia1007" width=200px alt="_"/> </a> |
 |                                                               백엔드                                                                |                                                            백엔드                                                             |                                                              백엔드                                                               |
