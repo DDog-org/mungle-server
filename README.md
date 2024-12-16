@@ -19,7 +19,7 @@
 <br/>
 
 ## 💻 기술 스택
-![image](https://github.com/user-attachments/assets/df0e52ef-007d-4154-aa30-6b2cdfb31bbc)
+![image](https://github.com/user-attachments/assets/ae5eefdc-2156-41aa-bb18-430c02ad39cf)
 <br />
 <br />
 
