@@ -3,6 +3,7 @@ package ddog.groomer.application.mapper;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.shop.BeautyShop;
 import ddog.groomer.presentation.account.dto.ShopInfo;
+import ddog.groomer.presentation.account.dto.UpdateShopReq;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,9 +14,10 @@ public class BeautyShopMapper {
 
     @Getter
     public class UpdateShopInfo {
-        private Long shopId;
 
+        private Long shopId;
         private String shopName;
+
         private String shopAddress;
         private String imageUrl;
         private List<String> imageUrlList;
@@ -24,7 +26,6 @@ public class BeautyShopMapper {
         private LocalTime endTime;
         private String introduction;
     }
-
     public static BeautyShop updateShopInfo(Long shopId, UpdateShopInfo req){
         return BeautyShop.builder()
                 .shopId(shopId)
@@ -42,9 +43,9 @@ public class BeautyShopMapper {
     @Getter
     @Builder
     public static class UpdateInfoResp {
+
         private String requestResult;
     }
-
     public static ShopInfo.UpdatePage mapToShopInfo(BeautyShop shop) {
         return ShopInfo.UpdatePage.builder()
                 .imageUrlList(shop.getImageUrlList())
@@ -56,6 +57,21 @@ public class BeautyShopMapper {
                 .address(shop.getShopAddress())
                 .detailAddress(shop.getShopDetailAddress())
                 .introduction(shop.getIntroduction())
+                .build();
+    }
+
+    public static BeautyShop updateShopInfoWithUpdateShopReq(BeautyShop shop, UpdateShopReq request) {
+        return BeautyShop.builder()
+                .shopId(shop.getShopId())
+                .imageUrlList(request.getImageUrlList())
+                .shopName(shop.getShopName())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
+                .closedDays(request.getClosedDays())
+                .phoneNumber(request.getPhoneNumber())
+                .shopAddress(shop.getShopAddress())
+                .shopDetailAddress(shop.getShopDetailAddress())
+                .introduction(request.getIntroduction())
                 .build();
     }
 }

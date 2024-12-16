@@ -141,4 +141,25 @@ public class AccountService {
 
         return BeautyShopMapper.mapToShopInfo(shop);
     }
+
+    public ShopInfo.UpdateResp updateShopInfo(UpdateShopReq request) {
+        validateUpdateShopInfoDataFormat(request);
+
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(request.getShopId());
+        BeautyShop updatedShop = BeautyShopMapper.updateShopInfoWithUpdateShopReq(shop, request);
+
+        beautyShopPersist.save(updatedShop);
+
+        return ShopInfo.UpdateResp.builder()
+                .requestResp("마이샵 정보가 성공적으로 변경되었습니다.")
+                .build();
+    }
+
+    private void validateUpdateShopInfoDataFormat(UpdateShopReq request) {
+        BeautyShop.validateImageUrlList(request.getImageUrlList());
+        BeautyShop.validateTimeRange(request.getStartTime(), request.getEndTime());
+        BeautyShop.validateClosedDays(request.getClosedDays());
+        BeautyShop.validateIntroduction(request.getIntroduction());
+        BeautyShop.validatePhoneNumber(request.getPhoneNumber());
+    }
 }

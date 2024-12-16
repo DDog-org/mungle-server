@@ -25,4 +25,10 @@ public class ShopInfo {
         private String introduction;
     }
 
+    @Getter
+    @Builder
+    public static class UpdateResp {
+        private String requestResp;
+    }
+
 }
