@@ -11,6 +11,7 @@ import ddog.vet.presentation.estimate.dto.EstimateDetail;
 import ddog.vet.presentation.estimate.dto.EstimateInfo;
 import ddog.vet.presentation.estimate.dto.EstimateResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
@@ -23,6 +24,8 @@ public class EstimateController {
     private final EstimateService estimateService;
     private final NotificationService notificationService;
     private final KakaoNotificationService kakaoNotificationService;
+
+    private final Environment environment;
 
     /* (신규) 일반 견적서들 리스트 조회 */
     @GetMapping("/general/list")
@@ -54,7 +57,8 @@ public class EstimateController {
     @PostMapping
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
         notificationService.sendNotificationToUser(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId(), NotifyType.ESTIMATED, "병원에게서 추가 소견 내용이 도착했어요!");
-//        kakaoNotificationService.sendOneTalk(estimateService.);
+        kakaoNotificationService.sendOneTalk(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname(), estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone(),
+                environment.getProperty("templateId.ESTIMATED"));
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }
