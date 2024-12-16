@@ -139,6 +139,7 @@ public class DetailInfoService {
                 .keywords(findGroomer.getKeywords())
                 .reviewCount(groomingReview.getTotalElements())
                 .groomerImage(findGroomer.getImageUrl())
+                .instagram(findGroomer.getInstagramId())
                 .build();
     }
 
