@@ -51,4 +51,11 @@ public class EstimateInfo {
             private LocalDateTime reservedDate;
         }
     }
+    @Getter
+    @Builder
+    public static class EstimateUserInfo {
+        private Long userId;
+        private String userNickname;
+        private String userPhone;
+    }
 }

@@ -59,7 +59,7 @@ public class EstimateController {
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
         notificationService.sendNotificationToUser(estimateService.findByUserInfoByEstimateId(request.getId()).getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
         kakaoNotificationService.sendOneTalk(estimateService.findByUserInfoByEstimateId(request.getId()).getUserNickname(), estimateService.findByUserInfoByEstimateId(request.getId()).getUserPhone(),
-                environment.getProperty("templateId.CALL"));
+                environment.getProperty("templateId.ESTIMATED"));
         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }
