@@ -81,6 +81,7 @@ public class DetailInfoService {
                 .groomers(groomerSummaryInfos)
                 .imageUrlList(findBeautyShop.getImageUrlList())
                 .introduction(findBeautyShop.getIntroduction())
+                .closedDay(findBeautyShop.getClosedDays())
                 .build();
     }
 
@@ -115,10 +116,12 @@ public class DetailInfoService {
                 .endTime(findVet.getEndTime())
                 .startTime(findVet.getStartTime())
                 .keywords(findVet.getKeywords())
-                .introductions(findVet.getIntroduction())
+                .introduction(findVet.getIntroduction())
                 .daengleMeter(findVet.getDaengleMeter())
                 .reviewCount(results.getTotalElements())
                 .imageUrlList(findVet.getImageUrlList())
+                .vetNumber(findVet.getPhoneNumber())
+                .closedDay(findVet.getClosedDays())
                 .build();
     }
 
