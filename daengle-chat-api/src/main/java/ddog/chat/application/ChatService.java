@@ -100,7 +100,7 @@ public class ChatService {
                                         .messageId(message.getMessageId())
                                         .messageSenderId(message.getSenderId())
                                         .messageContent(message.getContent())
-                                        .messageTime(message.getTimestamp().toLocalTime())
+                                        .messageTime(message.getTimestamp())
                                         .messageType(message.getMessageType())
                                         .build(),
                                 Collectors.toList()
@@ -149,7 +149,7 @@ public class ChatService {
             ChatMessage savedLastMessages = chatMessagePersist.findLatestMessageByRoomId(savedChatRoom.getChatRoomId());
             String lastMessage = (savedLastMessages != null) ? savedLastMessages.getContent() : "";
             String messageTime = (savedLastMessages != null)
-                    ? savedLastMessages.getTimestamp().toLocalTime().toString()
+                    ? savedLastMessages.getTimestamp().toString()
                     : "";
 
             userChatRoomListResps.add(UserChatRoomListResp.RoomList.builder()
@@ -207,7 +207,7 @@ public class ChatService {
                     .partnerId(savedChatRoom.getUserId())
                     .partnerName(savedUser.getNickname())
                     .partnerProfile(savedUser.getImageUrl())
-                    .messageTime(savedLastMessages.getTimestamp().toLocalTime().toString())
+                    .messageTime(savedLastMessages.getTimestamp().toString())
                     .lastMessage(savedLastMessages.getContent())
                     .build());
 
