@@ -19,7 +19,7 @@ public class Reservation {
     private Long petId;
     private ServiceType serviceType;
     private ReservationStatus reservationStatus;
-    private Long recipientId;
+    private Long recipientId;  //미용사 or 병원 pk
     private String recipientImageUrl;
     private String recipientName;
     private String shopName;

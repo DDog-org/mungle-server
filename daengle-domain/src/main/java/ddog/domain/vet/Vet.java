@@ -34,6 +34,10 @@ public class Vet {
     private List<String> licenses;
     private List<CareKeyword> keywords;
 
+    public void updateDaengleMeter(Integer newMeterValue) {
+        this.daengleMeter = newMeterValue;
+    }
+
     public static void validateName(String name) {
         if (name == null || name.length() < 2 || name.length() > 10 || !name.matches("^[가-힣\\s]+$")) {
             throw new IllegalArgumentException("Invalid name: must be 2-10 characters and in Korean.");

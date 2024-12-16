@@ -14,4 +14,29 @@ public class VetDaengleMeter {
     private Long vetId;
     private Integer score;
     private Long evaluationCount;
+
+    // 새로운 리뷰에 따른 점수 업데이트
+    public void updateMeterForNewReview(Integer newScore) {
+        long totalScore = (long) score * evaluationCount + newScore;
+        evaluationCount++;
+        score = Math.toIntExact(totalScore / evaluationCount);
+    }
+
+    // 수정된 리뷰에 따른 점수 업데이트
+    public void updateMeterForModifiedReview(Integer oldScore, Integer newScore) {
+        long totalScore = (long) score * evaluationCount - oldScore + newScore;
+        score = Math.toIntExact(totalScore / evaluationCount);
+    }
+
+    // 리뷰 삭제에 따른 점수 업데이트
+    public void updateMeterForDeletedReview(Integer oldScore) {
+        if (evaluationCount <= 1) {
+            score = 0;
+            evaluationCount = 0L;
+        } else {
+            long totalScore = (long) score * evaluationCount - oldScore;
+            evaluationCount--;
+            score = Math.toIntExact(totalScore / evaluationCount);
+        }
+    }
 }
