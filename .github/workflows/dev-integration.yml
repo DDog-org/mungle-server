@@ -5,7 +5,7 @@ name: Java CI with Gradle
 # develop 브랜치에 push, pull request가 일어 났을 경우 Actions가 실행됨
 on:
   pull_request:
-    branches: [ "NON" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
