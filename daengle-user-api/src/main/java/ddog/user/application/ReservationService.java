@@ -87,7 +87,7 @@ public class ReservationService {
         GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
-        Groomer groomer = groomerPersist.findByGroomerId(estimate.getGroomerId())
+        Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         Reservation reservation = reservationPersist.findByEstimateId(estimateId)
@@ -103,7 +103,7 @@ public class ReservationService {
         CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
-        Vet vet = vetPersist.findByVetId(estimate.getVetId())
+        Vet vet = vetPersist.findByAccountId(estimate.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
         Reservation reservation = reservationPersist.findByEstimateId(estimateId)
