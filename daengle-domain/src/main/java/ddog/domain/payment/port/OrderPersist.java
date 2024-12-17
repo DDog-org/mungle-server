@@ -8,4 +8,5 @@ public interface OrderPersist {
     Order save(Order order);
     Optional<Order> findByOrderUid(String orderUid);
     void delete(Order order);
+    Optional<Order> findByIdempotencyKey(String idempotencyKey);
 }

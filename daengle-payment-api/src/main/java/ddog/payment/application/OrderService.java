@@ -18,6 +18,7 @@ import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.payment.application.dto.response.PostOrderResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,25 +35,35 @@ public class OrderService {
     private final CareEstimatePersist careEstimatePersist;
 
     @Transactional
-    public PostOrderResp processOrder(Long accountId, PostOrderInfo postOrderInfo) {
-        User savedUser = userPersist.findByAccountId(accountId)
-                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_USER_NOT_FOUNDED));
+    public PostOrderResp processOrder(String idempotencyKey, Long accountId, PostOrderInfo postOrderInfo) {
+        try {
+            orderPersist.findByIdempotencyKey(idempotencyKey) //멱등성 보장
+                    .ifPresent(order -> {
+                        throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
+                    });
 
-        validateEstimate(postOrderInfo.getServiceType(), postOrderInfo.getEstimateId());
-        validatePostOrderInfoDataFormat(postOrderInfo);
+            User savedUser = userPersist.findByAccountId(accountId)
+                    .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_USER_NOT_FOUNDED));
 
-        Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(savedUser.getAccountId(), postOrderInfo);
-        Payment SavedPayment = paymentPersist.save(paymentToSave);
+            validateEstimate(postOrderInfo.getServiceType(), postOrderInfo.getEstimateId());
+            validatePostOrderInfoDataFormat(postOrderInfo);
 
-        Order orderToSave = OrderMapper.createBy(savedUser, postOrderInfo, SavedPayment);
-        Order savedOrder = orderPersist.save(orderToSave);
+            Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(savedUser.getAccountId(), postOrderInfo);
+            Payment SavedPayment = paymentPersist.save(paymentToSave);
 
-        return PostOrderResp.builder()
-                .orderId(savedOrder.getOrderId())
-                .accountId(accountId)
-                .estimateId(postOrderInfo.getEstimateId())
-                .orderUId(savedOrder.getOrderUid())
-                .build();
+            Order orderToSave = OrderMapper.createBy(idempotencyKey, savedUser, postOrderInfo, SavedPayment);
+            Order savedOrder = orderPersist.save(orderToSave);
+
+            return PostOrderResp.builder()
+                    .orderId(savedOrder.getOrderId())
+                    .accountId(accountId)
+                    .estimateId(postOrderInfo.getEstimateId())
+                    .orderUId(savedOrder.getOrderUid())
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
+            throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
+        }
     }
 
     //TODO 서비스 제공자(미용사/수의사) PK 유요한지 검증, Groomer || Vet 도메인 객체에게 역할 위임

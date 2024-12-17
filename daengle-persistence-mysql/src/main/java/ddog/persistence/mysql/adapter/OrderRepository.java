@@ -30,4 +30,9 @@ public class OrderRepository implements OrderPersist {
     public void delete(Order order) {
         orderJpaRepository.delete(OrderJpaEntity.fromModel(order));
     }
+
+    @Override
+    public Optional<Order> findByIdempotencyKey(String idempotencyKey) {
+        return orderJpaRepository.findByIdempotencyKey(idempotencyKey).map(OrderJpaEntity::toModel);
+    }
 }
