@@ -35,4 +35,6 @@ public interface GroomingEstimatePersist {
 
     List<GroomingEstimate> findMyEstimatesByUserId(Long userId);
 
+    Integer countEstimateByGroomerIdDistinctParentId(Long groomerId);
+
 }

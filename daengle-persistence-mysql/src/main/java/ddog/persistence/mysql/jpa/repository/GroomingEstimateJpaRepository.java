@@ -50,4 +50,8 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
     @Query("SELECT g FROM GroomingEstimates g WHERE DATE(g.reservedDate) = :today AND g.groomerId = :groomerAccountId AND g.status = :status")
     List<GroomingEstimateJpaEntity> findTodayScheduleByGroomerId(LocalDate today, Long groomerAccountId, EstimateStatus status);
 
+    @Query("SELECT COUNT(DISTINCT c.parentId) " +
+            "FROM GroomingEstimates c " +
+            "WHERE c.groomerId = :groomerAccountId")
+    Integer countDistinctParentIdsByGroomerAccountId(@Param("groomerAccountId") Long groomerAccountId);
 }

@@ -27,7 +27,7 @@ public class ScheduleInfoService {
 
     public ScheduleResp getScheduleByGroomerAccountId(Long accountId) {
 
-        int estimateTotalCount = groomingEstimatePersist.findGroomingEstimatesByGroomerId(accountId).size();
+        int estimateTotalCount = groomingEstimatePersist.countEstimateByGroomerIdDistinctParentId(accountId);
         int designationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndProposal(accountId).size();
         int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(accountId).size();
 
