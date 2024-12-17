@@ -1,0 +1,84 @@
+name: Deploy to Develop EC2
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ] #테스트 용
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      all_modules: ${{ steps.changes.outputs.all_modules }}
+      daengle-chat: ${{ steps.changes.outputs.daengle-chat }}
+      daengle-groomer: ${{ steps.changes.outputs.daengle-groomer }}
+      daengle-payment: ${{ steps.changes.outputs.daengle-payment }}
+      daengle-user: ${{ steps.changes.outputs.daengle-user }}
+      daengle-vet: ${{ steps.changes.outputs.daengle-vet }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for changes
+        id: changes
+        run: |
+          # 모든 모듈을 재배포해야 하는 공통 모듈 감지
+          if git diff --name-only HEAD^ HEAD | grep -E 'daengle-auth|daengle-domain|daengle-notification|daengle-persistence-(mysql|dynamodb)'; then
+            echo "all_modules=true" >> $GITHUB_OUTPUT
+          fi
+
+          # 개별 모듈 변경 감지
+          for module in daengle-chat-api daengle-groomer-api daengle-payment-api daengle-user-api daengle-vet-api; do
+            if git diff --name-only HEAD^ HEAD | grep -E "$module"; then
+              echo "${module/-api/}=true" >> $GITHUB_OUTPUT
+            fi
+          done
+
+  deploy:
+    needs: check-changes
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - name: daengle-chat
+            path: daengle-chat-api
+            ssh_host_var: SSH_CHAT_HOST
+          - name: daengle-groomer
+            path: daengle-groomer-api
+            ssh_host_var: SSH_GROOMER_HOST
+          - name: daengle-payment
+            path: daengle-payment-api
+            ssh_host_var: SSH_PAYMENT_HOST
+          - name: daengle-user
+            path: daengle-user-api
+            ssh_host_var: SSH_USER_HOST
+          - name: daengle-vet
+            path: daengle-vet-api
+            ssh_host_var: SSH_VET_HOST
+      max-parallel: 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Skip Unchanged Modules
+        if: needs.check-changes.outputs.all_modules != 'true' && needs.check-changes.outputs[matrix.module.name] != 'true'
+        run: echo "No changes detected in ${{ matrix.module.name }}. Skipping deployment."
+
+      - name: Create application.yml
+        if: needs.check-changes.outputs.all_modules == 'true' || needs.check-changes.outputs[matrix.module.name] == 'true'
+        run: |
+          mkdir -p ${{ matrix.module.path }}/src/main/resources
+          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
+
+      # 이어지는 나머지 Steps들은 동일하게 실행
+      - name: Build JAR
+        if: needs.check-changes.outputs.all_modules == 'true' || needs.check-changes.outputs[matrix.module.name] == 'true'
+        run: ./gradlew clean :${{ matrix.module.path }}:build -x test
+
+      - name: Deploy to EC2
+        if: needs.check-changes.outputs.all_modules == 'true' || needs.check-changes.outputs[matrix.module.name] == 'true'
+        run: |
+          # SSH를 통한 배포 실행
+          echo "Deploying ${{ matrix.module.name }}"
