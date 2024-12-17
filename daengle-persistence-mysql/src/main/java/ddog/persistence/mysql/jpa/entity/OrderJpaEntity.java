@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Orders")
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "orderUid"),
+                @UniqueConstraint(columnNames = "idempotencyKey") // 멱등성 키 유니크 제약조건
+        }
+)
 public class OrderJpaEntity {
 
     @Id
@@ -29,7 +35,13 @@ public class OrderJpaEntity {
 
     private Long price;
     private Long estimateId;
+
+    @Column(nullable = false, unique = true)
     private String orderUid;
+
+    @Column(nullable = false, unique = true)
+    private String idempotencyKey; // 멱등성 키 필드
+
     private Long accountId;
     private String customerName;
     private Long recipientId;
@@ -54,6 +66,7 @@ public class OrderJpaEntity {
                 .price(this.price)
                 .estimateId(this.estimateId)
                 .orderUid(this.orderUid)
+                .idempotencyKey(this.idempotencyKey)
                 .accountId(this.accountId)
                 .customerName(this.customerName)
                 .recipientId(this.recipientId)
@@ -79,6 +92,7 @@ public class OrderJpaEntity {
                 .price(order.getPrice())
                 .estimateId(order.getEstimateId())
                 .orderUid(order.getOrderUid())
+                .idempotencyKey(order.getIdempotencyKey())
                 .accountId(order.getAccountId())
                 .customerName(order.getCustomerName())
                 .recipientId(order.getRecipientId())

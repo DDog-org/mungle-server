@@ -20,6 +20,7 @@ public class Order {
     private Long price;
     private Long estimateId;
     private String orderUid;
+    private String idempotencyKey;
     private Long accountId;
     private String customerName;
     private Long recipientId;
