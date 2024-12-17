@@ -25,11 +25,10 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          # 기준 브랜치와 현재 상태의 전체 변경 사항 비교
           CHANGED_FILES=$(git diff --name-only origin/develop...HEAD)
           echo "Changed files: $CHANGED_FILES"
 
-          # 공통 모듈 감지: 변경 시 모든 모듈 재배포
+          # 공통 모듈 감지: 모든 모듈 재배포
           if echo "$CHANGED_FILES" | grep -E 'daengle-auth|daengle-domain|daengle-notification|daengle-persistence-(mysql|dynamodb)'; then
             echo "all_modules=true" >> $GITHUB_OUTPUT
           else
@@ -54,19 +53,14 @@ jobs:
         module:
           - name: daengle-chat
             path: daengle-chat-api
-            ssh_host_var: SSH_CHAT_HOST
           - name: daengle-groomer
             path: daengle-groomer-api
-            ssh_host_var: SSH_GROOMER_HOST
           - name: daengle-payment
             path: daengle-payment-api
-            ssh_host_var: SSH_PAYMENT_HOST
           - name: daengle-user
             path: daengle-user-api
-            ssh_host_var: SSH_USER_HOST
           - name: daengle-vet
             path: daengle-vet-api
-            ssh_host_var: SSH_VET_HOST
       max-parallel: 1
 
     steps:
@@ -88,27 +82,71 @@ jobs:
         if: steps.skip-check.outputs.deploy == 'false'
         run: echo "No changes detected in ${{ matrix.module.name }}. Skipping deployment."
 
-      # 변경사항이 있는 경우 배포 실행
-      - name: Create application.yml
+      # EC2 서버 호스트 설정
+      - name: Resolve EC2 Host
         if: steps.skip-check.outputs.deploy == 'true'
+        id: resolve-host
         run: |
-          mkdir -p ${{ matrix.module.path }}/src/main/resources
-          echo "${{ secrets.APPLICATION_YML_TEST }}" > ${{ matrix.module.path }}/src/main/resources/application.yml
+          case "${{ matrix.module.name }}" in
+            "daengle-chat")
+              echo "EC2_HOST=${{ secrets.SSH_CHAT_HOST }}" >> $GITHUB_ENV
+              ;;
+            "daengle-groomer")
+              echo "EC2_HOST=${{ secrets.SSH_GROOMER_HOST }}" >> $GITHUB_ENV
+              ;;
+            "daengle-payment")
+              echo "EC2_HOST=${{ secrets.SSH_PAYMENT_HOST }}" >> $GITHUB_ENV
+              ;;
+            "daengle-user")
+              echo "EC2_HOST=${{ secrets.SSH_USER_HOST }}" >> $GITHUB_ENV
+              ;;
+            "daengle-vet")
+              echo "EC2_HOST=${{ secrets.SSH_VET_HOST }}" >> $GITHUB_ENV
+              ;;
+          esac
+          echo "Resolved EC2_HOST: $EC2_HOST"
+
+      # Build 및 Docker Push
+      - name: Set up JDK 17
+        if: steps.skip-check.outputs.deploy == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
       - name: Build JAR
         if: steps.skip-check.outputs.deploy == 'true'
         run: ./gradlew clean :${{ matrix.module.path }}:build -x test
 
-      - name: Deploy to EC2
+      - name: Log in to Amazon ECR
+        if: steps.skip-check.outputs.deploy == 'true'
+        uses: aws-actions/amazon-ecr-login@v2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_ROOT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_ACCESS_ROOT_SECRET }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+      - name: Build and Push Docker Image
         if: steps.skip-check.outputs.deploy == 'true'
         run: |
-          echo "Deploying ${{ matrix.module.name }}"
+          IMAGE_TAG="${{ matrix.module.name }}-$(date +%Y%m%d%H%M%S)"
+          docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
+          docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
+          docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+      # Deploy to EC2
+      - name: Set up SSH
+        if: steps.skip-check.outputs.deploy == 'true'
+        run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-          EC2_HOST=${{ secrets[matrix.module.ssh_host_var] }}
+      - name: Deploy to EC2
+        if: steps.skip-check.outputs.deploy == 'true'
+        run: |
           ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST << 'EOF'
             export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
             export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
