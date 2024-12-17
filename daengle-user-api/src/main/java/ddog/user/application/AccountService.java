@@ -4,6 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.port.AccountPersist;
+import ddog.domain.payment.Payment;
+import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
@@ -30,15 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountPersist accountPersist;
-    private final UserPersist userPersist;
+
     private final PetPersist petPersist;
+    private final UserPersist userPersist;
+    private final AccountPersist accountPersist;
+    private final PaymentPersist paymentPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional(readOnly = true)
@@ -228,6 +234,18 @@ public class AccountService {
 
         return AccountResp.builder()
                 .requestResult("반려견 프로필 삭제 완료")
+                .build();
+    }
+
+    public WithdrawResp getWithdrawInfo(Long accountId) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        Optional<List<Payment>> paymentList = paymentPersist.findByPayerId(savedUser.getAccountId());
+        Integer count = paymentList.map(List::size).orElse(0);
+
+        return WithdrawResp.builder()
+                .waitingForServiceCount(count)
                 .build();
     }
 }

@@ -66,4 +66,10 @@ public class AccountController {
     public CommonResponseEntity<AccountResp> deletePet(@RequestBody DeletePetId request) {
         return success(accountService.deletePet(request.getPetId()));
     }
+
+    @GetMapping("withdraw-info")
+    public CommonResponseEntity<WithdrawResp> getWithdrawInfo(PayloadDto payloadDto) {
+        return success(accountService.getWithdrawInfo(payloadDto.getAccountId()));
+    }
+
 }
