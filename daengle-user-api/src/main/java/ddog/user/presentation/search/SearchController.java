@@ -16,7 +16,7 @@ public class SearchController {
 
     private final SearchService searchService;
     @GetMapping("/groomer")
-    public SearchGroomingResultByKeyword findGroomerSerachList(
+    public SearchGroomingResultByKeyword findGroomerSearchList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(required = false) String address,

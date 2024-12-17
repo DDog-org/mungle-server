@@ -36,6 +36,9 @@ public class SearchService {
 
         return SearchGroomingResultByKeyword.builder()
                 .result(resultList)
+                .page(groomerPage.getNumber())
+                .size(groomerPage.getSize())
+                .totalElements(groomerPage.getTotalElements())
                 .build();
 
     }
@@ -54,7 +57,9 @@ public class SearchService {
 
         return SearchVetResultByKeyword.builder()
                 .result(resultList)
+                .page(vetPage.getNumber())
+                .size(vetPage.getSize())
+                .totalElements(vetPage.getTotalElements())
                 .build();
-
     }
 }

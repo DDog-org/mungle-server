@@ -9,6 +9,10 @@ import java.util.List;
 @Getter
 @Builder
 public class SearchGroomingResultByKeyword {
+    private int page;
+    private int size;
+    private long totalElements;
+
     List<ResultList> result;
 
     @Getter

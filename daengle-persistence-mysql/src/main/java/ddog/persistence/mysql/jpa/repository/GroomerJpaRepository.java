@@ -16,10 +16,10 @@ public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Lo
     Optional<GroomerJpaEntity> findByGroomerId(Long groomerId);
 
     @Query("SELECT v FROM Groomers v " +
-            "JOIN v.keywords k " +
-            "WHERE (:region IS NULL OR v.address LIKE %:region%) " +
-            "AND (:keyword IS NULL OR v.name LIKE %:keyword%) " +
-            "AND (:tag IS NULL OR k = :tag)")
+            "LEFT JOIN v.keywords k " +
+            "WHERE (:region IS NULL OR :region = '' OR v.address LIKE CONCAT('%', :region, '%')) " +
+            "AND (:keyword IS NULL OR :keyword = '' OR v.name LIKE CONCAT('%', :keyword, '%')) " +
+            "AND (:tag IS NULL OR :tag = '' OR v.name LIKE CONCAT('%', :tag, '%'))")
     Page<GroomerJpaEntity> findAllGroomersBy(
             @Param("region") String region,
             @Param("keyword") String keyword,
