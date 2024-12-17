@@ -17,6 +17,8 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     Optional<ReservationJpaEntity> findByReservationId(Long id);
 
+    Optional<ReservationJpaEntity> findByEstimateId(Long id);
+
     Page<ReservationJpaEntity> findByCustomerIdAndServiceTypeAndReservationStatus(
             Long customerId, ServiceType serviceType, ReservationStatus reservationStatus, Pageable pageable);
 

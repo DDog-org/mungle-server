@@ -145,8 +145,11 @@ public class AccountService {
                 .build();
     }
 
-    public ShopInfo.UpdatePage getShopInfo(Long shopId) {
-        BeautyShop shop = beautyShopPersist.findBeautyShopById(shopId);
+    public ShopInfo.UpdatePage getShopInfo(Long accountId) {
+        Groomer groomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        BeautyShop shop = beautyShopPersist.findBeautyShopById(groomer.getShopId());
 
         return BeautyShopMapper.mapToShopInfo(shop);
     }

@@ -20,7 +20,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    public CommonResponseEntity<PostOrderResp> processOrder(PayloadDto payloadDto, @RequestBody PostOrderInfo postOrderInfo) {
-        return success(orderService.processOrder(payloadDto.getAccountId(), postOrderInfo));
+    public CommonResponseEntity<PostOrderResp> processOrder(@RequestHeader("Idempotency-Key") String idempotencyKey,
+                                                            PayloadDto payloadDto, @RequestBody PostOrderInfo postOrderInfo) {
+        return success(orderService.processOrder(idempotencyKey, payloadDto.getAccountId(), postOrderInfo));
     }
 }

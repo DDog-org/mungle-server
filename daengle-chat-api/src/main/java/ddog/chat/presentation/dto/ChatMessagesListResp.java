@@ -13,10 +13,9 @@ import java.util.Map;
 public class ChatMessagesListResp {
     private Long roomId;
     private Long userId;
-    private Long partnerId;
-    private String partnerProfile;
-    private String partnerName;
-    private Long estimateId;
+    private Long otherId;
+    private String otherProfile;
+    private String otherName;
 
     private List<Map<String, Object>> messagesGroupedByDate;
 

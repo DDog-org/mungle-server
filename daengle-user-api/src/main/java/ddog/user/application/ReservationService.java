@@ -90,23 +90,29 @@ public class ReservationService {
         GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
-        Groomer groomer = groomerPersist.findByGroomerId(estimate.getGroomerId())
+        Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        Reservation reservation = reservationPersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
         Pet pet = petPersist.findByPetId(estimate.getPetId())
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-        return ReservationMapper.mapToGroomingEstimateDetail(estimateId, groomer, estimate, pet);
+        return ReservationMapper.mapToGroomingEstimateDetail(reservation.getReservationId(), estimateId, groomer, estimate, pet);
     }
 
     public EstimateDetail.Care getCareEstimateDetail(Long estimateId) {
         CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
-        Vet vet = vetPersist.findByVetId(estimate.getVetId())
+        Vet vet = vetPersist.findByAccountId(estimate.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        return ReservationMapper.mapToCareEstimateDetail(estimateId, vet, estimate);
+        Reservation reservation = reservationPersist.findByEstimateId(estimateId)
+                .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+
+        return ReservationMapper.mapToCareEstimateDetail(reservation.getReservationId(), estimateId, vet, estimate);
     }
 
     public ReservationInfo.ReservationUsersInfo getCareUserAndPartnerDetail(Long reservationId) {

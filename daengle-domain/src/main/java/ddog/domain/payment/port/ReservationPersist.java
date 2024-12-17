@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface ReservationPersist {
     Reservation save(Reservation reservation);
 
+    Optional<Reservation> findByEstimateId(Long estimateId);
+
     Optional<Reservation> findByReservationId(Long reservationId);
 
     Page<Reservation> findPaymentHistoryList(Long accountId, ServiceType serviceType, Pageable pageable);
