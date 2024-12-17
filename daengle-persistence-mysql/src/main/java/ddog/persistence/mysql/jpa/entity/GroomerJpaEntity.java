@@ -1,8 +1,7 @@
 package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.groomer.Groomer;
-import ddog.domain.groomer.License;
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,10 +42,15 @@ public class GroomerJpaEntity {
     @JoinColumn(name = "account_id", referencedColumnName = "accountId")
     private List<LicenseJpaEntity> licenses;
 
-    @ElementCollection // 해시태그 리스트
-    @CollectionTable(name = "grooming_keywords", joinColumns = @JoinColumn(name = "groomer_id"))
-    @Column(name = "grooming_keyword")
-    private List<GroomingKeyword> keywords;
+    @ElementCollection // 뱃지 리스트
+    @CollectionTable(name = "grooming_badges", joinColumns = @JoinColumn(name = "groomer_id"))
+    @Column(name = "grooming_badge")
+    @Enumerated(EnumType.STRING)
+    private List<GroomingBadge> badges;
+
+    @OneToMany
+    @JoinColumn(name = "account_id", referencedColumnName = "accountId")
+    private List<GroomingKeywordJpaEntity> keywords;
 
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
@@ -67,7 +71,10 @@ public class GroomerJpaEntity {
                 .licenses(groomer.getLicenses().stream()
                         .map(LicenseJpaEntity::from)
                         .toList())
-                .keywords(groomer.getKeywords())
+                .badges(groomer.getBadges())
+                .keywords(groomer.getKeywords().stream()
+                        .map(GroomingKeywordJpaEntity::from)
+                        .toList())
                 .build();
     }
 
@@ -90,7 +97,10 @@ public class GroomerJpaEntity {
                 .licenses(licenses.stream()
                         .map(LicenseJpaEntity::toModel)
                         .toList())
-                .keywords(keywords)
+                .badges(badges)
+                .keywords(keywords.stream()
+                        .map(GroomingKeywordJpaEntity::toModel)
+                        .toList())
                 .build();
     }
 }

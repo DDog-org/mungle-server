@@ -44,6 +44,7 @@ public class VetJpaEntity {
     @ElementCollection // 휴무일 리스트
     @CollectionTable(name = "vet_closed_days", joinColumns = @JoinColumn(name = "vet_id"))
     @Column(name = "day")
+    @Enumerated(EnumType.STRING)
     private List<Day> closedDays;
 
     @ElementCollection // 자격증 URL 리스트
@@ -54,6 +55,7 @@ public class VetJpaEntity {
     @ElementCollection // 해시태그 리스트
     @CollectionTable(name = "care_keywords", joinColumns = @JoinColumn(name = "vet_id"))
     @Column(name = "care_keyword")
+    @Enumerated(EnumType.STRING)
     private List<CareKeyword> keywords;
 
     public static VetJpaEntity from(Vet vet) {

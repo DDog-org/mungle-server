@@ -1,6 +1,6 @@
 package ddog.domain.groomer;
 
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +29,7 @@ public class Groomer {
     private String introduction;
     private List<String> businessLicenses;
     private List<License> licenses;
+    private List<GroomingBadge> badges;
     private List<GroomingKeyword> keywords;
 
 
