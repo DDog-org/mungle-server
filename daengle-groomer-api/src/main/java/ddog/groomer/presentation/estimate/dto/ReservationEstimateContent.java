@@ -1,5 +1,7 @@
 package ddog.groomer.presentation.estimate.dto;
 
+import ddog.domain.pet.Part;
+import ddog.domain.pet.SignificantTag;
 import ddog.domain.pet.Weight;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,17 +23,12 @@ public class ReservationEstimateContent {
     private String petName;
     private Integer petAge;
     private Weight petWeight;
-    private List<String> dislikeParts;
-    private List<String> significantTags;
-    private String etcSignificants;
+    private List<Part> dislikeParts;
+    private List<SignificantTag> significantTags;
 
-    @Getter
-    @Builder
-    public static class toGroomerPetInfo {
-        private String desiredStyle;
-        private String requirements;
+    private String desiredStyle;
+    private String requirements;
 
-        private String overallOpinion;
-    }
+    private String overallOpinion;
 
 }
