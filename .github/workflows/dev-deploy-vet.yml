@@ -2,8 +2,6 @@ name: Deploy to Develop EC2
 on:
   push:
     branches: [ "develop-vet" ]
-  pull_request:
-    branches: [ "develop" ] #테스트 용
 
 jobs:
   deploy:
@@ -18,6 +16,7 @@ jobs:
       max-parallel: 1
 
     env:
+      SSH_USER: ${{ secrets.SSH_USER }}
       SSH_VET_HOST: ${{ secrets.SSH_VET_HOST }}
 
 
