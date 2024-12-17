@@ -16,7 +16,6 @@ public class ChatMessagesListResp {
     private Long otherId;
     private String otherProfile;
     private String otherName;
-    private Long estimateId;
 
     private List<Map<String, Object>> messagesGroupedByDate;
 

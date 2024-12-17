@@ -41,16 +41,12 @@ public class ChatService {
     private final VetPersist vetPersist;
     private final AccountPersist accountPersist;
 
-    private final GroomingEstimatePersist groomingEstimatePersist;
-    private final CareEstimatePersist careEstimatePersist;
-
     private ChatRoom startChat(Role role, Long accountId, Long otherUserId) {
         return findOrSaveChatRoom(role, accountId, otherUserId);
     }
 
     public ChatMessagesListResp getAllMessagesByRoomId(Role role, Long userAccountId, Long otherUserId) {
         ChatRoom savedChatRoom = startChat(role, userAccountId, otherUserId);
-        Long estimateId = null;
         String otherUserProfile = null;
         String otherUserName = null;
         if (role.equals(Role.DAENGLE)) {
@@ -59,25 +55,15 @@ public class ChatService {
                 Groomer savedGroomer = groomerPersist.findByAccountId(otherUserId).orElse(null);
                 otherUserProfile = (savedGroomer != null) ? savedGroomer.getImageUrl() : null;
                 otherUserName = (savedGroomer != null) ? savedGroomer.getName() : null;
-                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(userAccountId, otherUserId)
-                        .map(GroomingEstimate::getEstimateId).orElse(null);
             } else if (savedOtherUser.getRole().equals(Role.VET)) {
                 Vet savedVet = vetPersist.findByAccountId(otherUserId).orElse(null);
                 otherUserProfile = (savedVet != null) ? savedVet.getImageUrl() : null;
                 otherUserName = (savedVet != null) ? savedVet.getName() : null;
-                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(userAccountId, otherUserId)
-                        .map(CareEstimate::getEstimateId).orElse(null);
             }
         } else {
             User savedUser = userPersist.findByAccountId(otherUserId).orElse(null);
             otherUserProfile = (savedUser != null) ? savedUser.getImageUrl() : null;
             otherUserName = (savedUser != null) ? savedUser.getNickname() : null;
-            if (accountPersist.findById(userAccountId).getRole().equals(Role.GROOMER))
-                estimateId = groomingEstimatePersist.findEstimateByUserIdAndGroomerId(otherUserId, userAccountId)
-                        .map(GroomingEstimate::getEstimateId).orElse(null);
-            else if (accountPersist.findById(userAccountId).getRole().equals(Role.VET))
-                estimateId = careEstimatePersist.findEstimateByUserIdAndVetId(otherUserId, userAccountId)
-                        .map(CareEstimate::getEstimateId).orElse(null);
         }
 
         List<ChatMessage> savedMessages = chatMessagePersist.findByChatRoomId(savedChatRoom.getChatRoomId());
@@ -90,7 +76,6 @@ public class ChatService {
                     .otherName(otherUserName)
                     .otherProfile(otherUserProfile)
                     .messagesGroupedByDate(Collections.emptyList())
-                    .estimateId(estimateId)
                     .build();
         }
 
@@ -126,7 +111,6 @@ public class ChatService {
                 .otherName(otherUserName)
                 .otherProfile(otherUserProfile)
                 .messagesGroupedByDate(messagesByDate)
-                .estimateId(estimateId)
                 .build();
     }
 
