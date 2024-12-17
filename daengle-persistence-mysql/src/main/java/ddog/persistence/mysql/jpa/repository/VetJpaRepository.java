@@ -22,4 +22,15 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
     @Query("SELECT v FROM Vets v WHERE v.address LIKE CONCAT(:addressPrefix, '%')")
     List<VetJpaEntity> findVetsByAddressPrefix(@Param("addressPrefix") String addressPrefix);
 
+    @Query("SELECT v FROM Vets v " +
+            "JOIN v.keywords k " +
+            "WHERE (:region IS NULL OR v.address LIKE %:region%) " +
+            "AND (:keyword IS NULL OR v.name LIKE %:keyword%) " +
+            "AND (:tag IS NULL OR k = :tag)")
+    Page<VetJpaEntity> findAllVetsBy(
+            @Param("region") String region,
+            @Param("keyword") String keyword,
+            @Param("tag") String tag,
+            Pageable pageable
+    );
 }

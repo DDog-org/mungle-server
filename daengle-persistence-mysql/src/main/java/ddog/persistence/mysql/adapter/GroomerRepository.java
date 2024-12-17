@@ -5,6 +5,8 @@ import ddog.persistence.mysql.jpa.entity.GroomerJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomerJpaRepository;
 import ddog.domain.groomer.port.GroomerPersist;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -30,5 +32,10 @@ public class GroomerRepository implements GroomerPersist {
     public Optional<Groomer> findByGroomerId(Long groomerId) {
         return groomerJpaRepository.findByGroomerId(groomerId)
                 .map(GroomerJpaEntity::toModel);
+    }
+
+    @Override
+    public Page<Groomer> findGroomerByKeyword(String address, String keyword, String tag, Pageable pageable) {
+        return groomerJpaRepository.findAllGroomersBy(address, keyword, tag, pageable).map(GroomerJpaEntity::toModel);
     }
 }

@@ -15,4 +15,6 @@ public interface VetPersist {
 
     Page<Vet> findByAddress(String address, Pageable pageable);
     List<Vet> findByAddressPrefix(String addressPrefix);
+
+    Page<Vet> findVetByKeyword(String address, String keyword, String tag, Pageable pageable);
 }

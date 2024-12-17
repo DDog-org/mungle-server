@@ -51,4 +51,10 @@ public class VetRepository implements VetPersist {
                 .map(VetJpaEntity::toModel)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<Vet> findVetByKeyword(String address, String keyword, String tag, Pageable pageable) {
+        return vetJpaRepository.findAllVetsBy(address, keyword, tag, pageable).map(VetJpaEntity::toModel);
+    }
+
 }
