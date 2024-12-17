@@ -15,4 +15,6 @@ public interface VetPersist {
 
     Page<Vet> findByAddress(String address, Pageable pageable);
     List<Vet> findByAddressPrefix(String addressPrefix);
+
+    void deleteByAccountId(Long accountId);
 }

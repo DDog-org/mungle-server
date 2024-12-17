@@ -76,5 +76,4 @@ public class AccountController {
     public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
         return success(accountService.withdraw(payloadDto.getAccountId()));
     }
-
 }

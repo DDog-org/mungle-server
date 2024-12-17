@@ -252,7 +252,7 @@ public class AccountService {
     }
 
     @Transactional
-    public WithdrawResp withdraw(Long accountId) {
+    public WithdrawResp withdraw(Long accountId) {  //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 

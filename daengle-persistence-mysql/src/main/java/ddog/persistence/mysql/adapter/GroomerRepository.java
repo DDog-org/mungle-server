@@ -31,4 +31,9 @@ public class GroomerRepository implements GroomerPersist {
         return groomerJpaRepository.findByGroomerId(groomerId)
                 .map(GroomerJpaEntity::toModel);
     }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        groomerJpaRepository.deleteByAccountId(accountId);
+    }
 }
