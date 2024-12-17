@@ -24,11 +24,11 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
 
     @Query("SELECT v FROM Vets v " +
             "LEFT JOIN v.keywords k " +
-            "WHERE (:region IS NULL OR :region = '' OR v.address LIKE CONCAT('%', :region, '%')) " +
+            "WHERE (:address IS NULL OR :address = '' OR v.address LIKE CONCAT('%', :address, '%')) " +
             "AND (:keyword IS NULL OR :keyword = '' OR v.name LIKE CONCAT('%', :keyword, '%')) " +
             "AND (:tag IS NULL OR :tag = '' OR v.name LIKE CONCAT('%', :tag, '%'))")
     Page<VetJpaEntity> findAllVetsBy(
-            @Param("region") String region,
+            @Param("address") String address,
             @Param("keyword") String keyword,
             @Param("tag") String tag,
             Pageable pageable
