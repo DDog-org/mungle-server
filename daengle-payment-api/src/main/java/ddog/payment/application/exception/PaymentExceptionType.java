@@ -11,8 +11,9 @@ public enum PaymentExceptionType {
     PAYMENT_RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "예약 내역 찾을 수 없음"),
     PAYMENT_PG_INTEGRATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "결제 정보 조회 중 에러 발생"),
     PAYMENT_PG_INCOMPLETE(HttpStatus.INTERNAL_SERVER_ERROR, 5002, "미완료된 결제건"),
-    PAYMENT_PG_AMOUNT_MISMATCH(HttpStatus.INTERNAL_SERVER_ERROR, 5003, "결제 금액 불일치"),
-    PAYMENT_CANCEL_BATCH_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5004, "예약 취소 배치 처리 중 에러 발생");
+    PAYMENT_ALREADY_COMPLETED(HttpStatus.NOT_FOUND, 5003, "이미 완료된 결제건"),
+    PAYMENT_PG_AMOUNT_MISMATCH(HttpStatus.INTERNAL_SERVER_ERROR, 5004, "결제 금액 불일치"),
+    PAYMENT_CANCEL_BATCH_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5005, "예약 취소 배치 처리 중 에러 발생");
 
     private final HttpStatus httpStatus;
     private final Integer code;

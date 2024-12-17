@@ -10,12 +10,13 @@ import java.util.UUID;
 
 public class OrderMapper {
 
-    public static Order createBy(User user, PostOrderInfo postOrderInfo, Payment payment) {
+    public static Order createBy(String idempotencyKey ,User user, PostOrderInfo postOrderInfo, Payment payment) {
         return Order.builder()
                 .serviceType(postOrderInfo.getServiceType())
                 .petId(postOrderInfo.getPetId())
                 .price(postOrderInfo.getPrice())
                 .estimateId(postOrderInfo.getEstimateId())
+                .idempotencyKey(idempotencyKey)
                 .orderUid(String.valueOf(UUID.randomUUID()))
                 .accountId(user.getAccountId())
                 .customerName(user.getNickname())
