@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Payments")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "paymentUid"))
 public class PaymentJpaEntity {
 
     @Id
@@ -26,8 +25,6 @@ public class PaymentJpaEntity {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
     private LocalDateTime paymentDate;
-
-    @Column(nullable = false, unique = true)
     private String paymentUid;
 
     public Payment toModel() {
