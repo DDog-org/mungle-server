@@ -9,13 +9,11 @@ import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.review.port.GroomingReviewPersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
+import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
-import ddog.user.application.exception.account.GroomerException;
-import ddog.user.application.exception.account.GroomerExceptionType;
-import ddog.user.application.exception.account.VetException;
-import ddog.user.application.exception.account.VetExceptionType;
+import ddog.user.application.exception.account.*;
 import ddog.user.application.mapper.DetailInfoMapper;
 import ddog.user.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +39,7 @@ public class DetailInfoService {
     public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
         address = checkUserLoggedIn(accountId, address);
         address = address.replace(" ", "");
-
+        User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, size);
 
         Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address, pageable);
@@ -53,6 +51,7 @@ public class DetailInfoService {
                 .totalPages(savedBeautyShop.getTotalPages())
                 .totalElements(savedBeautyShop.getTotalElements())
                 .currentPage(savedBeautyShop.getNumber())
+                .userAddress(savedUser.getAddress())
                 .build();
     }
 
@@ -90,6 +89,7 @@ public class DetailInfoService {
 
         address = address.replace(" ", "");
 
+        User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, size);
         Page<Vet> savedVet = vetPersist.findByAddress(address, pageable);
 
@@ -100,6 +100,7 @@ public class DetailInfoService {
                 .totalPages(savedVet.getTotalPages())
                 .totalElements(savedVet.getTotalElements())
                 .currentPage(savedVet.getNumber())
+                .userAddress(savedUser.getAddress())
                 .build();
     }
 

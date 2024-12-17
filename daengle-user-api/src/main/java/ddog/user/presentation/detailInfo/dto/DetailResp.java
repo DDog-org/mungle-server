@@ -19,6 +19,7 @@ public class DetailResp {
     int totalPages;
     Long totalElements;
     int currentPage;
+    private String userAddress;
 
     @Getter
     @Builder
@@ -29,6 +30,7 @@ public class DetailResp {
         private String shopImage;
         private LocalTime startTime;
         private LocalTime endTime;
+        private List<Day> closedDay;
     }
 
     @Getter
@@ -55,6 +57,7 @@ public class DetailResp {
         private String vetImage;
         private LocalTime startTime;
         private LocalTime endTime;
+        private List<Day> closedDay;
     }
 
     @Getter

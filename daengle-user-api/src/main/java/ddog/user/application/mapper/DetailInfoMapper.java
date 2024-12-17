@@ -14,6 +14,7 @@ public class DetailInfoMapper {
                 .shopImage(beautyShop.getImageUrl())
                 .startTime(beautyShop.getStartTime())
                 .endTime(beautyShop.getEndTime())
+                .closedDay(beautyShop.getClosedDays())
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class DetailInfoMapper {
                 .vetImage(vet.getImageUrl())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
+                .closedDay(vet.getClosedDays())
                 .build();
     }
 }
