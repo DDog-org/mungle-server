@@ -2,6 +2,7 @@ package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.vet.Day;
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -52,11 +53,15 @@ public class VetJpaEntity {
     @Column(name = "license_url")
     private List<String> licenses;
 
-    @ElementCollection // 해시태그 리스트
-    @CollectionTable(name = "care_keywords", joinColumns = @JoinColumn(name = "vet_id"))
-    @Column(name = "care_keyword")
+    @ElementCollection // 뱃지 리스트
+    @CollectionTable(name = "care_badges", joinColumns = @JoinColumn(name = "vet_id"))
+    @Column(name = "care_badge")
     @Enumerated(EnumType.STRING)
-    private List<CareKeyword> keywords;
+    private List<CareBadge> badges;
+
+    @OneToMany
+    @JoinColumn(name = "account_id", referencedColumnName = "accountId")
+    private List<CareKeywordJpaEntity> keywords;
 
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
@@ -75,7 +80,10 @@ public class VetJpaEntity {
                 .endTime(vet.getEndTime())
                 .closedDays(vet.getClosedDays())
                 .licenses(vet.getLicenses())
-                .keywords(vet.getKeywords())
+                .badges(vet.getBadges())
+                .keywords(vet.getKeywords().stream()
+                        .map(CareKeywordJpaEntity::from)
+                        .toList())
                 .build();
     }
 
@@ -96,7 +104,10 @@ public class VetJpaEntity {
                 .endTime(endTime)
                 .closedDays(closedDays)
                 .licenses(licenses)
-                .keywords(keywords)
+                .badges(badges)
+                .keywords(keywords.stream()
+                        .map(CareKeywordJpaEntity::toModel)
+                        .toList())
                 .build();
     }
 }

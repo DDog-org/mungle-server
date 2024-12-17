@@ -1,7 +1,7 @@
 package ddog.domain.vet;
 
 import ddog.domain.vet.enums.AreaCode;
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +32,7 @@ public class Vet {
     private LocalTime endTime;
     private List<Day> closedDays;
     private List<String> licenses;
+    private List<CareBadge> badges;
     private List<CareKeyword> keywords;
 
     public void updateDaengleMeter(Integer newMeterValue) {
