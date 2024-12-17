@@ -33,7 +33,7 @@ public class Vet {
     private List<Day> closedDays;
     private List<String> licenses;
     private List<CareBadge> badges;
-    private List<CareKeyword> keywords;
+    private List<VetKeyword> keywords;
 
     public void updateDaengleMeter(Integer newMeterValue) {
         this.daengleMeter = newMeterValue;

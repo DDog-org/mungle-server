@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.jpa.entity;
 
-import ddog.domain.vet.CareKeyword;
+import ddog.domain.vet.VetKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "CareKeywords")
-public class CareKeywordJpaEntity {
+public class VetKeywordJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +23,17 @@ public class CareKeywordJpaEntity {
     private String keyword;
     private Integer count;
 
-    public static CareKeywordJpaEntity from(CareKeyword careKeyword) {
-        return CareKeywordJpaEntity.builder()
-                .keywordId(careKeyword.getKeywordId())
-                .accountId(careKeyword.getAccountId())
-                .keyword(careKeyword.getKeyword())
-                .count(careKeyword.getCount())
+    public static VetKeywordJpaEntity from(VetKeyword vetKeyword) {
+        return VetKeywordJpaEntity.builder()
+                .keywordId(vetKeyword.getKeywordId())
+                .accountId(vetKeyword.getAccountId())
+                .keyword(vetKeyword.getKeyword())
+                .count(vetKeyword.getCount())
                 .build();
     }
 
-    public CareKeyword toModel() {
-        return CareKeyword.builder()
+    public VetKeyword toModel() {
+        return VetKeyword.builder()
                 .keywordId(keywordId)
                 .accountId(accountId)
                 .keyword(keyword)

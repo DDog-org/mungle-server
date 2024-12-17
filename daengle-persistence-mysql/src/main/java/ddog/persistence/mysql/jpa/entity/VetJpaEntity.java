@@ -3,7 +3,6 @@ package ddog.persistence.mysql.jpa.entity;
 import ddog.domain.vet.Day;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.enums.CareBadge;
-import ddog.domain.vet.enums.CareKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,7 +60,7 @@ public class VetJpaEntity {
 
     @OneToMany
     @JoinColumn(name = "account_id", referencedColumnName = "accountId")
-    private List<CareKeywordJpaEntity> keywords;
+    private List<VetKeywordJpaEntity> keywords;
 
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
@@ -82,7 +81,7 @@ public class VetJpaEntity {
                 .licenses(vet.getLicenses())
                 .badges(vet.getBadges())
                 .keywords(vet.getKeywords().stream()
-                        .map(CareKeywordJpaEntity::from)
+                        .map(VetKeywordJpaEntity::from)
                         .toList())
                 .build();
     }
@@ -106,7 +105,7 @@ public class VetJpaEntity {
                 .licenses(licenses)
                 .badges(badges)
                 .keywords(keywords.stream()
-                        .map(CareKeywordJpaEntity::toModel)
+                        .map(VetKeywordJpaEntity::toModel)
                         .toList())
                 .build();
     }

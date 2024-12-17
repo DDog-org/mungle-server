@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CareKeyword {
+public class VetKeyword {
 
     private Long keywordId;
     private Long accountId;

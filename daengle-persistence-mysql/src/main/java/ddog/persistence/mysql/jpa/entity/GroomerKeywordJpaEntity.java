@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.jpa.entity;
 
-import ddog.domain.groomer.GroomingKeyword;
+import ddog.domain.groomer.GroomerKeyword;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "GroomingKeywords")
-public class GroomingKeywordJpaEntity {
+public class GroomerKeywordJpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class GroomingKeywordJpaEntity {
     private String keyword;
     private Integer count;
 
-    public static GroomingKeywordJpaEntity from(GroomingKeyword keyword) {
-        return GroomingKeywordJpaEntity.builder()
+    public static GroomerKeywordJpaEntity from(GroomerKeyword keyword) {
+        return GroomerKeywordJpaEntity.builder()
                 .keywordId(keyword.getKeywordId())
                 .accountId(keyword.getAccountId())
                 .keyword(keyword.getKeyword())
@@ -32,8 +32,8 @@ public class GroomingKeywordJpaEntity {
                 .build();
     }
 
-    public GroomingKeyword toModel() {
-        return GroomingKeyword.builder()
+    public GroomerKeyword toModel() {
+        return GroomerKeyword.builder()
                 .keywordId(keywordId)
                 .accountId(accountId)
                 .keyword(keyword)

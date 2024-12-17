@@ -30,11 +30,19 @@ public class Groomer {
     private List<String> businessLicenses;
     private List<License> licenses;
     private List<GroomingBadge> badges;
-    private List<GroomingKeyword> keywords;
+    private List<GroomerKeyword> keywords;
 
 
     public void updateDaengleMeter(Integer newMeterValue) {
         this.daengleMeter = newMeterValue;
+    }
+
+    public void updateBadges(List<GroomingBadge> badges) {
+        this.badges = badges;
+    }
+
+    public void updateKeywords(List<GroomerKeyword> keywords) {
+        this.keywords = keywords;
     }
 
     public static void validateShopName(String shopName) {

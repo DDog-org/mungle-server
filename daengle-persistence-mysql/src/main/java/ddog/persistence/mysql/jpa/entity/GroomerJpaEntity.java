@@ -50,7 +50,7 @@ public class GroomerJpaEntity {
 
     @OneToMany
     @JoinColumn(name = "account_id", referencedColumnName = "accountId")
-    private List<GroomingKeywordJpaEntity> keywords;
+    private List<GroomerKeywordJpaEntity> keywords;
 
     public static GroomerJpaEntity from(Groomer groomer) {
         return GroomerJpaEntity.builder()
@@ -73,7 +73,7 @@ public class GroomerJpaEntity {
                         .toList())
                 .badges(groomer.getBadges())
                 .keywords(groomer.getKeywords().stream()
-                        .map(GroomingKeywordJpaEntity::from)
+                        .map(GroomerKeywordJpaEntity::from)
                         .toList())
                 .build();
     }
@@ -99,7 +99,7 @@ public class GroomerJpaEntity {
                         .toList())
                 .badges(badges)
                 .keywords(keywords.stream()
-                        .map(GroomingKeywordJpaEntity::toModel)
+                        .map(GroomerKeywordJpaEntity::toModel)
                         .toList())
                 .build();
     }
