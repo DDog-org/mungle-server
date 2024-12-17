@@ -1,5 +1,6 @@
 package ddog.persistence.mysql.jpa.repository;
 
+import ddog.domain.vet.enums.CareKeyword;
 import ddog.persistence.mysql.jpa.entity.VetJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
     Page<VetJpaEntity> findAllVetsBy(
             @Param("address") String address,
             @Param("keyword") String keyword,
-            @Param("tag") String tag,
+            @Param("tag") CareKeyword tag,
             Pageable pageable
     );
 }

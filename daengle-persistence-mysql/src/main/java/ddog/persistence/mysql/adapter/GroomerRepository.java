@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.persistence.mysql.jpa.entity.GroomerJpaEntity;
 import ddog.persistence.mysql.jpa.repository.GroomerJpaRepository;
 import ddog.domain.groomer.port.GroomerPersist;
@@ -35,7 +36,7 @@ public class GroomerRepository implements GroomerPersist {
     }
 
     @Override
-    public Page<Groomer> findGroomerByKeyword(String address, String keyword, String tag, Pageable pageable) {
+    public Page<Groomer> findGroomerByKeyword(String address, String keyword, GroomingKeyword tag, Pageable pageable) {
         return groomerJpaRepository.findAllGroomersBy(address, keyword, tag, pageable).map(GroomerJpaEntity::toModel);
     }
 }

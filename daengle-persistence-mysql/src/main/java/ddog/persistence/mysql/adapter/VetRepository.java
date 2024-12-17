@@ -1,6 +1,7 @@
 package ddog.persistence.mysql.adapter;
 
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareKeyword;
 import ddog.persistence.mysql.jpa.entity.VetJpaEntity;
 import ddog.persistence.mysql.jpa.repository.VetJpaRepository;
 import ddog.domain.vet.port.VetPersist;
@@ -53,7 +54,7 @@ public class VetRepository implements VetPersist {
     }
 
     @Override
-    public Page<Vet> findVetByKeyword(String address, String keyword, String tag, Pageable pageable) {
+    public Page<Vet> findVetByKeyword(String address, String keyword, CareKeyword tag, Pageable pageable) {
         return vetJpaRepository.findAllVetsBy(address, keyword, tag, pageable).map(VetJpaEntity::toModel);
     }
 

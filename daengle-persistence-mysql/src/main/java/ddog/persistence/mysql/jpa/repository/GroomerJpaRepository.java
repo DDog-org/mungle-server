@@ -1,5 +1,6 @@
 package ddog.persistence.mysql.jpa.repository;
 
+import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.persistence.mysql.jpa.entity.GroomerJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Lo
     Page<GroomerJpaEntity> findAllGroomersBy(
             @Param("address") String address,
             @Param("keyword") String keyword,
-            @Param("tag") String tag,
+            @Param("tag") GroomingKeyword tag,
             Pageable pageable
     );
 }

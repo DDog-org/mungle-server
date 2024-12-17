@@ -1,8 +1,10 @@
 package ddog.user.application;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareKeyword;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.presentation.search.dto.SearchGroomingResultByKeyword;
 import ddog.user.presentation.search.dto.SearchVetResultByKeyword;
@@ -20,8 +22,7 @@ public class SearchService {
     private final GroomerPersist groomerPersist;
     private final VetPersist vetPersist;
 
-
-    public SearchGroomingResultByKeyword getGroomerResultBySearch(int page, int size, String address, String keyword, String tag) {
+    public SearchGroomingResultByKeyword getGroomerResultBySearch(int page, int size, String address, String keyword, GroomingKeyword tag) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Groomer> groomerPage = groomerPersist.findGroomerByKeyword(address, keyword, tag, pageable);
 
@@ -42,7 +43,7 @@ public class SearchService {
                 .build();
 
     }
-    public SearchVetResultByKeyword getVetResultBySearch(int page, int size, String address, String keyword, String tag) {
+    public SearchVetResultByKeyword getVetResultBySearch(int page, int size, String address, String keyword, CareKeyword tag) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Vet> vetPage = vetPersist.findVetByKeyword(address, keyword, tag, pageable);
 
