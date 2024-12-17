@@ -1,4 +1,5 @@
-package ddog.groomer.presentation.estimate.dto;
+package ddog.vet.presentation.estimate.dto;
+
 
 import ddog.domain.pet.Weight;
 import lombok.Builder;
@@ -27,11 +28,12 @@ public class ReservationEstimateContent {
 
     @Getter
     @Builder
-    public static class toGroomerPetInfo {
-        private String desiredStyle;
+    public static class toVetPetInfo {
+        private String symptoms;
         private String requirements;
 
-        private String overallOpinion;
+        private String treatment;
+        private String cause;
+        private String diagnosis;
     }
-
 }
