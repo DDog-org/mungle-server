@@ -29,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -237,15 +238,29 @@ public class AccountService {
                 .build();
     }
 
-    public WithdrawResp getWithdrawInfo(Long accountId) {
+    @Transactional(readOnly = true)
+    public WithdrawInfoResp getWithdrawInfo(Long accountId) {
         User savedUser = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Optional<List<Payment>> paymentList = paymentPersist.findByPayerId(savedUser.getAccountId());
         Integer count = paymentList.map(List::size).orElse(0);
 
-        return WithdrawResp.builder()
+        return WithdrawInfoResp.builder()
                 .waitingForServiceCount(count)
+                .build();
+    }
+
+    @Transactional
+    public WithdrawResp withdraw(Long accountId) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        userPersist.deleteByAccountId(savedUser.getAccountId());
+
+        return WithdrawResp.builder()
+                .accountId(savedUser.getAccountId())
+                .withdrawDate(LocalDateTime.now())
                 .build();
     }
 }

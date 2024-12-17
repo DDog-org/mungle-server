@@ -67,9 +67,14 @@ public class AccountController {
         return success(accountService.deletePet(request.getPetId()));
     }
 
-    @GetMapping("withdraw-info")
-    public CommonResponseEntity<WithdrawResp> getWithdrawInfo(PayloadDto payloadDto) {
+    @GetMapping("/withdraw-info")
+    public CommonResponseEntity<WithdrawInfoResp> getWithdrawInfo(PayloadDto payloadDto) {
         return success(accountService.getWithdrawInfo(payloadDto.getAccountId()));
+    }
+
+    @DeleteMapping
+    public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
+        return success(accountService.withdraw(payloadDto.getAccountId()));
     }
 
 }

@@ -10,4 +10,6 @@ public interface UserPersist {
     Optional<User> findByAccountId(Long accountId);
 
     Boolean hasNickname(String nickname);
+
+    void deleteByAccountId(Long accountId);
 }
