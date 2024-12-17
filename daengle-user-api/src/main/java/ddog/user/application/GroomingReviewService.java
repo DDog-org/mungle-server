@@ -232,7 +232,7 @@ public class GroomingReviewService {
 
     @Transactional(readOnly = true)
     public GroomingReviewListResp findGroomerReviewList(Long groomerId, int page, int size) {
-        Groomer savedGroomer = groomerPersist.findByAccountId(groomerId)
+        Groomer savedGroomer = groomerPersist.findByGroomerId(groomerId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);
