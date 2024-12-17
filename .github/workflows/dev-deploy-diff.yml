@@ -129,37 +129,44 @@ jobs:
       - name: Build and Push Docker Image
         if: steps.skip-check.outputs.deploy == 'true'
         run: |
+          set -e
+          cd ${{ matrix.module.path }}  # Dockerfile이 있는 디렉토리로 이동
+          
+          # Docker 이미지 태그 설정
           IMAGE_TAG="${{ matrix.module.name }}-$(date +%Y%m%d%H%M%S)"
+          echo "Building Docker image with tag: $IMAGE_TAG"
+          
+          # Docker 이미지 빌드 및 푸시
           docker build --platform linux/amd64 --build-arg JAR_FILE=build/libs/${{ matrix.module.name }}-api-0.0.1-SNAPSHOT.jar -t ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG .
           docker tag ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG ${{ secrets.ECR_REPOSITORY_URI }}:latest
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:$IMAGE_TAG
           docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
-
-      # Deploy to EC2
-      - name: Set up SSH
-        if: steps.skip-check.outputs.deploy == 'true'
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
-
-      - name: Deploy to EC2
-        if: steps.skip-check.outputs.deploy == 'true'
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST << 'EOF'
-            export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-            export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-            export AWS_REGION="${{ secrets.AWS_REGION }}"
-            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
-
-            CONTAINER_NAME="${{ matrix.module.name }}-container"
-            docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
-            docker stop $CONTAINER_NAME || true
-            docker rm $CONTAINER_NAME || true
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
-          EOF
-
-      - name: Deployment Complete
-        if: steps.skip-check.outputs.deploy == 'true'
-        run: echo "Deployment for ${{ matrix.module.name }} completed successfully!"
+          
+          # Deploy to EC2
+          - name: Set up SSH
+            if: steps.skip-check.outputs.deploy == 'true'
+            run: |
+              mkdir -p ~/.ssh
+              echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+              chmod 600 ~/.ssh/id_rsa
+              echo "StrictHostKeyChecking no" >> ~/.ssh/config
+          
+          - name: Deploy to EC2
+            if: steps.skip-check.outputs.deploy == 'true'
+            run: |
+              ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@$EC2_HOST << 'EOF'
+                export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+                export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+                export AWS_REGION="${{ secrets.AWS_REGION }}"
+                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+          
+                CONTAINER_NAME="${{ matrix.module.name }}-container"
+                docker pull ${{ secrets.ECR_REPOSITORY_URI }}:latest
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker run -d --name $CONTAINER_NAME -p 8080:8080 ${{ secrets.ECR_REPOSITORY_URI }}:latest
+              EOF
+          
+          - name: Deployment Complete
+            if: steps.skip-check.outputs.deploy == 'true'
+            run: echo "Deployment for ${{ matrix.module.name }} completed successfully!"
