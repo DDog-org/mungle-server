@@ -63,4 +63,12 @@ public class ReservationRepository implements ReservationPersist {
         return reservationJpaRepository.findTodayReservationByVetId(dateTime, ServiceType.GROOMING, recipientId)
                 .stream().map(ReservationJpaEntity::toModel).toList();
     }
+
+    @Override
+    public Optional<List<Reservation>> findByRecipientIdAndReservationStatus(Long recipientId, ReservationStatus status) {
+        return reservationJpaRepository.findByRecipientIdAndReservationStatus(recipientId, status)
+                .map(reservationJpaEntities -> reservationJpaEntities.stream()
+                .map(ReservationJpaEntity::toModel)
+                .toList());
+    }
 }

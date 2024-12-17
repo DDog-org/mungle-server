@@ -27,7 +27,7 @@ public class PaymentController {
 
     @PostMapping("/validate")
     public CommonResponseEntity<PaymentCallbackResp> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
-        return success(paymentService.validationPayment(paymentCallbackReq));
+            return success(paymentService.validationPayment(paymentCallbackReq));
     }
 
     @PostMapping("/cancel/{reservationId}")

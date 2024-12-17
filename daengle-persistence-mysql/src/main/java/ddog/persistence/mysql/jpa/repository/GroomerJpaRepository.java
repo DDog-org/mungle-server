@@ -11,4 +11,5 @@ public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Lo
 
     Optional<GroomerJpaEntity> findByGroomerId(Long groomerId);
 
+    void deleteByAccountId(Long accountId);
 }
