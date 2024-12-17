@@ -64,7 +64,6 @@ public class OrderService {
                     .build();
 
         } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
-            log.info(e.getMessage());
             throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
         }
     }
