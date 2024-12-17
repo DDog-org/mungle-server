@@ -87,7 +87,7 @@ public class GroomingReviewService {
 
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 
-        String includedBanWord = banWordValidator.getBanWords(postGroomingReviewInfo.getContent());
+        String includedBanWord = banWordValidator.findBanWords(postGroomingReviewInfo.getContent());
         if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
@@ -122,7 +122,7 @@ public class GroomingReviewService {
 
         validateModifyGroomingReviewInfoDataFormat(updateGroomingReviewInfo);
 
-        String includedBanWord = banWordValidator.getBanWords(updateGroomingReviewInfo.getContent());
+        String includedBanWord = banWordValidator.findBanWords(updateGroomingReviewInfo.getContent());
         if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         GroomingReview modifiedReview = GroomingReviewMapper.updateBy(savedGroomingReview, updateGroomingReviewInfo);

@@ -86,7 +86,7 @@ public class CareReviewService {
 
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
-        String includedBanWord = banWordValidator.getBanWords(postCareReviewInfo.getContent());
+        String includedBanWord = banWordValidator.findBanWords(postCareReviewInfo.getContent());
         if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
@@ -121,7 +121,7 @@ public class CareReviewService {
 
         validateModifyCareReviewInfoDataFormat(updateCareReviewInfo);
 
-        String includedBanWord = banWordValidator.getBanWords(updateCareReviewInfo.getContent());
+        String includedBanWord = banWordValidator.findBanWords(updateCareReviewInfo.getContent());
         if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, updateCareReviewInfo);
