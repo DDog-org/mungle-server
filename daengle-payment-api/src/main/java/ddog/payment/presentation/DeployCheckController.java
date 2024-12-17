@@ -23,7 +23,7 @@ public class DeployCheckController {
 
     @GetMapping("/test")
     public String test() {
-        return "Hello Daengle World - MULTI MODULE !!!! PAYMENT API !" +
+        return "Hello Daengle World - DIFF -MULTI MODULE !!!! PAYMENT API !" +
                 " Made at: " + deploymentTime + "   CI/CD SUCCESS";
     }
 }
