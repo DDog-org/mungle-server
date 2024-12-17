@@ -12,6 +12,8 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.application.exception.account.*;
@@ -32,6 +34,7 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationPersist reservationPersist;
+    private final UserPersist userPersist;
     private final PetPersist petPersist;
     private final VetPersist vetPersist;
     private final GroomerPersist groomerPersist;
@@ -83,7 +86,10 @@ public class ReservationService {
                 .build();
     }
 
-    public EstimateDetail.Grooming getGroomingEstimateDetail(Long estimateId) {
+    public EstimateDetail.Grooming getGroomingEstimateDetail(Long estimateId, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         GroomingEstimate estimate = groomingEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
@@ -96,10 +102,15 @@ public class ReservationService {
         Pet pet = petPersist.findByPetId(estimate.getPetId())
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-        return ReservationMapper.mapToGroomingEstimateDetail(reservation.getReservationId(), estimateId, groomer, estimate, pet);
+        int daengleMeter = user.calculateDaengleMeterWithGroomingBadge(groomer.getDaengleMeter(), groomer.getBadges());
+
+        return ReservationMapper.mapToGroomingEstimateDetail(reservation.getReservationId(), estimateId, groomer, estimate, pet, daengleMeter);
     }
 
-    public EstimateDetail.Care getCareEstimateDetail(Long estimateId) {
+    public EstimateDetail.Care getCareEstimateDetail(Long estimateId, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         CareEstimate estimate = careEstimatePersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
@@ -109,6 +120,8 @@ public class ReservationService {
         Reservation reservation = reservationPersist.findByEstimateId(estimateId)
                 .orElseThrow(() -> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
 
-        return ReservationMapper.mapToCareEstimateDetail(reservation.getReservationId(), estimateId, vet, estimate);
+        int daengleMeter = user.calculateDaengleMeterWithCareBadge(vet.getDaengleMeter(), vet.getBadges());
+
+        return ReservationMapper.mapToCareEstimateDetail(reservation.getReservationId(), estimateId, vet, estimate, daengleMeter);
     }
 }

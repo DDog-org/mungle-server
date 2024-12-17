@@ -77,13 +77,13 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static EstimateInfo.Care.Content mapToEstimateInfo(CareEstimate estimate, Vet vet) {
+    public static EstimateInfo.Care.Content mapToEstimateInfo(CareEstimate estimate, Vet vet, int daengleMeter) {
         return EstimateInfo.Care.Content.builder()
                 .id(estimate.getEstimateId())
                 .name(vet.getName())
-                .daengleMeter(vet.getDaengleMeter())
+                .daengleMeter(daengleMeter)
                 .imageUrl(vet.getImageUrl())
-                .keywords(vet.getKeywords())
+                .badges(vet.getBadges())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }
@@ -101,13 +101,14 @@ public class CareEstimateMapper {
                 .build();
     }
 
-    public static CareEstimateDetail mapToEstimateDetail(CareEstimate estimate, Vet vet, Pet pet) {
+    public static CareEstimateDetail mapToEstimateDetail(CareEstimate estimate, Vet vet, Pet pet, int daengleMeter) {
         return CareEstimateDetail.builder()
                 .careEstimateId(estimate.getEstimateId())
                 .vetId(vet.getVetId())
                 .imageUrl(vet.getImageUrl())
                 .name(vet.getName())
-                .daengleMeter(vet.getDaengleMeter())
+                .daengleMeter(daengleMeter)
+                .badges(vet.getBadges())
                 .proposal(estimate.getProposal())
                 .introduction(vet.getIntroduction())
                 .address(estimate.getAddress())

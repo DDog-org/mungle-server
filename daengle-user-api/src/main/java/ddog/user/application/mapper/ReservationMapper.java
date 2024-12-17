@@ -34,7 +34,7 @@ public class ReservationMapper {
                 .build();
     }
 
-    public static EstimateDetail.Grooming mapToGroomingEstimateDetail(Long reservationId, Long estimateId, Groomer groomer, GroomingEstimate estimate, Pet pet) {
+    public static EstimateDetail.Grooming mapToGroomingEstimateDetail(Long reservationId, Long estimateId, Groomer groomer, GroomingEstimate estimate, Pet pet, int daengleMeter) {
         return EstimateDetail.Grooming.builder()
                 .reservationId(reservationId)
                 .groomingEstimateId(estimateId)
@@ -43,8 +43,8 @@ public class ReservationMapper {
                 .name(groomer.getName())
                 .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
-                .daengleMeter(groomer.getDaengleMeter())
-                .keywords(groomer.getKeywords())
+                .daengleMeter(daengleMeter)
+                .badges(groomer.getBadges())
                 .introduction(groomer.getIntroduction())
                 .address(groomer.getAddress())
                 .reservedDate(estimate.getReservedDate())
@@ -54,15 +54,15 @@ public class ReservationMapper {
                 .build();
     }
 
-    public static EstimateDetail.Care mapToCareEstimateDetail(Long reservationId, Long estimateId, Vet vet, CareEstimate estimate) {
+    public static EstimateDetail.Care mapToCareEstimateDetail(Long reservationId, Long estimateId, Vet vet, CareEstimate estimate, int daengleMeter) {
         return EstimateDetail.Care.builder()
                 .reservationId(reservationId)
                 .careEstimateId(estimateId)
                 .vetId(vet.getAccountId())
                 .imageUrl(vet.getImageUrl())
                 .name(vet.getName())
-                .daengleMeter(vet.getDaengleMeter())
-                .keywords(vet.getKeywords())
+                .daengleMeter(daengleMeter)
+                .badges(vet.getBadges())
                 .introduction(vet.getIntroduction())
                 .address(vet.getAddress())
                 .reservedDate(estimate.getReservedDate())
