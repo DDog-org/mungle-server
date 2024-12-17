@@ -8,6 +8,7 @@ import ddog.chat.presentation.dto.ChatMessagesListResp;
 import ddog.chat.presentation.dto.PartnerChatRoomListResp;
 import ddog.chat.presentation.dto.UserChatRoomListResp;
 import ddog.domain.chat.ChatMessage;
+import ddog.domain.chat.ChatRoom;
 import ddog.domain.chat.enums.PartnerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,6 +23,11 @@ public class ChatController {
 
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
+
+    @GetMapping("/start")
+    public CommonResponseEntity<ChatRoom> findChatRoom(PayloadDto payloadDto, @RequestParam Long otherId) {
+        return success(chatService.findOrSaveChatRoom(payloadDto.getRole(), payloadDto.getAccountId(), otherId));
+    }
 
     @GetMapping("/with")
     public CommonResponseEntity<ChatMessagesListResp> startChatMessage(PayloadDto payloadDto, @RequestParam Long otherId) {

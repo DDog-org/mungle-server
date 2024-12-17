@@ -231,7 +231,7 @@ public class ChatService {
                 .build();
     }
 
-    private ChatRoom findOrSaveChatRoom(Role role, Long accountId, Long otherUserId) {
+    public ChatRoom findOrSaveChatRoom(Role role, Long accountId, Long otherUserId) {
         ChatRoom toSaveChat = null;
         if (role.equals(Role.DAENGLE)) {
             if (accountPersist.findById(otherUserId).getRole().equals(Role.VET)) {
