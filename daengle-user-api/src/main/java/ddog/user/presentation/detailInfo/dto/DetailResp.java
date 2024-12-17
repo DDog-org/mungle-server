@@ -1,9 +1,9 @@
 package ddog.user.presentation.detailInfo.dto;
 
 import ddog.domain.groomer.GroomerSummaryInfo;
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.vet.Day;
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -69,7 +69,7 @@ public class DetailResp {
         private String vetImage;
         private LocalTime startTime;
         private LocalTime endTime;
-        private List<CareKeyword> keywords;
+        private List<CareBadge> badges;
         private String introduction;
         private int daengleMeter;
         private Long reviewCount;
@@ -84,7 +84,7 @@ public class DetailResp {
         private Long groomerAccountId;
         private String groomerName;
         private String groomerImage;
-        private List<GroomingKeyword> keywords;
+        private List<GroomingBadge> badges;
         private String introduction;
         private Long shopId;
         private String shopName;
