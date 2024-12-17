@@ -46,8 +46,6 @@ public class ReviewService {
         Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-        log.info(String.valueOf(savedGroomer.getGroomerId()));
-
         Pageable pageable = PageRequest.of(page, size);
         Page<GroomingReview> groomingReviews = groomingReviewPersist.findByGroomerId(savedGroomer.getGroomerId(), pageable);
 
