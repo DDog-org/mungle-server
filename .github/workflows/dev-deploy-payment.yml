@@ -12,6 +12,7 @@ jobs:
         module:
           - name: daengle-payment
             path: daengle-payment-api
+            ssh_host_var: SSH_PAYMENT_HOST
       max-parallel: 1
 
     env:
