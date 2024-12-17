@@ -15,6 +15,7 @@ import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.shop.BeautyShop;
+import ddog.domain.shop.dto.UpdateShopReq;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.AccountException;
 import ddog.groomer.application.exception.account.AccountExceptionType;
@@ -151,10 +152,7 @@ public class AccountService {
     public ShopInfo.UpdateResp updateShopInfo(UpdateShopReq request) {
         validateUpdateShopInfoDataFormat(request);
 
-        BeautyShop shop = beautyShopPersist.findBeautyShopById(request.getShopId());
-        BeautyShop updatedShop = BeautyShopMapper.updateShopInfoWithUpdateShopReq(shop, request);
-
-        beautyShopPersist.save(updatedShop);
+        beautyShopPersist.updateBeautyShopWithUpdateShopReq(request);
 
         return ShopInfo.UpdateResp.builder()
                 .requestResp("마이샵 정보가 성공적으로 변경되었습니다.")

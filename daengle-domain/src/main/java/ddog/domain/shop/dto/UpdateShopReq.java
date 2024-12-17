@@ -1,4 +1,4 @@
-package ddog.groomer.presentation.account.dto;
+package ddog.domain.shop.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.vet.Day;
