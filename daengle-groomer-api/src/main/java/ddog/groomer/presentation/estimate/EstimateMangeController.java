@@ -3,6 +3,7 @@ package ddog.groomer.presentation.estimate;
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.EstimateManageService;
+import ddog.groomer.presentation.estimate.dto.PetProfile;
 import ddog.groomer.presentation.estimate.dto.ReservationEstimateContent;
 import ddog.groomer.presentation.estimate.dto.WeekScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
-@RequestMapping("/api/groomer/manage")
+@RequestMapping("/api/groomer")
 @RequiredArgsConstructor
 public class EstimateMangeController {
     private final EstimateManageService estimateManageService;

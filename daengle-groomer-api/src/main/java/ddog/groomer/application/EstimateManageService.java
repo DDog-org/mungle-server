@@ -27,14 +27,15 @@ public class EstimateManageService {
     private final PetPersist petPersist;
     private final UserPersist userPersist;
     private final ReservationPersist reservationPersist;
-    public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long groomerAcoountId, Long reservationId) {
+
+    public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long groomerAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
 
-        GroomingEstimate savedEstimate = groomingEstimatePersist.findEstimateByPetIdAndGroomerAccountId(petId, groomerAcoountId);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.findEstimateByPetIdAndGroomerAccountId(petId, groomerAccountId);
         Long userAccountId = savedEstimate.getUserId();
 
         User savedUser = userPersist.findByAccountId(userAccountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
-        Groomer savedGroomer = groomerPersist.findByAccountId(groomerAcoountId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+        Groomer savedGroomer = groomerPersist.findByAccountId(groomerAccountId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
         Pet savedPet = petPersist.findByPetId(petId).orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
         return ReservationEstimateContent.builder()
