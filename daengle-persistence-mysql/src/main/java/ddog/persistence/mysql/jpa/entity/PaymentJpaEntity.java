@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Payments")
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "idempotencyKey") // 멱등성 키 유니크 제약조건
+        }
+)
 public class PaymentJpaEntity {
 
     @Id
@@ -27,6 +32,9 @@ public class PaymentJpaEntity {
     private LocalDateTime paymentDate;
     private String paymentUid;
 
+    @Column(nullable = false, unique = true)
+    private String idempotencyKey; // 멱등성 키 필드
+
     public Payment toModel() {
         return Payment.builder()
                 .paymentId(this.paymentId)
@@ -35,6 +43,7 @@ public class PaymentJpaEntity {
                 .status(this.status)
                 .paymentDate(this.paymentDate)
                 .paymentUid(this.paymentUid)
+                .idempotencyKey(this.idempotencyKey)
                 .build();
     }
 
@@ -46,6 +55,7 @@ public class PaymentJpaEntity {
                 .status(payment.getStatus())
                 .paymentDate(payment.getPaymentDate())
                 .paymentUid(payment.getPaymentUid())
+                .idempotencyKey(payment.getIdempotencyKey())
                 .build();
     }
 }
