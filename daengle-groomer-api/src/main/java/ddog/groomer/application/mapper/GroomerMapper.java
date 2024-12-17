@@ -31,7 +31,7 @@ public class GroomerMapper {
         return ProfileInfo.builder()
                 .imageUrl(groomer.getImageUrl())
                 .name(groomer.getName())
-//                .keywords(groomer.getKeywords())
+                .badges(groomer.getBadges())
                 .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
                 .introduction(groomer.getIntroduction())

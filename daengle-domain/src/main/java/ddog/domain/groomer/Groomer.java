@@ -32,19 +32,6 @@ public class Groomer {
     private List<GroomingBadge> badges;
     private List<GroomerKeyword> keywords;
 
-
-    public void updateDaengleMeter(Integer newMeterValue) {
-        this.daengleMeter = newMeterValue;
-    }
-
-    public void updateBadges(List<GroomingBadge> badges) {
-        this.badges = badges;
-    }
-
-    public void updateKeywords(List<GroomerKeyword> keywords) {
-        this.keywords = keywords;
-    }
-
     public static void validateShopName(String shopName) {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {
             throw new IllegalArgumentException("Shop name must be 1-20 characters long and can contain Korean, " +
@@ -98,5 +85,17 @@ public class Groomer {
         if (introduction != null && (introduction.isEmpty() || introduction.length() > 50)) {
             throw new IllegalArgumentException("Invalid introduction: must be 50 characters or less if provided.");
         }
+    }
+
+    public void updateDaengleMeter(Integer newMeterValue) {
+        this.daengleMeter = newMeterValue;
+    }
+
+    public void updateBadges(List<GroomingBadge> badges) {
+        this.badges = badges;
+    }
+
+    public void updateKeywords(List<GroomerKeyword> keywords) {
+        this.keywords = keywords;
     }
 }

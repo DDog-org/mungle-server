@@ -2,6 +2,7 @@ package ddog.vet.presentation.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.vet.Day;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class ProfileInfo {
 
     private List<String> imageUrls;
     private String name;
-    private List<CareKeyword> keywords;
+    private List<CareBadge> badges;
     private List<Day> closedDays;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
