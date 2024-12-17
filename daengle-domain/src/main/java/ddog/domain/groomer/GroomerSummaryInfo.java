@@ -1,6 +1,6 @@
 package ddog.domain.groomer;
 
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class GroomerSummaryInfo {
     private Long groomerAccountId;
     private String groomerName;
     private String groomerImage;
-    private List<GroomingKeyword> keywords;
+    private List<GroomingBadge> badges;
     private int daengleMeter;
     private Long reviewCount;
 }

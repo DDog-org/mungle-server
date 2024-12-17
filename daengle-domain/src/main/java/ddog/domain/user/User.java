@@ -1,6 +1,10 @@
 package ddog.domain.user;
 
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.pet.Pet;
+import ddog.domain.pet.SignificantTag;
+import ddog.domain.pet.Weight;
+import ddog.domain.vet.enums.CareBadge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +53,86 @@ public class User {
         if (address == null || !address.matches("^\\S+시 \\S+구 \\S+동$")) {
             throw new IllegalArgumentException("Invalid address: must follow format '00시 00구 00동'.");
         }*/
+    }
+
+    public int calculateDaengleMeterWithGroomingBadge(int daengleMeter, List<GroomingBadge> badges) {
+        if (pets.isEmpty() || badges.isEmpty()) {
+            return daengleMeter;
+        }
+
+        int ADDITIONAL_METER = 3;
+        int finalDaengleMeter = daengleMeter;
+
+        Pet pet = pets.get(0);
+        for (GroomingBadge badge : badges) {
+            if (badge.equals(GroomingBadge.DANGEROUS_DOG)) {
+                if (pet.getIsBite()) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(GroomingBadge.LARGE_DOG)) {
+                if (pet.getWeight().equals(Weight.LARGE)) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(GroomingBadge.OLD_DOG)) {
+                if (pet.getAge() >= 10) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(GroomingBadge.SKIN_DISEASE)) {
+                List<SignificantTag> significantTags = pet.getSignificantTags();
+                if (significantTags.isEmpty()) {
+                    continue;
+                }
+                if (significantTags.contains(SignificantTag.SKIN_DISEASES)) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            }
+        }
+
+        return finalDaengleMeter;
+    }
+
+    public int calculateDaengleMeterWithCareBadge(int daengleMeter, List<CareBadge> badges) {
+        if (pets.isEmpty() || badges.isEmpty()) {
+            return daengleMeter;
+        }
+
+        int ADDITIONAL_METER = 3;
+        int finalDaengleMeter = daengleMeter;
+
+        Pet pet = pets.get(0);
+        for (CareBadge badge : badges) {
+            if (badge.equals(CareBadge.DANGEROUS_DOG)) {
+                if (pet.getIsBite()) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(CareBadge.LARGE_DOG)) {
+                if (pet.getWeight().equals(Weight.LARGE)) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(CareBadge.OLD_DOG)) {
+                if (pet.getAge() >= 10) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(CareBadge.SKIN_DISEASE)) {
+                List<SignificantTag> significantTags = pet.getSignificantTags();
+                if (significantTags.isEmpty()) {
+                    continue;
+                }
+                if (significantTags.contains(SignificantTag.SKIN_DISEASES)) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            } else if (badge.equals(CareBadge.HEART_DISEASE)) {
+                List<SignificantTag> significantTags = pet.getSignificantTags();
+                if (significantTags.isEmpty()) {
+                    continue;
+                }
+                if (significantTags.contains(SignificantTag.HEART_DISEASE)) {
+                    finalDaengleMeter += ADDITIONAL_METER;
+                }
+            }
+        }
+
+        return finalDaengleMeter;
     }
 
     public User withImageAndNickname(String imageUrl, String nickname) {

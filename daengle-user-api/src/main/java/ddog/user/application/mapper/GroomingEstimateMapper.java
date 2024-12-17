@@ -78,14 +78,14 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static EstimateInfo.Grooming.Content mapToEstimateInfo(GroomingEstimate estimate, Groomer groomer) {
+    public static EstimateInfo.Grooming.Content mapToEstimateInfo(GroomingEstimate estimate, Groomer groomer, int daengleMeter) {
         return EstimateInfo.Grooming.Content.builder()
                 .id(estimate.getEstimateId())
                 .name(groomer.getName())
-                .daengleMeter(groomer.getDaengleMeter())
+                .daengleMeter(daengleMeter)
                 .imageUrl(groomer.getImageUrl())
                 .shopName(groomer.getShopName())
-                .keywords(groomer.getKeywords())
+                .badges(groomer.getBadges())
                 .reservedDate(estimate.getReservedDate())
                 .build();
     }
@@ -103,7 +103,7 @@ public class GroomingEstimateMapper {
                 .build();
     }
 
-    public static GroomingEstimateDetail mapToEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet) {
+    public static GroomingEstimateDetail mapToEstimateDetail(GroomingEstimate estimate, Groomer groomer, Pet pet, int daengleMeter) {
         return GroomingEstimateDetail.builder()
                 .groomingEstimateId(estimate.getEstimateId())
                 .groomerId(groomer.getGroomerId())
@@ -111,7 +111,8 @@ public class GroomingEstimateMapper {
                 .name(groomer.getName())
                 .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
-                .daengleMeter(groomer.getDaengleMeter())
+                .daengleMeter(daengleMeter)
+                .badges(groomer.getBadges())
                 .proposal(estimate.getProposal())
                 .introduction(groomer.getIntroduction())
                 .address(estimate.getAddress())

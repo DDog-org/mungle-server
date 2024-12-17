@@ -34,12 +34,12 @@ public class ReservationController {
     }
 
     @GetMapping("/grooming/{estimateId}/detail")
-    public CommonResponseEntity<EstimateDetail.Grooming> getGroomingEstimateDetail(@PathVariable Long estimateId) {
-        return success(reservationService.getGroomingEstimateDetail(estimateId));
+    public CommonResponseEntity<EstimateDetail.Grooming> getGroomingEstimateDetail(@PathVariable Long estimateId, PayloadDto payloadDto) {
+        return success(reservationService.getGroomingEstimateDetail(estimateId, payloadDto.getAccountId()));
     }
 
     @GetMapping("/care/{estimateId}/detail")
-    public CommonResponseEntity<EstimateDetail.Care> getCareEstimateDetail(@PathVariable Long estimateId) {
-        return success(reservationService.getCareEstimateDetail(estimateId));
+    public CommonResponseEntity<EstimateDetail.Care> getCareEstimateDetail(@PathVariable Long estimateId, PayloadDto payloadDto) {
+        return success(reservationService.getCareEstimateDetail(estimateId, payloadDto.getAccountId()));
     }
 }

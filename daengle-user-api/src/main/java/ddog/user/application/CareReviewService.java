@@ -1,14 +1,22 @@
 package ddog.user.application;
 
 import ddog.domain.filtering.BanWordValidator;
+import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.GroomerKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.review.CareReview;
 import ddog.domain.vet.VetDaengleMeter;
+import ddog.domain.vet.VetKeyword;
+import ddog.domain.vet.enums.CareBadge;
+import ddog.domain.vet.enums.CareKeyword;
 import ddog.domain.vet.port.VetDaengleMeterPersist;
 import ddog.user.application.exception.account.VetException;
 import ddog.user.application.exception.account.VetExceptionType;
 import ddog.user.application.mapper.CareReviewMapper;
+import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
 import ddog.user.presentation.review.dto.response.CareReviewListResp;
 import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
@@ -92,6 +100,8 @@ public class CareReviewService {
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
 
+        processKeywords(postCareReviewInfo, savedVet);
+
         VetDaengleMeter vetDaengleMeter = vetDaengleMeterPersist.findByVetId(savedCareReview.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_DAENGLE_METER_NOT_FOUND));
 
@@ -109,6 +119,41 @@ public class CareReviewService {
                 .revieweeId(savedCareReview.getVetId())
                 .banWord(null)
                 .build();
+    }
+
+    private void processKeywords(PostCareReviewInfo postCareReviewInfo, Vet vet) {
+
+        List<VetKeyword> vetKeywords = vet.getKeywords();
+        List<CareBadge> badges = vet.getBadges();
+
+        List<CareKeyword> postKeywords = postCareReviewInfo.getCareKeywordList();
+
+        for (CareKeyword postKeyword : postKeywords) {
+            boolean isAdded = false;
+
+            for (VetKeyword vetKeyword : vetKeywords) {
+                if (postKeyword.toString().equals(vetKeyword.getKeyword())) {
+                    vetKeyword.increaseCount();
+
+                    if (vetKeyword.isAvailableRegisterBadge()) {
+                        if (postKeyword.getBadge() != null) {
+                            badges.add(postKeyword.getBadge());
+                        }
+                    }
+                    isAdded = true;
+                    break;
+                }
+            }
+            if (isAdded) {
+                continue;
+            }
+
+            VetKeyword newKeyword = VetKeyword.createNewKeyword(vet.getAccountId(), postKeyword.toString());
+            vetKeywords.add(newKeyword);
+        }
+
+        vet.updateKeywords(vetKeywords);
+        vet.updateBadges(badges);
     }
 
     @Transactional
