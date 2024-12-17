@@ -19,6 +19,8 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.util.List;
 
+/* JWT 인증 필터 클래스로 HTTP 요청에서 JWT 토큰을 추출하고 검증하여 사용자 인증 정보를 설정한다.
+* Spring Security의 필터 체인에 추가된다. */
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
