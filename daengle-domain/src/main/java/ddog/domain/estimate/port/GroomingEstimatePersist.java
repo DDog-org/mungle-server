@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +36,7 @@ public interface GroomingEstimatePersist {
     List<GroomingEstimate> findMyEstimatesByUserId(Long userId);
 
     GroomingEstimate findEstimateByPetIdAndGroomerAccountId(Long petId, Long groomerAccountId);
+
+    Integer countEstimateByGroomerIdDistinctParentId(Long groomerId);
 
 }

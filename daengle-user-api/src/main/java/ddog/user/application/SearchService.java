@@ -2,11 +2,9 @@ package ddog.user.application;
 
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.enums.GroomingBadge;
-import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.enums.CareBadge;
-import ddog.domain.vet.enums.CareKeyword;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.presentation.search.dto.SearchGroomingResultByKeyword;
 import ddog.user.presentation.search.dto.SearchVetResultByKeyword;
@@ -30,7 +28,7 @@ public class SearchService {
 
         List<SearchGroomingResultByKeyword.ResultList> resultList = groomerPage.stream()
                 .map(groomer -> SearchGroomingResultByKeyword.ResultList.builder()
-                        .partnerId(groomer.getGroomerId())
+                        .partnerId(groomer.getAccountId())
                         .partnerName(groomer.getName())
                         .partnerImage(groomer.getImageUrl())
                         .groomingBadges(groomer.getBadges())
@@ -51,7 +49,7 @@ public class SearchService {
 
         List<SearchVetResultByKeyword.ResultList> resultList = vetPage.stream()
                 .map(vet -> SearchVetResultByKeyword.ResultList.builder()
-                        .partnerId(vet.getVetId())
+                        .partnerId(vet.getAccountId())
                         .partnerName(vet.getName())
                         .partnerImage(vet.getImageUrl())
                         .careBadges(vet.getBadges())

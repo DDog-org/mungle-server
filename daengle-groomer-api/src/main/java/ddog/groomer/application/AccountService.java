@@ -3,15 +3,16 @@ package ddog.groomer.application;
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
+import ddog.domain.account.port.AccountPersist;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.GroomerDaengleMeter;
+import ddog.domain.groomer.GroomerSummaryInfo;
 import ddog.domain.groomer.License;
 import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
+import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.groomer.port.LicensePersist;
-import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ReservationStatus;
-import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
@@ -23,8 +24,6 @@ import ddog.groomer.application.mapper.BeautyShopMapper;
 import ddog.groomer.application.mapper.GroomerDaengleMeterMapper;
 import ddog.groomer.application.mapper.GroomerMapper;
 import ddog.groomer.presentation.account.dto.*;
-import ddog.domain.account.port.AccountPersist;
-import ddog.domain.groomer.port.GroomerPersist;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +86,7 @@ public class AccountService {
         Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();
 
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
-        Groomer savedGroomer =  groomerPersist.save(newGroomer);
+        Groomer savedGroomer = groomerPersist.save(newGroomer);
 
         GroomerDaengleMeter newGroomerDaengleMeter = GroomerDaengleMeterMapper.create(savedGroomer.getGroomerId());
         groomerDaengleMeterPersist.save(newGroomerDaengleMeter);
@@ -185,6 +184,37 @@ public class AccountService {
         return WithdrawResp.builder()
                 .accountId(savedGroomer.getAccountId())
                 .withdrawDate(LocalDateTime.now())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ShopDetailInfo findBeautyShop(Long shopId) {
+
+        BeautyShop findBeautyShop = beautyShopPersist.findBeautyShopById(shopId);
+
+        List<GroomerSummaryInfo> groomerSummaryInfos = new ArrayList<>();
+        for (Groomer groomer : findBeautyShop.getGroomers()) {
+            groomerSummaryInfos.add(GroomerSummaryInfo.builder()
+                    .groomerName(groomer.getName())
+                    .groomerImage(groomer.getImageUrl())
+                    .badges(groomer.getBadges())
+                    .daengleMeter(groomer.getDaengleMeter())
+                    .groomerAccountId(groomer.getAccountId())
+                    .build());
+        }
+
+        return ShopDetailInfo.builder()
+                .shopId(findBeautyShop.getShopId())
+                .shopName(findBeautyShop.getShopName())
+                .shopAddress(findBeautyShop.getShopAddress())
+                .shopDetailAddress(findBeautyShop.getShopDetailAddress())
+                .imageUrlList(findBeautyShop.getImageUrlList())
+                .groomers(groomerSummaryInfos)
+                .startTime(findBeautyShop.getStartTime())
+                .endTime(findBeautyShop.getEndTime())
+                .introduction(findBeautyShop.getIntroduction())
+                .closedDay(findBeautyShop.getClosedDays())
+                .shopNumber(findBeautyShop.getPhoneNumber())
                 .build();
     }
 
