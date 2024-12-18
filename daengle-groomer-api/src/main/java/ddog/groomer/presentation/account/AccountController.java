@@ -59,4 +59,9 @@ public class AccountController {
     public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
         return success(accountService.withdraw(payloadDto.getAccountId()));
     }
+
+    @GetMapping("/shop/{shopId}")
+    public CommonResponseEntity<ShopDetailInfo> getBeautyShopDetail(@PathVariable Long shopId) {
+        return success(accountService.findBeautyShop(shopId));
+    }
 }
