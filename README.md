@@ -2,7 +2,7 @@
 
 <div align=center>
   <h1> 🐶댕글 서비스의 핵심 키워드!🐶 </h2>
-  https://daengle.com/
+  https://www.daengle.com
   <br>
   <br>
   <strong>댕글</strong> ~~~~~~ 하는 서비스
