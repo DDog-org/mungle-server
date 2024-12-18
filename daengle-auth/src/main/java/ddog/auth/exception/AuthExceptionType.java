@@ -14,6 +14,8 @@ public enum AuthExceptionType {
     MISSING_TOKEN(HttpStatus.UNAUTHORIZED, 1006, "Authorization 헤더가 누락되었습니다."),
     EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, 1007, "토큰 값이 비어 있습니다."),
     MISSING_AUTH_CLAIM(HttpStatus.FORBIDDEN, 1008, "토큰에 권한 정보가 없습니다."),
+    MISSING_COOKIE_TOKEN(HttpStatus.BAD_REQUEST, 1009, "쿠키에 토큰 정보가 없습니다"),
+
 
 
     /* 권한 관련 오류 */

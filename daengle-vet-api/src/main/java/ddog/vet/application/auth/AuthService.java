@@ -13,6 +13,8 @@ import ddog.vet.application.exception.account.AccountException;
 import ddog.vet.application.exception.account.AccountExceptionType;
 import ddog.vet.presentation.auth.dto.LoginResult;
 import ddog.vet.presentation.auth.dto.ValidateResp;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -80,14 +82,18 @@ public class AuthService {
         return authentication;
     }
 
-    public AccessTokenInfo reGenerateAccessToken(String refreshToken, HttpServletResponse response) {
+    public AccessTokenInfo reGenerateAccessToken(HttpServletRequest request, HttpServletResponse response) {
+
+        // 쿠키에서 refreshToken 추출
+        String refreshToken = extractRefreshTokenFromCookies(request);
+
         if (refreshToken == null) {
             throw new AuthException(AuthExceptionType.MISSING_TOKEN);
         }
         if (refreshToken.isEmpty()) {
             throw new AuthException(AuthExceptionType.EMPTY_TOKEN);
         }
-        if (!jwtTokenProvider.validateToken(refreshToken.substring(7).trim())) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new AuthException(AuthExceptionType.INVALID_TOKEN);
         }
 
@@ -108,5 +114,20 @@ public class AuthService {
         return ValidateResp.builder()
                 .IsValidateMember(isValidateMember)
                 .build();
+    }
+
+    private String extractRefreshTokenFromCookies(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            throw new AuthException(AuthExceptionType.MISSING_TOKEN); // 쿠키가 없으면 예외 처리
+        }
+
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refreshToken")) {
+                return cookie.getValue();
+            }
+        }
+
+        throw new AuthException(AuthExceptionType.MISSING_COOKIE_TOKEN);
     }
 }
