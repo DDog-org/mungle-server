@@ -24,10 +24,11 @@ import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.*;
 import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +39,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    public static final int PG_API_TIMEOUT = 5;
     private final IamportClient iamportClient;
 
     private final UserPersist userPersist;
@@ -63,27 +61,62 @@ public class PaymentService {
     private final GroomingReviewPersist groomingReviewPersist;
 
     @Transactional
-    public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
+    @TimeLimiter(name = "paymentValidation")
+    @CircuitBreaker(name = "paymentValidation", fallbackMethod = "handlePaymentValidationFallback")
+    public CompletableFuture<PaymentCallbackResp> validationPayment(PaymentCallbackReq paymentCallbackReq) {
+        Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid())
+                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+
+        Payment payment = savedOrder.getPayment();
+        Hibernate.initialize(payment);
+
+        return CompletableFuture.supplyAsync(() -> processValidation(paymentCallbackReq, savedOrder, payment));
+    }
+
+    private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
+        validateEstimateBy(savedOrder);
+
+        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+
         try {
-            // 트랜잭션 내에서 데이터 로드
-            Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid())
-                    .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+            com.siot.IamportRestClient.response.Payment iamportResp =
+                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
 
-            // Lazy 로딩된 엔티티 강제 초기화
-            Payment payment = savedOrder.getPayment();
-            Hibernate.initialize(payment);
+            // 결제 검증 절차
+            String paymentStatus = iamportResp.getStatus();
+            long paymentAmount = iamportResp.getAmount().longValue();
 
-            // 비동기 작업
-            CompletableFuture<PaymentCallbackResp> future = CompletableFuture.supplyAsync(() -> {
-                return processValidation(paymentCallbackReq, savedOrder, payment);
-            });
-            return future.get(PG_API_TIMEOUT, TimeUnit.SECONDS);
+            if (payment.checkIncompleteBy(paymentStatus)) { //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
+            }
 
-        } catch (TimeoutException e) {
-            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_TIMEOUT);
+            if (payment.checkInValidationBy(paymentAmount)) {   //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
 
-        } catch (ExecutionException | InterruptedException e) {
-            throw new RuntimeException(e);
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
+            }
+
+            payment.validationSuccess(iamportResp.getImpUid());
+            paymentPersist.save(payment);
+
+            Reservation reservationToSave = ReservationMapper.createBy(savedOrder, payment);
+            Reservation savedReservation = reservationPersist.save(reservationToSave);
+
+            return PaymentCallbackResp.builder()
+                    .customerId(savedOrder.getAccountId())
+                    .reservationId(savedReservation.getReservationId())
+                    .paymentId(payment.getPaymentId())
+                    .price(payment.getPrice())
+                    .build();
+
+        } catch (IamportResponseException | IOException e) {
+            // PG사 통신 실패 처리
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED, e);
         }
     }
 
@@ -99,7 +132,7 @@ public class PaymentService {
         CancelData cancel_data = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
 
         try {
-            if(refundAmount.compareTo(BigDecimal.ZERO) > 0) iamportClient.cancelPaymentByImpUid(cancel_data);
+            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) iamportClient.cancelPaymentByImpUid(cancel_data);
 
             savedPayment.cancel();
             paymentPersist.save(savedPayment);
@@ -161,54 +194,24 @@ public class PaymentService {
         return mappingToPaymentHistoryListResp(reservations);
     }
 
+    private CompletableFuture<PaymentCallbackResp> handlePaymentValidationFallback(PaymentCallbackReq paymentCallbackReq, Throwable t) {
+        Throwable rootCause = findRootCause(t);
 
-    private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
-        validateEstimateBy(savedOrder);
-
-        try {
-            if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
-                throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
-            validateEstimateBy(savedOrder);
-
-            com.siot.IamportRestClient.response.Payment iamportResp =
-                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
-
-            // 결제 검증 절차
-            String paymentStatus = iamportResp.getStatus();
-            long paymentAmount = iamportResp.getAmount().longValue();
-
-            if (payment.checkIncompleteBy(paymentStatus)) { //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
-            }
-
-            if (payment.checkInValidationBy(paymentAmount)) {   //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
-
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
-            }
-
-            payment.validationSuccess(iamportResp.getImpUid());
-            paymentPersist.save(payment);
-
-            Reservation reservationToSave = ReservationMapper.createBy(savedOrder, payment);
-            Reservation savedReservation = reservationPersist.save(reservationToSave);
-
-            return PaymentCallbackResp.builder()
-                    .customerId(savedOrder.getAccountId())
-                    .reservationId(savedReservation.getReservationId())
-                    .paymentId(payment.getPaymentId())
-                    .price(payment.getPrice())
-                    .build();
-
-        } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
-            throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
-        } catch (IamportResponseException | IOException e) {
-            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        if (rootCause instanceof PaymentException) {
+            throw (PaymentException) rootCause;
+        } else if (rootCause instanceof TimeoutException) {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_TIMEOUT, rootCause);
+        } else {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED, rootCause);
         }
+    }
+
+    private Throwable findRootCause(Throwable t) {
+        Throwable cause = t;
+        while (cause.getCause() != null && cause != cause.getCause()) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 
     private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {

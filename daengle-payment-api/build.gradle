@@ -49,6 +49,12 @@ dependencies {
 
     // 테스트
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // resilience4j
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.0.2'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.0.2'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.0.2'
+    implementation 'io.github.resilience4j:resilience4j-timelimiter:2.0.2'
 }
 
 test {
