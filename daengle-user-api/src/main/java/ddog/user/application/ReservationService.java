@@ -37,7 +37,6 @@ public class ReservationService {
     private final UserPersist userPersist;
     private final PetPersist petPersist;
     private final VetPersist vetPersist;
-    private final UserPersist userPersist;
     private final GroomerPersist groomerPersist;
     private final GroomingEstimatePersist groomingEstimatePersist;
     private final CareEstimatePersist careEstimatePersist;

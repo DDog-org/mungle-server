@@ -1,6 +1,6 @@
 package ddog.persistence.mysql.jpa.repository;
 
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.persistence.mysql.jpa.entity.VetJpaEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +27,13 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
             "LEFT JOIN v.keywords k " +
             "WHERE (:address IS NULL OR :address = '' OR v.address LIKE CONCAT('%', :address, '%')) " +
             "AND (:keyword IS NULL OR :keyword = '' OR v.name LIKE CONCAT('%', :keyword, '%')) " +
-            "AND (:tag IS NULL OR :tag = '' OR v.name LIKE CONCAT('%', :tag, '%'))")
+            "AND (:badge IS NULL OR :badge = '' OR :badge MEMBER OF v.badges)")
     Page<VetJpaEntity> findAllVetsBy(
             @Param("address") String address,
             @Param("keyword") String keyword,
-            @Param("tag") CareKeyword tag,
+            @Param("badge") CareBadge badge,
             Pageable pageable
     );
+
     void deleteByAccountId(Long accountId);
 }
