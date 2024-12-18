@@ -36,10 +36,22 @@ public class DetailInfoService {
     private final GroomerPersist groomerPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
+    private String checkUserLoggedIn(Long accountId, String address) {
+        if (accountId == null) {
+            address = "서울 강남구 역삼동";
+
+        } else {
+            User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+            address = savedUser.getAddress();
+        }
+
+        return address;
+    }
+
     public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
         address = checkUserLoggedIn(accountId, address);
+
         address = address.replace(" ", "");
-        User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, size);
 
         Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address, pageable);
@@ -51,7 +63,7 @@ public class DetailInfoService {
                 .totalPages(savedBeautyShop.getTotalPages())
                 .totalElements(savedBeautyShop.getTotalElements())
                 .currentPage(savedBeautyShop.getNumber())
-                .userAddress(savedUser.getAddress())
+                .userAddress(address)
                 .build();
     }
 
@@ -157,12 +169,6 @@ public class DetailInfoService {
         } else if (parts.length >= 4) {
             return String.join(" ", parts[0], parts[1], parts[2]);
         }
-        return address;
-    }
-
-    private String checkUserLoggedIn(Long accountId, String address) {
-        if (accountId == null) address = "서울 강남구 역삼동";
-        else if (address == null) address = userPersist.findByAccountId(accountId).get().getAddress();
         return address;
     }
 

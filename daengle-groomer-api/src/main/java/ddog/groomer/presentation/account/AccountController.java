@@ -60,7 +60,7 @@ public class AccountController {
         return success(accountService.withdraw(payloadDto.getAccountId()));
     }
 
-    @GetMapping("/shop/{shopId}")
+    @GetMapping("/mypage/shop/{shopId}")
     public CommonResponseEntity<ShopDetailInfo> getBeautyShopDetail(@PathVariable Long shopId) {
         return success(accountService.findBeautyShop(shopId));
     }
