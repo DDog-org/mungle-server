@@ -124,4 +124,48 @@ public class ReservationService {
 
         return ReservationMapper.mapToCareEstimateDetail(reservation.getReservationId(), estimateId, vet, estimate, daengleMeter);
     }
+
+    public ReservationInfo.ReservationUsersInfo getCareUserAndPartnerDetail(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+        Long estimateId = savedReservation.getEstimateId();
+        CareEstimate savedCareEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(()-> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+
+        Long userId = savedCareEstimate.getUserId();
+        Long vetId = savedCareEstimate.getVetId();
+
+        Vet savedVet = vetPersist.findByVetId(vetId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+        User savedUser = userPersist.findByAccountId(userId).orElseThrow(()-> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+
+        return ReservationInfo.ReservationUsersInfo.builder()
+                .estimateId(estimateId)
+                .partnerId(savedVet.getAccountId())
+                .partnerName(savedVet.getName())
+                .partnerPhone(savedVet.getPhoneNumber())
+                .userId(savedUser.getAccountId())
+                .userName(savedUser.getNickname())
+                .build();
+    }
+
+    public ReservationInfo.ReservationUsersInfo getGroomingUserAndPartnerDetail(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND));
+        Long estimateId = savedReservation.getEstimateId();
+        GroomingEstimate savedGroomingEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+
+        Long userId = savedGroomingEstimate.getUserId();
+        Long groomerId = savedGroomingEstimate.getGroomerId();
+
+        Groomer savedGroomer = groomerPersist.findByGroomerId(groomerId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+        User savedUser = userPersist.findByAccountId(userId).orElseThrow(()-> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+
+        return ReservationInfo.ReservationUsersInfo.builder()
+                .estimateId(estimateId)
+                .partnerId(savedGroomer.getAccountId())
+                .partnerName(savedGroomer.getName())
+                .partnerPhone(savedGroomer.getPhoneNumber())
+                .userId(savedUser.getAccountId())
+                .userName(savedUser.getNickname())
+                .build();
+    }
 }

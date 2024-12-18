@@ -78,6 +78,8 @@ public class VetMapper {
                 .endTime(request.getEndTime())
                 .closedDays(request.getClosedDays())
                 .licenses(vet.getLicenses())
+                .badges(vet.getBadges())
+                .keywords(vet.getKeywords())
                 .build();
     }
 }

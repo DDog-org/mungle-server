@@ -120,4 +120,17 @@ public class EstimateService {
                 .requestResult("대기 진료 견적서 등록 완료")
                 .build();
     }
+
+    public EstimateInfo.EstimateUserInfo findByUserInfoByEstimateId(Long estimateId) {
+        CareEstimate savedCareEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
+        Long userId = savedCareEstimate.getUserId();
+        String userName = userPersist.findByAccountId(userId).get().getNickname();
+        String userPhone = userPersist.findByAccountId(userId).get().getPhoneNumber();
+
+        return EstimateInfo.EstimateUserInfo.builder()
+                .userId(userId)
+                .userNickname(userName)
+                .userPhone(userPhone)
+                .build();
+    }
 }

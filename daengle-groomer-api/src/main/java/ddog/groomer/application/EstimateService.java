@@ -19,6 +19,7 @@ import ddog.groomer.presentation.estimate.dto.EstimateDetail;
 import ddog.groomer.presentation.estimate.dto.EstimateInfo;
 import ddog.groomer.presentation.estimate.dto.EstimateResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -117,5 +118,18 @@ public class EstimateService {
                 .estimateId(savedEstimate.getEstimateId())
                 .requestResult("대기 미용 견적서 등록 완료")
                 .build();
+    }
+
+    public EstimateInfo.EstimateUserInfo findByUserInfoByEstimateId(Long estimateId) {
+         GroomingEstimate savedEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
+         Long userId = savedEstimate.getUserId();
+         String userName = userPersist.findByAccountId(userId).get().getNickname();
+         String userPhone = userPersist.findByAccountId(userId).get().getPhoneNumber();
+
+         return EstimateInfo.EstimateUserInfo.builder()
+                 .userId(userId)
+                 .userNickname(userName)
+                 .userPhone(userPhone)
+                 .build();
     }
 }
