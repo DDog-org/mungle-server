@@ -115,19 +115,15 @@ public class JwtTokenProvider {
     }
 
     public TokenAccountInfoDto.TokenInfo extractTokenInfoFromJwt(String token) {
-        if (token.startsWith("Bearer ")) {
-            String resolvedToken = token.substring(7).trim();
-            Claims claims = parseClaims(resolvedToken);
+        Claims claims = parseClaims(token);
 
-            String email = claims.getSubject().split(",")[0];
-            String role = claims.get("auth", String.class);
+        String email = claims.getSubject().split(",")[0];
+        String role = claims.get("auth", String.class);
 
-            return TokenAccountInfoDto.TokenInfo.builder()
-                    .email(email)
-                    .role(role)
-                    .build();
-        }
+        return TokenAccountInfoDto.TokenInfo.builder()
+                .email(email)
+                .role(role)
+                .build();
 
-        return null;
     }
 }

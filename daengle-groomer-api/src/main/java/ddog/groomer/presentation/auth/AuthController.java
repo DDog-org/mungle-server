@@ -8,6 +8,7 @@ import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.groomer.application.auth.AuthService;
 import ddog.groomer.presentation.auth.dto.LoginResult;
 import ddog.groomer.presentation.auth.dto.ValidateResp;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public CommonResponseEntity<AccessTokenInfo> reGenerateAccessToken(@RequestBody RefreshTokenDto refreshTokenDto, HttpServletResponse response) {
-        return success(authService.reGenerateAccessToken(refreshTokenDto.getRefreshToken(), response));
+    public CommonResponseEntity<AccessTokenInfo> reGenerateAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return success(authService.reGenerateAccessToken(request, response));
     }
 
     @GetMapping("/validate")

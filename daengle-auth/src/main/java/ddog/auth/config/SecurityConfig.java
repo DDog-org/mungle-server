@@ -44,7 +44,7 @@ public class SecurityConfig {
                         ));
                         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
                         config.setAllowCredentials(true);
-                        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Authorization-refresh", "X-Api-Key"));
+                        config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "Authorization-refresh", "X-Api-Key", "Idempotency-Key"));
                         config.setMaxAge(3600L);
                         return config;
                     }
