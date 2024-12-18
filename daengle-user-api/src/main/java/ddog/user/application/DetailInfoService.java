@@ -40,7 +40,7 @@ public class DetailInfoService {
         if (accountId == null) {
             address = "서울 강남구 역삼동";
 
-        } else {
+        } else if (address == null){
             User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
             address = savedUser.getAddress();
         }
