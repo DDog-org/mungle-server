@@ -37,8 +37,8 @@ public class CareReviewJpaEntity {
 
     @ElementCollection // 키워드 리스트
     @CollectionTable(name = "care_review_keyword_list", joinColumns = @JoinColumn(name = "care_review_id"))
-    @Enumerated(EnumType.STRING)
     @Column(name = "keyword_list")
+    @Enumerated(EnumType.STRING)
     private List<CareKeyword> careKeywordList;
 
     public static CareReviewJpaEntity from (CareReview careReview) {

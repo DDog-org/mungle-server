@@ -42,13 +42,12 @@ public class BeautyShopJpaEntity {
     @ElementCollection // 휴무일 리스트
     @CollectionTable(name = "shop_closed_days", joinColumns = @JoinColumn(name = "shop_id"))
     @Column(name = "day")
+    @Enumerated(EnumType.STRING)
     private List<Day> closedDays;
-
 
     private String introduction;
 
-
-    public static BeautyShopJpaEntity from (BeautyShop beautyShop) {
+    public static BeautyShopJpaEntity from(BeautyShop beautyShop) {
         return BeautyShopJpaEntity.builder()
                 .shopId(beautyShop.getShopId())
                 .shopName(beautyShop.getShopName())

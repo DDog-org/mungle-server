@@ -40,6 +40,9 @@ public class Groomer {
     }
 
     public static void validateInstagramId(String instagramId) {
+        if (instagramId == null) {
+            return;
+        }
         if (instagramId.length() < 2 || instagramId.length() > 30) {
             throw new IllegalArgumentException("Instagram ID must be at least 2 characters and no more than 30 characters.");
         }

@@ -35,18 +35,6 @@ public class PaymentJpaEntity {
     @Column(nullable = false, unique = true)
     private String idempotencyKey; // 멱등성 키 필드
 
-    public Payment toModel() {
-        return Payment.builder()
-                .paymentId(this.paymentId)
-                .payerId(this.payerId)
-                .price(this.price)
-                .status(this.status)
-                .paymentDate(this.paymentDate)
-                .paymentUid(this.paymentUid)
-                .idempotencyKey(this.idempotencyKey)
-                .build();
-    }
-
     public static PaymentJpaEntity from(Payment payment) {
         return PaymentJpaEntity.builder()
                 .paymentId(payment.getPaymentId())
@@ -56,6 +44,18 @@ public class PaymentJpaEntity {
                 .paymentDate(payment.getPaymentDate())
                 .paymentUid(payment.getPaymentUid())
                 .idempotencyKey(payment.getIdempotencyKey())
+                .build();
+    }
+
+    public Payment toModel() {
+        return Payment.builder()
+                .paymentId(this.paymentId)
+                .payerId(this.payerId)
+                .price(this.price)
+                .status(this.status)
+                .paymentDate(this.paymentDate)
+                .paymentUid(this.paymentUid)
+                .idempotencyKey(this.idempotencyKey)
                 .build();
     }
 }
