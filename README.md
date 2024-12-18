@@ -54,10 +54,11 @@ api 모듈을 독립적ㅇ로 배포할 수 있도록 브랜치 전략을 활용
 
 <br />
 
-![스크린샷 2024-12-18 오후 4 31 35](https://github.com/user-attachments/assets/015616e7-281f-4e0a-a510-55f410b74f4c)
-
-![스크린샷 2024-12-18 오후 4 37 58](https://github.com/user-attachments/assets/14ebfb68-d8cc-4940-a0c9-330df5c7893c)
-
+<div align=center>
+  
+![image](https://github.com/user-attachments/assets/015616e7-281f-4e0a-a510-55f410b74f4c)
+![image](https://github.com/user-attachments/assets/14ebfb68-d8cc-4940-a0c9-330df5c7893c)
+</div>
 
 <br />
 
