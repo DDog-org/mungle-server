@@ -74,7 +74,7 @@ api 모듈을 독립적ㅇ로 배포할 수 있도록 브랜치 전략을 활용
 <br />
 
 ## 🧰 기술 스택
-![image](https://github.com/user-attachments/assets/ae5eefdc-2156-41aa-bb18-430c02ad39cf)
+![image](https://github.com/user-attachments/assets/1f16efb5-5d72-449c-b3fb-bbe83b2446d1)
 <br />
 <br />
 
