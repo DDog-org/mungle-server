@@ -52,8 +52,9 @@ public class AccountService {
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
         validateSignUpRequestDataFormat(request);
 
-        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.VET)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.VET)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
 
         Account newAccount = Account.create(request.getEmail(), Role.VET);
         Account savedAccount = accountPersist.save(newAccount);
