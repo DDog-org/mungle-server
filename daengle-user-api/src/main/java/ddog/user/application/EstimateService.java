@@ -4,6 +4,7 @@ import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.estimate.dto.PetInfos;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
@@ -141,11 +142,14 @@ public class EstimateService {
                             .name(pet.getName())
                             .build()));
         }
+
         return EstimateInfo.Pet.builder()
                 .pets(contents)
                 .build();
     }
 
+    /* SQL 튜닝 전 조회 */
+    @Transactional(readOnly = true)
     public EstimateInfo.Pet findGeneralCarePets(Long accountId) {
         User user = userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -162,6 +166,19 @@ public class EstimateService {
                             .build()));
         }
         return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    /* SQL 튜닝 후 조회 */
+    @Transactional(readOnly = true)
+    public PetInfos findTuningGeneralCarePets(Long accountId) {
+        userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<PetInfos.Content> contents = careEstimatePersist.findByStatusAndProposalAndUserId(EstimateStatus.NEW, Proposal.GENERAL, accountId);
+
+        return PetInfos.builder()
                 .pets(contents)
                 .build();
     }
