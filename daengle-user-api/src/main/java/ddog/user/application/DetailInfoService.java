@@ -51,10 +51,10 @@ public class DetailInfoService {
     public DetailResp findBeautyShops(Long accountId, String address, int page, int size) {
         address = checkUserLoggedIn(accountId, address);
 
-        address = address.replace(" ", "");
+        String addressEdit = address.replace(" ", "");
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(address, pageable);
+        Page<BeautyShop> savedBeautyShop = beautyShopPersist.findBeautyShopsByAddress(addressEdit, pageable);
 
         List<DetailResp.ShopInfo> shopInfos = savedBeautyShop.stream().map(DetailInfoMapper::mapToBeautyShop).collect(Collectors.toList());
 
@@ -100,11 +100,10 @@ public class DetailInfoService {
     public DetailResp findVets(Long accountId, String address, int page, int size) {
         address = checkUserLoggedIn(accountId, address);
 
-        address = address.replace(" ", "");
+        String addressEdit = address.replace(" ", "");
 
-        User savedUser = userPersist.findByAccountId(accountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
         Pageable pageable = PageRequest.of(page, size);
-        Page<Vet> savedVet = vetPersist.findByAddress(address, pageable);
+        Page<Vet> savedVet = vetPersist.findByAddress(addressEdit, pageable);
 
         List<DetailResp.VetInfo> vetInfos = savedVet.stream().map(DetailInfoMapper::mapToVet).collect(Collectors.toList());
 
@@ -113,7 +112,7 @@ public class DetailInfoService {
                 .totalPages(savedVet.getTotalPages())
                 .totalElements(savedVet.getTotalElements())
                 .currentPage(savedVet.getNumber())
-                .userAddress(savedUser.getAddress())
+                .userAddress(address)
                 .build();
     }
 
