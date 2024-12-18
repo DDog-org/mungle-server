@@ -88,7 +88,9 @@ api 모듈을 독립적ㅇ로 배포할 수 있도록 브랜치 전략을 활용
 <br />
 
 ## 🗃️ ERD 설계도
-![image](https://github.com/user-attachments/assets/f1980534-20ec-441f-8d53-d0d0cfead8a2)
+![image](https://github.com/user-attachments/assets/dc1f3e07-9a46-44bf-bab6-22daa21da6de)
+![image](https://github.com/user-attachments/assets/92c07e93-3e63-4cc0-9c06-e1d9405d1ae8)
+
 
 <br />
 <br />
