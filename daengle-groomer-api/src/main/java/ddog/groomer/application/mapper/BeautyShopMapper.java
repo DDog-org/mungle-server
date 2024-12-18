@@ -3,7 +3,7 @@ package ddog.groomer.application.mapper;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.shop.BeautyShop;
 import ddog.groomer.presentation.account.dto.ShopInfo;
-import ddog.groomer.presentation.account.dto.UpdateShopReq;
+import ddog.domain.shop.dto.UpdateShopReq;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -69,6 +69,7 @@ public class BeautyShopMapper {
                 .startTime(request.getStartTime())
                 .endTime(request.getEndTime())
                 .closedDays(request.getClosedDays())
+                .groomers(shop.getGroomers())
                 .phoneNumber(request.getPhoneNumber())
                 .shopAddress(shop.getShopAddress())
                 .shopDetailAddress(shop.getShopDetailAddress())

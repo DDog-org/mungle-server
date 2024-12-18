@@ -2,9 +2,9 @@ package ddog.groomer.presentation.account;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.shop.dto.UpdateShopReq;
 import ddog.groomer.application.AccountService;
 
-import ddog.groomer.application.mapper.BeautyShopMapper;
 import ddog.groomer.presentation.account.dto.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
