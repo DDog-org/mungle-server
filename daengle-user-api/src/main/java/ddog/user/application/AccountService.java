@@ -37,7 +37,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountService {
 
-
     private final PetPersist petPersist;
     private final UserPersist userPersist;
     private final AccountPersist accountPersist;
@@ -75,8 +74,9 @@ public class AccountService {
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         validateSignUpWithPetDataFormat(request);
 
-        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -100,8 +100,9 @@ public class AccountService {
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
         validateSignUpWithoutPetDataFormat(request);
 
-        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)
-                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
