@@ -14,6 +14,8 @@ import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.application.exception.account.*;
+import ddog.user.application.exception.info.BeautyShopException;
+import ddog.user.application.exception.info.BeautyShopExceptionType;
 import ddog.user.application.mapper.DetailInfoMapper;
 import ddog.user.presentation.detailInfo.dto.DetailResp;
 import lombok.RequiredArgsConstructor;
@@ -140,7 +142,7 @@ public class DetailInfoService {
 
     public DetailResp.GroomerDetailInfo findGroomerById(Long groomerAccountId) {
         Groomer findGroomer = groomerPersist.findByAccountId(groomerAccountId).orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress()).get();
+        BeautyShop beautyShop = beautyShopPersist.findBeautyShopByNameAndAddress(findGroomer.getShopName(), findGroomer.getAddress()).orElseThrow(()-> new BeautyShopException(BeautyShopExceptionType.SHOP_NOT_FOUND));
         Pageable pageable = Pageable.unpaged();
 
         Page<GroomingReview> groomingReview = groomingReviewPersist.findByGroomerId(findGroomer.getGroomerId(), pageable);

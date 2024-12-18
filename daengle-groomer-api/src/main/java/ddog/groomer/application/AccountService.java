@@ -84,7 +84,7 @@ public class AccountService {
         BeautyShop savedBeautyShop = existingBeautyShop.orElseGet(() -> BeautyShop.create(request.getShopName(), request.getAddress()));
 
         beautyShopPersist.save(savedBeautyShop);
-        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).get().getShopId();
+        Long shopId = beautyShopPersist.findBeautyShopByNameAndAddress(savedBeautyShop.getShopName(), savedBeautyShop.getShopAddress()).orElseThrow().getShopId();
 
         Groomer newGroomer = GroomerMapper.create(savedAccount.getAccountId(), request, licenses, shopId);
         Groomer savedGroomer = groomerPersist.save(newGroomer);

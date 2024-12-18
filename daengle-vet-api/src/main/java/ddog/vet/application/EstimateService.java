@@ -124,8 +124,8 @@ public class EstimateService {
     public EstimateInfo.EstimateUserInfo findByUserInfoByEstimateId(Long estimateId) {
         CareEstimate savedCareEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
         Long userId = savedCareEstimate.getUserId();
-        String userName = userPersist.findByAccountId(userId).get().getNickname();
-        String userPhone = userPersist.findByAccountId(userId).get().getPhoneNumber();
+        String userName = userPersist.findByAccountId(userId).orElseThrow(()-> new UserException(UserExceptionType.USER_NOT_FOUND)).getUsername();
+        String userPhone = userPersist.findByAccountId(userId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND)).getPhoneNumber();
 
         return EstimateInfo.EstimateUserInfo.builder()
                 .userId(userId)

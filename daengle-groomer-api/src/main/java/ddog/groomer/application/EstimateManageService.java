@@ -39,7 +39,7 @@ public class EstimateManageService {
 
     public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long groomerAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
-        Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
+        Long estimateId = reservationPersist.findByReservationId(reservationId).orElseThrow().getEstimateId();
 
         GroomingEstimate savedEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
         Long userAccountId = savedEstimate.getUserId();
@@ -84,8 +84,8 @@ public class EstimateManageService {
                             .scheduleTime(groomingEstimate.getReservedDate())
                             .reservationId(reservationPersist.findByEstimateId(groomingEstimate.getEstimateId()).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND)).getReservationId())
                             .petId(groomingEstimate.getPetId())
-                            .petName(petPersist.findByPetId(groomingEstimate.getPetId()).get().getName())
-                            .petProfile(petPersist.findByPetId(groomingEstimate.getPetId()).get().getImageUrl())
+                            .petName(petPersist.findByPetId(groomingEstimate.getPetId()).orElseThrow().getName())
+                            .petProfile(petPersist.findByPetId(groomingEstimate.getPetId()).orElseThrow().getImageUrl())
                             .desiredStyle(groomingEstimate.getDesiredStyle())
                             .build()
             );

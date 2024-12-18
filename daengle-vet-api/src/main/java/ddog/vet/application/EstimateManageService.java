@@ -36,7 +36,7 @@ public class EstimateManageService {
 
     public ReservationEstimateContent findEstimateByVetAccountIdAndReservationId(Long vetAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
-        Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
+        Long estimateId = reservationPersist.findByReservationId(reservationId).orElseThrow().getEstimateId();
 
         CareEstimate savedEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
         Long userAccountId = savedEstimate.getUserId();
@@ -81,10 +81,10 @@ public class EstimateManageService {
             toSaveSchedule.add(
                     WeekScheduleResp.VetSchedule.builder()
                             .scheduleTime(careEstimate.getReservedDate())
-                            .reservationId(reservationPersist.findByEstimateId(careEstimate.getEstimateId()).get().getReservationId())
+                            .reservationId(reservationPersist.findByEstimateId(careEstimate.getEstimateId()).orElseThrow().getReservationId())
                             .petId(careEstimate.getPetId())
-                            .petName(petPersist.findByPetId(careEstimate.getPetId()).get().getName())
-                            .petProfile(petPersist.findByPetId(careEstimate.getPetId()).get().getImageUrl())
+                            .petName(petPersist.findByPetId(careEstimate.getPetId()).orElseThrow().getName())
+                            .petProfile(petPersist.findByPetId(careEstimate.getPetId()).orElseThrow().getImageUrl())
                             .build()
             );
         }
