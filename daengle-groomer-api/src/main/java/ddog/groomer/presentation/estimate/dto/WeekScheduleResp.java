@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ public class WeekScheduleResp {
     @Getter
     @Builder
     public static class GroomerSchedule {
-        private LocalDateTime scheduleTime;
+        private LocalTime scheduleTime;
         private Long reservationId;
         private Long petId;
         private String petName;

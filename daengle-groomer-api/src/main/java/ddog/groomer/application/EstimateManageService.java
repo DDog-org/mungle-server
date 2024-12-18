@@ -81,7 +81,7 @@ public class EstimateManageService {
         for (GroomingEstimate groomingEstimate :groomingEstimates) {
             toSaveSchedule.add(
                     WeekScheduleResp.GroomerSchedule.builder()
-                            .scheduleTime(groomingEstimate.getReservedDate())
+                            .scheduleTime(groomingEstimate.getReservedDate().toLocalTime())
                             .reservationId(reservationPersist.findByEstimateId(groomingEstimate.getEstimateId()).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND)).getReservationId())
                             .petId(groomingEstimate.getPetId())
                             .petName(petPersist.findByPetId(groomingEstimate.getPetId()).orElseThrow().getName())

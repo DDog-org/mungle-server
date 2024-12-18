@@ -59,9 +59,9 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
 
     Optional<CareEstimateJpaEntity> findCareEstimateJpaEntityByUserIdAndVetId(Long userId, Long vetId);
 
-    @Query("SELECT COUNT(DISTINCT c.parentId) " +
+    @Query("SELECT COUNT(c) " +
             "FROM CareEstimates c " +
-            "WHERE c.vetId = :vetAccountId")
+            "WHERE c.vetId = :vetAccountId AND c.parentId IS NULL")
     Integer countDistinctParentIdsByVetAccountId(@Param("vetAccountId") Long vetAccountId);
 
     Optional<CareEstimateJpaEntity> findCareEstimateJpaEntityByUserIdAndPetId(Long userId, Long petId);
