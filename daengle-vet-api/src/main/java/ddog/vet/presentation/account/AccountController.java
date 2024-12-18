@@ -34,8 +34,8 @@ public class AccountController {
     }
 
     @PatchMapping("/info")
-    public CommonResponseEntity<AccountResp> modifyInfo(@RequestBody UpdateInfo request, PayloadDto payloadDto) {
-        return success(accountService.modifyInfo(request, payloadDto.getAccountId()));
+    public CommonResponseEntity<AccountResp> updateInfo(@RequestBody UpdateInfo request, PayloadDto payloadDto) {
+        return success(accountService.updateInfo(request, payloadDto.getAccountId()));
     }
 
     @GetMapping("/withdraw-info")

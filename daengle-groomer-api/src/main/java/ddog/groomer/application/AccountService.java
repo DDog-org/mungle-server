@@ -15,6 +15,8 @@ import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
+import ddog.groomer.application.exception.account.AccountException;
+import ddog.groomer.application.exception.account.AccountExceptionType;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
 import ddog.groomer.application.mapper.BeautyShopMapper;
@@ -57,8 +59,11 @@ public class AccountService {
 
     @Transactional
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
-
         validateSignUpReqDataFormat(request);
+
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.GROOMER)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
 
         Account newAccount = Account.create(request.getEmail(), Role.GROOMER);
         Account savedAccount = accountPersist.save(newAccount);
