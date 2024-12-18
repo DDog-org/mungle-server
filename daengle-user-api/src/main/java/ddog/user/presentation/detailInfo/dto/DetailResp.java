@@ -46,6 +46,7 @@ public class DetailResp {
         private String introduction;
         private Long reviewCount;
         private List<Day> closedDay;
+        private String shopNumber;
     }
 
     @Getter
