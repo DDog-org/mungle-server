@@ -26,6 +26,7 @@ import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +48,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    public static final int PG_API_TIMEOUT = 5;
     private final IamportClient iamportClient;
 
     private final UserPersist userPersist;
@@ -59,54 +65,25 @@ public class PaymentService {
     @Transactional
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
         try {
-            Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+            // 트랜잭션 내에서 데이터 로드
+            Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid())
+                    .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+
+            // Lazy 로딩된 엔티티 강제 초기화
             Payment payment = savedOrder.getPayment();
+            Hibernate.initialize(payment);
 
-            if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
-                throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
-            validateEstimateBy(savedOrder);
+            // 비동기 작업
+            CompletableFuture<PaymentCallbackResp> future = CompletableFuture.supplyAsync(() -> {
+                return processValidation(paymentCallbackReq, savedOrder, payment);
+            });
+            return future.get(PG_API_TIMEOUT, TimeUnit.SECONDS);
 
-            com.siot.IamportRestClient.response.Payment iamportResp =
-                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
-            String paymentStatus = iamportResp.getStatus();
-            long paymentAmount = iamportResp.getAmount().longValue();
+        } catch (TimeoutException e) {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_TIMEOUT);
 
-            //결제 완료 검증
-            if (payment.checkIncompleteBy(paymentStatus)) {  //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
-
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
-            }
-
-            //결제 금액 검증
-            if (payment.checkInValidationBy(paymentAmount)) {    //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
-                payment.invalidate();
-                paymentPersist.save(payment);
-
-                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
-                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
-            }
-
-            //결제 검증 절차 성공
-            payment.validationSuccess(iamportResp.getImpUid());
-            paymentPersist.save(payment);
-
-            //예약 정보 생성
-            Reservation reservationToSave = ReservationMapper.createBy(savedOrder, payment);
-            Reservation savedReservation = reservationPersist.save(reservationToSave);
-
-            return PaymentCallbackResp.builder()
-                    .customerId(savedOrder.getAccountId())
-                    .reservationId(savedReservation.getReservationId())
-                    .paymentId(payment.getPaymentId())
-                    .price(payment.getPrice())
-                    .build();
-
-        } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
-            throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
-        } catch (IamportResponseException | IOException e) {
-            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -182,6 +159,56 @@ public class PaymentService {
         Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
 
         return mappingToPaymentHistoryListResp(reservations);
+    }
+
+
+    private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
+        validateEstimateBy(savedOrder);
+
+        try {
+            if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+                throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+            validateEstimateBy(savedOrder);
+
+            com.siot.IamportRestClient.response.Payment iamportResp =
+                    iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
+
+            // 결제 검증 절차
+            String paymentStatus = iamportResp.getStatus();
+            long paymentAmount = iamportResp.getAmount().longValue();
+
+            if (payment.checkIncompleteBy(paymentStatus)) { //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INCOMPLETE);
+            }
+
+            if (payment.checkInValidationBy(paymentAmount)) {   //TODO 결제상태 변경과 영속도 도메인 엔티티에게 위임하기
+                payment.invalidate();
+                paymentPersist.save(payment);
+
+                iamportClient.cancelPaymentByImpUid(new CancelData(iamportResp.getImpUid(), true, new BigDecimal(paymentAmount)));
+                throw new PaymentException(PaymentExceptionType.PAYMENT_PG_AMOUNT_MISMATCH);
+            }
+
+            payment.validationSuccess(iamportResp.getImpUid());
+            paymentPersist.save(payment);
+
+            Reservation reservationToSave = ReservationMapper.createBy(savedOrder, payment);
+            Reservation savedReservation = reservationPersist.save(reservationToSave);
+
+            return PaymentCallbackResp.builder()
+                    .customerId(savedOrder.getAccountId())
+                    .reservationId(savedReservation.getReservationId())
+                    .paymentId(payment.getPaymentId())
+                    .price(payment.getPrice())
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
+            throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
+        } catch (IamportResponseException | IOException e) {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        }
     }
 
     private PaymentHistoryListResp mappingToPaymentHistoryListResp(Page<Reservation> reservations) {
