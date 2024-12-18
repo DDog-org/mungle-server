@@ -10,9 +10,12 @@ import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
+import ddog.groomer.application.exception.GroomingEstimateException;
+import ddog.groomer.application.exception.GroomingEstimateExceptionType;
 import ddog.groomer.application.exception.ReservationException;
 import ddog.groomer.application.exception.ReservationExceptionType;
 import ddog.groomer.application.exception.account.*;
+import ddog.groomer.presentation.estimate.dto.PetInfo;
 import ddog.groomer.presentation.estimate.dto.ReservationEstimateContent;
 import ddog.groomer.presentation.estimate.dto.WeekScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +38,9 @@ public class EstimateManageService {
 
     public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long groomerAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
+        Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
 
-        GroomingEstimate savedEstimate = groomingEstimatePersist.findEstimateByPetIdAndGroomerAccountId(petId, groomerAccountId);
+        GroomingEstimate savedEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
         Long userAccountId = savedEstimate.getUserId();
 
         User savedUser = userPersist.findByAccountId(userAccountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
@@ -87,6 +91,27 @@ public class EstimateManageService {
                 .scheduleDate(localDate)
                 .scheduleList(toSaveSchedule)
                 .build();
+    }
+
+    public PetInfo findPetInfoByPetId(Long petId){
+        Pet pet = petPersist.findByPetId(petId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+        return PetInfo.builder()
+                .petId(petId)
+                .image(pet.getImageUrl())
+                .name(pet.getName())
+                .birth(pet.getBirth())
+                .gender(pet.getGender())
+                .breed(pet.getBreed())
+                .isNeutered(pet.getIsNeutered())
+                .weight(pet.getWeight())
+                .groomingExperience(pet.getGroomingExperience())
+                .isBite(pet.getIsBite())
+                .dislikeParts(pet.getDislikeParts())
+                .significantTags(pet.getSignificantTags())
+                .significant(pet.getSignificant())
+                .build();
+
     }
 
 }

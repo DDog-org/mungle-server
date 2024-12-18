@@ -3,6 +3,7 @@ package ddog.vet.presentation.estimate;
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
 import ddog.vet.application.EstimateManageService;
+import ddog.vet.presentation.estimate.dto.PetInfo;
 import ddog.vet.presentation.estimate.dto.ReservationEstimateContent;
 import ddog.vet.presentation.estimate.dto.WeekScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,10 @@ public class EstimateManageController {
     @GetMapping("/week/{date}")
     public CommonResponseEntity<WeekScheduleResp> findWeekSchedule(PayloadDto payloadDto, @PathVariable String date){
         return success(estimateManageService.findScheduleByGroomerIdAndDate(payloadDto.getAccountId(), date));
+    }
+
+    @GetMapping("/petInfo/{petId}")
+    public CommonResponseEntity<PetInfo> findPetInfoByPetId(@PathVariable Long petId) {
+        return success(estimateManageService.findPetInfoByPetId(petId));
     }
 }

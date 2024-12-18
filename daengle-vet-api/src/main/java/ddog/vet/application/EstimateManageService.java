@@ -10,7 +10,10 @@ import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
+import ddog.vet.application.exception.CareEstimateException;
+import ddog.vet.application.exception.CareEstimateExceptionType;
 import ddog.vet.application.exception.account.*;
+import ddog.vet.presentation.estimate.dto.PetInfo;
 import ddog.vet.presentation.estimate.dto.ReservationEstimateContent;
 import ddog.vet.presentation.estimate.dto.WeekScheduleResp;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +35,22 @@ public class EstimateManageService {
     private final ReservationPersist reservationPersist;
 
     public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long vetAccountId, Long reservationId) {
-        Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new VetException(VetExceptionType.VET_NOT_FOUND)).getPetId();
+        Long petId = reservationPersist.findByReservationId(reservationId).get().getPetId();
+        Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
 
-        CareEstimate savedEstimate = careEstimatePersist.findEstimateByUserIdAndPetId(vetAccountId, petId).get();
+        CareEstimate savedEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
         Long userAccountId = savedEstimate.getUserId();
 
         User savedUser = userPersist.findByAccountId(userAccountId).orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
         Vet savedVet = vetPersist.findByAccountId(vetAccountId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
         Pet savedPet = petPersist.findByPetId(petId).orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+        ReservationEstimateContent.toVetPetInfo petEstimateInfo = ReservationEstimateContent.toVetPetInfo.builder()
+                .symptoms(savedEstimate.getSymptoms())
+                .requirements(savedEstimate.getRequirements())
+                .treatment(savedEstimate.getTreatment())
+                .cause(savedEstimate.getCause())
+                .diagnosis(savedEstimate.getDiagnosis())
+                .build();
 
         return ReservationEstimateContent.builder()
                 .userId(userAccountId)
@@ -54,13 +65,14 @@ public class EstimateManageService {
                 .petWeight(savedPet.getWeight())
                 .dislikeParts(savedPet.getDislikeParts())
                 .significantTags(savedPet.getSignificantTags())
+                .petInfo(petEstimateInfo)
                 .build();
     }
 
     public WeekScheduleResp findScheduleByGroomerIdAndDate(Long vetAccountId, String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
-        System.out.println(localDate);
+
         List<CareEstimate> CareEstimates = careEstimatePersist.findTodayCareSchedule(vetAccountId, localDate, EstimateStatus.ON_RESERVATION);
 
         List<WeekScheduleResp.VetSchedule> toSaveSchedule = new ArrayList<>();
@@ -80,6 +92,27 @@ public class EstimateManageService {
                 .scheduleDate(localDate)
                 .scheduleList(toSaveSchedule)
                 .build();
+    }
+
+    public PetInfo findPetInfoByPetId(Long petId){
+        Pet pet = petPersist.findByPetId(petId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND));
+
+        return PetInfo.builder()
+                .petId(petId)
+                .image(pet.getImageUrl())
+                .name(pet.getName())
+                .birth(pet.getBirth())
+                .gender(pet.getGender())
+                .breed(pet.getBreed())
+                .isNeutered(pet.getIsNeutered())
+                .weight(pet.getWeight())
+                .groomingExperience(pet.getGroomingExperience())
+                .isBite(pet.getIsBite())
+                .dislikeParts(pet.getDislikeParts())
+                .significantTags(pet.getSignificantTags())
+                .significant(pet.getSignificant())
+                .build();
+
     }
 
 }

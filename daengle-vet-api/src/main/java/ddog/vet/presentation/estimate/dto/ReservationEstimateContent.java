@@ -27,6 +27,8 @@ public class ReservationEstimateContent {
     private List<SignificantTag> significantTags;
     private String etcSignificants;
 
+    private toVetPetInfo petInfo;
+
     @Getter
     @Builder
     public static class toVetPetInfo {
