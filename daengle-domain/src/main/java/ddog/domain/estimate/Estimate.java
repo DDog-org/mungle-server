@@ -38,4 +38,6 @@ public abstract class Estimate {
     public void updateStatus(EstimateStatus status) {
         this.status = status;
     }
+
+
 }
