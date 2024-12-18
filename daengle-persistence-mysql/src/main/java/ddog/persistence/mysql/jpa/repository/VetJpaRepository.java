@@ -22,4 +22,5 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
     @Query("SELECT v FROM Vets v WHERE v.address LIKE CONCAT(:addressPrefix, '%')")
     List<VetJpaEntity> findVetsByAddressPrefix(@Param("addressPrefix") String addressPrefix);
 
+    void deleteByAccountId(Long accountId);
 }

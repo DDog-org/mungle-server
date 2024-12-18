@@ -3,26 +3,29 @@ package ddog.user.application;
 import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.GroomerDaengleMeter;
+import ddog.domain.groomer.GroomerKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
+import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
+import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.review.GroomingReview;
+import ddog.domain.review.port.GroomingReviewPersist;
+import ddog.domain.user.User;
+import ddog.domain.user.port.UserPersist;
+import ddog.user.application.exception.ReviewException;
+import ddog.user.application.exception.ReviewExceptionType;
 import ddog.user.application.exception.account.GroomerException;
 import ddog.user.application.exception.account.GroomerExceptionType;
-import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
-import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
-import ddog.domain.user.User;
-import ddog.domain.groomer.port.GroomerPersist;
-import ddog.domain.review.port.GroomingReviewPersist;
-import ddog.domain.payment.port.ReservationPersist;
 import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
-import ddog.user.application.exception.ReviewException;
-import ddog.user.application.exception.ReviewExceptionType;
-import ddog.domain.user.port.UserPersist;
 import ddog.user.application.mapper.GroomingReviewMapper;
+import ddog.user.presentation.review.dto.request.PostGroomingReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateGroomingReviewInfo;
 import ddog.user.presentation.review.dto.response.GroomingReviewDetailResp;
 import ddog.user.presentation.review.dto.response.GroomingReviewListResp;
 import ddog.user.presentation.review.dto.response.GroomingReviewSummaryResp;
@@ -80,18 +83,22 @@ public class GroomingReviewService {
         Groomer savedGroomer = groomerPersist.findByGroomerId(reservation.getRecipientId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-        if(reservation.getServiceType() != ServiceType.GROOMING) throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
+        if (reservation.getServiceType() != ServiceType.GROOMING)
+            throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
 
-        if(groomingReviewPersist.findByReservationId(postGroomingReviewInfo.getReservationId())
+        if (groomingReviewPersist.findByReservationId(postGroomingReviewInfo.getReservationId())
                 .isPresent()) throw new ReviewException(ReviewExceptionType.REVIEW_HAS_WRITTEN);
 
         validatePostGroomingReviewInfoDataFormat(postGroomingReviewInfo);
 
         String includedBanWord = banWordValidator.findBanWords(postGroomingReviewInfo.getContent());
-        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+        if (includedBanWord != null)
+            throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         GroomingReview groomingReviewToSave = GroomingReviewMapper.createBy(reservation, postGroomingReviewInfo);
         GroomingReview SavedGroomingReview = groomingReviewPersist.save(groomingReviewToSave);
+
+        processKeywords(postGroomingReviewInfo, savedGroomer);
 
         GroomerDaengleMeter groomerDaengleMeter = groomerDaengleMeterPersist.findByGroomerId(savedGroomer.getGroomerId())
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_DAENGLE_METER_NOT_FOUND));
@@ -112,6 +119,41 @@ public class GroomingReviewService {
                 .build();
     }
 
+    private void processKeywords(PostGroomingReviewInfo postGroomingReviewInfo, Groomer groomer) {
+
+        List<GroomerKeyword> groomerKeywords = groomer.getKeywords();
+        List<GroomingBadge> badges = groomer.getBadges();
+
+        List<GroomingKeyword> postKeywords = postGroomingReviewInfo.getGroomingKeywordList();
+
+        for (GroomingKeyword postKeyword : postKeywords) {
+            boolean isAdded = false;
+            
+            for (GroomerKeyword groomerKeyword : groomerKeywords) {
+                if (postKeyword.toString().equals(groomerKeyword.getKeyword())) {
+                    groomerKeyword.increaseCount();
+                    
+                    if (groomerKeyword.isAvailableRegisterBadge()) {
+                        if (postKeyword.getBadge() != null) {
+                            badges.add(postKeyword.getBadge());
+                        }
+                    }
+                    isAdded = true;
+                    break;
+                }
+            }
+            if (isAdded) {
+                continue;
+            }
+            
+            GroomerKeyword newKeyword = GroomerKeyword.createNewKeyword(groomer.getAccountId(), postKeyword.toString());
+            groomerKeywords.add(newKeyword);
+        }
+
+        groomer.updateKeywords(groomerKeywords);
+        groomer.updateBadges(badges);
+    }
+
     @Transactional
     public ReviewResp updateReview(Long reviewId, UpdateGroomingReviewInfo updateGroomingReviewInfo) {
         GroomingReview savedGroomingReview = groomingReviewPersist.findByReviewId(reviewId)
@@ -123,7 +165,8 @@ public class GroomingReviewService {
         validateModifyGroomingReviewInfoDataFormat(updateGroomingReviewInfo);
 
         String includedBanWord = banWordValidator.findBanWords(updateGroomingReviewInfo.getContent());
-        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+        if (includedBanWord != null)
+            throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         GroomingReview modifiedReview = GroomingReviewMapper.updateBy(savedGroomingReview, updateGroomingReviewInfo);
         GroomingReview updatedGroomingReview = groomingReviewPersist.save(modifiedReview);
@@ -189,7 +232,7 @@ public class GroomingReviewService {
 
     @Transactional(readOnly = true)
     public GroomingReviewListResp findGroomerReviewList(Long groomerId, int page, int size) {
-        Groomer savedGroomer = groomerPersist.findByAccountId(groomerId)
+        Groomer savedGroomer = groomerPersist.findByGroomerId(groomerId)
                 .orElseThrow(() -> new ReviewException(ReviewExceptionType.REVIEWWEE_NOT_FOUNT));
 
         Pageable pageable = PageRequest.of(page, size);

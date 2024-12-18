@@ -12,4 +12,5 @@ public interface GroomerPersist {
 
     Optional<Groomer> findByGroomerId(Long groomerId);
 
+    void deleteByAccountId(Long accountId);
 }

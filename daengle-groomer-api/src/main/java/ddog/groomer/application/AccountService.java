@@ -8,6 +8,11 @@ import ddog.domain.groomer.GroomerDaengleMeter;
 import ddog.domain.groomer.License;
 import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
 import ddog.domain.groomer.port.LicensePersist;
+import ddog.domain.payment.Payment;
+import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.ReservationStatus;
+import ddog.domain.payment.port.PaymentPersist;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.shop.BeautyShop;
 import ddog.domain.shop.port.BeautyShopPersist;
 import ddog.groomer.application.exception.account.GroomerException;
@@ -29,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +47,7 @@ public class AccountService {
 
     private final AccountPersist accountPersist;
     private final GroomerPersist groomerPersist;
+    private final ReservationPersist reservationPersist;
 
     private final LicensePersist licensePersist;
     private final BeautyShopPersist beautyShopPersist;
@@ -85,26 +92,7 @@ public class AccountService {
                 .build();
     }
 
-    private void validateSignUpReqDataFormat(SignUpReq request) {
-        Groomer.validateShopName(request.getShopName());
-        Groomer.validateName(request.getName());
-        Groomer.validatePhoneNumber(request.getPhoneNumber());
-        Groomer.validateAddress(request.getAddress());
-        Groomer.validateDetailAddress(request.getDetailAddress());
-        Groomer.validateBusinessLicenses(request.getBusinessLicenses());
-        Groomer.validateLicenses(request.getLicenses());
-    }
-
-    private Authentication getAuthentication(Long accountId, String email) {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_GROOMER"));
-
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
-    }
-
+    @Transactional(readOnly = true)
     public ProfileInfo getGroomerInfo(Long accountId) {
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
@@ -145,6 +133,7 @@ public class AccountService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public ShopInfo.UpdatePage getShopInfo(Long accountId) {
         Groomer groomer = groomerPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
@@ -154,6 +143,7 @@ public class AccountService {
         return BeautyShopMapper.mapToShopInfo(shop);
     }
 
+    @Transactional
     public ShopInfo.UpdateResp updateShopInfo(UpdateShopReq request) {
         validateUpdateShopInfoDataFormat(request);
 
@@ -167,11 +157,57 @@ public class AccountService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
+    public WithdrawInfoResp getWithdrawInfo(Long accountId) {
+        Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        Optional<List<Reservation>> reservations = reservationPersist.findByRecipientIdAndReservationStatus(savedGroomer.getGroomerId(), ReservationStatus.DEPOSIT_PAID);
+        Integer count = reservations.map(List::size).orElse(0);
+
+        return WithdrawInfoResp.builder()
+                .waitingForServiceCount(count)
+                .build();
+    }
+
+    @Transactional
+    public WithdrawResp withdraw(Long accountId) {  //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
+        Groomer savedGroomer = groomerPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
+
+        groomerPersist.deleteByAccountId(savedGroomer.getAccountId());
+
+        return WithdrawResp.builder()
+                .accountId(savedGroomer.getAccountId())
+                .withdrawDate(LocalDateTime.now())
+                .build();
+    }
+
     private void validateUpdateShopInfoDataFormat(UpdateShopReq request) {
         BeautyShop.validateImageUrlList(request.getImageUrlList());
         BeautyShop.validateTimeRange(request.getStartTime(), request.getEndTime());
         BeautyShop.validateClosedDays(request.getClosedDays());
         BeautyShop.validateIntroduction(request.getIntroduction());
         BeautyShop.validatePhoneNumber(request.getPhoneNumber());
+    }
+
+    private void validateSignUpReqDataFormat(SignUpReq request) {
+        Groomer.validateShopName(request.getShopName());
+        Groomer.validateName(request.getName());
+        Groomer.validatePhoneNumber(request.getPhoneNumber());
+        Groomer.validateAddress(request.getAddress());
+        Groomer.validateDetailAddress(request.getDetailAddress());
+        Groomer.validateBusinessLicenses(request.getBusinessLicenses());
+        Groomer.validateLicenses(request.getLicenses());
+    }
+
+    private Authentication getAuthentication(Long accountId, String email) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_GROOMER"));
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 }

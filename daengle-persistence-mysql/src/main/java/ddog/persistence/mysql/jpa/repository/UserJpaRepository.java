@@ -10,4 +10,6 @@ public interface UserJpaRepository extends JpaRepository<UserJpaEntity, Long> {
     boolean existsByNickname(String nickname);
 
     Optional<UserJpaEntity> findByAccountId(Long accountId);
+
+    void deleteByAccountId(Long accountId);
 }

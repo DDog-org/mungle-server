@@ -2,7 +2,7 @@ package ddog.persistence.mysql.jpa.entity;
 
 import ddog.domain.vet.Day;
 import ddog.domain.vet.Vet;
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +44,7 @@ public class VetJpaEntity {
     @ElementCollection // 휴무일 리스트
     @CollectionTable(name = "vet_closed_days", joinColumns = @JoinColumn(name = "vet_id"))
     @Column(name = "day")
+    @Enumerated(EnumType.STRING)
     private List<Day> closedDays;
 
     @ElementCollection // 자격증 URL 리스트
@@ -51,10 +52,15 @@ public class VetJpaEntity {
     @Column(name = "license_url")
     private List<String> licenses;
 
-    @ElementCollection // 해시태그 리스트
-    @CollectionTable(name = "care_keywords", joinColumns = @JoinColumn(name = "vet_id"))
-    @Column(name = "care_keyword")
-    private List<CareKeyword> keywords;
+    @ElementCollection // 뱃지 리스트
+    @CollectionTable(name = "care_badges", joinColumns = @JoinColumn(name = "vet_id"))
+    @Column(name = "care_badge")
+    @Enumerated(EnumType.STRING)
+    private List<CareBadge> badges;
+
+    @OneToMany
+    @JoinColumn(name = "account_id", referencedColumnName = "accountId")
+    private List<VetKeywordJpaEntity> keywords;
 
     public static VetJpaEntity from(Vet vet) {
         return VetJpaEntity.builder()
@@ -73,7 +79,10 @@ public class VetJpaEntity {
                 .endTime(vet.getEndTime())
                 .closedDays(vet.getClosedDays())
                 .licenses(vet.getLicenses())
-                .keywords(vet.getKeywords())
+                .badges(vet.getBadges())
+                .keywords(vet.getKeywords().stream()
+                        .map(VetKeywordJpaEntity::from)
+                        .toList())
                 .build();
     }
 
@@ -94,7 +103,10 @@ public class VetJpaEntity {
                 .endTime(endTime)
                 .closedDays(closedDays)
                 .licenses(licenses)
-                .keywords(keywords)
+                .badges(badges)
+                .keywords(keywords.stream()
+                        .map(VetKeywordJpaEntity::toModel)
+                        .toList())
                 .build();
     }
 }

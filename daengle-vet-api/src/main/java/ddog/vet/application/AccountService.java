@@ -3,6 +3,9 @@ package ddog.vet.application;
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
+import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.ReservationStatus;
+import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.account.port.AccountPersist;
 import ddog.domain.vet.VetDaengleMeter;
@@ -24,9 +27,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -34,6 +39,7 @@ import java.util.List;
 public class AccountService {
 
     private final AccountPersist accountPersist;
+    private final ReservationPersist reservationPersist;
 
     private final VetPersist vetPersist;
     private final VetDaengleMeterPersist vetDaengleMeterPersist;
@@ -113,6 +119,32 @@ public class AccountService {
 
         return AccountResp.builder()
                 .requestResult("병원 프로필 수정 완료.")
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public WithdrawInfoResp getWithdrawInfo(Long accountId) {   //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
+        Vet savedVet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        Optional<List<Reservation>> reservations = reservationPersist.findByRecipientIdAndReservationStatus(savedVet.getVetId(), ReservationStatus.DEPOSIT_PAID);
+        Integer count = reservations.map(List::size).orElse(0);
+
+        return WithdrawInfoResp.builder()
+                .waitingForServiceCount(count)
+                .build();
+    }
+
+    @Transactional
+    public WithdrawResp withdraw(Long accountId) {  //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
+        Vet savedVet = vetPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
+
+        vetPersist.deleteByAccountId(savedVet.getAccountId());
+
+        return WithdrawResp.builder()
+                .accountId(savedVet.getAccountId())
+                .withdrawDate(LocalDateTime.now())
                 .build();
     }
 

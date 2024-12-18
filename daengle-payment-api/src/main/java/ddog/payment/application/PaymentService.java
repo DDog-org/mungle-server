@@ -16,8 +16,6 @@ import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.payment.port.ReservationPersist;
-import ddog.domain.review.CareReview;
-import ddog.domain.review.GroomingReview;
 import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.review.port.GroomingReviewPersist;
 import ddog.domain.user.User;
@@ -28,6 +26,7 @@ import ddog.payment.application.exception.*;
 import ddog.payment.application.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,13 +58,14 @@ public class PaymentService {
 
     @Transactional
     public PaymentCallbackResp validationPayment(PaymentCallbackReq paymentCallbackReq) {
-        Order order = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
-        Payment payment = order.getPayment();
-
-        if(payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED) throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
-        validateEstimateBy(order);
-
         try {
+            Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid()).orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
+            Payment payment = savedOrder.getPayment();
+
+            if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+                throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+            validateEstimateBy(savedOrder);
+
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
             String paymentStatus = iamportResp.getStatus();
@@ -94,16 +93,18 @@ public class PaymentService {
             paymentPersist.save(payment);
 
             //예약 정보 생성
-            Reservation reservationToSave = ReservationMapper.createBy(order, payment);
+            Reservation reservationToSave = ReservationMapper.createBy(savedOrder, payment);
             Reservation savedReservation = reservationPersist.save(reservationToSave);
 
             return PaymentCallbackResp.builder()
-                    .customerId(order.getAccountId())
+                    .customerId(savedOrder.getAccountId())
                     .reservationId(savedReservation.getReservationId())
                     .paymentId(payment.getPaymentId())
                     .price(payment.getPrice())
                     .build();
 
+        } catch (DataIntegrityViolationException e) {  //데이터 무결성 제약조건 위배
+            throw new OrderException(OrderExceptionType.ORDER_ALREADY_PROCESSED);
         } catch (IamportResponseException | IOException e) {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
         }

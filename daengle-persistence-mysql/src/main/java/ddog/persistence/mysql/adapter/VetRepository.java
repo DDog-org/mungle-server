@@ -51,4 +51,9 @@ public class VetRepository implements VetPersist {
                 .map(VetJpaEntity::toModel)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        vetJpaRepository.deleteByAccountId(accountId);
+    }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class PaymentMapper {
 
-    public static Payment createTemporaryHistoryBy(Long accountId, PostOrderInfo postOrderInfo) {
+    public static Payment createTemporaryHistoryBy(String idempotencyKey, Long accountId, PostOrderInfo postOrderInfo) {
         return Payment.builder()
                 .paymentId(null)
                 .payerId(accountId)
@@ -16,6 +16,7 @@ public class PaymentMapper {
                 .status(PaymentStatus.PAYMENT_READY)
                 .paymentDate(LocalDateTime.now())
                 .paymentUid(null)
+                .idempotencyKey(idempotencyKey)
                 .build();
     }
 }

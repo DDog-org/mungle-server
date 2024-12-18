@@ -1,7 +1,7 @@
 package ddog.groomer.presentation.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class ProfileInfo {
 
     private String imageUrl;
     private String name;
-    private List<GroomingKeyword> keywords;
+    private List<GroomingBadge> badges;
     private Long shopId;
     private String shopName;
     private String introduction;
