@@ -106,5 +106,10 @@ public class CareEstimateRepository implements CareEstimatePersist {
     public Optional<CareEstimate> findEstimateByUserIdAndVetId(Long userId, Long vetId) {
         return careEstimateJpaRepository.findCareEstimateJpaEntityByUserIdAndVetId(userId, vetId).map(CareEstimateJpaEntity::toModel);
     }
+
+    @Override
+    public Integer countEstimateByVetIdDistinctParentId(Long vetId) {
+        return careEstimateJpaRepository.countDistinctParentIdsByVetAccountId(vetId);
+    }
 }
 

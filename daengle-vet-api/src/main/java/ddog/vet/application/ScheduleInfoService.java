@@ -27,7 +27,7 @@ public class ScheduleInfoService {
     public ScheduleResp getScheduleByVetAccountId(Long accountId) {
         Vet savedVet = vetPersist.findByAccountId(accountId).orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        int estimateTotalCount = careEstimatePersist.findCareEstimatesByVetId(accountId).size();
+        int estimateTotalCount = careEstimatePersist.countEstimateByVetIdDistinctParentId(accountId);
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(accountId).size();
         int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(accountId).size();
 
