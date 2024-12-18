@@ -1,6 +1,8 @@
 package ddog.user.presentation.search;
 
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import ddog.user.application.SearchService;
 import ddog.user.presentation.search.dto.SearchGroomingResultByKeyword;
@@ -23,7 +25,7 @@ public class SearchController {
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) GroomingKeyword tag
+            @RequestParam(required = false) GroomingBadge tag
     ) {
         return searchService.getGroomerResultBySearch(page, size, address, keyword, tag);
     }
@@ -34,7 +36,7 @@ public class SearchController {
             @RequestParam(defaultValue = "6") int size,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) CareKeyword tag
+            @RequestParam(required = false) CareBadge tag
     ) {
         return searchService.getVetResultBySearch(page, size, address, keyword, tag);
     }

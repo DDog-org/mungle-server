@@ -1,5 +1,6 @@
 package ddog.user.presentation.search.dto;
 
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,6 @@ public class SearchVetResultByKeyword {
         public Long partnerId;
         public String partnerName;
         public String partnerImage;
-        public List<CareKeyword> careKeywords;
+        public List<CareBadge> careBadges;
     }
 }

@@ -1,6 +1,7 @@
 package ddog.domain.vet.port;
 
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +18,7 @@ public interface VetPersist {
     Page<Vet> findByAddress(String address, Pageable pageable);
     List<Vet> findByAddressPrefix(String addressPrefix);
 
-    Page<Vet> findVetByKeyword(String address, String keyword, CareKeyword tag, Pageable pageable);
+    Page<Vet> findVetByKeyword(String address, String keyword, CareBadge tag, Pageable pageable);
 
     void deleteByAccountId(Long accountId);
 }

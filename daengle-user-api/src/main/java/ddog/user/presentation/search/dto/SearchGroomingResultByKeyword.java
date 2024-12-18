@@ -1,5 +1,6 @@
 package ddog.user.presentation.search.dto;
 
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,6 @@ public class SearchGroomingResultByKeyword {
         public Long partnerId;
         public String partnerName;
         public String partnerImage;
-        public List<GroomingKeyword> groomingKeywords;
+        public List<GroomingBadge> groomingBadges;
     }
 }

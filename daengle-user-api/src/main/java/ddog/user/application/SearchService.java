@@ -1,9 +1,11 @@
 package ddog.user.application;
 
 import ddog.domain.groomer.Groomer;
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.vet.Vet;
+import ddog.domain.vet.enums.CareBadge;
 import ddog.domain.vet.enums.CareKeyword;
 import ddog.domain.vet.port.VetPersist;
 import ddog.user.presentation.search.dto.SearchGroomingResultByKeyword;
@@ -22,16 +24,16 @@ public class SearchService {
     private final GroomerPersist groomerPersist;
     private final VetPersist vetPersist;
 
-    public SearchGroomingResultByKeyword getGroomerResultBySearch(int page, int size, String address, String keyword, GroomingKeyword tag) {
+    public SearchGroomingResultByKeyword getGroomerResultBySearch(int page, int size, String address, String keyword, GroomingBadge badge) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Groomer> groomerPage = groomerPersist.findGroomerByKeyword(address, keyword, tag, pageable);
+        Page<Groomer> groomerPage = groomerPersist.findGroomerByKeyword(address, keyword, badge, pageable);
 
         List<SearchGroomingResultByKeyword.ResultList> resultList = groomerPage.stream()
                 .map(groomer -> SearchGroomingResultByKeyword.ResultList.builder()
                         .partnerId(groomer.getGroomerId())
                         .partnerName(groomer.getName())
                         .partnerImage(groomer.getImageUrl())
-                        .groomingKeywords(groomer.getKeywords())
+                        .groomingBadges(groomer.getBadges())
                         .build())
                 .toList();
 
@@ -43,16 +45,16 @@ public class SearchService {
                 .build();
 
     }
-    public SearchVetResultByKeyword getVetResultBySearch(int page, int size, String address, String keyword, CareKeyword tag) {
+    public SearchVetResultByKeyword getVetResultBySearch(int page, int size, String address, String keyword, CareBadge badge) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Vet> vetPage = vetPersist.findVetByKeyword(address, keyword, tag, pageable);
+        Page<Vet> vetPage = vetPersist.findVetByKeyword(address, keyword, badge, pageable);
 
         List<SearchVetResultByKeyword.ResultList> resultList = vetPage.stream()
                 .map(vet -> SearchVetResultByKeyword.ResultList.builder()
                         .partnerId(vet.getVetId())
                         .partnerName(vet.getName())
                         .partnerImage(vet.getImageUrl())
-                        .careKeywords(vet.getKeywords())
+                        .careBadges(vet.getBadges())
                         .build())
                 .toList();
 
