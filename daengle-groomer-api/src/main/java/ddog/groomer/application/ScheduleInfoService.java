@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +33,9 @@ public class ScheduleInfoService {
         int reservationCount = groomingEstimatePersist.findGroomingEstimatesByGroomerIdAndEstimateStatus(accountId).size();
 
         Groomer savedGroomer = groomerPersist.findByAccountId(accountId).orElseThrow(()-> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
-
-        List<GroomingEstimate> savedReservation = groomingEstimatePersist.findTodayGroomingSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
-        System.out.println(LocalDate.now());
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+        List<GroomingEstimate> savedReservation = groomingEstimatePersist.findTodayGroomingSchedule(accountId, startOfDay, endOfDay, EstimateStatus.ON_RESERVATION);
         List<ScheduleResp.TodayReservation> toSaveReservations = new ArrayList<>();
 
         for (GroomingEstimate reservation : savedReservation) {

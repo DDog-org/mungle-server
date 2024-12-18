@@ -86,6 +86,7 @@ public class OrderService {
             groomingEstimatePersist.updateStatusWithParentId(EstimateStatus.END, estimate.getParentId());
 
             estimate.updateStatus(EstimateStatus.ON_RESERVATION);
+
             groomingEstimatePersist.save(estimate);
 
         } else if (serviceType.equals(ServiceType.CARE)) {
