@@ -4,6 +4,8 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.port.AccountPersist;
+import ddog.domain.payment.Payment;
+import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
@@ -27,18 +29,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountPersist accountPersist;
-    private final UserPersist userPersist;
+
     private final PetPersist petPersist;
+    private final UserPersist userPersist;
+    private final AccountPersist accountPersist;
+    private final PaymentPersist paymentPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional(readOnly = true)
@@ -228,6 +235,32 @@ public class AccountService {
 
         return AccountResp.builder()
                 .requestResult("반려견 프로필 삭제 완료")
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public WithdrawInfoResp getWithdrawInfo(Long accountId) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        Optional<List<Payment>> paymentList = paymentPersist.findByPayerId(savedUser.getAccountId());
+        Integer count = paymentList.map(List::size).orElse(0);
+
+        return WithdrawInfoResp.builder()
+                .waitingForServiceCount(count)
+                .build();
+    }
+
+    @Transactional
+    public WithdrawResp withdraw(Long accountId) {  //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        userPersist.deleteByAccountId(savedUser.getAccountId());
+
+        return WithdrawResp.builder()
+                .accountId(savedUser.getAccountId())
+                .withdrawDate(LocalDateTime.now())
                 .build();
     }
 }

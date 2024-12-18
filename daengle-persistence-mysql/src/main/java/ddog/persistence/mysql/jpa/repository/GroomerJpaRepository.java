@@ -27,4 +27,5 @@ public interface GroomerJpaRepository extends JpaRepository<GroomerJpaEntity, Lo
             @Param("tag") GroomingKeyword tag,
             Pageable pageable
     );
+    void deleteByAccountId(Long accountId);
 }

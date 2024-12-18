@@ -30,4 +30,9 @@ public class UserRepository implements UserPersist {
     public Boolean hasNickname(String nickname) {
         return userJpaRepository.existsByNickname(nickname);
     }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        userJpaRepository.deleteByAccountId(accountId);
+    }
 }

@@ -34,4 +34,5 @@ public interface VetJpaRepository extends JpaRepository<VetJpaEntity, Long> {
             @Param("tag") CareKeyword tag,
             Pageable pageable
     );
+    void deleteByAccountId(Long accountId);
 }

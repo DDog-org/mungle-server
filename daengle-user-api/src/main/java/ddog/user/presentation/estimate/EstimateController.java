@@ -2,13 +2,9 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.notification.enums.NotifyType;
-import ddog.notification.application.KakaoNotificationService;
-import ddog.notification.application.NotificationService;
 import ddog.user.application.EstimateService;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
@@ -19,10 +15,6 @@ import static ddog.auth.exception.common.CommonResponseEntity.success;
 public class EstimateController {
 
     private final EstimateService estimateService;
-    private final NotificationService notificationService;
-    private final KakaoNotificationService kakaoNotificationService;
-
-    private final Environment environment;
 
     /* 미용사, 사용자 및 반려견 정보 제공 */
     @PostMapping("/groomer-user-info")
@@ -39,22 +31,12 @@ public class EstimateController {
     /* 사용자 -> 미용사 (신규) 미용 견적서 등록 */
     @PostMapping("/grooming")
     public CommonResponseEntity<EstimateResp> createGroomingEstimate(@RequestBody CreateNewGroomingEstimateReq request, PayloadDto payloadDto) {
-        if (request.getGroomerId() != null) {
-            DesignationEstimateInfo findPartnerInfo = estimateService.findGroomingEstimateUserAndPartner(request);
-            kakaoNotificationService.sendOneTalk(findPartnerInfo.getPartnerName(), findPartnerInfo.getPartnerPhone(), environment.getProperty("templateId.CALL"));
-            notificationService.sendNotificationToUser(findPartnerInfo.getPartnerId(), NotifyType.CALL, "지정 견적이 도착했어요!");
-        }
         return success(estimateService.createNewGroomingEstimate(request, payloadDto.getAccountId()));
     }
 
     /* 사용자 -> 병원 (신규) 진료 견적서 등록 */
     @PostMapping("/care")
     public CommonResponseEntity<EstimateResp> createCareEstimate(@RequestBody CreateNewCareEstimateReq request, PayloadDto payloadDto) {
-        if (request.getVetId() != null) {
-            DesignationEstimateInfo findPartnerInfo = estimateService.findCareEstimateUserAndPartner(request);
-            kakaoNotificationService.sendOneTalk(findPartnerInfo.getPartnerName(), findPartnerInfo.getPartnerPhone(), environment.getProperty("templateId.CALL"));
-            notificationService.sendNotificationToUser(findPartnerInfo.getPartnerId(), NotifyType.CALL, "지정 견적이 도착했어요!");
-        }
         return success(estimateService.createNewCareEstimate(request, payloadDto.getAccountId()));
     }
 
@@ -75,9 +57,10 @@ public class EstimateController {
     public CommonResponseEntity<EstimateInfo.Grooming> findGeneralGroomingEstimates(
             @PathVariable Long petId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            PayloadDto payloadDto
     ) {
-        return success(estimateService.findGeneralGroomingEstimates(petId, page, size));
+        return success(estimateService.findGeneralGroomingEstimates(petId, page, size, payloadDto.getAccountId()));
     }
 
     /* (일반) 대기 진료 견적서 리스트 조회 */
@@ -85,9 +68,10 @@ public class EstimateController {
     public CommonResponseEntity<EstimateInfo.Care> findGeneralCareEstimates(
             @PathVariable Long petId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            PayloadDto payloadDto
     ) {
-        return success(estimateService.findGeneralCareEstimates(petId, page, size));
+        return success(estimateService.findGeneralCareEstimates(petId, page, size, payloadDto.getAccountId()));
     }
 
     /* (지정) 대기 미용 견적서 페이지 반려동물 정보 반환 */
@@ -107,9 +91,10 @@ public class EstimateController {
     public CommonResponseEntity<EstimateInfo.Grooming> findDesignationGroomingEstimates(
             @PathVariable Long petId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            PayloadDto payloadDto
     ) {
-        return success(estimateService.findDesignationGroomingEstimates(petId, page, size));
+        return success(estimateService.findDesignationGroomingEstimates(petId, page, size, payloadDto.getAccountId()));
     }
 
     /* (지정) 대기 진료 견적서 리스트 조회 */
@@ -117,9 +102,10 @@ public class EstimateController {
     public CommonResponseEntity<EstimateInfo.Care> findDesignationCareEstimates(
             @PathVariable Long petId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(defaultValue = "20") int size,
+            PayloadDto payloadDto
     ) {
-        return success(estimateService.findDesignationCareEstimates(petId, page, size));
+        return success(estimateService.findDesignationCareEstimates(petId, page, size, payloadDto.getAccountId()));
     }
 
     /* 사용자가 작성한 미용 견적서 조회 */
@@ -148,13 +134,13 @@ public class EstimateController {
 
     /* (대기) 미용 견적서 상세 조회 */
     @GetMapping("/{groomingEstimateId}/grooming-detail")
-    public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId) {
-        return success(estimateService.getGroomingEstimateDetail(groomingEstimateId));
+    public CommonResponseEntity<GroomingEstimateDetail> getGroomingEstimateDetail(@PathVariable Long groomingEstimateId, PayloadDto payloadDto) {
+        return success(estimateService.getGroomingEstimateDetail(groomingEstimateId, payloadDto.getAccountId()));
     }
 
     /* (대기) 진료 견적서 상세 조회 */
     @GetMapping("/{careEstimateId}/care-detail")
-    public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId) {
-        return success(estimateService.getCareEstimateDetail(careEstimateId));
+    public CommonResponseEntity<CareEstimateDetail> getCareEstimateDetail(@PathVariable Long careEstimateId, PayloadDto payloadDto) {
+        return success(estimateService.getCareEstimateDetail(careEstimateId, payloadDto.getAccountId()));
     }
 }

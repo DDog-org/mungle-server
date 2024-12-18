@@ -58,4 +58,9 @@ public class VetRepository implements VetPersist {
         return vetJpaRepository.findAllVetsBy(address, keyword, tag, pageable).map(VetJpaEntity::toModel);
     }
 
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        vetJpaRepository.deleteByAccountId(accountId);
+    }
 }

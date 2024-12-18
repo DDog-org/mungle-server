@@ -167,21 +167,25 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo.Grooming findGeneralGroomingEstimates(Long petId, int page, int size) {
+    public EstimateInfo.Grooming findGeneralGroomingEstimates(Long petId, int page, int size, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
         Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.GENERAL, pageable);
 
-        return groomingEstimatesToContents(estimates);
+        return groomingEstimatesToContents(estimates, user);
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo.Care findGeneralCareEstimates(Long petId, int page, int size) {
+    public EstimateInfo.Care findGeneralCareEstimates(Long petId, int page, int size, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size);
         Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.GENERAL, pageable);
 
-        return careEstimatesToContents(estimates);
+        return careEstimatesToContents(estimates, user);
     }
 
     @Transactional(readOnly = true)
@@ -227,28 +231,36 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo.Grooming findDesignationGroomingEstimates(Long petId, int page, int size) {
+    public EstimateInfo.Grooming findDesignationGroomingEstimates(Long petId, int page, int size, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         Pageable pageable = PageRequest.of(page, size);
         Page<GroomingEstimate> estimates = groomingEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
 
-        return groomingEstimatesToContents(estimates);
+        return groomingEstimatesToContents(estimates, user);
     }
 
     @Transactional(readOnly = true)
-    public EstimateInfo.Care findDesignationCareEstimates(Long petId, int page, int size) {
+    public EstimateInfo.Care findDesignationCareEstimates(Long petId, int page, int size, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         Pageable pageable = PageRequest.of(page, size);
         Page<CareEstimate> estimates = careEstimatePersist.findByPetIdAndStatusAndProposal(petId, EstimateStatus.PENDING, Proposal.DESIGNATION, pageable);
 
-        return careEstimatesToContents(estimates);
+        return careEstimatesToContents(estimates, user);
     }
 
-    private EstimateInfo.Grooming groomingEstimatesToContents(Page<GroomingEstimate> estimates) {
+    private EstimateInfo.Grooming groomingEstimatesToContents(Page<GroomingEstimate> estimates, User user) {
         List<EstimateInfo.Grooming.Content> contents = new ArrayList<>();
         for (GroomingEstimate estimate : estimates) {
             Groomer groomer = groomerPersist.findByAccountId(estimate.getGroomerId())
                     .orElseThrow(() -> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
-            contents.add(GroomingEstimateMapper.mapToEstimateInfo(estimate, groomer));
+            int daengleMeter = user.calculateDaengleMeterWithGroomingBadge(groomer.getDaengleMeter(), groomer.getBadges());
+
+            contents.add(GroomingEstimateMapper.mapToEstimateInfo(estimate, groomer, daengleMeter));
         }
 
         return EstimateInfo.Grooming.builder()
@@ -256,13 +268,15 @@ public class EstimateService {
                 .build();
     }
 
-    private EstimateInfo.Care careEstimatesToContents(Page<CareEstimate> estimates) {
+    private EstimateInfo.Care careEstimatesToContents(Page<CareEstimate> estimates, User user) {
         List<EstimateInfo.Care.Content> contents = new ArrayList<>();
         for (CareEstimate estimate : estimates) {
             Vet vet = vetPersist.findByAccountId(estimate.getVetId())
                     .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-            contents.add(CareEstimateMapper.mapToEstimateInfo(estimate, vet));
+            int daengleMeter = user.calculateDaengleMeterWithCareBadge(vet.getDaengleMeter(), vet.getBadges());
+
+            contents.add(CareEstimateMapper.mapToEstimateInfo(estimate, vet, daengleMeter));
         }
 
         return EstimateInfo.Care.builder()
@@ -313,7 +327,10 @@ public class EstimateService {
     }
 
     @Transactional(readOnly = true)
-    public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId) {
+    public GroomingEstimateDetail getGroomingEstimateDetail(Long groomingEstimateId, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         GroomingEstimate groomingEstimate = groomingEstimatePersist.findByEstimateId(groomingEstimateId)
                 .orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
 
@@ -323,11 +340,16 @@ public class EstimateService {
         Pet pet = petPersist.findByPetId(groomingEstimate.getPetId())
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-        return GroomingEstimateMapper.mapToEstimateDetail(groomingEstimate, groomer, pet);
+        int daengleMeter = user.calculateDaengleMeterWithGroomingBadge(groomer.getDaengleMeter(), groomer.getBadges());
+
+        return GroomingEstimateMapper.mapToEstimateDetail(groomingEstimate, groomer, pet, daengleMeter);
     }
 
     @Transactional(readOnly = true)
-    public CareEstimateDetail getCareEstimateDetail(Long careEstimateId) {
+    public CareEstimateDetail getCareEstimateDetail(Long careEstimateId, Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
         CareEstimate careEstimate = careEstimatePersist.findByEstimateId(careEstimateId)
                 .orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
 
@@ -337,7 +359,9 @@ public class EstimateService {
         Pet pet = petPersist.findByPetId(careEstimate.getPetId())
                 .orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
 
-        return CareEstimateMapper.mapToEstimateDetail(careEstimate, vet, pet);
+        int daengleMeter = user.calculateDaengleMeterWithCareBadge(vet.getDaengleMeter(), vet.getBadges());
+
+        return CareEstimateMapper.mapToEstimateDetail(careEstimate, vet, pet, daengleMeter);
     }
 
     @Transactional(readOnly = true)

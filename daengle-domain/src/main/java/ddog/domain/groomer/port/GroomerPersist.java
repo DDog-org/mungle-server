@@ -16,4 +16,5 @@ public interface GroomerPersist {
     Optional<Groomer> findByGroomerId(Long groomerId);
 
     Page<Groomer> findGroomerByKeyword(String address, String keyword, GroomingKeyword tag, Pageable pageable);
+    void deleteByAccountId(Long accountId);
 }

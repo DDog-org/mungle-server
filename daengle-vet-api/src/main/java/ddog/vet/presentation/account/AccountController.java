@@ -37,4 +37,14 @@ public class AccountController {
     public CommonResponseEntity<AccountResp> modifyInfo(@RequestBody UpdateInfo request, PayloadDto payloadDto) {
         return success(accountService.modifyInfo(request, payloadDto.getAccountId()));
     }
+
+    @GetMapping("/withdraw-info")
+    public CommonResponseEntity<WithdrawInfoResp> getWithdrawInfo(PayloadDto payloadDto) {
+        return success(accountService.getWithdrawInfo(payloadDto.getAccountId()));
+    }
+
+    @DeleteMapping
+    public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
+        return success(accountService.withdraw(payloadDto.getAccountId()));
+    }
 }

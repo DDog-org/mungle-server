@@ -39,4 +39,9 @@ public class GroomerRepository implements GroomerPersist {
     public Page<Groomer> findGroomerByKeyword(String address, String keyword, GroomingKeyword tag, Pageable pageable) {
         return groomerJpaRepository.findAllGroomersBy(address, keyword, tag, pageable).map(GroomerJpaEntity::toModel);
     }
+
+    @Override
+    public void deleteByAccountId(Long accountId) {
+        groomerJpaRepository.deleteByAccountId(accountId);
+    }
 }

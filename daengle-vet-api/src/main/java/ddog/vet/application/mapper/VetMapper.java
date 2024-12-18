@@ -29,7 +29,7 @@ public class VetMapper {
         return ProfileInfo.builder()
                 .imageUrls(vet.getImageUrlList())
                 .name(vet.getName())
-                .keywords(vet.getKeywords())
+                .badges(vet.getBadges())
                 .closedDays(vet.getClosedDays())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())

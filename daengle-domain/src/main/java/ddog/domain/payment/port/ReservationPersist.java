@@ -26,4 +26,6 @@ public interface ReservationPersist {
 
     List<Reservation> findTodayGroomingReservationByPartnerId(LocalDate dateTime, ServiceType serviceType, Long recipientId);
 
+    Optional<List<Reservation>> findByRecipientIdAndReservationStatus(Long recipientId, ReservationStatus status);
+
 }

@@ -1,8 +1,8 @@
 package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.domain.groomer.enums.GroomingKeyword;
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
+import ddog.domain.vet.enums.CareBadge;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -43,7 +43,7 @@ public class EstimateInfo {
             private int daengleMeter;
             private String imageUrl;
             private String shopName;
-            private List<GroomingKeyword> keywords;
+            private List<GroomingBadge> badges;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
             private LocalDateTime reservedDate;
@@ -63,7 +63,7 @@ public class EstimateInfo {
             private String name;
             private int daengleMeter;
             private String imageUrl;
-            private List<CareKeyword> keywords;
+            private List<CareBadge> badges;
 
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
             private LocalDateTime reservedDate;
