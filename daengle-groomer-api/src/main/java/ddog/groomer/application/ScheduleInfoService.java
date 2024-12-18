@@ -34,6 +34,7 @@ public class ScheduleInfoService {
         Groomer savedGroomer = groomerPersist.findByAccountId(accountId).orElseThrow(()-> new GroomerException(GroomerExceptionType.GROOMER_NOT_FOUND));
 
         List<GroomingEstimate> savedReservation = groomingEstimatePersist.findTodayGroomingSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
+        System.out.println(LocalDate.now());
         List<ScheduleResp.TodayReservation> toSaveReservations = new ArrayList<>();
 
         for (GroomingEstimate reservation : savedReservation) {
