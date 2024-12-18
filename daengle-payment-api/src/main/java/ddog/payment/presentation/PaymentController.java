@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
@@ -26,8 +27,9 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/validate")
-    public CommonResponseEntity<PaymentCallbackResp> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
-            return success(paymentService.validationPayment(paymentCallbackReq));
+    public CompletableFuture<CommonResponseEntity<PaymentCallbackResp>> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
+        return paymentService.validationPayment(paymentCallbackReq)
+                .thenApply(CommonResponseEntity::success); // 성공 응답 래핑
     }
 
     @PostMapping("/cancel/{reservationId}")
