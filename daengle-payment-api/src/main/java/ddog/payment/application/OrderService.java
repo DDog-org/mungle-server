@@ -50,7 +50,7 @@ public class OrderService {
             validateEstimate(postOrderInfo.getServiceType(), postOrderInfo.getEstimateId());
             validatePostOrderInfoDataFormat(postOrderInfo);
 
-            Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(savedUser.getAccountId(), postOrderInfo);
+            Payment paymentToSave = PaymentMapper.createTemporaryHistoryBy(idempotencyKey, savedUser.getAccountId(), postOrderInfo);
             Payment SavedPayment = paymentPersist.save(paymentToSave);
 
             Order orderToSave = OrderMapper.createBy(idempotencyKey, savedUser, postOrderInfo, SavedPayment);

@@ -25,6 +25,7 @@ public class Payment {
     private PaymentStatus status;
     private LocalDateTime paymentDate;
     private String paymentUid;
+    private String idempotencyKey;
 
     public static final String PAYMENT_SUCCESS_STATUS = "paid";
 

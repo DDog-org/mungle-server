@@ -1,6 +1,6 @@
 package ddog.domain.groomer;
 
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,12 +29,8 @@ public class Groomer {
     private String introduction;
     private List<String> businessLicenses;
     private List<License> licenses;
-    private List<GroomingKeyword> keywords;
-
-
-    public void updateDaengleMeter(Integer newMeterValue) {
-        this.daengleMeter = newMeterValue;
-    }
+    private List<GroomingBadge> badges;
+    private List<GroomerKeyword> keywords;
 
     public static void validateShopName(String shopName) {
         if (shopName == null || !shopName.matches("^[가-힣a-zA-Z0-9][가-힣a-zA-Z0-9\\s]{0,19}$")) {
@@ -44,6 +40,9 @@ public class Groomer {
     }
 
     public static void validateInstagramId(String instagramId) {
+        if (instagramId == null) {
+            return;
+        }
         if (instagramId.length() < 2 || instagramId.length() > 30) {
             throw new IllegalArgumentException("Instagram ID must be at least 2 characters and no more than 30 characters.");
         }
@@ -89,5 +88,17 @@ public class Groomer {
         if (introduction != null && (introduction.isEmpty() || introduction.length() > 50)) {
             throw new IllegalArgumentException("Invalid introduction: must be 50 characters or less if provided.");
         }
+    }
+
+    public void updateDaengleMeter(Integer newMeterValue) {
+        this.daengleMeter = newMeterValue;
+    }
+
+    public void updateBadges(List<GroomingBadge> badges) {
+        this.badges = badges;
+    }
+
+    public void updateKeywords(List<GroomerKeyword> keywords) {
+        this.keywords = keywords;
     }
 }

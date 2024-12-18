@@ -65,7 +65,7 @@ public class DetailInfoService {
                     .groomerName(groomer.getName())
                     .groomerImage(groomer.getImageUrl())
                     .reviewCount(groomerReviewCount)
-                    .keywords(groomer.getKeywords())
+                    .badges(groomer.getBadges())
                     .daengleMeter(groomer.getDaengleMeter())
                     .groomerAccountId(groomer.getAccountId())
                     .build());
@@ -81,6 +81,7 @@ public class DetailInfoService {
                 .imageUrlList(findBeautyShop.getImageUrlList())
                 .introduction(findBeautyShop.getIntroduction())
                 .closedDay(findBeautyShop.getClosedDays())
+                .shopNumber(findBeautyShop.getPhoneNumber())
                 .build();
     }
 
@@ -116,7 +117,7 @@ public class DetailInfoService {
                 .vetName(findVet.getName())
                 .endTime(findVet.getEndTime())
                 .startTime(findVet.getStartTime())
-                .keywords(findVet.getKeywords())
+                .badges(findVet.getBadges())
                 .introduction(findVet.getIntroduction())
                 .daengleMeter(findVet.getDaengleMeter())
                 .reviewCount(results.getTotalElements())
@@ -140,7 +141,7 @@ public class DetailInfoService {
                 .introduction(findGroomer.getIntroduction())
                 .shopName(findGroomer.getShopName())
                 .shopId(beautyShop.getShopId())
-                .keywords(findGroomer.getKeywords())
+                .badges(findGroomer.getBadges())
                 .reviewCount(groomingReview.getTotalElements())
                 .groomerImage(findGroomer.getImageUrl())
                 .instagram(findGroomer.getInstagramId())

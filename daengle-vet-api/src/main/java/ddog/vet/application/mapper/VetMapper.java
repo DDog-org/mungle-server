@@ -6,22 +6,28 @@ import ddog.vet.presentation.account.dto.ProfileInfo;
 import ddog.vet.presentation.account.dto.SignUpReq;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class VetMapper {
 
     public static Vet create(Long accountId, SignUpReq request) {
         return Vet.builder()
                 .accountId(accountId)
+                .email(request.getEmail())
                 .daengleMeter(50)
                 .name(request.getName())
                 .imageUrl("")
+                .imageUrlList(null)
                 .address(request.getAddress())
                 .detailAddress(request.getDetailAddress())
                 .phoneNumber(request.getPhoneNumber())
-                .licenses(request.getLicenses())
-                .email(request.getEmail())
+                .introduction(null)
                 .startTime(LocalTime.of(0, 0))
                 .endTime(LocalTime.of(23, 59))
+                .closedDays(null)
+                .licenses(request.getLicenses())
+                .badges(null)
+                .keywords(new ArrayList<>())
                 .build();
     }
 
@@ -29,7 +35,7 @@ public class VetMapper {
         return ProfileInfo.builder()
                 .imageUrls(vet.getImageUrlList())
                 .name(vet.getName())
-                .keywords(vet.getKeywords())
+                .badges(vet.getBadges())
                 .closedDays(vet.getClosedDays())
                 .startTime(vet.getStartTime())
                 .endTime(vet.getEndTime())
@@ -72,6 +78,8 @@ public class VetMapper {
                 .endTime(request.getEndTime())
                 .closedDays(request.getClosedDays())
                 .licenses(vet.getLicenses())
+                .badges(vet.getBadges())
+                .keywords(vet.getKeywords())
                 .build();
     }
 }

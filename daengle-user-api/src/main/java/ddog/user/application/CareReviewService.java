@@ -3,29 +3,34 @@ package ddog.user.application;
 import ddog.domain.filtering.BanWordValidator;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
-import ddog.domain.review.CareReview;
-import ddog.domain.vet.VetDaengleMeter;
-import ddog.domain.vet.port.VetDaengleMeterPersist;
-import ddog.user.application.exception.account.VetException;
-import ddog.user.application.exception.account.VetExceptionType;
-import ddog.user.application.mapper.CareReviewMapper;
-import ddog.user.presentation.review.dto.response.CareReviewListResp;
-import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
-import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
-import ddog.domain.user.User;
-import ddog.domain.vet.Vet;
-import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.payment.port.ReservationPersist;
+import ddog.domain.review.CareReview;
+import ddog.domain.review.port.CareReviewPersist;
+import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
+import ddog.domain.vet.Vet;
+import ddog.domain.vet.VetDaengleMeter;
+import ddog.domain.vet.VetKeyword;
+import ddog.domain.vet.enums.CareBadge;
+import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.port.VetDaengleMeterPersist;
+import ddog.domain.vet.port.VetKeywordPersist;
 import ddog.domain.vet.port.VetPersist;
-import ddog.user.application.exception.*;
+import ddog.user.application.exception.ReviewException;
+import ddog.user.application.exception.ReviewExceptionType;
 import ddog.user.application.exception.account.UserException;
 import ddog.user.application.exception.account.UserExceptionType;
+import ddog.user.application.exception.account.VetException;
+import ddog.user.application.exception.account.VetExceptionType;
 import ddog.user.application.exception.estimate.ReservationException;
 import ddog.user.application.exception.estimate.ReservationExceptionType;
+import ddog.user.application.mapper.CareReviewMapper;
+import ddog.user.presentation.review.dto.request.PostCareReviewInfo;
+import ddog.user.presentation.review.dto.request.UpdateCareReviewInfo;
 import ddog.user.presentation.review.dto.response.CareReviewDetailResp;
-import ddog.user.presentation.review.dto.response.ReviewResp;
+import ddog.user.presentation.review.dto.response.CareReviewListResp;
 import ddog.user.presentation.review.dto.response.CareReviewSummaryResp;
+import ddog.user.presentation.review.dto.response.ReviewResp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +39,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -43,6 +50,7 @@ public class CareReviewService {
 
     private final VetPersist vetPersist;
     private final UserPersist userPersist;
+    private final VetKeywordPersist vetKeywordPersist;
     private final CareReviewPersist careReviewPersist;
     private final ReservationPersist reservationPersist;
     private final VetDaengleMeterPersist vetDaengleMeterPersist;
@@ -79,18 +87,22 @@ public class CareReviewService {
         Vet savedVet = vetPersist.findByVetId(reservation.getRecipientId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
 
-        if(careReviewPersist.findByReservationId(postCareReviewInfo.getReservationId())
+        if (careReviewPersist.findByReservationId(postCareReviewInfo.getReservationId())
                 .isPresent()) throw new ReviewException(ReviewExceptionType.REVIEW_HAS_WRITTEN);
 
-        if(reservation.getServiceType() != ServiceType.CARE) throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
+        if (reservation.getServiceType() != ServiceType.CARE)
+            throw new ReviewException(ReviewExceptionType.REVIEW_INVALID_SERVICE_TYPE);
 
         validatePostCareReviewInfoDataFormat(postCareReviewInfo);
 
         String includedBanWord = banWordValidator.findBanWords(postCareReviewInfo.getContent());
-        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+        if (includedBanWord != null)
+            throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         CareReview careReviewToSave = CareReviewMapper.createBy(reservation, postCareReviewInfo);
         CareReview savedCareReview = careReviewPersist.save(careReviewToSave);
+
+        processKeywords(postCareReviewInfo, savedVet);
 
         VetDaengleMeter vetDaengleMeter = vetDaengleMeterPersist.findByVetId(savedCareReview.getVetId())
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_DAENGLE_METER_NOT_FOUND));
@@ -111,6 +123,41 @@ public class CareReviewService {
                 .build();
     }
 
+    private void processKeywords(PostCareReviewInfo postCareReviewInfo, Vet vet) {
+
+        List<VetKeyword> vetKeywords = new ArrayList<>(vet.getKeywords());
+        List<CareBadge> badges = new ArrayList<>(vet.getBadges());
+
+        List<CareKeyword> postKeywords = postCareReviewInfo.getCareKeywordList();
+        for (CareKeyword postKeyword : postKeywords) {
+            boolean isAdded = false;
+
+            for (VetKeyword vetKeyword : vetKeywords) {
+                if (postKeyword.toString().equals(vetKeyword.getKeyword())) {
+                    vetKeyword.increaseCount();
+                    vetKeywordPersist.save(vetKeyword);
+
+                    if (vetKeyword.isAvailableRegisterBadge()) {
+                        if (postKeyword.getBadge() != null) {
+                            badges.add(postKeyword.getBadge());
+                        }
+                    }
+                    isAdded = true;
+                    break;
+                }
+            }
+            if (isAdded) {
+                continue;
+            }
+
+            VetKeyword newKeyword = VetKeyword.createNewKeyword(vet.getAccountId(), postKeyword.toString());
+            VetKeyword savedKeyword = vetKeywordPersist.save(newKeyword);
+            vetKeywords.add(savedKeyword);
+        }
+        vet.updateKeywords(vetKeywords);
+        vet.updateBadges(badges);
+    }
+
     @Transactional
     public ReviewResp updateReview(Long reviewId, UpdateCareReviewInfo updateCareReviewInfo) {
         CareReview savedCareReview = careReviewPersist.findByReviewId(reviewId)
@@ -122,7 +169,8 @@ public class CareReviewService {
         validateModifyCareReviewInfoDataFormat(updateCareReviewInfo);
 
         String includedBanWord = banWordValidator.findBanWords(updateCareReviewInfo.getContent());
-        if(includedBanWord != null) throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
+        if (includedBanWord != null)
+            throw new ReviewException(ReviewExceptionType.REVIEW_CONTENT_CONTAIN_BAN_WORD, includedBanWord);
 
         CareReview modifiedReview = CareReviewMapper.modifyBy(savedCareReview, updateCareReviewInfo);
         CareReview updatedCareReview = careReviewPersist.save(modifiedReview);

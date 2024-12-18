@@ -1,10 +1,9 @@
 package ddog.user.presentation.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import ddog.domain.estimate.Proposal;
-import ddog.domain.groomer.enums.GroomingKeyword;
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.pet.Weight;
-import ddog.domain.vet.enums.CareKeyword;
+import ddog.domain.vet.enums.CareBadge;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -26,7 +25,7 @@ public class EstimateDetail {
         private Long shopId;
         private String shopName;
         private int daengleMeter;
-        private List<GroomingKeyword> keywords;
+        private List<GroomingBadge> badges;
         private String introduction;
         private String address;
 
@@ -46,7 +45,7 @@ public class EstimateDetail {
         private String imageUrl;
         private String name;
         private int daengleMeter;
-        private List<CareKeyword> keywords;
+        private List<CareBadge> badges;
         private String introduction;
         private String address;
 

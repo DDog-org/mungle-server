@@ -4,15 +4,14 @@ import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
 import ddog.domain.account.port.AccountPersist;
+import ddog.domain.payment.Payment;
+import ddog.domain.payment.port.PaymentPersist;
 import ddog.domain.pet.Breed;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
-import ddog.user.application.exception.account.PetException;
-import ddog.user.application.exception.account.PetExceptionType;
-import ddog.user.application.exception.account.UserException;
-import ddog.user.application.exception.account.UserExceptionType;
+import ddog.user.application.exception.account.*;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -27,18 +26,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountPersist accountPersist;
-    private final UserPersist userPersist;
     private final PetPersist petPersist;
+    private final UserPersist userPersist;
+    private final AccountPersist accountPersist;
+    private final PaymentPersist paymentPersist;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional(readOnly = true)
@@ -71,6 +74,10 @@ public class AccountService {
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         validateSignUpWithPetDataFormat(request);
 
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
+
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
 
@@ -89,22 +96,13 @@ public class AccountService {
                 .build();
     }
 
-    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
-        User.validateUsername(request.getUsername());
-        User.validatePhoneNumber(request.getPhoneNumber());
-        User.validateNickname(request.getNickname());
-        User.validateAddress(request.getAddress());
-
-        Pet.validatePetName(request.getPetName());
-        Pet.validatePetBirth(request.getPetBirth());
-        Pet.validatePetGender(request.getPetGender());
-        Pet.validatePetWeight(request.getPetWeight());
-        Pet.validateBreed(request.getBreed());
-    }
-
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
         validateSignUpWithoutPetDataFormat(request);
+
+        if (accountPersist.hasAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)) {
+            throw new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT);
+        }
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -118,23 +116,6 @@ public class AccountService {
         return SignUpResp.builder()
                 .accessToken(accessToken)
                 .build();
-    }
-
-    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
-        User.validateUsername(request.getUsername());
-        User.validatePhoneNumber(request.getPhoneNumber());
-        User.validateNickname(request.getNickname());
-        User.validateAddress(request.getAddress());
-    }
-
-    private Authentication getAuthentication(Long accountId, String email) {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
-
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
     }
 
     @Transactional(readOnly = true)
@@ -178,14 +159,17 @@ public class AccountService {
                 .build();
     }
 
-    private void validateAddPetInfoDataFormat(AddPetInfo request) {
-        Pet.validatePetName(request.getName());
-        Pet.validatePetBirth(request.getBirth());
-        Pet.validatePetGender(request.getGender());
+    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
+
+        Pet.validatePetName(request.getPetName());
+        Pet.validatePetBirth(request.getPetBirth());
+        Pet.validatePetGender(request.getPetGender());
+        Pet.validatePetWeight(request.getPetWeight());
         Pet.validateBreed(request.getBreed());
-        Pet.validatePetWeight(request.getWeight());
-        Pet.validatePetDislikeParts(request.getDislikeParts());
-        Pet.validateSignificantTags(request.getSignificantTags());
     }
 
     @Transactional(readOnly = true)
@@ -209,14 +193,11 @@ public class AccountService {
                 .build();
     }
 
-    private void validateModifyPetInfoDataFormat(UpdatePetInfo request) {
-        Pet.validatePetName(request.getName());
-        Pet.validatePetBirth(request.getBirth());
-        Pet.validatePetGender(request.getGender());
-        Pet.validateBreed(request.getBreed());
-        Pet.validatePetWeight(request.getWeight());
-        Pet.validatePetDislikeParts(request.getDislikeParts());
-        Pet.validateSignificantTags(request.getSignificantTags());
+    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
     }
 
     @Transactional
@@ -229,5 +210,61 @@ public class AccountService {
         return AccountResp.builder()
                 .requestResult("반려견 프로필 삭제 완료")
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public WithdrawInfoResp getWithdrawInfo(Long accountId) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        Optional<List<Payment>> paymentList = paymentPersist.findByPayerId(savedUser.getAccountId());
+        Integer count = paymentList.map(List::size).orElse(0);
+
+        return WithdrawInfoResp.builder()
+                .waitingForServiceCount(count)
+                .build();
+    }
+
+    @Transactional
+    public WithdrawResp withdraw(Long accountId) {  //TODO 탈퇴 후 추가로 처리해야할 작업들 고려하기 (ex. 예약취소)
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        userPersist.deleteByAccountId(savedUser.getAccountId());
+
+        return WithdrawResp.builder()
+                .accountId(savedUser.getAccountId())
+                .withdrawDate(LocalDateTime.now())
+                .build();
+    }
+
+    private Authentication getAuthentication(Long accountId, String email) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
+    }
+
+    private void validateAddPetInfoDataFormat(AddPetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
+    }
+
+    private void validateModifyPetInfoDataFormat(UpdatePetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
     }
 }

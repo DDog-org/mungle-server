@@ -49,4 +49,14 @@ public class AccountController {
     public CommonResponseEntity<ShopInfo.UpdateResp> updateShopInfo(@RequestBody UpdateShopReq request) {
         return success(accountService.updateShopInfo(request));
     }
+
+    @GetMapping("/withdraw-info")
+    public CommonResponseEntity<WithdrawInfoResp> getWithdrawInfo(PayloadDto payloadDto) {
+        return success(accountService.getWithdrawInfo(payloadDto.getAccountId()));
+    }
+
+    @DeleteMapping
+    public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
+        return success(accountService.withdraw(payloadDto.getAccountId()));
+    }
 }

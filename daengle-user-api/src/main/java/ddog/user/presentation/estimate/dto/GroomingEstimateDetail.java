@@ -2,11 +2,13 @@ package ddog.user.presentation.estimate.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ddog.domain.estimate.Proposal;
+import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.pet.Weight;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -19,6 +21,7 @@ public class GroomingEstimateDetail {
     private Long shopId;
     private String shopName;
     private int daengleMeter;
+    private List<GroomingBadge> badges;
     private Proposal proposal;
     private String introduction;
     private String address;
