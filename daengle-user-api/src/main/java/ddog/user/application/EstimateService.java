@@ -148,7 +148,31 @@ public class EstimateService {
                 .build();
     }
 
-    public PetInfos findGeneralCarePets(Long accountId) {
+    /* SQL 튜닝 전 조회 */
+    @Transactional(readOnly = true)
+    public EstimateInfo.Pet findGeneralCarePets(Long accountId) {
+        User user = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
+
+        List<Pet> pets = user.getPets();
+        List<EstimateInfo.Pet.Content> contents = new ArrayList<>();
+        for (Pet pet : pets) {
+            careEstimatePersist.findByEstimateStatusAndProposalAndPetId(EstimateStatus.NEW, Proposal.GENERAL, pet.getPetId())
+                    .ifPresent(estimate -> contents.add(EstimateInfo.Pet.Content.builder()
+                            .estimateId(estimate.getEstimateId())
+                            .petId(pet.getPetId())
+                            .imageUrl(pet.getImageUrl())
+                            .name(pet.getName())
+                            .build()));
+        }
+        return EstimateInfo.Pet.builder()
+                .pets(contents)
+                .build();
+    }
+
+    /* SQL 튜닝 후 조회 */
+    @Transactional(readOnly = true)
+    public PetInfos findTuningGeneralCarePets(Long accountId) {
         userPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new UserException(UserExceptionType.USER_NOT_FOUND));
 

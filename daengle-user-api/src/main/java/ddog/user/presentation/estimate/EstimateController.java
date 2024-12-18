@@ -2,6 +2,7 @@ package ddog.user.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
+import ddog.domain.estimate.dto.PetInfos;
 import ddog.user.application.EstimateService;
 import ddog.user.presentation.estimate.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,12 @@ public class EstimateController {
     @GetMapping("/general/care/pets")
     public CommonResponseEntity<EstimateInfo.Pet> findGeneralCarePets(PayloadDto payloadDto) {
         return success(estimateService.findGeneralCarePets(payloadDto.getAccountId()));
+    }
+
+    /* (일반) 대기 진료 견적서 페이지 반려동물 정보 반환 SQL 튜닝 버젼 */
+    @GetMapping("/general/care/pets/tuning")
+    public CommonResponseEntity<PetInfos> findTuningGeneralCarePets(PayloadDto payloadDto) {
+        return success(estimateService.findTuningGeneralCarePets(payloadDto.getAccountId()));
     }
 
     /* (일반) 대기 미용 견적서 리스트 조회 */
