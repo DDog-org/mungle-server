@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Builder
 public class WeekScheduleResp {
-    private LocalDate scheduleDate;
+    private String scheduleDate;
     private List<GroomerSchedule> scheduleList;
 
     @Getter

@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -91,8 +91,8 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     }
 
     @Override
-    public List<GroomingEstimate> findTodayGroomingSchedule(Long groomerAccountId, LocalDate dateTime, EstimateStatus estimateStatus) {
-        return groomingEstimateJpaRepository.findTodayScheduleByGroomerId(dateTime, groomerAccountId, estimateStatus)
+    public List<GroomingEstimate> findTodayGroomingSchedule(Long groomerAccountId, LocalDateTime startOfDay, LocalDateTime endOfDay, EstimateStatus estimateStatus) {
+        return groomingEstimateJpaRepository.findTodayScheduleByGroomerId(startOfDay, endOfDay, groomerAccountId, estimateStatus)
                 .stream().map(GroomingEstimateJpaEntity::toModel).toList();
     }
 
@@ -105,6 +105,7 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     public GroomingEstimate findEstimateByPetIdAndGroomerAccountId(Long petId, Long groomerAccountId) {
         return groomingEstimateJpaRepository.findGroomingEstimateJpaEntityByPetIdAndGroomerId(petId, groomerAccountId).get().toModel();
     }
+
     @Override
     public Integer countEstimateByGroomerIdDistinctParentId(Long groomerId) {
         return groomingEstimateJpaRepository.countDistinctParentIdsByGroomerAccountId(groomerId);

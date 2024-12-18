@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,10 @@ public class EstimateManageService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findTodayGroomingSchedule(groomerAccountId, localDate, EstimateStatus.ON_RESERVATION);
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.plusDays(1).atStartOfDay();
+
+        List<GroomingEstimate> groomingEstimates = groomingEstimatePersist.findTodayGroomingSchedule(groomerAccountId, startOfDay, endOfDay, EstimateStatus.ON_RESERVATION);
 
         List<WeekScheduleResp.GroomerSchedule> toSaveSchedule = new ArrayList<>();
 
@@ -88,7 +92,7 @@ public class EstimateManageService {
         }
 
         return WeekScheduleResp.builder()
-                .scheduleDate(localDate)
+                .scheduleDate(date)
                 .scheduleList(toSaveSchedule)
                 .build();
     }

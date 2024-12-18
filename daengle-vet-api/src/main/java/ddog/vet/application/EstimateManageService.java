@@ -35,7 +35,7 @@ public class EstimateManageService {
     private final ReservationPersist reservationPersist;
 
     public ReservationEstimateContent findEstimateByVetAccountIdAndReservationId(Long vetAccountId, Long reservationId) {
-        Long petId = reservationPersist.findByReservationId(reservationId).get().getPetId();
+        Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
         Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
 
         CareEstimate savedEstimate = careEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new CareEstimateException(CareEstimateExceptionType.CARE_ESTIMATE_NOT_FOUND));
