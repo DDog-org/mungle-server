@@ -11,10 +11,7 @@ import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
-import ddog.user.application.exception.account.PetException;
-import ddog.user.application.exception.account.PetExceptionType;
-import ddog.user.application.exception.account.UserException;
-import ddog.user.application.exception.account.UserExceptionType;
+import ddog.user.application.exception.account.*;
 import ddog.user.application.mapper.PetMapper;
 import ddog.user.application.mapper.UserMapper;
 import ddog.user.presentation.account.dto.*;
@@ -78,6 +75,9 @@ public class AccountService {
     public SignUpResp signUpWithPet(SignUpWithPet request, HttpServletResponse response) {
         validateSignUpWithPetDataFormat(request);
 
+        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)
+                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
+
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
 
@@ -96,22 +96,12 @@ public class AccountService {
                 .build();
     }
 
-    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
-        User.validateUsername(request.getUsername());
-        User.validatePhoneNumber(request.getPhoneNumber());
-        User.validateNickname(request.getNickname());
-        User.validateAddress(request.getAddress());
-
-        Pet.validatePetName(request.getPetName());
-        Pet.validatePetBirth(request.getPetBirth());
-        Pet.validatePetGender(request.getPetGender());
-        Pet.validatePetWeight(request.getPetWeight());
-        Pet.validateBreed(request.getBreed());
-    }
-
     @Transactional
     public SignUpResp signUpWithoutPet(SignUpWithoutPet request, HttpServletResponse response) {
         validateSignUpWithoutPetDataFormat(request);
+
+        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.DAENGLE)
+                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
 
         Account accountToSave = Account.createUser(request.getEmail(), Role.DAENGLE);
         Account savedAccount = accountPersist.save(accountToSave);
@@ -125,23 +115,6 @@ public class AccountService {
         return SignUpResp.builder()
                 .accessToken(accessToken)
                 .build();
-    }
-
-    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
-        User.validateUsername(request.getUsername());
-        User.validatePhoneNumber(request.getPhoneNumber());
-        User.validateNickname(request.getNickname());
-        User.validateAddress(request.getAddress());
-    }
-
-    private Authentication getAuthentication(Long accountId, String email) {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
-
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
     }
 
     @Transactional(readOnly = true)
@@ -185,14 +158,17 @@ public class AccountService {
                 .build();
     }
 
-    private void validateAddPetInfoDataFormat(AddPetInfo request) {
-        Pet.validatePetName(request.getName());
-        Pet.validatePetBirth(request.getBirth());
-        Pet.validatePetGender(request.getGender());
+    private void validateSignUpWithPetDataFormat(SignUpWithPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
+
+        Pet.validatePetName(request.getPetName());
+        Pet.validatePetBirth(request.getPetBirth());
+        Pet.validatePetGender(request.getPetGender());
+        Pet.validatePetWeight(request.getPetWeight());
         Pet.validateBreed(request.getBreed());
-        Pet.validatePetWeight(request.getWeight());
-        Pet.validatePetDislikeParts(request.getDislikeParts());
-        Pet.validateSignificantTags(request.getSignificantTags());
     }
 
     @Transactional(readOnly = true)
@@ -216,14 +192,11 @@ public class AccountService {
                 .build();
     }
 
-    private void validateModifyPetInfoDataFormat(UpdatePetInfo request) {
-        Pet.validatePetName(request.getName());
-        Pet.validatePetBirth(request.getBirth());
-        Pet.validatePetGender(request.getGender());
-        Pet.validateBreed(request.getBreed());
-        Pet.validatePetWeight(request.getWeight());
-        Pet.validatePetDislikeParts(request.getDislikeParts());
-        Pet.validateSignificantTags(request.getSignificantTags());
+    private void validateSignUpWithoutPetDataFormat(SignUpWithoutPet request) {
+        User.validateUsername(request.getUsername());
+        User.validatePhoneNumber(request.getPhoneNumber());
+        User.validateNickname(request.getNickname());
+        User.validateAddress(request.getAddress());
     }
 
     @Transactional
@@ -262,5 +235,35 @@ public class AccountService {
                 .accountId(savedUser.getAccountId())
                 .withdrawDate(LocalDateTime.now())
                 .build();
+    }
+
+    private Authentication getAuthentication(Long accountId, String email) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_DAENGLE"));
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
+    }
+
+    private void validateAddPetInfoDataFormat(AddPetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
+    }
+
+    private void validateModifyPetInfoDataFormat(UpdatePetInfo request) {
+        Pet.validatePetName(request.getName());
+        Pet.validatePetBirth(request.getBirth());
+        Pet.validatePetGender(request.getGender());
+        Pet.validateBreed(request.getBreed());
+        Pet.validatePetWeight(request.getWeight());
+        Pet.validatePetDislikeParts(request.getDislikeParts());
+        Pet.validateSignificantTags(request.getSignificantTags());
     }
 }

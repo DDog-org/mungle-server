@@ -7,6 +7,7 @@ import ddog.domain.groomer.GroomerKeyword;
 import ddog.domain.groomer.enums.GroomingBadge;
 import ddog.domain.groomer.enums.GroomingKeyword;
 import ddog.domain.groomer.port.GroomerDaengleMeterPersist;
+import ddog.domain.groomer.port.GroomerKeywordPersist;
 import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ServiceType;
@@ -38,6 +39,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -47,6 +49,7 @@ public class GroomingReviewService {
 
     private final UserPersist userPersist;
     private final GroomerPersist groomerPersist;
+    private final GroomerKeywordPersist groomerKeywordPersist;
     private final ReservationPersist reservationPersist;
     private final GroomingReviewPersist groomingReviewPersist;
     private final GroomerDaengleMeterPersist groomerDaengleMeterPersist;
@@ -121,8 +124,8 @@ public class GroomingReviewService {
 
     private void processKeywords(PostGroomingReviewInfo postGroomingReviewInfo, Groomer groomer) {
 
-        List<GroomerKeyword> groomerKeywords = groomer.getKeywords();
-        List<GroomingBadge> badges = groomer.getBadges();
+        List<GroomerKeyword> groomerKeywords = new ArrayList<>(groomer.getKeywords());
+        List<GroomingBadge> badges = new ArrayList<>(groomer.getBadges());
 
         List<GroomingKeyword> postKeywords = postGroomingReviewInfo.getGroomingKeywordList();
 
@@ -147,7 +150,8 @@ public class GroomingReviewService {
             }
             
             GroomerKeyword newKeyword = GroomerKeyword.createNewKeyword(groomer.getAccountId(), postKeyword.toString());
-            groomerKeywords.add(newKeyword);
+            GroomerKeyword savedKeyword = groomerKeywordPersist.save(newKeyword);
+            groomerKeywords.add(savedKeyword);
         }
 
         groomer.updateKeywords(groomerKeywords);

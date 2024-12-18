@@ -2,10 +2,11 @@ package ddog.groomer.application.mapper;
 
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.License;
-import ddog.groomer.presentation.account.dto.UpdateInfoReq;
 import ddog.groomer.presentation.account.dto.ProfileInfo;
 import ddog.groomer.presentation.account.dto.SignUpReq;
+import ddog.groomer.presentation.account.dto.UpdateInfoReq;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroomerMapper {
@@ -14,16 +15,20 @@ public class GroomerMapper {
         return Groomer.builder()
                 .accountId(accountId)
                 .daengleMeter(50)
-                .imageUrl("")
+                .introduction(null)
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())
+                .imageUrl("")
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .detailAddress(request.getDetailAddress())
                 .shopId(shopId)
                 .shopName(request.getShopName())
+                .introduction(null)
                 .businessLicenses(request.getBusinessLicenses())
                 .licenses(licenses)
+                .badges(null)
+                .keywords(new ArrayList<>())
                 .build();
     }
 

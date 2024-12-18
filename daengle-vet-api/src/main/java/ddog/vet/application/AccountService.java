@@ -3,14 +3,16 @@ package ddog.vet.application;
 import ddog.auth.config.jwt.JwtTokenProvider;
 import ddog.domain.account.Account;
 import ddog.domain.account.Role;
+import ddog.domain.account.port.AccountPersist;
 import ddog.domain.payment.Reservation;
 import ddog.domain.payment.enums.ReservationStatus;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.vet.Vet;
-import ddog.domain.account.port.AccountPersist;
 import ddog.domain.vet.VetDaengleMeter;
 import ddog.domain.vet.port.VetDaengleMeterPersist;
 import ddog.domain.vet.port.VetPersist;
+import ddog.vet.application.exception.account.AccountException;
+import ddog.vet.application.exception.account.AccountExceptionType;
 import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.application.mapper.VetDaengleMeterMapper;
@@ -50,6 +52,9 @@ public class AccountService {
     public SignUpResp signUp(SignUpReq request, HttpServletResponse response) {
         validateSignUpRequestDataFormat(request);
 
+        accountPersist.findAccountByEmailAndRole(request.getEmail(), Role.VET)
+                .orElseThrow(() -> new AccountException(AccountExceptionType.DUPLICATE_ACCOUNT));
+
         Account newAccount = Account.create(request.getEmail(), Role.VET);
         Account savedAccount = accountPersist.save(newAccount);
 
@@ -67,24 +72,7 @@ public class AccountService {
                 .build();
     }
 
-    private void validateSignUpRequestDataFormat(SignUpReq request) {
-        Vet.validateName(request.getName());
-        Vet.validateAddress(request.getAddress());
-        Vet.validateDetailAddress(request.getDetailAddress());
-        Vet.validatePhoneNumber(request.getPhoneNumber());
-        Vet.validateLicenses(request.getLicenses());
-    }
-
-    private Authentication getAuthentication(Long accountId, String email) {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_VET"));
-
-        Authentication authentication
-                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
-    }
-
+    @Transactional(readOnly = true)
     public ProfileInfo getVetInfo(Long accountId) {
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
@@ -101,9 +89,8 @@ public class AccountService {
     }
 
     @Transactional
-    public AccountResp modifyInfo(UpdateInfo request, Long accountId) {
+    public AccountResp updateInfo(UpdateInfo request, Long accountId) {
         validateModifyInfoDataFormat(request);
-
 
         Vet vet = vetPersist.findByAccountId(accountId)
                 .orElseThrow(() -> new VetException(VetExceptionType.VET_NOT_FOUND));
@@ -114,6 +101,7 @@ public class AccountService {
         if (imageUrls != null && !imageUrls.isEmpty()) {
             updateImageUrl = imageUrls.get(0);
         }
+
         Vet updatedVet = VetMapper.updateWithUpdateInfo(vet, request, updateImageUrl);
         vetPersist.save(updatedVet);
 
@@ -146,6 +134,24 @@ public class AccountService {
                 .accountId(savedVet.getAccountId())
                 .withdrawDate(LocalDateTime.now())
                 .build();
+    }
+
+    private void validateSignUpRequestDataFormat(SignUpReq request) {
+        Vet.validateName(request.getName());
+        Vet.validateAddress(request.getAddress());
+        Vet.validateDetailAddress(request.getDetailAddress());
+        Vet.validatePhoneNumber(request.getPhoneNumber());
+        Vet.validateLicenses(request.getLicenses());
+    }
+
+    private Authentication getAuthentication(Long accountId, String email) {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_VET"));
+
+        Authentication authentication
+                = new UsernamePasswordAuthenticationToken(email + "," + accountId, null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
     }
 
     private void validateModifyInfoDataFormat(UpdateInfo request) {

@@ -20,6 +20,7 @@ public class ChatRoomJpaEntity {
     private Long chatRoomId;
     private Long userId;
     private Long partnerId;
+
     @Enumerated(value = EnumType.STRING)
     private PartnerType partnerType;
 
