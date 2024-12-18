@@ -64,6 +64,7 @@ public class PaymentService {
     @TimeLimiter(name = "paymentValidation")
     @CircuitBreaker(name = "paymentValidation", fallbackMethod = "handlePaymentValidationFallback")
     public CompletableFuture<PaymentCallbackResp> validationPayment(PaymentCallbackReq paymentCallbackReq) {
+
         Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid())
                 .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
 
@@ -74,8 +75,8 @@ public class PaymentService {
     }
 
     private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
-        validateEstimateBy(savedOrder);
 
+        validateEstimateBy(savedOrder);
         if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
             throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
 

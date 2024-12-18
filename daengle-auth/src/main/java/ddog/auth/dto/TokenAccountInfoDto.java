@@ -2,7 +2,7 @@ package ddog.auth.dto;
 
 import ddog.domain.account.Provider;
 import ddog.domain.account.Role;
-import ddog.persistence.mysql.jpa.entity.AccountJpaEntity;
+import ddog.persistence.rdb.jpa.entity.AccountJpaEntity;
 import lombok.Builder;
 import lombok.Getter;
 
