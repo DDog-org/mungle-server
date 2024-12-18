@@ -2,7 +2,6 @@ package ddog.vet.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.domain.notification.enums.NotifyType;
 import ddog.notification.application.KakaoNotificationService;
 import ddog.notification.application.NotificationService;
 import ddog.vet.application.EstimateService;
@@ -56,10 +55,7 @@ public class EstimateController {
     /* 병원 -> 사용자 (대기) 진료 견적서 작성 */
     @PostMapping
     public CommonResponseEntity<EstimateResp> createEstimate(@RequestBody CreatePendingEstimateReq request, PayloadDto payloadDto) {
-        EstimateInfo.EstimateUserInfo savedEstimate = estimateService.findByUserInfoByEstimateId(request.getId());
-        notificationService.sendNotificationToUser(savedEstimate.getUserId(), NotifyType.ESTIMATED, "미용사에게서 추가 소견 내용이 도착했어요!");
-        kakaoNotificationService.sendOneTalk(savedEstimate.getUserNickname(), savedEstimate.getUserPhone(), environment.getProperty("templateId.ESTIMATED"));
-        return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
+         return success(estimateService.createPendingEstimate(request, payloadDto.getAccountId()));
     }
 }
 
