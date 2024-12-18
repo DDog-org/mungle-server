@@ -34,7 +34,7 @@ public class EstimateManageService {
     private final UserPersist userPersist;
     private final ReservationPersist reservationPersist;
 
-    public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long vetAccountId, Long reservationId) {
+    public ReservationEstimateContent findEstimateByVetAccountIdAndReservationId(Long vetAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).get().getPetId();
         Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
 
@@ -69,7 +69,7 @@ public class EstimateManageService {
                 .build();
     }
 
-    public WeekScheduleResp findScheduleByGroomerIdAndDate(Long vetAccountId, String date) {
+    public WeekScheduleResp findScheduleByVetIdAndDate(Long vetAccountId, String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
@@ -81,7 +81,7 @@ public class EstimateManageService {
             toSaveSchedule.add(
                     WeekScheduleResp.VetSchedule.builder()
                             .scheduleTime(careEstimate.getReservedDate())
-                            .reservationId(reservationPersist.findByEstimateId(careEstimate.getEstimateId()).get().getEstimateId())
+                            .reservationId(reservationPersist.findByEstimateId(careEstimate.getEstimateId()).get().getReservationId())
                             .petId(careEstimate.getPetId())
                             .petName(petPersist.findByPetId(careEstimate.getPetId()).get().getName())
                             .petProfile(petPersist.findByPetId(careEstimate.getPetId()).get().getImageUrl())

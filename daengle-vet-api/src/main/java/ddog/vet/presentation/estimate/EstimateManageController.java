@@ -22,12 +22,12 @@ public class EstimateManageController {
 
     @GetMapping("/reservation/{reservationId}")
     public CommonResponseEntity<ReservationEstimateContent> findReservationOrEstimateBy(@PathVariable Long reservationId, PayloadDto payloadDto) {
-        return success(estimateManageService.findEstimateDetailByGroomerIdAndPetId(payloadDto.getAccountId(), reservationId));
+        return success(estimateManageService.findEstimateByVetAccountIdAndReservationId(payloadDto.getAccountId(), reservationId));
     }
 
     @GetMapping("/week/{date}")
     public CommonResponseEntity<WeekScheduleResp> findWeekSchedule(PayloadDto payloadDto, @PathVariable String date){
-        return success(estimateManageService.findScheduleByGroomerIdAndDate(payloadDto.getAccountId(), date));
+        return success(estimateManageService.findScheduleByVetIdAndDate(payloadDto.getAccountId(), date));
     }
 
     @GetMapping("/petInfo/{petId}")
