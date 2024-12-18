@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,10 @@ public class ScheduleInfoService {
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(accountId).size();
         int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(accountId).size();
 
-        List<CareEstimate> savedReservations = careEstimatePersist.findTodayCareSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+
+        List<CareEstimate> savedReservations = careEstimatePersist.findTodayCareSchedule(accountId, startOfDay, endOfDay, EstimateStatus.ON_RESERVATION);
 
         List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
 

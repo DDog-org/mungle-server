@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -109,8 +110,8 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.findByVetId(vetAccountId).stream().map(CareEstimateJpaEntity::toModel).toList();
     }
 
-    public List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus) {
-        return careEstimateJpaRepository.finTodayScheduleByVetId(dateTime, vetAccountId, estimateStatus)
+    public List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDateTime startOfDay, LocalDateTime endOfDay, EstimateStatus estimateStatus) {
+        return careEstimateJpaRepository.finTodayScheduleByVetId(startOfDay, endOfDay, vetAccountId, estimateStatus)
                 .stream().map(CareEstimateJpaEntity::toModel).toList();
     }
 

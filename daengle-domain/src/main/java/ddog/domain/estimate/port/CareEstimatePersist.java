@@ -7,7 +7,7 @@ import ddog.domain.estimate.dto.PetInfos;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +34,7 @@ public interface CareEstimatePersist {
 
     List<CareEstimate> findCareEstimatesByVetId(Long vetAccountId);
 
-    List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus);
+    List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDateTime startOfDay, LocalDateTime endOfDay, EstimateStatus estimateStatus);
 
     List<CareEstimate> findMyEstimatesByUserId(Long userId);
 

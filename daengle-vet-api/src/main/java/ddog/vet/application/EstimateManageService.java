@@ -3,6 +3,7 @@ package ddog.vet.application;
 import ddog.domain.estimate.CareEstimate;
 import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.port.CareEstimatePersist;
+import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,15 +75,18 @@ public class EstimateManageService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        List<CareEstimate> CareEstimates = careEstimatePersist.findTodayCareSchedule(vetAccountId, localDate, EstimateStatus.ON_RESERVATION);
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.plusDays(1).atStartOfDay();
+
+        List<CareEstimate> CareEstimates = careEstimatePersist.findTodayCareSchedule(vetAccountId, startOfDay, endOfDay, EstimateStatus.ON_RESERVATION);
 
         List<WeekScheduleResp.VetSchedule> toSaveSchedule = new ArrayList<>();
 
         for (CareEstimate careEstimate : CareEstimates) {
             toSaveSchedule.add(
                     WeekScheduleResp.VetSchedule.builder()
-                            .scheduleTime(careEstimate.getReservedDate())
-                            .reservationId(reservationPersist.findByEstimateId(careEstimate.getEstimateId()).orElseThrow().getReservationId())
+                            .scheduleTime(careEstimate.getReservedDate().toLocalTime())
+                            .reservationId(reservationPersist.findByEstimateIdAndType(careEstimate.getEstimateId(), ServiceType.CARE).orElseThrow().getReservationId())
                             .petId(careEstimate.getPetId())
                             .petName(petPersist.findByPetId(careEstimate.getPetId()).orElseThrow().getName())
                             .petProfile(petPersist.findByPetId(careEstimate.getPetId()).orElseThrow().getImageUrl())
@@ -89,7 +94,7 @@ public class EstimateManageService {
             );
         }
         return WeekScheduleResp.builder()
-                .scheduleDate(localDate)
+                .scheduleDate(date)
                 .scheduleList(toSaveSchedule)
                 .build();
     }

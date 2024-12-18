@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,5 +26,7 @@ public interface ReservationPersist {
     List<Reservation> findTodayGroomingReservationByPartnerId(LocalDate dateTime, ServiceType serviceType, Long recipientId);
 
     Optional<List<Reservation>> findByRecipientIdAndReservationStatus(Long recipientId, ReservationStatus status);
+
+    Optional<Reservation> findByEstimateIdAndType(Long estimateId, ServiceType type);
 
 }
