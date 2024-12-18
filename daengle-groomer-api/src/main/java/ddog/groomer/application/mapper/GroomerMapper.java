@@ -67,11 +67,14 @@ public class GroomerMapper {
                 .imageUrl(request.getImage())
                 .email(groomer.getEmail())
                 .address(groomer.getAddress())
+                .detailAddress(groomer.getDetailAddress())
+                .shopId(groomer.getShopId())
                 .shopName(groomer.getShopName())
                 .introduction(request.getIntroduction())
                 .businessLicenses(groomer.getBusinessLicenses())
                 .licenses(groomer.getLicenses())
-                .shopId(groomer.getShopId())
+                .badges(groomer.getBadges())
+                .keywords(groomer.getKeywords())
                 .build();
     }
 
