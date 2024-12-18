@@ -8,8 +8,12 @@ import ddog.domain.groomer.port.GroomerPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 
+import ddog.groomer.application.exception.GroomingEstimateException;
+import ddog.groomer.application.exception.GroomingEstimateExceptionType;
 import ddog.groomer.application.exception.account.GroomerException;
 import ddog.groomer.application.exception.account.GroomerExceptionType;
+import ddog.groomer.application.exception.account.PetException;
+import ddog.groomer.application.exception.account.PetExceptionType;
 import ddog.groomer.presentation.schedule.dto.ScheduleResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,8 +44,8 @@ public class ScheduleInfoService {
 
         for (GroomingEstimate reservation : savedReservation) {
             Long petId = reservation.getPetId();
-            Pet pet = petPersist.findByPetId(petId).get();
-            GroomingEstimate savedGroomingEstimate =groomingEstimatePersist.findByEstimateId(reservation.getEstimateId()).get();
+            Pet pet = petPersist.findByPetId(petId).orElseThrow(() -> new PetException(PetExceptionType.PET_NOT_FOUND));
+            GroomingEstimate savedGroomingEstimate =groomingEstimatePersist.findByEstimateId(reservation.getEstimateId()).orElseThrow(()-> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
             toSaveReservations.add(ScheduleResp.TodayReservation.builder()
                     .petId(petId)
                     .petName(pet.getName())

@@ -103,7 +103,7 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
 
     @Override
     public GroomingEstimate findEstimateByPetIdAndGroomerAccountId(Long petId, Long groomerAccountId) {
-        return groomingEstimateJpaRepository.findGroomingEstimateJpaEntityByPetIdAndGroomerId(petId, groomerAccountId).get().toModel();
+        return groomingEstimateJpaRepository.findGroomingEstimateJpaEntityByPetIdAndGroomerId(petId, groomerAccountId).orElseThrow().toModel();
     }
 
     @Override

@@ -7,6 +7,8 @@ import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
 import ddog.domain.vet.Vet;
 import ddog.domain.vet.port.VetPersist;
+import ddog.vet.application.exception.account.PetException;
+import ddog.vet.application.exception.account.PetExceptionType;
 import ddog.vet.application.exception.account.VetException;
 import ddog.vet.application.exception.account.VetExceptionType;
 import ddog.vet.presentation.schedule.dto.ScheduleResp;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +34,16 @@ public class ScheduleInfoService {
         int designationCount = careEstimatePersist.findCareEstimatesByVetIdAndProposal(accountId).size();
         int reservationCount = careEstimatePersist.findCareEstimatesByVetIdAndEstimateStatus(accountId).size();
 
-        List<CareEstimate> savedReservations = careEstimatePersist.findTodayCareSchedule(accountId, LocalDate.now(), EstimateStatus.ON_RESERVATION);
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+
+        List<CareEstimate> savedReservations = careEstimatePersist.findTodayCareSchedule(accountId, startOfDay, endOfDay, EstimateStatus.ON_RESERVATION);
 
         List<ScheduleResp.TodayReservation> toSaveReservation = new ArrayList<>();
 
         for (CareEstimate reservation : savedReservations) {
             Long petId = reservation.getPetId();
-            Pet pet = petPersist.findByPetId(petId).get();
+            Pet pet = petPersist.findByPetId(petId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND));
             toSaveReservation.add(ScheduleResp.TodayReservation.builder()
                     .petId(reservation.getPetId())
                     .petName(pet.getName())

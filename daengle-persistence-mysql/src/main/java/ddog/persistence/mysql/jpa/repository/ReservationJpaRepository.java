@@ -28,4 +28,6 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationJpaEn
 
     @Query("SELECT r FROM Reservations r WHERE DATE(r.schedule) = :today AND r.serviceType = :serviceType AND r.recipientId = :recipientId")
     List<ReservationJpaEntity> findTodayReservationByVetId(LocalDate today, ServiceType serviceType, Long recipientId);
+
+    Optional<ReservationJpaEntity> findByEstimateIdAndServiceType(Long estimateId, ServiceType serviceType);
 }

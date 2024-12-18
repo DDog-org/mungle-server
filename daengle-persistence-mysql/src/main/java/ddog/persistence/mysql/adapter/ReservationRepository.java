@@ -71,4 +71,9 @@ public class ReservationRepository implements ReservationPersist {
                 .map(ReservationJpaEntity::toModel)
                 .toList());
     }
+
+    @Override
+    public Optional<Reservation> findByEstimateIdAndType(Long estimateId, ServiceType type) {
+        return reservationJpaRepository.findByEstimateIdAndServiceType(estimateId, type).map(ReservationJpaEntity::toModel);
+    }
 }

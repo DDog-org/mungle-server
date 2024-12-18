@@ -5,6 +5,7 @@ import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
 import ddog.domain.groomer.Groomer;
 import ddog.domain.groomer.port.GroomerPersist;
+import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.ReservationPersist;
 import ddog.domain.pet.Pet;
 import ddog.domain.pet.port.PetPersist;
@@ -39,7 +40,7 @@ public class EstimateManageService {
 
     public ReservationEstimateContent findEstimateDetailByGroomerIdAndPetId(Long groomerAccountId, Long reservationId) {
         Long petId = reservationPersist.findByReservationId(reservationId).orElseThrow(()-> new PetException(PetExceptionType.PET_NOT_FOUND)).getPetId();
-        Long estimateId = reservationPersist.findByReservationId(reservationId).get().getEstimateId();
+        Long estimateId = reservationPersist.findByReservationId(reservationId).orElseThrow().getEstimateId();
 
         GroomingEstimate savedEstimate = groomingEstimatePersist.findByEstimateId(estimateId).orElseThrow(() -> new GroomingEstimateException(GroomingEstimateExceptionType.GROOMING_ESTIMATE_NOT_FOUND));
         Long userAccountId = savedEstimate.getUserId();
@@ -81,11 +82,11 @@ public class EstimateManageService {
         for (GroomingEstimate groomingEstimate :groomingEstimates) {
             toSaveSchedule.add(
                     WeekScheduleResp.GroomerSchedule.builder()
-                            .scheduleTime(groomingEstimate.getReservedDate())
-                            .reservationId(reservationPersist.findByEstimateId(groomingEstimate.getEstimateId()).orElseThrow(()-> new ReservationException(ReservationExceptionType.RESERVATION_NOT_FOUND)).getReservationId())
+                            .scheduleTime(groomingEstimate.getReservedDate().toLocalTime())
+                            .reservationId(reservationPersist.findByEstimateIdAndType(groomingEstimate.getEstimateId(), ServiceType.GROOMING).orElseThrow().getReservationId())
                             .petId(groomingEstimate.getPetId())
-                            .petName(petPersist.findByPetId(groomingEstimate.getPetId()).get().getName())
-                            .petProfile(petPersist.findByPetId(groomingEstimate.getPetId()).get().getImageUrl())
+                            .petName(petPersist.findByPetId(groomingEstimate.getPetId()).orElseThrow().getName())
+                            .petProfile(petPersist.findByPetId(groomingEstimate.getPetId()).orElseThrow().getImageUrl())
                             .desiredStyle(groomingEstimate.getDesiredStyle())
                             .build()
             );
