@@ -9,36 +9,46 @@ jar {
 repositories {
     mavenCentral()
 
-    //IamPort
-    maven {url 'https://jitpack.io'}
+    // IamPort
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation(project(':daengle-domain'))
-    implementation(project(':daengle-auth'))
-    implementation(project(':daengle-notification'))
+    // 내부 모듈 의존성
+    implementation project(':daengle-domain')
+    implementation project(':daengle-auth')
+    implementation project(':daengle-notification')
 
+    // Spring Boot 의존성
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework:spring-tx'
-    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
     implementation 'org.springframework.data:spring-data-commons'
 
-    // IamPort //
-    implementation group: 'com.github.iamport', name: 'iamport-rest-client-java', version: '0.2.22'
-    implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: '2.9.0'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
-    implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
+    // 환경 변수 관리
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 
-    // security
+    // IamPort
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    // Hibernate (Jakarta 지원)
+    implementation 'org.hibernate.orm:hibernate-core:6.2.15.Final'
+
+    // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     testImplementation 'org.springframework.security:spring-security-test'
 
-    // jwt
+    // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // 테스트
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
