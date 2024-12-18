@@ -19,5 +19,9 @@ dependencies {
 
     //Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // Resilience4j
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.0.2'
+    implementation 'io.github.resilience4j:resilience4j-timelimiter'
 }
 
