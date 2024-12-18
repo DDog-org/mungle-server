@@ -30,7 +30,7 @@ public class EstimateMangeController {
         return success(estimateManageService.findScheduleByGroomerIdAndDate(payloadDto.getAccountId(), date));
     }
 
-    @GetMapping("/petInf/{petId}")
+    @GetMapping("/petInfo/{petId}")
     public CommonResponseEntity<PetInfo> findPetInfoById(@PathVariable Long petId){
         return success(estimateManageService.findPetInfoByPetId(petId));
     }
