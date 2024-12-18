@@ -81,6 +81,7 @@ public class DetailInfoService {
                 .imageUrlList(findBeautyShop.getImageUrlList())
                 .introduction(findBeautyShop.getIntroduction())
                 .closedDay(findBeautyShop.getClosedDays())
+                .shopNumber(findBeautyShop.getPhoneNumber())
                 .build();
     }
 
