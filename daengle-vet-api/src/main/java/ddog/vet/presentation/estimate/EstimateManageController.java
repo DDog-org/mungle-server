@@ -1,10 +1,10 @@
-package ddog.groomer.presentation.estimate;
+package ddog.vet.presentation.estimate;
 
 import ddog.auth.dto.PayloadDto;
 import ddog.auth.exception.common.CommonResponseEntity;
-import ddog.groomer.application.EstimateManageService;
-import ddog.groomer.presentation.estimate.dto.ReservationEstimateContent;
-import ddog.groomer.presentation.estimate.dto.WeekScheduleResp;
+import ddog.vet.application.EstimateManageService;
+import ddog.vet.presentation.estimate.dto.ReservationEstimateContent;
+import ddog.vet.presentation.estimate.dto.WeekScheduleResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import static ddog.auth.exception.common.CommonResponseEntity.success;
 
 @RestController
-@RequestMapping("/api/groomer")
+@RequestMapping("/api/vet")
 @RequiredArgsConstructor
-public class EstimateMangeController {
+public class EstimateManageController {
     private final EstimateManageService estimateManageService;
 
     @GetMapping("/reservation/{reservationId}")

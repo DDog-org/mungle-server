@@ -50,5 +50,5 @@ public interface CareEstimateJpaRepository extends JpaRepository<CareEstimateJpa
 
     List<CareEstimateJpaEntity> findCareEstimateJpaEntitiesByUserId(Long userId);
 
-    Optional<CareEstimateJpaEntity> findCareEstimateJpaEntityByUserIdAndVetId(Long userId, Long vetId);
+    Optional<CareEstimateJpaEntity> findCareEstimateJpaEntityByUserIdAndPetId(Long userId, Long petId);
 }

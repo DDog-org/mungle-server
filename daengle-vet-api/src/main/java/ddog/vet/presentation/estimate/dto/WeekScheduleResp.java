@@ -1,4 +1,4 @@
-package ddog.groomer.presentation.estimate.dto;
+package ddog.vet.presentation.estimate.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,17 +11,15 @@ import java.util.List;
 @Builder
 public class WeekScheduleResp {
     private LocalDate scheduleDate;
-    private List<GroomerSchedule> scheduleList;
+    private List<VetSchedule> scheduleList;
 
     @Getter
     @Builder
-    public static class GroomerSchedule {
+    public static class VetSchedule {
         private LocalDateTime scheduleTime;
         private Long reservationId;
         private Long petId;
         private String petName;
         private String petProfile;
-        private String desiredStyle;
     }
-
 }

@@ -35,5 +35,5 @@ public interface CareEstimatePersist {
 
     List<CareEstimate> findMyEstimatesByUserId(Long userId);
 
-    Optional<CareEstimate> findEstimateByUserIdAndVetId(Long userId, Long vetId);
+    Optional<CareEstimate> findEstimateByUserIdAndPetId(Long userId, Long petId);
 }

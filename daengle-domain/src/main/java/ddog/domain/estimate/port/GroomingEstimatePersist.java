@@ -32,7 +32,7 @@ public interface GroomingEstimatePersist {
 
     List<GroomingEstimate> findGroomingEstimatesByGroomerId(Long groomerAccountId);
 
-    List<GroomingEstimate> findTodayGroomingSchedule(Long goroomerAccountId, LocalDate dateTime, EstimateStatus estimateStatus);
+    List<GroomingEstimate> findTodayGroomingSchedule(Long groomerAccountId, LocalDate dateTime, EstimateStatus estimateStatus);
 
     List<GroomingEstimate> findMyEstimatesByUserId(Long userId);
 

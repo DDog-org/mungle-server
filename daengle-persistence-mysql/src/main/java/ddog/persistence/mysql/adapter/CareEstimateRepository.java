@@ -92,7 +92,7 @@ public class CareEstimateRepository implements CareEstimatePersist {
         return careEstimateJpaRepository.findByVetId(vetAccountId).stream().map(CareEstimateJpaEntity::toModel).toList();
     }
 
-    public List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus){
+    public List<CareEstimate> findTodayCareSchedule(Long vetAccountId, LocalDate dateTime, EstimateStatus estimateStatus) {
         return careEstimateJpaRepository.finTodayScheduleByVetId(dateTime, vetAccountId, estimateStatus)
                 .stream().map(CareEstimateJpaEntity::toModel).toList();
     }
@@ -103,8 +103,9 @@ public class CareEstimateRepository implements CareEstimatePersist {
     }
 
     @Override
-    public Optional<CareEstimate> findEstimateByUserIdAndVetId(Long userId, Long vetId) {
-        return careEstimateJpaRepository.findCareEstimateJpaEntityByUserIdAndVetId(userId, vetId).map(CareEstimateJpaEntity::toModel);
+    public Optional<CareEstimate> findEstimateByUserIdAndPetId(Long userId, Long petId) {
+        return careEstimateJpaRepository.findCareEstimateJpaEntityByUserIdAndPetId(userId, petId).map(CareEstimateJpaEntity::toModel);
     }
+
 }
 
