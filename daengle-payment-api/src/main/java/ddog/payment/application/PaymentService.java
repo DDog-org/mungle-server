@@ -12,6 +12,7 @@ import ddog.domain.message.port.MessageSend;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
+import ddog.domain.payment.enums.PaymentStatus;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
@@ -140,15 +141,10 @@ public class PaymentService {
 
     private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
         validateEstimateBy(savedOrder);
-//        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
-//            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
 
         try {
-            try {
-                Thread.sleep(100000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
 
@@ -203,13 +199,8 @@ public class PaymentService {
 
     @Transactional
     public void refundPayment(String paymentUid, String orderUid) {
-
-        Order savedOrder = orderPersist.findByOrderUid("?")
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED));
-
-
-       /* Order savedOrder = orderPersist.findByOrderUid(orderUid)
-                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));*/
+        Order savedOrder = orderPersist.findByOrderUid(orderUid)
+                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
 
         Payment payment = savedOrder.getPayment();
 
@@ -222,7 +213,7 @@ public class PaymentService {
             paymentPersist.save(payment);
 
             log.info("Refund processed successfully for paymentUid: {}", paymentUid);
-        } catch (IamportResponseException | IOException e) {
+        } catch (IamportResponseException | IOException e) {  //TODO 에러 로그 슬랙 연동
             log.error("Payment gateway error while processing refund for paymentUid: {}", paymentUid, e);
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
         }

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 public class MessageSender implements MessageSend {
 
     private final SqsTemplate sqsTemplate;
-    public static final String SSQ_NAME = "PaymentTimeoutQ.fifo";
+    public static final String SSQ_NAME = "PaymentTimeoutQ";
+
+    private static final int DELAY_SECONDS = 60;
 
     @Override
     public void send(MessageSendable messageSendable) {
@@ -22,5 +24,15 @@ public class MessageSender implements MessageSend {
         sqsTemplate.send(to -> to
                 .queue(SSQ_NAME)
                 .payload(message));
+    }
+
+    @Override
+    public void sendWithDelay(MessageSendable messageSendable) {
+        String message = messageSendable.toString();
+
+        sqsTemplate.send(to -> to
+                .queue(SSQ_NAME)
+                .payload(message)
+                .delaySeconds(DELAY_SECONDS));  // Delay 설정
     }
 }
