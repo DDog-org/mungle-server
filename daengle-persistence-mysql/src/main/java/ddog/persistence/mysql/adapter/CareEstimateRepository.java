@@ -132,7 +132,7 @@ public class CareEstimateRepository implements CareEstimatePersist {
 
     @Override
     public List<CareEstimate> findByCareEstimateStatusBy(Long userId, EstimateStatus estimateStatus) {
-        return careEstimateJpaRepository.findCareEstimatesByVetIdAndStatus(userId, EstimateStatus.NEW).stream().map(CareEstimateJpaEntity::toModel).toList();
+        return careEstimateJpaRepository.findCareEstimateJpaEntitiesByUserIdAndStatus(userId, EstimateStatus.NEW).stream().map(CareEstimateJpaEntity::toModel).toList();
     }
 }
 

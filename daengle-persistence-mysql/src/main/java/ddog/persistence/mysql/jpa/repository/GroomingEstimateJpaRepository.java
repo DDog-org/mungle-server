@@ -64,4 +64,7 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
             "FROM GroomingEstimates c " +
             "WHERE c.groomerId = :groomerAccountId")
     Integer countDistinctParentIdsByGroomerAccountId(@Param("groomerAccountId") Long groomerAccountId);
+
+    List<GroomingEstimateJpaEntity> findGroomingEstimateJpaEntitiesByUserIdAndStatus(Long userId, EstimateStatus status);
+
 }
