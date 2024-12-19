@@ -1,6 +1,7 @@
 package ddog.user.application;
 
 import ddog.domain.estimate.CareEstimate;
+import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
@@ -50,8 +51,8 @@ public class AccountInfoService {
         Page<CareReview> savedCareReview = careReviewPersist.findByReviewerId(accountId, Pageable.unpaged());
         Integer reviewCount = Math.toIntExact(savedCareReview.getTotalElements() + savedGroomingReview.getTotalElements());
 
-        List<GroomingEstimate> savedGroomingEstimate = groomingEstimatePersist.findMyEstimatesByUserId(accountId);
-        List<CareEstimate> savedCareEstimate = careEstimatePersist.findMyEstimatesByUserId(accountId);
+        List<GroomingEstimate> savedGroomingEstimate = groomingEstimatePersist.findByGroomingEstimateStatusBy(accountId, EstimateStatus.NEW);
+        List<CareEstimate> savedCareEstimate = careEstimatePersist.findByCareEstimateStatusBy(accountId, EstimateStatus.NEW);
         Integer estimateCount = savedCareEstimate.size() + savedGroomingEstimate.size();
 
         return MyProfileResp.builder()

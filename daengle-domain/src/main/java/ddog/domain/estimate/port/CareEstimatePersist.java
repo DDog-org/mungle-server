@@ -41,4 +41,7 @@ public interface CareEstimatePersist {
     Optional<CareEstimate> findEstimateByUserIdAndPetId(Long userId, Long petId);
 
     Integer countEstimateByVetIdDistinctParentId(Long vetId);
+
+    List<CareEstimate> findByCareEstimateStatusBy(Long userId, EstimateStatus estimateStatus);
+
 }
