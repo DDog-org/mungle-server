@@ -12,40 +12,37 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MessageListener {
+public class PaymentTimeOutMessageListener {
 
     private final ObjectMapper objectMapper;
+    private final PaymentService paymentService;
 
     @SqsListener(value = "PaymentTimeoutQ.fifo", factory = "sqsListenerContainerFactory")
     public void listen(Message message) {
-        System.out.println("Received message: " + message);
+        try {
+            PaymentTimeoutMessage paymentTimeoutMessage = parseMessageBody(message);
+            paymentService.refundPayment(paymentTimeoutMessage.getPaymentUid());
 
-        PaymentTimeoutMessage paymentTimeoutMessage =  parseMessageBody(message);
-        // 메시지 처리 로직
-
-        log.info(paymentTimeoutMessage.getMessageBody() +" SUCCESS");
+            log.info("Refund processed successfully for paymentUid: {}", paymentTimeoutMessage.getPaymentUid());
+        } catch (Exception e) {
+            log.error("Failed to process message: {}", message, e);
+        }
     }
 
     private PaymentTimeoutMessage parseMessageBody(Message message) {
         try {
-            // ObjectMapper로 JSON 메시지를 파싱
             JsonNode bodyNode = objectMapper.readTree(message.body());
-            log.info("Parsed message body: {}", bodyNode);
 
-            // 필드 값 추출
             String paymentUid = bodyNode.get("paymentUid").asText();
             String orderUid = bodyNode.get("orderUid").asText();
             Long estimateId = Long.valueOf(bodyNode.get("estimateId").asText());
 
-            // 결과 객체 생성
             return PaymentTimeoutMessage.builder()
                     .paymentUid(paymentUid)
                     .orderUid(orderUid)
                     .estimateId(estimateId)
                     .build();
         } catch (Exception e) {
-            // 에러 로그 출력 및 IllegalArgumentException 던지기
-            log.error("Failed to parse message: {}", message, e);
             throw new IllegalArgumentException("Failed to parse message: " + message, e);
         }
     }

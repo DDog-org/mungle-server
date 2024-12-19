@@ -252,8 +252,7 @@ public class PaymentService {
                 paymentCallbackReq.getOrderUid(),
                 paymentCallbackReq.getEstimateId()
         );
-
-        // SQS에 타임아웃 메시지 전송
+        //SQS에 타임아웃 메시지 전송
         messageSend.send(timeoutMessage);
     }
 
