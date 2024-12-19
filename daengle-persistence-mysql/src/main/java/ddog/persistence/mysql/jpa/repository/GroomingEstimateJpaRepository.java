@@ -60,8 +60,8 @@ public interface GroomingEstimateJpaRepository extends JpaRepository<GroomingEst
 
     Optional<GroomingEstimateJpaEntity> findGroomingEstimateJpaEntityByPetIdAndGroomerId(Long petId, Long groomerId);
 
-    @Query("SELECT COUNT(c) " +
+    @Query("SELECT COUNT(DISTINCT c.parentId) " +
             "FROM GroomingEstimates c " +
-            "WHERE c.groomerId = :groomerAccountId AND c.parentId IS NULL")
+            "WHERE c.groomerId = :groomerAccountId")
     Integer countDistinctParentIdsByGroomerAccountId(@Param("groomerAccountId") Long groomerAccountId);
 }
