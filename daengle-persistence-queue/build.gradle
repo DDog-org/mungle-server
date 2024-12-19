@@ -1,0 +1,16 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation(project(':daengle-domain'))
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // SQS
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs:3.2.0-M1'
+}

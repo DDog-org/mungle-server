@@ -29,7 +29,7 @@ public class PaymentController {
     @PostMapping("/validate")
     public CompletableFuture<CommonResponseEntity<PaymentCallbackResp>> validationPayment(@RequestBody PaymentCallbackReq paymentCallbackReq) {
         return paymentService.validationPayment(paymentCallbackReq)
-                .thenApply(CommonResponseEntity::success); // 성공 응답 래핑
+                .thenApply(CommonResponseEntity::success);
     }
 
     @PostMapping("/cancel/{reservationId}")

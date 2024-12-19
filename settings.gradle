@@ -9,4 +9,5 @@ include 'daengle-vet-api'
 include 'daengle-notification'
 include 'daengle-chat-api'
 include 'daengle-persistence-nosql'
+include 'daengle-persistence-queue'
 
