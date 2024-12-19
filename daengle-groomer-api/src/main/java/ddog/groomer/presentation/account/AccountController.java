@@ -55,7 +55,7 @@ public class AccountController {
         return success(accountService.getWithdrawInfo(payloadDto.getAccountId()));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/info")
     public CommonResponseEntity<WithdrawResp> withdraw(PayloadDto payloadDto) {
         return success(accountService.withdraw(payloadDto.getAccountId()));
     }
