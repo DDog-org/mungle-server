@@ -140,11 +140,16 @@ public class PaymentService {
     }
 
     private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
-        validateEstimateBy(savedOrder);
-        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
-            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+        //validateEstimateBy(savedOrder);
+//        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+//            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
 
         try {
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
 
