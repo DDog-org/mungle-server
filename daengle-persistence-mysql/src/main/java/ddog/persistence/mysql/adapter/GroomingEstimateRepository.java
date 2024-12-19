@@ -110,4 +110,9 @@ public class GroomingEstimateRepository implements GroomingEstimatePersist {
     public Integer countEstimateByGroomerIdDistinctParentId(Long groomerId) {
         return groomingEstimateJpaRepository.countDistinctParentIdsByGroomerAccountId(groomerId);
     }
+
+    @Override
+    public List<GroomingEstimate> findByGroomingEstimateStatusBy(Long userId, EstimateStatus estimateStatus) {
+        return groomingEstimateJpaRepository.findAllByGroomerIdAndStatus(userId, estimateStatus).stream().map(GroomingEstimateJpaEntity::toModel).toList();
+    }
 }
