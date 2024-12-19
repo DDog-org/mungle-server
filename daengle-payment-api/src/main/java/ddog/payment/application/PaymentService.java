@@ -202,29 +202,24 @@ public class PaymentService {
     }
 
     @Transactional
-    public void refundPayments(List<String> paymentUids) {
-        paymentUids.forEach(paymentUid -> {
-            try {
-                refundPayment(paymentUid);
-            } catch (PaymentException e) {
-                log.error("Failed to process payment refund for paymentUid: {}", paymentUid, e);
-                // TODO JobQ에 재등록
-            }
-        });
-    }
+    public void refundPayment(String paymentUid, String orderUid) {
 
-    @Transactional
-    public void refundPayment(String paymentUid) {
-        Payment savedPayment = paymentPersist.findByPaymentUid(paymentUid)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_NOT_FOUND));
+        Order savedOrder = orderPersist.findByOrderUid("?")
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED));
 
-        BigDecimal refundAmount = BigDecimal.valueOf(savedPayment.getPrice());
-        CancelData cancelData = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
+
+       /* Order savedOrder = orderPersist.findByOrderUid(orderUid)
+                .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));*/
+
+        Payment payment = savedOrder.getPayment();
+
+        BigDecimal refundAmount = BigDecimal.valueOf(payment.getPrice());
+        CancelData cancelData = new CancelData(payment.getPaymentUid(), true, refundAmount);
 
         try {
             iamportClient.cancelPaymentByImpUid(cancelData);  // 실제 환불 요청
-            savedPayment.cancel();
-            paymentPersist.save(savedPayment);
+            payment.cancel();
+            paymentPersist.save(payment);
 
             log.info("Refund processed successfully for paymentUid: {}", paymentUid);
         } catch (IamportResponseException | IOException e) {
