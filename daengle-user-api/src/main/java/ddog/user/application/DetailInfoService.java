@@ -92,7 +92,7 @@ public class DetailInfoService {
                 .endTime(findBeautyShop.getEndTime())
                 .startTime(findBeautyShop.getStartTime())
                 .groomers(groomerSummaryInfos)
-                .imageUrlList(findBeautyShop.getImageUrlList())
+                .shopImage(findBeautyShop.getImageUrl())
                 .introduction(findBeautyShop.getIntroduction())
                 .closedDay(findBeautyShop.getClosedDays())
                 .shopNumber(findBeautyShop.getPhoneNumber())
