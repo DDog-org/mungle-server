@@ -27,7 +27,6 @@ public class GroomingReviewController {
     private final GroomingReviewService groomingReviewService;
     private final ReservationService reservationService;
     private final KakaoNotificationService kakaoNotificationService;
-    private final NotificationService notificationService;
     private final Environment environment;
 
     @GetMapping("/grooming/review/{reviewId}")
@@ -39,7 +38,6 @@ public class GroomingReviewController {
     public CommonResponseEntity<ReviewResp> postReview(@RequestBody PostGroomingReviewInfo postGroomingReviewInfo) {
         ReservationInfo.ReservationUsersInfo findReservationInfo = reservationService.getGroomingUserAndPartnerDetail(postGroomingReviewInfo.getReservationId());
         kakaoNotificationService.sendOneTalk(findReservationInfo.getUserName(), findReservationInfo.getPartnerPhone(), environment.getProperty("templateId.REVIEWED"));
-        notificationService.sendNotificationToUser(findReservationInfo.getPartnerId(), NotifyType.REVIEWED, findReservationInfo.getUserName()+"님의 리뷰가 등록됐어요!");
         return success(groomingReviewService.postReview(postGroomingReviewInfo));
     }
 
