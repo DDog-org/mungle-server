@@ -1,6 +1,7 @@
 package ddog.persistence.queue.adapter;
 
 import ddog.domain.message.port.MessageSend;
+import ddog.domain.message.port.MessageSendable;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,25 +14,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageSender implements MessageSend {
 
-    public static final String SSQ_NAME = "PaymentTimeoutQ.fifo";
     private final SqsTemplate sqsTemplate;
-
+    public static final String SSQ_NAME = "PaymentTimeoutQ.fifo";
 
     @Override
-    public void send(String message) {
-        Message<String> newMessage = MessageBuilder.withPayload(message)
-                .setHeader("message-group-id", "defaultGroup")
-                .setHeader("message-deduplication-id", String.valueOf(System.currentTimeMillis()))
+    public void send(MessageSendable message) {
+        Message<String> newMessage = MessageBuilder.withPayload(message.getMessageBody())
+                .setHeader("message-group-id", message.getMessageGroupId())
+                .setHeader("message-deduplication-id", message.getMessageDeduplicationId())
                 .build();
-
-        log.info("Sending message: {}", newMessage);
 
         sqsTemplate.sendAsync(SSQ_NAME, newMessage)
                 .whenComplete((result, ex) -> {
                     if (ex != null) {
-                        log.error("Failed to send message", ex);
+                        //log.error("Failed to send message", ex); TODO 후속 조치
                     } else {
-                        log.info("Message sent successfully, result: {}", result);
+                        //log.info("Message sent successfully, result: {}", result);
                     }
                 });
     }

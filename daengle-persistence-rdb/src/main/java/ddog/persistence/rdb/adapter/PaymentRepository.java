@@ -31,6 +31,11 @@ import java.util.Optional;
     }
 
     @Override
+    public Optional<Payment> findByPaymentUid(String paymentUid) {
+        return paymentJpaRepository.findByPaymentUid(paymentUid).map(PaymentJpaEntity::toModel);
+    }
+
+    @Override
         public Payment save(Payment payment) {
             PaymentJpaEntity paymentJpaEntity = paymentJpaRepository.save(PaymentJpaEntity.from(payment));
             return paymentJpaEntity.toModel();

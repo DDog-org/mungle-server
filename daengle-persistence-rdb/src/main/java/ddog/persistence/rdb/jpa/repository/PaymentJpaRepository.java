@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface PaymentJpaRepository extends JpaRepository<PaymentJpaEntity, Long> {
     Optional<PaymentJpaEntity> findByPaymentId(Long paymentId);
     Optional<PaymentJpaEntity> findByIdempotencyKey(String idempotencyKey);
+    Optional<PaymentJpaEntity> findByPaymentUid(String paymentUid);
     Optional<List<PaymentJpaEntity>> findByPayerId(Long payerId);
 }

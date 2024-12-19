@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface PaymentPersist {
     Optional<Payment> findByPaymentId(Long paymentId);
     Optional<List<Payment>> findByPayerId(Long paymentId);
+    Optional<Payment> findByPaymentUid(String paymentUid);
     Payment save(Payment payment);
     Optional<Payment> findByIdempotencyKey(String idempotencyKey);
 }

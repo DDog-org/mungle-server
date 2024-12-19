@@ -8,10 +8,10 @@ import ddog.domain.estimate.EstimateStatus;
 import ddog.domain.estimate.GroomingEstimate;
 import ddog.domain.estimate.port.CareEstimatePersist;
 import ddog.domain.estimate.port.GroomingEstimatePersist;
+import ddog.domain.message.port.MessageSend;
 import ddog.domain.payment.Order;
 import ddog.domain.payment.Payment;
 import ddog.domain.payment.Reservation;
-import ddog.domain.payment.enums.PaymentStatus;
 import ddog.domain.payment.enums.ServiceType;
 import ddog.domain.payment.port.OrderPersist;
 import ddog.domain.payment.port.PaymentPersist;
@@ -20,6 +20,7 @@ import ddog.domain.review.port.CareReviewPersist;
 import ddog.domain.review.port.GroomingReviewPersist;
 import ddog.domain.user.User;
 import ddog.domain.user.port.UserPersist;
+import ddog.payment.application.dto.message.PaymentTimeoutMessage;
 import ddog.payment.application.dto.request.PaymentCallbackReq;
 import ddog.payment.application.dto.response.*;
 import ddog.payment.application.exception.*;
@@ -60,11 +61,12 @@ public class PaymentService {
     private final CareReviewPersist careReviewPersist;
     private final GroomingReviewPersist groomingReviewPersist;
 
+    private final MessageSend messageSend;
+
     @Transactional
     @TimeLimiter(name = "paymentValidation")
     @CircuitBreaker(name = "paymentValidation", fallbackMethod = "handlePaymentValidationFallback")
     public CompletableFuture<PaymentCallbackResp> validationPayment(PaymentCallbackReq paymentCallbackReq) {
-
         Order savedOrder = orderPersist.findByOrderUid(paymentCallbackReq.getOrderUid())
                 .orElseThrow(() -> new OrderException(OrderExceptionType.ORDER_NOT_FOUNDED));
 
@@ -74,13 +76,79 @@ public class PaymentService {
         return CompletableFuture.supplyAsync(() -> processValidation(paymentCallbackReq, savedOrder, payment));
     }
 
-    private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
+    @Transactional
+    public PaymentCancelResp cancelReservation(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_RESERVATION_NOT_FOUND));
 
-        validateEstimateBy(savedOrder);
-        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
-            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+        Payment savedPayment = paymentPersist.findByPaymentId(savedReservation.getPaymentId())
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_NOT_FOUND));
+
+        BigDecimal refundAmount = savedPayment.calculateRefundAmount(savedReservation.getSchedule());
+        CancelData cancel_data = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
 
         try {
+            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) iamportClient.cancelPaymentByImpUid(cancel_data);
+
+            savedPayment.cancel();
+            paymentPersist.save(savedPayment);
+
+            return PaymentCancelResp.builder()
+                    .paymentId(savedPayment.getPaymentId())
+                    .reservationId(savedReservation.getReservationId())
+                    .originDepositAmount(savedPayment.getPrice())
+                    .refundAmount(refundAmount)
+                    .build();
+
+        } catch (IamportResponseException | IOException e) {
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
+        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
+
+        Boolean hasWrittenReview = checkIfReviewExistsBy(savedReservation);
+
+        return PaymentHistoryDetail.builder()
+                .reservationId(savedReservation.getReservationId())
+                .reservationStatus(savedReservation.getReservationStatus())
+                .recipientName(savedReservation.getRecipientName())
+                .shopName(savedReservation.getShopName())
+                .schedule(savedReservation.getSchedule())
+                .deposit(savedReservation.getDeposit())
+                .customerName(savedReservation.getCustomerName())
+                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
+                .visitorName(savedReservation.getVisitorName())
+                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
+                .hasWrittenReview(hasWrittenReview)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
+        User savedUser = userPersist.findByAccountId(accountId)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
+
+        return mappingToPaymentHistoryListResp(reservations);
+    }
+
+    private PaymentCallbackResp processValidation(PaymentCallbackReq paymentCallbackReq, Order savedOrder, Payment payment) {
+        validateEstimateBy(savedOrder);
+//        if (payment.getStatus() == PaymentStatus.PAYMENT_COMPLETED)
+//            throw new PaymentException(PaymentExceptionType.PAYMENT_ALREADY_COMPLETED);
+
+        try {
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             com.siot.IamportRestClient.response.Payment iamportResp =
                     iamportClient.paymentByImpUid(paymentCallbackReq.getPaymentUid()).getResponse();
 
@@ -122,77 +190,47 @@ public class PaymentService {
     }
 
     @Transactional
-    public PaymentCancelResp cancelPayment(Long reservationId) {
-        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_RESERVATION_NOT_FOUND));
-
-        Payment savedPayment = paymentPersist.findByPaymentId(savedReservation.getPaymentId())
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_NOT_FOUND));
-
-        BigDecimal refundAmount = savedPayment.calculateRefundAmount(savedReservation.getSchedule());
-        CancelData cancel_data = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
-
-        try {
-            if (refundAmount.compareTo(BigDecimal.ZERO) > 0) iamportClient.cancelPaymentByImpUid(cancel_data);
-
-            savedPayment.cancel();
-            paymentPersist.save(savedPayment);
-
-            return PaymentCancelResp.builder()
-                    .paymentId(savedPayment.getPaymentId())
-                    .reservationId(savedReservation.getReservationId())
-                    .originDepositAmount(savedPayment.getPrice())
-                    .refundAmount(refundAmount)
-                    .build();
-
-        } catch (IamportResponseException | IOException e) {
-            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
-        }
-    }
-
-    @Transactional
-    public List<PaymentCancelResp> cancelPayments(List<Long> reservationIds) {
+    public List<PaymentCancelResp> cancelReservations(List<Long> reservationIds) {
         try {
             return reservationIds.stream()
-                    .map(this::cancelPayment) // cancelPayment 호출
-                    .collect(Collectors.toList()); // 모든 결과 수집
+                    .map(this::cancelReservation)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             // 예외 발생 시 전체 작업 롤백
             throw new PaymentException(PaymentExceptionType.PAYMENT_CANCEL_BATCH_ERROR);
         }
     }
 
-    @Transactional(readOnly = true)
-    public PaymentHistoryDetail getPaymentHistory(Long reservationId) {
-        Reservation savedReservation = reservationPersist.findByReservationId(reservationId)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_HISTORY_NOT_FOUND));
-
-        Boolean hasWrittenReview = checkIfReviewExistsBy(savedReservation);
-
-        return PaymentHistoryDetail.builder()
-                .reservationId(savedReservation.getReservationId())
-                .reservationStatus(savedReservation.getReservationStatus())
-                .recipientName(savedReservation.getRecipientName())
-                .shopName(savedReservation.getShopName())
-                .schedule(savedReservation.getSchedule())
-                .deposit(savedReservation.getDeposit())
-                .customerName(savedReservation.getCustomerName())
-                .customerPhoneNumber(savedReservation.getCustomerPhoneNumber())
-                .visitorName(savedReservation.getVisitorName())
-                .visitorPhoneNumber(savedReservation.getVisitorPhoneNumber())
-                .hasWrittenReview(hasWrittenReview)
-                .build();
+    @Transactional
+    public void refundPayments(List<String> paymentUids) {
+        paymentUids.forEach(paymentUid -> {
+            try {
+                refundPayment(paymentUid);
+            } catch (PaymentException e) {
+                log.error("Failed to process payment refund for paymentUid: {}", paymentUid, e);
+                // 예외 발생 시 추가 처리 로직 (예: 실패한 결제 건 별도 로깅, 재시도 등)
+            }
+        });
     }
 
-    @Transactional(readOnly = true)
-    public PaymentHistoryListResp findPaymentHistoryList(Long accountId, ServiceType serviceType, int page, int size) {
-        User savedUser = userPersist.findByAccountId(accountId)
-                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_USER_NOT_FOUND));
+    @Transactional
+    public void refundPayment(String paymentUid) {
+        Payment savedPayment = paymentPersist.findByPaymentUid(paymentUid)
+                .orElseThrow(() -> new PaymentException(PaymentExceptionType.PAYMENT_NOT_FOUND));
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Reservation> reservations = reservationPersist.findPaymentHistoryList(savedUser.getAccountId(), serviceType, pageable);
+        BigDecimal refundAmount = BigDecimal.valueOf(savedPayment.getPrice());
+        CancelData cancelData = new CancelData(savedPayment.getPaymentUid(), true, refundAmount);
 
-        return mappingToPaymentHistoryListResp(reservations);
+        try {
+            iamportClient.cancelPaymentByImpUid(cancelData);  // 실제 환불 요청
+            savedPayment.cancel();
+            paymentPersist.save(savedPayment);
+
+            log.info("Refund processed successfully for paymentUid: {}", paymentUid);
+        } catch (IamportResponseException | IOException e) {
+            log.error("Payment gateway error while processing refund for paymentUid: {}", paymentUid, e);
+            throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED);
+        }
     }
 
     private CompletableFuture<PaymentCallbackResp> handlePaymentValidationFallback(PaymentCallbackReq paymentCallbackReq, Throwable t) {
@@ -201,10 +239,22 @@ public class PaymentService {
         if (rootCause instanceof PaymentException) {
             throw (PaymentException) rootCause;
         } else if (rootCause instanceof TimeoutException) {
+            sendPaymentTimeoutMessage(paymentCallbackReq);
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_TIMEOUT, rootCause);
         } else {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED, rootCause);
         }
+    }
+
+    private void sendPaymentTimeoutMessage(PaymentCallbackReq paymentCallbackReq) {
+        PaymentTimeoutMessage timeoutMessage = new PaymentTimeoutMessage(
+                paymentCallbackReq.getPaymentUid(),
+                paymentCallbackReq.getOrderUid(),
+                paymentCallbackReq.getEstimateId()
+        );
+
+        // SQS에 타임아웃 메시지 전송
+        messageSend.send(timeoutMessage);
     }
 
     private Throwable findRootCause(Throwable t) {

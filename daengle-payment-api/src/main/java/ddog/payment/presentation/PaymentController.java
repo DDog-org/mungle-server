@@ -33,13 +33,8 @@ public class PaymentController {
     }
 
     @PostMapping("/cancel/{reservationId}")
-    public CommonResponseEntity<PaymentCancelResp> cancelPayment(@PathVariable Long reservationId) {
-        return success(paymentService.cancelPayment(reservationId));
-    }
-
-    @PostMapping("/cancel/batch")
-    public CommonResponseEntity<List<PaymentCancelResp>> cancelPayments(@RequestBody CancelPaymentsRequest request) {
-        return success(paymentService.cancelPayments(request.getReservationIds()));
+    public CommonResponseEntity<PaymentCancelResp> cancelReservation(@PathVariable Long reservationId) {
+        return success(paymentService.cancelReservation(reservationId));
     }
 
     @GetMapping("/{serviceType}/history/list")
@@ -55,5 +50,10 @@ public class PaymentController {
     public CommonResponseEntity<PaymentHistoryDetail> getPaymentHistory(
             @PathVariable Long reservationId) {
         return success(paymentService.getPaymentHistory(reservationId));
+    }
+
+    @PostMapping("/cancel/batch")
+    public CommonResponseEntity<List<PaymentCancelResp>> cancelReservations(@RequestBody CancelPaymentsRequest request) {
+        return success(paymentService.cancelReservations(request.getReservationIds()));
     }
 }

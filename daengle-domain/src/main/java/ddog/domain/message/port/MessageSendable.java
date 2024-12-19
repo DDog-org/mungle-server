@@ -1,4 +1,4 @@
-package ddog.domain.message;
+package ddog.domain.message.port;
 
 public interface MessageSendable {
     String getMessageBody();
