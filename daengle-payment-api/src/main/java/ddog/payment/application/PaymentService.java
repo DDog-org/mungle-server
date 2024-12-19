@@ -208,7 +208,7 @@ public class PaymentService {
                 refundPayment(paymentUid);
             } catch (PaymentException e) {
                 log.error("Failed to process payment refund for paymentUid: {}", paymentUid, e);
-                // 예외 발생 시 추가 처리 로직 (예: 실패한 결제 건 별도 로깅, 재시도 등)
+                // TODO JobQ에 재등록
             }
         });
     }
@@ -238,8 +238,11 @@ public class PaymentService {
 
         if (rootCause instanceof PaymentException) {
             throw (PaymentException) rootCause;
+
         } else if (rootCause instanceof TimeoutException) {
+
             sendPaymentTimeoutMessage(paymentCallbackReq);
+
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_TIMEOUT, rootCause);
         } else {
             throw new PaymentException(PaymentExceptionType.PAYMENT_PG_INTEGRATION_FAILED, rootCause);
